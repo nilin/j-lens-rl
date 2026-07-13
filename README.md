@@ -8,8 +8,12 @@ examples, eight rollouts per prompt, KL term, and evaluation. Only the reward ca
 
 - `configs/gsm8k.json`: verifiable numeric exact-match reward.
 - `configs/jlens.json`: mean standardized J-lens log-probability mass for
-  `solved`, sampled every 20 response tokens. Literal target-token positions are
-  excluded to reduce the easiest reward-hacking path.
+`solved`, sampled every 20 response tokens. Literal target-token positions are
+excluded to reduce the easiest reward-hacking path.
+
+`score_start_fraction` selects the response window used by the J reward (`0.5`
+means the later half), while `score_layers` selects any subset of the fitted
+layers. These allow targeted alignment screens without refitting the lens.
 
 The J-lens implementation is pinned to Anthropic commit
 `581d398613e5602a5af361e1c34d3a92ea82ba8e`. TRL v1.0.0 is vendored under

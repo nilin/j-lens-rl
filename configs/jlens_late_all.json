@@ -1,0 +1,7 @@
+{
+  "base": "jlens.json",
+  "score_start_fraction": 0.5,
+  "score_layers": [8, 14, 20],
+  "run_name": "gsm8k-jlens-solved-late-all",
+  "output_dir": "runs/jlens_solved_late_all"
+}

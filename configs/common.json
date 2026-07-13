@@ -21,6 +21,8 @@
   "lora_rank": 8,
   "lora_alpha": 16,
   "score_stride": 20,
+  "score_start_fraction": 0.0,
+  "score_layers": [8, 14, 20],
   "vocab_chunk_size": 16384,
   "mask_target_tokens": true,
   "eval_every": 25,

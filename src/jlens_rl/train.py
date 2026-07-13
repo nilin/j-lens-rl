@@ -127,6 +127,7 @@ def main() -> None:
                 cfg["lens_path"], cfg["calibration_path"], tokenizer,
                 cfg["target_words"], cfg["score_stride"], cfg["mask_target_tokens"],
                 cfg.get("vocab_chunk_size", 16384),
+                cfg.get("score_start_fraction", 0.0), cfg.get("score_layers"),
             )
         )
         reward_funcs.append(jreward)
@@ -136,7 +137,7 @@ def main() -> None:
 
     training_args = GRPOConfig(
         output_dir=str(output_dir),
-        run_name=f"gsm8k-{cfg['reward_type']}-reward",
+        run_name=cfg.get("run_name", f"gsm8k-{cfg['reward_type']}-reward"),
         max_steps=cfg["updates"],
         learning_rate=cfg["learning_rate"],
         beta=cfg["kl_beta"],

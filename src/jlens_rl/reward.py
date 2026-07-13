@@ -58,6 +58,8 @@ class TargetJLReward:
         stride: int = 20,
         mask_target_tokens: bool = False,
         vocab_chunk_size: int = 16384,
+        score_start_fraction: float = 0.0,
+        score_layers: Sequence[int] | None = None,
     ) -> None:
         self.lens = JacobianLens.load(lens_path)
         self.target_words = list(target_words)
@@ -65,6 +67,16 @@ class TargetJLReward:
         self.stride = stride
         self.mask_target_tokens = mask_target_tokens
         self.vocab_chunk_size = vocab_chunk_size
+        if not 0.0 <= score_start_fraction < 1.0:
+            raise ValueError("score_start_fraction must be in [0, 1)")
+        self.score_start_fraction = score_start_fraction
+        available_layers = list(self.lens.source_layers)
+        self.score_layers = list(score_layers) if score_layers is not None else available_layers
+        missing_layers = set(self.score_layers) - set(available_layers)
+        if missing_layers:
+            raise ValueError(
+                f"score layers {sorted(missing_layers)} are not present in lens layers {available_layers}"
+            )
         calibration = json.loads(Path(calibration_path).read_text())
         self.mean = float(calibration["mean"])
         self.std = max(float(calibration["std"]), 1e-6)
@@ -78,7 +90,10 @@ class TargetJLReward:
     ) -> torch.Tensor:
         norm, lm_head = decoder_parts(model)
         end = int(attention_mask.sum().item())
-        positions = list(range(prompt_len + self.stride - 1, end, self.stride))
+        response_len = max(0, end - prompt_len)
+        window_start = prompt_len + int(response_len * self.score_start_fraction)
+        first_position = max(prompt_len + self.stride - 1, window_start)
+        positions = list(range(first_position, end, self.stride))
         if self.mask_target_tokens and input_ids is not None:
             targets = set(self.token_ids)
             positions = [p for p in positions if int(input_ids[p]) not in targets]
@@ -93,7 +108,7 @@ class TargetJLReward:
             # not an accidental incentive to repeat the target token.
             return torch.full((1,), self.mean, device=attention_mask.device)
         per_layer = []
-        for layer in self.lens.source_layers:
+        for layer in self.score_layers:
             # HF hidden_states[0] is embeddings; block L output is [L + 1].
             h = hidden_states[layer + 1][batch_index, positions].float()
             key = (layer, str(h.device))
