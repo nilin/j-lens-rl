@@ -82,14 +82,21 @@ artifacts).
 Layer-8 W&B: [`xkytbmoz`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/xkytbmoz).
 Layer-20 W&B: [`r4govttw`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/r4govttw).
 
-The layer-8 gain is only 2 additional correct answers out of 200 and is not a
-verified win. Full-test evaluation of the frozen base and layer-8 checkpoint 25
-on all 1,319 GSM8K examples is in progress.
+The layer-8 gain is only 2 additional correct answers out of 200. Full-test
+standalone evaluation on all 1,319 GSM8K examples gave:
+
+| Model | Exact match | Correct | 95% Wilson CI |
+|---|---:|---:|---:|
+| Frozen base | 30.705% | 405/1,319 | 28.27–33.25% |
+| Layer-8 checkpoint 25 | 30.933% | 408/1,319 | 28.50–33.48% |
+
+The net gain is 3 answers (+0.23 percentage points). It is directionally
+positive but far too small to establish a reliable effect, so a second training
+seed is required.
 
 ## Next decision
 
-1. Complete matched full-test evaluation of base and layer-8 checkpoint 25.
-2. If the gain persists, replicate training with another seed and run a matched
-   correctness-reward control at learning rate `3e-6`.
-3. If it does not persist, use the alignment screen to design a stronger
+1. Replicate layer-8 late-half training with another seed.
+2. Run a matched correctness-reward control at learning rate `3e-6`.
+3. If the gain does not reproduce, use the alignment screen to design a stronger
    within-prompt `solved` signal before spending more training compute.

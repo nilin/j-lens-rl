@@ -1,0 +1,6 @@
+{
+  "base": "jlens_late_8_lr3e6.json",
+  "seed": 43,
+  "run_name": "gsm8k-jlens-solved-late-layer8-lr3e6-seed43",
+  "output_dir": "runs/jlens_solved_late_8_lr3e6_seed43"
+}
