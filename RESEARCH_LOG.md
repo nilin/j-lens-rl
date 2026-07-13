@@ -101,7 +101,18 @@ as selection noise, not success.
 
 ## Next decision
 
-1. Fit and cross-validate a composite of layer/window `solved` measurements on
-   grouped training rollouts, centering within prompt to match GRPO.
-2. Train the composite only if it improves held-out within-prompt ranking.
+The nine-readout ridge composite improved cross-validated within-prompt pair
+accuracy from 60.1% (layer-8 late-half mean) to 62.0% on the same 100-prompt
+screen. Its step-25 training result nevertheless fell from 32.5% to 32.0%
+exact match (W&B
+[`07ins5l5`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/07ins5l5)).
+This is a negative result: offline rank alignment did not generalize into a
+validation improvement.
+
+Next:
+
+1. Screen late-half and final-quarter mean/max `solved` readouts at each layer;
+   a transient peak may be more informative than a sequence average.
+2. Train only a readout whose cross-validated grouped ranking materially beats
+   the current 60--62% range.
 3. Run a matched correctness-reward control at the selected learning rate.

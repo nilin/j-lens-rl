@@ -104,12 +104,20 @@ def main() -> None:
         cfg["lens_path"], cfg["calibration_path"], tokenizer, cfg["target_words"],
         cfg["score_stride"], cfg["mask_target_tokens"], cfg.get("vocab_chunk_size", 16384),
     )
-    candidates = [
-        (f"layer{layer}_{window}", layer, window)
-        for layer in scorer.lens.source_layers
-        for window in ("all_mean", "late_mean", "final")
+    windows = [
+        ("all_mean", 0.0, "mean", False),
+        ("late_mean", 0.5, "mean", False),
+        ("tail_mean", 0.75, "mean", False),
+        ("late_max", 0.5, "max", False),
+        ("tail_max", 0.75, "max", False),
+        ("final", 0.5, "last", True),
     ]
-    candidate_scores: dict[str, list[float]] = {name: [] for name, _, _ in candidates}
+    candidates = [
+        (f"layer{layer}_{name}", layer, start_fraction, aggregation, include_final)
+        for layer in scorer.lens.source_layers
+        for name, start_fraction, aggregation, include_final in windows
+    ]
+    candidate_scores: dict[str, list[float]] = {name: [] for name, *_ in candidates}
     correct: list[float] = []
     groups: list[int] = []
 
@@ -143,11 +151,11 @@ def main() -> None:
             [torch.ones_like(sequence) for sequence in sequences], batch_first=True, padding_value=0
         )
         output = model(ids, attention_mask=mask, output_hidden_states=True, use_cache=False)
-        for name, layer, window in candidates:
+        for name, layer, start_fraction, aggregation, include_final in candidates:
             scorer.score_layers = [layer]
-            scorer.score_start_fraction = 0.5 if window != "all_mean" else 0.0
-            scorer.score_aggregation = "last" if window == "final" else "mean"
-            scorer.score_include_final = window == "final"
+            scorer.score_start_fraction = start_fraction
+            scorer.score_aggregation = aggregation
+            scorer.score_include_final = include_final
             candidate_scores[name].extend(
                 scorer(model, output.hidden_states, prompt_lengths[i], mask[i], i, ids[i])
                 for i in range(args.generations)
