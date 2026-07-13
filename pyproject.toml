@@ -26,6 +26,7 @@ fit-jlens = "jlens_rl.fit_lens:main"
 train-jlens-rl = "jlens_rl.train:main"
 eval-jlens-rl = "jlens_rl.eval:main"
 plot-jlens-rl = "jlens_rl.plot:main"
+analyze-jlens-alignment = "jlens_rl.analyze_alignment:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
