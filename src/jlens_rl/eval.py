@@ -97,6 +97,7 @@ def main() -> None:
         cfg["target_words"], cfg["score_stride"], cfg["mask_target_tokens"],
         cfg.get("vocab_chunk_size", 16384),
         cfg.get("score_start_fraction", 0.0), cfg.get("score_layers"),
+        cfg.get("score_aggregation", "mean"), cfg.get("score_include_final", False),
     )
     ds = load_dataset("openai/gsm8k", "main", split="test")
     rows = ds.select(range(min(cfg["validation_examples"], len(ds))))

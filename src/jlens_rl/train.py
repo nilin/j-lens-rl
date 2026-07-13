@@ -128,6 +128,7 @@ def main() -> None:
                 cfg["target_words"], cfg["score_stride"], cfg["mask_target_tokens"],
                 cfg.get("vocab_chunk_size", 16384),
                 cfg.get("score_start_fraction", 0.0), cfg.get("score_layers"),
+                cfg.get("score_aggregation", "mean"), cfg.get("score_include_final", False),
             )
         )
         reward_funcs.append(jreward)

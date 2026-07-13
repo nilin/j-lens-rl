@@ -60,6 +60,8 @@ class TargetJLReward:
         vocab_chunk_size: int = 16384,
         score_start_fraction: float = 0.0,
         score_layers: Sequence[int] | None = None,
+        score_aggregation: str = "mean",
+        score_include_final: bool = False,
     ) -> None:
         self.lens = JacobianLens.load(lens_path)
         self.target_words = list(target_words)
@@ -70,6 +72,11 @@ class TargetJLReward:
         if not 0.0 <= score_start_fraction < 1.0:
             raise ValueError("score_start_fraction must be in [0, 1)")
         self.score_start_fraction = score_start_fraction
+        if score_aggregation not in {"mean", "max", "last"}:
+            raise ValueError("score_aggregation must be mean, max, or last")
+        self.score_aggregation = score_aggregation
+        self.score_include_final = score_include_final
+        self.special_token_ids = set(tokenizer.all_special_ids)
         available_layers = list(self.lens.source_layers)
         self.score_layers = list(score_layers) if score_layers is not None else available_layers
         missing_layers = set(self.score_layers) - set(available_layers)
@@ -94,14 +101,21 @@ class TargetJLReward:
         window_start = prompt_len + int(response_len * self.score_start_fraction)
         first_position = max(prompt_len + self.stride - 1, window_start)
         positions = list(range(first_position, end, self.stride))
-        if self.mask_target_tokens and input_ids is not None:
-            targets = set(self.token_ids)
-            positions = [p for p in positions if int(input_ids[p]) not in targets]
+        excluded = set(self.special_token_ids)
+        if self.mask_target_tokens:
+            excluded.update(self.token_ids)
+        if input_ids is not None:
+            positions = [p for p in positions if int(input_ids[p]) not in excluded]
+            if self.score_include_final:
+                final_positions = [
+                    p for p in range(window_start, end) if int(input_ids[p]) not in excluded
+                ]
+                if final_positions and final_positions[-1] not in positions:
+                    positions.append(final_positions[-1])
         if not positions and end > prompt_len:
             fallback = list(range(prompt_len, end))
-            if self.mask_target_tokens and input_ids is not None:
-                targets = set(self.token_ids)
-                fallback = [p for p in fallback if int(input_ids[p]) not in targets]
+            if input_ids is not None:
+                fallback = [p for p in fallback if int(input_ids[p]) not in excluded]
             positions = fallback[-1:]
         if not positions:
             # A completion containing no unmasked positions should receive a neutral score,
@@ -121,16 +135,22 @@ class TargetJLReward:
                     normalized, lm_head, self.token_ids, self.vocab_chunk_size
                 )
             )
-        return torch.stack(per_layer).flatten()
+        return torch.stack(per_layer)
 
     def __call__(
         self, model: Any, hidden_states: Sequence[torch.Tensor], prompt_len: int,
         attention_mask: torch.Tensor, batch_index: int = 0,
         input_ids: torch.Tensor | None = None,
     ) -> float:
-        raw = self.raw_scores(
+        raw_scores = self.raw_scores(
             model, hidden_states, prompt_len, attention_mask, batch_index, input_ids
-        ).mean()
+        )
+        if self.score_aggregation == "mean":
+            raw = raw_scores.mean()
+        elif self.score_aggregation == "max":
+            raw = raw_scores.max()
+        else:
+            raw = raw_scores[:, -1].mean() if raw_scores.ndim == 2 else raw_scores[-1]
         return float(((raw - self.mean) / self.std).clamp(-5, 5).item())
 
 

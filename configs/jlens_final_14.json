@@ -1,0 +1,7 @@
+{
+  "base": "jlens_late_14.json",
+  "score_aggregation": "last",
+  "score_include_final": true,
+  "run_name": "gsm8k-jlens-solved-final-layer14",
+  "output_dir": "runs/jlens_solved_final_14"
+}
