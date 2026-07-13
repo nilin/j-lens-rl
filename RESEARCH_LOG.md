@@ -111,8 +111,15 @@ validation improvement.
 
 Next:
 
-1. Screen late-half and final-quarter mean/max `solved` readouts at each layer;
-   a transient peak may be more informative than a sequence average.
-2. Train only a readout whose cross-validated grouped ranking materially beats
-   the current 60--62% range.
-3. Run a matched correctness-reward control at the selected learning rate.
+The expanded screen used 200 prompts x 8 generations (1,600 rollouts), with
+136 mixed-outcome prompts. Layer-20 final-token was the best simple readout at
+58.5% pair accuracy; layer-8 late-half mean reached 56.1%. Late/final-quarter
+max readouts were near chance. The 18-way composite reached 62.9%, only 0.9
+points above the prior composite that failed in RL, so it was rejected as too
+weak to justify another fitted-composite run.
+
+Artifact: `artifacts/solved_alignment_windows_200.json` (ignored).
+
+Next: run a matched exact-match-reward control at learning rate `3e-6` to test
+whether this update regime can produce a detectable validation change before
+continuing the internal-reward search.

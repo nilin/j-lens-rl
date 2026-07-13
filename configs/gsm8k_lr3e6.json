@@ -1,0 +1,7 @@
+{
+  "base": "gsm8k.json",
+  "learning_rate": 3e-6,
+  "early_stopping_patience": 1,
+  "run_name": "gsm8k-exact-match-control-lr3e6",
+  "output_dir": "runs/gsm8k_reward_lr3e6"
+}
