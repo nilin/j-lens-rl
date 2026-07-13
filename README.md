@@ -76,7 +76,10 @@ W&B project by default. Both rollout rewards are computed in both runs; reward
 weights are the sole experimental difference. A separate fixed, greedy
 validation callback measures held-out GSM8K exact match at step zero and every
 25 updates. This validation score is never used as reward in the J-lens run and
-is the primary result plotted by `plot-jlens-rl`.
+is the primary result plotted by `plot-jlens-rl`. Runs stop early after two
+consecutive validation evaluations without a new best exact-match score; this
+patience avoids spending the full budget on clearly flat variants while being
+less sensitive to one noisy 200-example measurement.
 
 ## Standalone evaluation
 

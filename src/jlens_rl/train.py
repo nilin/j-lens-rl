@@ -44,8 +44,10 @@ class DeterministicValidationCallback(TrainerCallback):
         self.rows = rows
         self.cfg = cfg
         self.trainer: Any = None
+        self.best_exact_match: float | None = None
+        self.evaluations_without_improvement = 0
 
-    def evaluate_and_log(self, model: Any, step: int) -> None:
+    def evaluate_and_log(self, model: Any, step: int) -> dict[str, float]:
         metrics = evaluate(
             model, self.tokenizer, self.rows, self.cfg, None,
             self.cfg.get("validation_batch_size", 16),
@@ -55,10 +57,21 @@ class DeterministicValidationCallback(TrainerCallback):
             {"step": step, **metrics},
         )
         self.trainer.log({f"validation/{key}": value for key, value in metrics.items()})
+        return metrics
 
     def on_step_end(self, args, state, control, model=None, **kwargs):
         if state.global_step % self.cfg["eval_every"] == 0:
-            self.evaluate_and_log(model, state.global_step)
+            metrics = self.evaluate_and_log(model, state.global_step)
+            score = metrics["exact_match"]
+            min_delta = self.cfg.get("early_stopping_min_delta", 0.0)
+            if self.best_exact_match is None or score > self.best_exact_match + min_delta:
+                self.best_exact_match = score
+                self.evaluations_without_improvement = 0
+            else:
+                self.evaluations_without_improvement += 1
+            patience = self.cfg.get("early_stopping_patience")
+            if patience and self.evaluations_without_improvement >= patience:
+                control.should_training_stop = True
         return control
 
 
@@ -170,7 +183,8 @@ def main() -> None:
     )
     validation_callback.trainer = trainer
     trainer.add_callback(validation_callback)
-    validation_callback.evaluate_and_log(trainer.model, 0)
+    initial_metrics = validation_callback.evaluate_and_log(trainer.model, 0)
+    validation_callback.best_exact_match = initial_metrics["exact_match"]
     trainer.train()
     trainer.save_model(output_dir / "final")
     tokenizer.save_pretrained(output_dir / "final")

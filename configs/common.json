@@ -24,6 +24,8 @@
   "vocab_chunk_size": 16384,
   "mask_target_tokens": true,
   "eval_every": 25,
+  "early_stopping_patience": 2,
+  "early_stopping_min_delta": 0.0,
   "eval_strategy": "no",
   "save_every": 25,
   "wandb_project": "j-lens-rl",
