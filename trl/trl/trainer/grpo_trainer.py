@@ -1148,7 +1148,7 @@ class GRPOTrainer(_BaseTrainer):
         self._pending_metrics[name].append(value)
 
     @profiling_decorator
-    def _calculate_rewards(self, inputs, prompts, completions, completion_ids_list):
+    def _calculate_rewards(self, inputs, prompts, completions, prompt_ids_list, completion_ids_list):
         device = self.accelerator.device
         rewards_per_func = torch.zeros(len(prompts), len(self.reward_funcs), device=device)
 
@@ -1164,6 +1164,11 @@ class GRPOTrainer(_BaseTrainer):
 
         # Allow reward functions to log additional scalar metrics.
         reward_kwargs["log_metric"] = self._log_metric
+
+        # Internal-state rewards need the exact policy and token IDs used for the rollout. The model is unwrapped so
+        # custom rewards can inspect hidden states without depending on the distributed wrapper.
+        reward_kwargs["trainer_model"] = self.accelerator.unwrap_model(self.model)
+        reward_kwargs["prompt_ids"] = prompt_ids_list
 
         async_funcs_info = []  # async custom functions for asyncio.gather
 
@@ -1225,7 +1230,7 @@ class GRPOTrainer(_BaseTrainer):
             row_reward_kwargs = {
                 key: value[nan_row_idx]
                 for key, value in reward_kwargs.items()
-                if key not in ("trainer_state", "log_extra", "log_metric")
+                if key not in ("trainer_state", "log_extra", "log_metric", "trainer_model", "prompt_ids")
             }
             row_reward_kwargs["prompt"] = prompts[nan_row_idx]
             row_reward_kwargs["completion"] = completions[nan_row_idx]
@@ -1958,7 +1963,7 @@ class GRPOTrainer(_BaseTrainer):
         # Calculate rewards for each reward function. rewards_per_func aggregates rewards across all processes. This is
         # important because rewards will be normalized per group, and completions are distributed. We will later slice
         # rewards_per_func to extract each process's subset.
-        rewards_per_func = self._calculate_rewards(inputs, prompts, completions, completion_ids_list)
+        rewards_per_func = self._calculate_rewards(inputs, prompts, completions, prompt_ids_list, completion_ids_list)
         num_generations = self.num_generations if mode == "train" else self.num_generations_eval
 
         if self.multi_objective_aggregation == "sum_then_normalize":

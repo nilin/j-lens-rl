@@ -18,6 +18,7 @@
   "lora_alpha": 16,
   "score_stride": 20,
   "eval_every": 25,
+  "wandb_project": "j-lens-rl",
+  "wandb_mode": "online",
   "output_dir": "runs/default"
 }
-

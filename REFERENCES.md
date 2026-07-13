@@ -11,7 +11,7 @@ The following external projects materially informed or support this repository.
 ## TRL
 
 - Repository: [huggingface/trl](https://github.com/huggingface/trl)
-- Use here: TRL's GRPO trainer and accuracy-reward conventions were used as an algorithmic reference for the local group-relative policy-gradient loop. TRL code is not vendored, installed, or imported by this repository.
+- Use here: TRL v1.0.0 is vendored under `trl/` from upstream commit `f3e9ac1005980fded7192682599c70749785fa9b`. Its `GRPOTrainer`, Hugging Face Trainer integration, checkpointing, evaluation, and W&B logging are used directly. The local patch only exposes policy internals required by the J-lens reward.
 
 ## Qwen2.5
 

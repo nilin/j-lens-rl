@@ -9,10 +9,11 @@ examples, rollouts, KL term, and evaluation. Only the reward callable differs:
   20 response tokens.
 
 The J-lens implementation is pinned to Anthropic commit
-`581d398613e5602a5af361e1c34d3a92ea82ba8e`. The trainer is intentionally small
-and local rather than vendoring TRL: its group-relative reward normalization and
-answer reward follow TRL's GRPO interface, while direct ownership of the forward
-pass lets us inspect policy hidden states.
+`581d398613e5602a5af361e1c34d3a92ea82ba8e`. TRL v1.0.0 is vendored under
+`trl/` from upstream commit `f3e9ac1005980fded7192682599c70749785fa9b`. Its standard `GRPOTrainer` handles
+generation, optimization, checkpointing, evaluation, and W&B logging. Our narrow
+patch exposes the policy and rollout token IDs to custom reward functions so the
+J-lens reward can inspect hidden states.
 
 ## GPU setup
 
@@ -22,6 +23,7 @@ Use Linux, Python 3.10+, a recent NVIDIA driver, and a CUDA GPU with roughly
 ```bash
 ./setup.sh
 source .venv/bin/activate
+wandb login
 pytest -q
 ```
 
@@ -51,8 +53,8 @@ The overrides below perform one optimizer update. For a quick smoke test, also
 temporarily set `validation_examples` to a small value in `configs/common.json`.
 
 ```bash
-train-jlens-rl --config configs/gsm8k.json --updates 1 --output-dir runs/smoke-gsm8k
-train-jlens-rl --config configs/jlens.json --updates 1 --output-dir runs/smoke-jlens
+train-jlens-rl --config configs/gsm8k.json --updates 1 --output-dir runs/smoke-gsm8k --wandb-mode offline
+train-jlens-rl --config configs/jlens.json --updates 1 --output-dir runs/smoke-jlens --wandb-mode offline
 ```
 
 ## 3. Run the matched experiment
@@ -65,9 +67,11 @@ train-jlens-rl --config configs/jlens.json
 plot-jlens-rl --output runs/comparison.png
 ```
 
-Each run writes its resolved configuration, JSONL metrics, periodic LoRA
-checkpoints, and final adapter. Validation always reports both GSM8K exact match
-and the `solved` J-score, regardless of which reward was optimized.
+Each run writes its resolved configuration, TRL trainer state/log history,
+periodic LoRA checkpoints, and final adapter. It also logs to the `j-lens-rl`
+W&B project by default. Both GSM8K exact match and the `solved` J-score are
+computed regardless of which one is optimized; reward weights are the sole
+experimental difference.
 
 ## Standalone evaluation
 

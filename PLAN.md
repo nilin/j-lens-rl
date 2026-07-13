@@ -15,7 +15,7 @@ Use Anthropic’s Apache-2.0 [`anthropics/jacobian-lens`](https://github.com/ant
 
 For each completion, rerun a gradient-free policy forward pass and retain response-position hidden states. J-reward is the mean over chosen layers and positions of the target tokens’ J-lens log-probability, clipped to the base model’s calibration range. Freeze the fitted Jacobians, embeddings, final norm, and LM head; train rank-8 LoRA on attention/MLP projections. Re-fit the lens after training to detect exploitation of a stale lens.
 
-Base the loop and numeric answer parsing on Hugging Face TRL’s existing [`GRPOTrainer` and `accuracy_reward`](https://github.com/huggingface/trl), but use a small in-process PyTorch implementation so J-good can access hidden states. Both runs optimize the same group-relative REINFORCE objective plus `0.02 * KL(policy || base)`; only the scalar reward callable changes. This should fit the local M3 with 24 GB unified memory using one prompt per batch and gradient accumulation.
+Use a vendored, commit-pinned Hugging Face TRL [`GRPOTrainer`](https://github.com/huggingface/trl) for generation, the GRPO objective, KL regularization, evaluation, checkpointing, and W&B logging. A narrow trainer patch exposes the unwrapped policy and rollout token IDs to reward callables so J-good can run an additional hidden-state forward pass. Both rewards are calculated and logged in both runs; only their weights change (`[1,0]` versus `[0,1]`).
 
 ## Experiment and plots
 

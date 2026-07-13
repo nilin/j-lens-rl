@@ -78,3 +78,33 @@ class TargetJLReward:
     ) -> float:
         raw = self.raw_scores(model, hidden_states, prompt_len, attention_mask).mean()
         return float(((raw - self.mean) / self.std).clamp(-5, 5).item())
+
+
+class TRLTargetJLReward:
+    """Callable adapter that computes J-rewards inside the vendored TRL trainer."""
+
+    __name__ = "jlens_solved_reward"
+
+    def __init__(self, scorer: TargetJLReward) -> None:
+        self.scorer = scorer
+
+    @torch.no_grad()
+    def __call__(
+        self,
+        trainer_model: Any,
+        prompt_ids: list[list[int]],
+        completion_ids: list[list[int]],
+        log_metric: Any,
+        **kwargs,
+    ) -> list[float]:
+        was_training = trainer_model.training
+        trainer_model.eval()
+        rewards = []
+        for prompt, completion in zip(prompt_ids, completion_ids, strict=True):
+            ids = torch.tensor([prompt + completion], device=trainer_model.device)
+            mask = torch.ones_like(ids)
+            output = trainer_model(ids, attention_mask=mask, output_hidden_states=True, use_cache=False)
+            rewards.append(self.scorer(trainer_model, output.hidden_states, len(prompt), mask[0]))
+        trainer_model.train(was_training)
+        log_metric("jlens/solved_mean", sum(rewards) / len(rewards))
+        return rewards

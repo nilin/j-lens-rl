@@ -2,44 +2,46 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import sys
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-import torch
-import torch.nn.functional as F
+# The vendored repository directory and its Python package are both named `trl`.
+# Put the repository root on sys.path so it wins over the outer namespace directory.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "trl"))
+
 from datasets import load_dataset
-from peft import LoraConfig, get_peft_model
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import LoraConfig
+from transformers import AutoTokenizer
+from trl import GRPOConfig, GRPOTrainer
 
-from .common import append_jsonl, format_prompt, gsm8k_reward, load_config, model_dtype, seed_everything
-from .eval import evaluate
-from .reward import TargetJLReward
-
-
-def completion_mask(sequences: torch.Tensor, prompt_len: int, eos_id: int | None) -> torch.Tensor:
-    mask = torch.ones_like(sequences[:, prompt_len:], dtype=torch.float32)
-    if eos_id is not None:
-        eos = sequences[:, prompt_len:].eq(eos_id)
-        after = eos.cumsum(dim=1) - eos.long()
-        mask *= after.eq(0)
-    return mask
+from .common import SYSTEM_PROMPT, extract_answer, load_config, seed_everything
+from .reward import TRLTargetJLReward, TargetJLReward
 
 
-def completion_logps(logits: torch.Tensor, sequences: torch.Tensor,
-                     prompt_len: int) -> torch.Tensor:
-    # Token at absolute position p is predicted by logits at p-1.
-    prediction = logits[:, prompt_len - 1 : -1].float()
-    targets = sequences[:, prompt_len:]
-    return F.log_softmax(prediction, dim=-1).gather(-1, targets.unsqueeze(-1)).squeeze(-1)
+def gsm8k_reward_trl(completions: list[list[dict[str, str]]], answer: list[str], **kwargs) -> list[float]:
+    contents = [completion[0]["content"] for completion in completions]
+    return [float(extract_answer(text) == extract_answer(gold)) for text, gold in zip(contents, answer, strict=True)]
+
+
+def prepare_example(example: dict[str, str]) -> dict[str, Any]:
+    return {
+        "prompt": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": example["question"]},
+        ],
+        "answer": example["answer"],
+    }
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser()
-    p.add_argument("--config", required=True)
-    p.add_argument("--updates", type=int)
-    p.add_argument("--output-dir")
-    return p.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", required=True)
+    parser.add_argument("--updates", type=int)
+    parser.add_argument("--output-dir")
+    parser.add_argument("--wandb-mode", choices=["online", "offline", "disabled"])
+    return parser.parse_args()
 
 
 def main() -> None:
@@ -47,118 +49,85 @@ def main() -> None:
     cfg = load_config(args.config)
     if args.updates is not None:
         cfg["updates"] = args.updates
-    if args.output_dir:
+    if args.output_dir is not None:
         cfg["output_dir"] = args.output_dir
+    if args.wandb_mode is not None:
+        cfg["wandb_mode"] = args.wandb_mode
     if cfg["reward_type"] not in {"gsm8k", "jlens"}:
         raise ValueError("reward_type must be gsm8k or jlens")
-    if not torch.cuda.is_available():
-        raise RuntimeError("training requires a CUDA GPU")
     seed_everything(cfg["seed"])
-    outdir = Path(cfg["output_dir"])
-    outdir.mkdir(parents=True, exist_ok=True)
-    (outdir / "resolved_config.json").write_text(json.dumps(cfg, indent=2) + "\n")
+    os.environ["WANDB_PROJECT"] = cfg["wandb_project"]
+    os.environ["WANDB_MODE"] = cfg["wandb_mode"]
+
+    output_dir = Path(cfg["output_dir"])
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "resolved_config.json").write_text(json.dumps(cfg, indent=2) + "\n")
 
     tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
     tokenizer.pad_token = tokenizer.pad_token or tokenizer.eos_token
     tokenizer.padding_side = "left"
-    base = AutoModelForCausalLM.from_pretrained(
-        cfg["model_name"], torch_dtype=model_dtype(), device_map={"": "cuda:0"}
+
+    raw = load_dataset("openai/gsm8k", "main")
+    train_dataset = raw["train"].shuffle(seed=cfg["seed"]).select(range(cfg["train_examples"]))
+    eval_dataset = raw["test"].select(range(cfg["validation_examples"]))
+    train_dataset = train_dataset.map(prepare_example, remove_columns=["question"])
+    eval_dataset = eval_dataset.map(prepare_example, remove_columns=["question"])
+
+    jreward = TRLTargetJLReward(
+        TargetJLReward(
+            cfg["lens_path"], cfg["calibration_path"], tokenizer,
+            cfg["target_words"], cfg["score_stride"],
+        )
     )
-    base.config.use_cache = False
-    lora = LoraConfig(
-        r=cfg["lora_rank"], lora_alpha=cfg["lora_alpha"], lora_dropout=0.0,
+    reward_funcs = [gsm8k_reward_trl, jreward]
+    reward_weights = [1.0, 0.0] if cfg["reward_type"] == "gsm8k" else [0.0, 1.0]
+
+    training_args = GRPOConfig(
+        output_dir=str(output_dir),
+        run_name=f"gsm8k-{cfg['reward_type']}-reward",
+        max_steps=cfg["updates"],
+        learning_rate=cfg["learning_rate"],
+        beta=cfg["kl_beta"],
+        per_device_train_batch_size=cfg["num_generations"],
+        gradient_accumulation_steps=cfg["gradient_accumulation_steps"],
+        num_generations=cfg["num_generations"],
+        generation_batch_size=cfg["num_generations"],
+        max_completion_length=cfg["max_new_tokens"],
+        temperature=cfg["temperature"],
+        reward_weights=reward_weights,
+        eval_strategy="steps",
+        eval_steps=cfg["eval_every"],
+        per_device_eval_batch_size=cfg["num_generations"],
+        num_generations_eval=cfg["num_generations"],
+        logging_steps=1,
+        save_steps=cfg["eval_every"],
+        save_total_limit=3,
+        report_to=["wandb"] if cfg["wandb_mode"] != "disabled" else ["none"],
+        bf16=True,
+        gradient_checkpointing=True,
+        use_vllm=False,
+        seed=cfg["seed"],
+    )
+    peft_config = LoraConfig(
+        r=cfg["lora_rank"],
+        lora_alpha=cfg["lora_alpha"],
+        lora_dropout=0.0,
         target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
         task_type="CAUSAL_LM",
     )
-    model = get_peft_model(base, lora)
-    model.train()
-    optimizer = torch.optim.AdamW(
-        (p for p in model.parameters() if p.requires_grad), lr=cfg["learning_rate"]
+    trainer = GRPOTrainer(
+        model=cfg["model_name"],
+        reward_funcs=reward_funcs,
+        args=training_args,
+        train_dataset=train_dataset,
+        eval_dataset=eval_dataset,
+        processing_class=tokenizer,
+        peft_config=peft_config,
     )
-    jreward = TargetJLReward(
-        cfg["lens_path"], cfg["calibration_path"], tokenizer,
-        cfg["target_words"], cfg["score_stride"],
-    )
-
-    train_ds = load_dataset("openai/gsm8k", "main", split="train").shuffle(seed=cfg["seed"])
-    train_ds = train_ds.select(range(min(cfg["train_examples"], len(train_ds))))
-    val_ds = load_dataset("openai/gsm8k", "main", split="test")
-    val_ds = val_ds.select(range(min(cfg["validation_examples"], len(val_ds))))
-    metrics_path = outdir / "metrics.jsonl"
-    optimizer.zero_grad(set_to_none=True)
-
-    micro = 0
-    for update in range(1, cfg["updates"] + 1):
-        update_rewards, update_kls, update_losses = [], [], []
-        for _ in range(cfg["gradient_accumulation_steps"]):
-            row = train_ds[micro % len(train_ds)]
-            micro += 1
-            prompt = format_prompt(tokenizer, row["question"])
-            encoded = tokenizer(
-                [prompt] * cfg["num_generations"], return_tensors="pt", padding=True,
-                truncation=True, max_length=cfg["max_prompt_tokens"],
-            ).to(model.device)
-            prompt_len = encoded.input_ids.shape[1]
-            model.eval()
-            with torch.no_grad():
-                sequences = model.generate(
-                    **encoded, max_new_tokens=cfg["max_new_tokens"], do_sample=True,
-                    temperature=cfg["temperature"],
-                    pad_token_id=tokenizer.pad_token_id,
-                )
-            model.train()
-            cmask = completion_mask(sequences, prompt_len, tokenizer.eos_token_id).to(model.device)
-            attention = torch.cat(
-                [torch.ones_like(sequences[:, :prompt_len]), cmask.long()], dim=1
-            )
-            policy = model(sequences, attention_mask=attention, output_hidden_states=True, use_cache=False)
-            logps = completion_logps(policy.logits, sequences, prompt_len)
-            with torch.no_grad(), model.disable_adapter():
-                reference = model(sequences, attention_mask=attention, use_cache=False)
-                ref_logps = completion_logps(reference.logits, sequences, prompt_len)
-
-            texts = tokenizer.batch_decode(sequences[:, prompt_len:], skip_special_tokens=True)
-            if cfg["reward_type"] == "gsm8k":
-                rewards = [gsm8k_reward(text, row["answer"]) for text in texts]
-            else:
-                rewards = []
-                for i in range(sequences.shape[0]):
-                    hs = tuple(h[i : i + 1] for h in policy.hidden_states)
-                    rewards.append(jreward(model, hs, prompt_len, attention[i]))
-            r = torch.tensor(rewards, device=model.device, dtype=torch.float32)
-            advantage = (r - r.mean()) / (r.std(unbiased=False) + 1e-4)
-            denom = cmask.sum(dim=1).clamp_min(1)
-            pg = -(advantage * (logps * cmask).sum(dim=1) / denom).mean()
-            log_ratio = ref_logps - logps
-            kl_tokens = torch.exp(log_ratio) - log_ratio - 1
-            kl = (kl_tokens * cmask).sum() / cmask.sum().clamp_min(1)
-            loss = (pg + cfg["kl_beta"] * kl) / cfg["gradient_accumulation_steps"]
-            loss.backward()
-            update_rewards.extend(rewards)
-            update_kls.append(float(kl.detach()))
-            update_losses.append(float(loss.detach() * cfg["gradient_accumulation_steps"]))
-            del policy, reference
-
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        optimizer.step()
-        optimizer.zero_grad(set_to_none=True)
-        row_metrics = {
-            "step": update, "split": "train", "reward_type": cfg["reward_type"],
-            "reward": float(np.mean(update_rewards)), "kl": float(np.mean(update_kls)),
-            "loss": float(np.mean(update_losses)),
-        }
-        append_jsonl(metrics_path, row_metrics)
-        print(json.dumps(row_metrics), flush=True)
-
-        if update == 1 or update % cfg["eval_every"] == 0 or update == cfg["updates"]:
-            result = evaluate(model, tokenizer, val_ds, cfg, jreward)
-            result.update({"step": update, "split": "validation", "reward_type": cfg["reward_type"]})
-            append_jsonl(metrics_path, result)
-            print(json.dumps(result), flush=True)
-            model.save_pretrained(outdir / f"checkpoint-{update}")
-
-    model.save_pretrained(outdir / "final")
-    tokenizer.save_pretrained(outdir / "final")
+    trainer.train()
+    trainer.save_model(output_dir / "final")
+    tokenizer.save_pretrained(output_dir / "final")
+    (output_dir / "log_history.json").write_text(json.dumps(trainer.state.log_history, indent=2) + "\n")
 
 
 if __name__ == "__main__":
