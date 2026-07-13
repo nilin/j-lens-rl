@@ -1,0 +1,6 @@
+{
+  "base": "jlens_late_8_lr3e6_dense_eval.json",
+  "seed": 43,
+  "run_name": "gsm8k-jlens-solved-late-layer8-lr3e6-dense-eval-seed43",
+  "output_dir": "runs/jlens_solved_late_8_lr3e6_dense_eval_seed43"
+}

@@ -133,7 +133,129 @@ alignment before training.
 
 The 100-prompt GSM8K-domain fit completed. Calibration on 50 held-out reference
 reasoning transcripts: mean `-18.3153293482`, standard deviation
-`4.7388755305`, target token ID `27956`. The tracked
-`configs/jlens_gsm8k_lens.json` reproduces the next alignment/training setup;
-binary lens artifacts remain ignored and are reproducible via the handoff
-command.
+`4.7388755305`, target token ID `27956`. This config and its artifacts were
+subsequently removed without an accepted result for the leakage-boundary reason
+below.
+
+## Rejected: reference-solution domain lens
+
+The GSM8K-domain lens path was abandoned before any result was accepted. It
+used correct GSM8K training solutions as the lens-fitting text. This was not
+held-out leakage and did not update the policy, but it made the reward
+indirectly solution-informed and therefore unsuitable for the intended claim.
+Its screen was stopped, and its fitting option, config, and artifacts were
+removed. A replacement domain variant is permitted only on the frozen base
+model's own ungraded completions from GSM8K training prompts disjoint from the
+RL subset. Reference answers, verifier scores, correctness labels, validation,
+and test examples remain forbidden in reward construction.
+
+## Generic WikiText `happy` reward
+
+A separate clean concept test used a lens fitted and calibrated only on
+WikiText, targeted `happy`, masked literal target-token positions, and assigned
+zero reward weight to GSM8K correctness. Literal `happy` completion rate stayed
+at 0% throughout. Held-out numeric exact match did not improve:
+
+| Step | Exact match (n=200) |
+|---:|---:|
+| 0 | 33.5% |
+| 25 | 32.5% |
+| 50 | 32.5% |
+| 75 | 31.5% |
+| 100 | 31.5% |
+
+W&B: [`kxor0zvs`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/kxor0zvs).
+This is a negative result. Internal happy-score movement is not counted as
+success, and no full-test or second-seed follow-up is justified.
+
+## Ungraded base-rollout lens
+
+To domain-match without solution information, the frozen base model sampled
+150 response-only completions from shuffled GSM8K training prompts 1,000–1,149,
+disjoint from the 1,000 RL prompts. The fitting code reads only `question`; it
+never reads reference answers, verifier scores, correctness labels, validation,
+or test data. The exact sampled corpus is saved with the ignored lens artifact.
+
+Calibration on 50 held-out ungraded rollouts: mean `-19.4511426386`, standard
+deviation `6.1915322224`, target token ID `27956`.
+
+Grouped alignment screen: 200 training prompts × 8 frozen-base generations;
+145 prompts had mixed outcomes. The strongest simple readout was layer-20 final
+content token: 58.00% within-prompt pair accuracy, correlation `+0.1769`, and
+correct-minus-incorrect score `+0.3202` SD. All temporal means/maxima were near
+or below chance. The verifier-fitted composite reached only 58.66% and is not
+eligible as a reward. Artifact:
+`artifacts/solved_alignment_ungraded_rollout_lens_200.json`.
+
+Decision: screen one J-only layer-20 final-token run at LR `3e-6`, with online
+W&B and the unchanged step-25 exact-match stop gate.
+
+The run failed the gate: exact match fell from 32.5% at step 0 to 28.0% at
+step 25, with 0% literal `solved` usage. It stopped immediately. W&B:
+[`x0h4ul95`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/x0h4ul95).
+No full-test evaluation is justified.
+
+Next variation: return to the generic WikiText layer-8 late-half signal—the
+only clean signal with a prior positive monitor node—and reduce LR from `3e-6`
+to `2e-6` to test for a slower, sustained multi-node improvement. Reward
+construction and all data boundaries remain unchanged.
+
+LR `2e-6` failed the first gate, falling from 32.5% to 31.0% at step 25; W&B
+[`y2b2p5b0`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/y2b2p5b0).
+Next, reproduce the strongest LR `3e-6` setting with additional greedy monitor
+nodes at steps 10 and 20 before the unchanged step-25 gate. Evaluation is
+gradient-free and deterministic and does not alter rollout RNG or rewards.
+
+## LR `3e-6` dense-evaluation reproduction
+
+The generic WikiText `solved` lens, layer-8 late-half mean readout, and LR
+`3e-6` setting were reproduced on an RTX 4090. The substantive W&B config is
+identical to the earlier H100 run: seed 42, eight rollouts, 256-token maximum
+completion, temperature 1, DAPO/group normalization, KL 0.02, rank-8 LoRA,
+and reward weights `[0, 1]`. Only the output/run names and added deterministic
+validation nodes differ.
+
+| Step | Exact match (n=200) |
+|---:|---:|
+| 0 | 32.5% |
+| 10 | 32.0% |
+| 20 | 32.5% |
+| 25 | **33.5%** |
+| 35 | 32.5% |
+| 50 | **33.5%** |
+
+Literal `solved` completion rate remained 0% at every node. This passes the
+requested multiple-monitor-node condition but is not yet a successful result:
+the full 1,319-example verification and second-seed replication gates still
+apply. W&B:
+[`kwk4m0ev`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/kwk4m0ev).
+
+Standalone greedy evaluation of the step-50 adapter on all 1,319 held-out
+examples scored 408/1,319 (30.933%, 95% Wilson CI 28.50–33.48%), versus the
+frozen base's established 405/1,319 (30.705%). This is a gain of three answers
+and matches the earlier seed-42 full-test result. Literal `solved` appeared in
+1/1,319 completions (0.076%). The effect remains too small to accept without
+the required seed-43 replication.
+
+Seed 43 independently improved at multiple monitor nodes:
+
+| Step | Exact match (n=200) |
+|---:|---:|
+| 0 | 32.5% |
+| 10 | **33.5%** |
+| 20 | **34.0%** |
+| 25 | **33.0%** |
+| 35 | **34.0%** |
+
+Literal `solved` completion rate remained 0% throughout. Training stopped at
+step 35 after two evaluations without exceeding the 34.0% best. W&B:
+[`wsg6wioj`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/wsg6wioj).
+The final step-35 adapter scored 407/1,319 on the full held-out test
+(30.857%, 95% Wilson CI 28.42–33.40%), two answers above the frozen base, with
+0/1,319 literal `solved` completions.
+
+The strict acceptance gate therefore passes directionally on both seeds:
+408/1,319 for seed 42 and 407/1,319 for seed 43, versus 405/1,319 for the same
+frozen-base evaluator. The absolute gains are only +3 and +2 answers and the
+confidence intervals heavily overlap, so this is evidence of a small
+replicated directional effect, not a statistically precise or large gain.

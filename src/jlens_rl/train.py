@@ -60,7 +60,13 @@ class DeterministicValidationCallback(TrainerCallback):
         return metrics
 
     def on_step_end(self, args, state, control, model=None, **kwargs):
-        if state.global_step % self.cfg["eval_every"] == 0:
+        evaluation_steps = self.cfg.get("validation_steps")
+        should_evaluate = (
+            state.global_step in evaluation_steps
+            if evaluation_steps is not None
+            else state.global_step % self.cfg["eval_every"] == 0
+        )
+        if should_evaluate:
             metrics = self.evaluate_and_log(model, state.global_step)
             score = metrics["exact_match"]
             min_delta = self.cfg.get("early_stopping_min_delta", 0.0)
@@ -70,7 +76,12 @@ class DeterministicValidationCallback(TrainerCallback):
             else:
                 self.evaluations_without_improvement += 1
             patience = self.cfg.get("early_stopping_patience")
-            if patience and self.evaluations_without_improvement >= patience:
+            stopping_start = self.cfg.get("early_stopping_start_step", 0)
+            if (
+                patience
+                and state.global_step >= stopping_start
+                and self.evaluations_without_improvement >= patience
+            ):
                 control.should_training_stop = True
         return control
 

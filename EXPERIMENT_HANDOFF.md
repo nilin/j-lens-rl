@@ -43,10 +43,14 @@ reward. Do not change TRL unless a demonstrated blocker requires it.
 
 Current conclusions:
 
-- WikiText-fitted `solved` readouts weakly rank correctness offline, but no
-  J-reward result has replicated a full-test exact-match gain.
-- Layer-8 late-half mean had one +3/1,319 result at seed 42, then -1/1,319 at
-  seed 43. Treat it as noise.
+- The generic WikiText-fitted `solved` lens with a layer-8 late-half mean
+  readout and LR `3e-6` now passes the exact acceptance gate. Seed 42 improved
+  at monitor steps 25 and 50 and scored 408/1,319 on the full test. Seed 43
+  improved at steps 10, 20, 25, and 35 and scored 407/1,319. The same frozen
+  base scores 405/1,319. W&B runs: `kwk4m0ev`, `wsg6wioj`.
+- Treat this as a small replicated directional effect (+3 and +2 answers), not
+  a large or statistically precise gain; the full-test confidence intervals
+  overlap heavily.
 - A nine-readout composite reached 62.0% offline pair accuracy but decreased the
   200-example monitor from 32.5% to 32.0%.
 - A larger 200-prompt screen found layer-20 final-token at 58.5%, layer-8
@@ -54,45 +58,62 @@ Current conclusions:
   readouts were near chance, so no new RL run was justified.
 - The matched exact-match-reward control at LR `3e-6` was also flat, 32.5% to
   32.5% at step 25 (W&B `37nto25a`).
+- A clean WikiText-fitted `happy` reward decreased the 200-example monitor from
+  33.5% to 32.5% at step 25 and 31.5% at step 100 (W&B `kxor0zvs`), with 0%
+  literal `happy` usage. Treat it as a negative result.
 
-## Current experiment: domain-matched lens
+## Reproduce the accepted run
 
-The leading hypothesis is domain mismatch: the original Jacobian transport and
-calibration use WikiText, while rewards are applied to chat-formatted math
-reasoning. Fit a lens on GSM8K reference reasoning transcripts:
+Regenerate the generic WikiText lens (expected held-out calibration mean
+`-19.0812344828`, standard deviation `3.9094524086`, target token `27956`):
 
 ```bash
 .venv/bin/fit-jlens \
-  --corpus gsm8k \
-  --output artifacts/qwen25_05b_solved_lens_gsm8k.pt \
-  --calibration-output artifacts/qwen25_05b_solved_calibration_gsm8k.json \
-  --target-word solved \
-  --num-prompts 100 --calibration-prompts 50 \
+  --corpus wikitext \
+  --output artifacts/qwen25_05b_solved_lens.pt \
+  --calibration-output artifacts/qwen25_05b_solved_calibration.json \
+  --target-word solved --num-prompts 100 --calibration-prompts 50 \
   --layers 8,14,20 --dim-batch 16 --seed 42
 ```
 
-This fit completed successfully on the originating machine. Its held-out
-calibration is mean `-18.3153293482`, standard deviation `4.7388755305`, and
-target token ID `27956`. Because `artifacts/` is ignored, another machine must
-run the command above; matching these values is the reproducibility check.
-
-The tracked `configs/jlens_gsm8k_lens.json` points at those domain artifacts.
-Then run:
+Run both seeds online in W&B:
 
 ```bash
-.venv/bin/python -m jlens_rl.analyze_alignment \
-  --config configs/jlens_gsm8k_lens.json \
-  --prompts 200 --generations 8 \
-  --output artifacts/solved_alignment_gsm8k_lens_200.json
+export WANDB_API_KEY="$(tr -d '\r\n' < .env)"
+.venv/bin/train-jlens-rl \
+  --config configs/jlens_late_8_lr3e6_dense_eval.json --wandb-mode online
+.venv/bin/train-jlens-rl \
+  --config configs/jlens_late_8_lr3e6_dense_eval_seed43.json --wandb-mode online
 ```
 
-Compare five-fold prompt-group CV and simple-readout pair accuracy to the
-WikiText baselines above. Only launch RL if a simple readout is materially
-stronger, or if a composite improvement is large enough to distinguish it from
-the previously failed 62.0% mixture. Use LR `3e-6`, patience 1, online W&B,
-and the unchanged step-25 validation gate.
+Verify the saved adapters against all 1,319 examples:
 
-If the domain lens is not stronger, the next useful direction is a directly
-cross-validated correctness probe constrained to features derived from the
-`solved` Jacobian readouts. Keep its fitting labels disjoint by prompt and do
-not call probe accuracy or internal reward movement a successful outcome.
+```bash
+.venv/bin/eval-jlens-rl --config configs/full_eval.json \
+  --adapter runs/jlens_solved_late_8_lr3e6_dense_eval/checkpoint-50 \
+  --skip-jlens-metric --batch-size 16
+.venv/bin/eval-jlens-rl --config configs/full_eval.json \
+  --adapter runs/jlens_solved_late_8_lr3e6_dense_eval_seed43/final \
+  --skip-jlens-metric --batch-size 16
+```
+
+Training uses reward weights `[0, 1]`: the GSM8K verifier is computed only as
+an audit metric and has exactly zero contribution to the scalar reward or
+gradient. The lens is fitted only on WikiText; no GSM8K questions, answers,
+grades, validation examples, or test examples enter reward construction.
+
+## Rejected experiment: GSM8K-reference domain lens
+
+Do not fit or use a lens on GSM8K reference solutions. Although that path did
+not update policy weights or touch held-out evaluation examples, fitting the
+reward transport on correct training solutions makes the signal indirectly
+solution-informed and weakens the intended internal-satisfaction-only claim.
+The implementation, config, and generated artifacts for this path were removed.
+
+Reference-solution fitting remains prohibited. A clean domain-matched variant
+may use the frozen base model's own ungraded GSM8K-training completions, drawn
+from prompts disjoint from the RL training subset. Save that rollout corpus for
+auditability. It must never read reference answers, verifier scores, correctness
+labels, validation examples, or test examples. Any candidate must pass grouped
+alignment screening before RL; correctness remains evaluation-only under the
+full-test and second-seed gate above.

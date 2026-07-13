@@ -1,0 +1,7 @@
+{
+  "base": "jlens_late_8.json",
+  "learning_rate": 2e-6,
+  "early_stopping_patience": 1,
+  "run_name": "gsm8k-jlens-solved-late-layer8-lr2e6",
+  "output_dir": "runs/jlens_solved_late_8_lr2e6"
+}

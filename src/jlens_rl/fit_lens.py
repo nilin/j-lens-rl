@@ -27,25 +27,56 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--layers", default="8,14,20")
     p.add_argument("--dim-batch", type=int, default=16)
     p.add_argument("--seed", type=int, default=42)
-    p.add_argument("--corpus", choices=("wikitext", "gsm8k"), default="wikitext")
+    p.add_argument(
+        "--corpus", choices=("wikitext", "gsm8k_rollouts"), default="wikitext",
+        help="Fit on generic text or ungraded base-model GSM8K completions.",
+    )
+    p.add_argument(
+        "--rollout-offset", type=int, default=1000,
+        help="Start after the shuffled RL training subset for disjoint rollout prompts.",
+    )
+    p.add_argument("--rollout-batch-size", type=int, default=8)
     return p.parse_args()
 
 
-def lens_corpus(name: str, tokenizer: AutoTokenizer, total: int) -> list[str]:
-    if name == "wikitext":
-        corpus = load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1", split="train")
-        return [x["text"] for x in corpus if len(x["text"].split()) >= 80][:total]
-    corpus = load_dataset("openai/gsm8k", "main", split="train")
-    texts = []
-    for row in corpus.select(range(total)):
-        texts.append(tokenizer.apply_chat_template(
-            [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": row["question"]},
-                {"role": "assistant", "content": row["answer"]},
-            ],
-            tokenize=False,
-        ))
+@torch.no_grad()
+def ungraded_gsm8k_rollouts(
+    model: AutoModelForCausalLM,
+    tokenizer: AutoTokenizer,
+    total: int,
+    seed: int,
+    offset: int,
+    batch_size: int,
+) -> list[str]:
+    """Sample response-only fitting text without ever reading answers or grades."""
+    dataset = load_dataset("openai/gsm8k", "main", split="train").shuffle(seed=seed)
+    rows = dataset.select(range(offset, offset + total))
+    tokenizer.padding_side = "left"
+    texts: list[str] = []
+    for start in range(0, total, batch_size):
+        questions = rows[start : min(start + batch_size, total)]["question"]
+        prompts = [
+            tokenizer.apply_chat_template(
+                [
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": question},
+                ],
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+            for question in questions
+        ]
+        encoded = tokenizer(
+            prompts, return_tensors="pt", padding=True, truncation=True,
+            max_length=384,
+        ).to(model.device)
+        prompt_width = encoded.input_ids.shape[1]
+        generated = model.generate(
+            **encoded, max_new_tokens=128, do_sample=True, temperature=1.0,
+            pad_token_id=tokenizer.pad_token_id,
+        )
+        for sequence in generated[:, prompt_width:]:
+            texts.append(tokenizer.decode(sequence, skip_special_tokens=True))
     return texts
 
 
@@ -55,6 +86,7 @@ def main() -> None:
     seed_everything(args.seed)
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     tokenizer = AutoTokenizer.from_pretrained(args.model)
+    tokenizer.pad_token = tokenizer.pad_token or tokenizer.eos_token
     model = AutoModelForCausalLM.from_pretrained(
         args.model, torch_dtype=model_dtype(), device_map="cuda"
     )
@@ -62,9 +94,23 @@ def main() -> None:
         model = PeftModel.from_pretrained(model, args.adapter).merge_and_unload()
     wrapped = jlens.from_hf(model, tokenizer, force_bos=False)
     layers = [int(x) for x in args.layers.split(",")]
-    prompts = lens_corpus(
-        args.corpus, tokenizer, args.num_prompts + args.calibration_prompts
-    )
+    total = args.num_prompts + args.calibration_prompts
+    if args.corpus == "wikitext":
+        corpus = load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1", split="train")
+        prompts = [x["text"] for x in corpus if len(x["text"].split()) >= 80][:total]
+    else:
+        prompts = ungraded_gsm8k_rollouts(
+            model, tokenizer, total, args.seed, args.rollout_offset,
+            args.rollout_batch_size,
+        )
+        corpus_path = Path(args.output + ".ungraded_rollouts.json")
+        corpus_path.write_text(json.dumps({
+            "source": "base_model_ungraded_gsm8k_train_rollouts",
+            "seed": args.seed,
+            "offset": args.rollout_offset,
+            "count": len(prompts),
+            "texts": prompts,
+        }, indent=2) + "\n")
     lens = jlens.fit(
         wrapped, prompts[: args.num_prompts], source_layers=layers,
         dim_batch=args.dim_batch, max_seq_len=128,
@@ -86,7 +132,8 @@ def main() -> None:
             raw.extend(target_log_probs(normalized, head, ids).cpu().tolist())
     stats = {"mean": float(np.mean(raw)), "std": float(np.std(raw)), "token_ids": ids,
              "target_words": target_words, "layers": layers, "model": args.model,
-             "adapter": args.adapter, "corpus": args.corpus}
+             "adapter": args.adapter, "corpus": args.corpus,
+             "rollout_offset": args.rollout_offset if args.corpus == "gsm8k_rollouts" else None}
     Path(args.calibration_output).write_text(json.dumps(stats, indent=2) + "\n")
     print(json.dumps(stats, indent=2))
 

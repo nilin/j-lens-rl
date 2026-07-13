@@ -1,0 +1,8 @@
+{
+  "base": "jlens_late_8_lr3e6.json",
+  "validation_steps": [10, 20, 25, 35, 50, 75, 100],
+  "early_stopping_start_step": 25,
+  "early_stopping_patience": 2,
+  "run_name": "gsm8k-jlens-solved-late-layer8-lr3e6-dense-eval",
+  "output_dir": "runs/jlens_solved_late_8_lr3e6_dense_eval"
+}

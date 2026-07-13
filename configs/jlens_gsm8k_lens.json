@@ -1,9 +1,0 @@
-{
-  "base": "jlens.json",
-  "lens_path": "artifacts/qwen25_05b_solved_lens_gsm8k.pt",
-  "calibration_path": "artifacts/qwen25_05b_solved_calibration_gsm8k.json",
-  "learning_rate": 3e-6,
-  "early_stopping_patience": 1,
-  "run_name": "gsm8k-jlens-solved-domain-lens",
-  "output_dir": "runs/jlens_solved_domain_lens"
-}

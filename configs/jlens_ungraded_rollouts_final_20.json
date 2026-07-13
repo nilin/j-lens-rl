@@ -1,0 +1,9 @@
+{
+  "base": "jlens_gsm8k_rollouts.json",
+  "score_layers": [20],
+  "score_start_fraction": 0.5,
+  "score_aggregation": "last",
+  "score_include_final": true,
+  "run_name": "gsm8k-jlens-solved-ungraded-rollouts-final-layer20",
+  "output_dir": "runs/jlens_solved_ungraded_rollouts_final_20"
+}
