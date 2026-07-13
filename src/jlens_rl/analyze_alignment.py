@@ -43,6 +43,45 @@ def summarize(scores: list[float], correct: list[float], groups: list[int]) -> d
     }
 
 
+def fit_group_composite(
+    candidate_scores: dict[str, list[float]], correct: list[float], groups: list[int], ridge: float = 1.0
+) -> dict[str, Any]:
+    names = list(candidate_scores)
+    features = np.column_stack([candidate_scores[name] for name in names])
+    labels = np.asarray(correct, dtype=float)
+    group_ids = np.asarray(groups)
+
+    centered_features = features.copy()
+    centered_labels = labels.copy()
+    for group in np.unique(group_ids):
+        idx = group_ids == group
+        centered_features[idx] -= centered_features[idx].mean(axis=0)
+        centered_labels[idx] -= centered_labels[idx].mean()
+
+    predictions = np.zeros(len(labels))
+    for fold in range(5):
+        test = group_ids % 5 == fold
+        train = ~test
+        scale = centered_features[train].std(axis=0)
+        scale[scale < 1e-6] = 1.0
+        x_train = centered_features[train] / scale
+        weights = np.linalg.solve(
+            x_train.T @ x_train + ridge * np.eye(x_train.shape[1]),
+            x_train.T @ centered_labels[train],
+        ) / scale
+        predictions[test] = centered_features[test] @ weights
+
+    scale = centered_features.std(axis=0)
+    scale[scale < 1e-6] = 1.0
+    x = centered_features / scale
+    weights = np.linalg.solve(x.T @ x + ridge * np.eye(x.shape[1]), x.T @ centered_labels) / scale
+    return {
+        "ridge": ridge,
+        "weights": {name: float(weight) for name, weight in zip(names, weights, strict=True)},
+        "cross_validated": summarize(predictions.tolist(), correct, groups),
+    }
+
+
 @torch.no_grad()
 def main() -> None:
     p = argparse.ArgumentParser()
@@ -121,6 +160,12 @@ def main() -> None:
         "overall_exact_match": float(np.mean(correct)),
         "candidates": {
             name: summarize(scores, correct, groups) for name, scores in candidate_scores.items()
+        },
+        "composite": fit_group_composite(candidate_scores, correct, groups),
+        "samples": {
+            "correct": correct,
+            "groups": groups,
+            "scores": candidate_scores,
         },
     }
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)

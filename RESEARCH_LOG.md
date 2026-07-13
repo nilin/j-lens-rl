@@ -94,9 +94,14 @@ The net gain is 3 answers (+0.23 percentage points). It is directionally
 positive but far too small to establish a reliable effect, so a second training
 seed is required.
 
+Seed-43 replication peaked at 33.0% on the 200-example monitor at step 25,
+but full-test evaluation scored 404/1,319 (30.629%), one answer below the frozen
+base. The seed-42 full-test gain therefore did **not** replicate and is treated
+as selection noise, not success.
+
 ## Next decision
 
-1. Replicate layer-8 late-half training with another seed.
-2. Run a matched correctness-reward control at learning rate `3e-6`.
-3. If the gain does not reproduce, use the alignment screen to design a stronger
-   within-prompt `solved` signal before spending more training compute.
+1. Fit and cross-validate a composite of layer/window `solved` measurements on
+   grouped training rollouts, centering within prompt to match GRPO.
+2. Train the composite only if it improves held-out within-prompt ranking.
+3. Run a matched correctness-reward control at the selected learning rate.
