@@ -16,7 +16,7 @@ from peft import LoraConfig
 from transformers import AutoTokenizer, TrainerCallback
 from trl import GRPOConfig, GRPOTrainer
 
-from .common import SYSTEM_PROMPT, extract_answer, load_config, seed_everything
+from .common import SYSTEM_PROMPT, append_jsonl, extract_answer, load_config, seed_everything
 from .eval import evaluate
 from .reward import TRLTargetJLReward, TargetJLReward
 
@@ -45,16 +45,20 @@ class DeterministicValidationCallback(TrainerCallback):
         self.cfg = cfg
         self.trainer: Any = None
 
-    def evaluate_and_log(self, model: Any) -> None:
+    def evaluate_and_log(self, model: Any, step: int) -> None:
         metrics = evaluate(
             model, self.tokenizer, self.rows, self.cfg, None,
             self.cfg.get("validation_batch_size", 16),
+        )
+        append_jsonl(
+            Path(self.cfg["output_dir"]) / "validation_history.jsonl",
+            {"step": step, **metrics},
         )
         self.trainer.log({f"validation/{key}": value for key, value in metrics.items()})
 
     def on_step_end(self, args, state, control, model=None, **kwargs):
         if state.global_step % self.cfg["eval_every"] == 0:
-            self.evaluate_and_log(model)
+            self.evaluate_and_log(model, state.global_step)
         return control
 
 
@@ -166,7 +170,7 @@ def main() -> None:
     )
     validation_callback.trainer = trainer
     trainer.add_callback(validation_callback)
-    validation_callback.evaluate_and_log(trainer.model)
+    validation_callback.evaluate_and_log(trainer.model, 0)
     trainer.train()
     trainer.save_model(output_dir / "final")
     tokenizer.save_pretrained(output_dir / "final")

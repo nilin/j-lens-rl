@@ -11,6 +11,9 @@ from .common import binomial_ci95
 
 def read_validation(path: str) -> list[dict]:
     """Read the fixed greedy validation measurements logged by our callback."""
+    validation_path = Path(path).with_name("validation_history.jsonl")
+    if validation_path.exists():
+        return [json.loads(line) for line in validation_path.read_text().splitlines()]
     return [
         row
         for row in json.loads(Path(path).read_text())
@@ -29,7 +32,7 @@ def main() -> None:
     for label, path in [("GSM8K reward", args.gsm8k), ("J-lens solved reward", args.jlens)]:
         rows = read_validation(path)
         steps = [r["step"] for r in rows]
-        exact = [r["validation/exact_match"] for r in rows]
+        exact = [r.get("exact_match", r.get("validation/exact_match")) for r in rows]
         intervals = [
             binomial_ci95(round(x * args.validation_examples), args.validation_examples)
             for x in exact

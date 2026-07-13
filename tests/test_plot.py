@@ -15,3 +15,13 @@ def test_read_validation_uses_fixed_greedy_metrics(tmp_path):
         )
     )
     assert [row["step"] for row in read_validation(str(path))] == [0, 25]
+
+
+def test_read_validation_prefers_durable_history(tmp_path):
+    path = tmp_path / "log_history.json"
+    path.write_text("[]")
+    (tmp_path / "validation_history.jsonl").write_text(
+        '{"step": 0, "exact_match": 0.3}\n'
+        '{"step": 25, "exact_match": 0.35}\n'
+    )
+    assert [row["step"] for row in read_validation(str(path))] == [0, 25]
