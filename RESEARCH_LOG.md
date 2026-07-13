@@ -123,3 +123,10 @@ Artifact: `artifacts/solved_alignment_windows_200.json` (ignored).
 Next: run a matched exact-match-reward control at learning rate `3e-6` to test
 whether this update regime can produce a detectable validation change before
 continuing the internal-reward search.
+
+The matched control was also flat: 32.5% at step 0 and 32.5% at step 25 (W&B
+[`37nto25a`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/37nto25a)).
+Thus a 25-update, `3e-6` run does not reliably move greedy exact match even
+under the oracle training reward. The next variation refits the Jacobian lens
+on chat-formatted GSM8K reasoning rather than generic WikiText, then screens
+alignment before training.
