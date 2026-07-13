@@ -1,0 +1,5 @@
+{
+  "base": "happy.json",
+  "reward_type": "gsm8k",
+  "output_dir": "runs/gsm8k_happy_pair_control"
+}

@@ -1,0 +1,8 @@
+{
+  "base": "common.json",
+  "reward_type": "jlens",
+  "lens_path": "artifacts/qwen25_05b_lens.pt",
+  "calibration_path": "artifacts/qwen25_05b_happy_calibration.json",
+  "target_words": ["happy"],
+  "output_dir": "runs/jlens_happy_reward"
+}

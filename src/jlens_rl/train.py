@@ -13,10 +13,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "trl"))
 
 from datasets import load_dataset
 from peft import LoraConfig
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, TrainerCallback
 from trl import GRPOConfig, GRPOTrainer
 
 from .common import SYSTEM_PROMPT, extract_answer, load_config, seed_everything
+from .eval import evaluate
 from .reward import TRLTargetJLReward, TargetJLReward
 
 
@@ -33,6 +34,28 @@ def prepare_example(example: dict[str, str]) -> dict[str, Any]:
         ],
         "answer": example["answer"],
     }
+
+
+class DeterministicValidationCallback(TrainerCallback):
+    """Log fixed, greedy GSM8K accuracy without feeding it into training."""
+
+    def __init__(self, tokenizer: Any, rows: Any, cfg: dict[str, Any]) -> None:
+        self.tokenizer = tokenizer
+        self.rows = rows
+        self.cfg = cfg
+        self.trainer: Any = None
+
+    def evaluate_and_log(self, model: Any) -> None:
+        metrics = evaluate(
+            model, self.tokenizer, self.rows, self.cfg, None,
+            self.cfg.get("validation_batch_size", 16),
+        )
+        self.trainer.log({f"validation/{key}": value for key, value in metrics.items()})
+
+    def on_step_end(self, args, state, control, model=None, **kwargs):
+        if state.global_step % self.cfg["eval_every"] == 0:
+            self.evaluate_and_log(model)
+        return control
 
 
 def parse_args() -> argparse.Namespace:
@@ -74,7 +97,8 @@ def main() -> None:
 
     raw = load_dataset("openai/gsm8k", "main")
     train_dataset = raw["train"].shuffle(seed=cfg["seed"]).select(range(cfg["train_examples"]))
-    eval_dataset = raw["test"].select(range(cfg["validation_examples"]))
+    raw_eval_dataset = raw["test"].select(range(cfg["validation_examples"]))
+    eval_dataset = raw_eval_dataset
     train_dataset = train_dataset.map(prepare_example, remove_columns=["question"])
     eval_dataset = eval_dataset.map(prepare_example, remove_columns=["question"])
 
@@ -84,7 +108,7 @@ def main() -> None:
         jreward = TRLTargetJLReward(
             TargetJLReward(
                 cfg["lens_path"], cfg["calibration_path"], tokenizer,
-                cfg["target_words"], cfg["score_stride"],
+                cfg["target_words"], cfg["score_stride"], cfg["mask_target_tokens"],
             )
         )
         reward_funcs.append(jreward)
@@ -107,12 +131,12 @@ def main() -> None:
         reward_weights=reward_weights,
         loss_type=cfg["loss_type"],
         scale_rewards=cfg["scale_rewards"],
-        eval_strategy="steps",
+        eval_strategy=cfg["eval_strategy"],
         eval_steps=cfg["eval_every"],
         per_device_eval_batch_size=cfg["num_generations"],
-        num_generations_eval=cfg["num_generations"],
+        num_generations_eval=cfg["num_generations_eval"],
         logging_steps=1,
-        save_steps=cfg["eval_every"],
+        save_steps=cfg["save_every"],
         save_total_limit=3,
         report_to=["wandb"] if cfg["wandb_mode"] != "disabled" else ["none"],
         bf16=True,
@@ -136,6 +160,12 @@ def main() -> None:
         processing_class=tokenizer,
         peft_config=peft_config,
     )
+    validation_callback = DeterministicValidationCallback(
+        tokenizer, raw_eval_dataset, cfg
+    )
+    validation_callback.trainer = trainer
+    trainer.add_callback(validation_callback)
+    validation_callback.evaluate_and_log(trainer.model)
     trainer.train()
     trainer.save_model(output_dir / "final")
     tokenizer.save_pretrained(output_dir / "final")

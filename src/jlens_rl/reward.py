@@ -37,10 +37,13 @@ class TargetJLReward:
         tokenizer: Any,
         target_words: Sequence[str],
         stride: int = 20,
+        mask_target_tokens: bool = False,
     ) -> None:
         self.lens = JacobianLens.load(lens_path)
+        self.target_words = list(target_words)
         self.token_ids = single_token_ids(tokenizer, target_words)
         self.stride = stride
+        self.mask_target_tokens = mask_target_tokens
         calibration = json.loads(Path(calibration_path).read_text())
         self.mean = float(calibration["mean"])
         self.std = max(float(calibration["std"]), 1e-6)
@@ -50,10 +53,14 @@ class TargetJLReward:
     def raw_scores(
         self, model: Any, hidden_states: Sequence[torch.Tensor], prompt_len: int,
         attention_mask: torch.Tensor, batch_index: int = 0,
+        input_ids: torch.Tensor | None = None,
     ) -> torch.Tensor:
         norm, lm_head = decoder_parts(model)
         end = int(attention_mask.sum().item())
         positions = list(range(prompt_len + self.stride - 1, end, self.stride))
+        if self.mask_target_tokens and input_ids is not None:
+            targets = set(self.token_ids)
+            positions = [p for p in positions if int(input_ids[p]) not in targets]
         if not positions and end > prompt_len:
             positions = [end - 1]
         if not positions:
@@ -76,9 +83,10 @@ class TargetJLReward:
     def __call__(
         self, model: Any, hidden_states: Sequence[torch.Tensor], prompt_len: int,
         attention_mask: torch.Tensor, batch_index: int = 0,
+        input_ids: torch.Tensor | None = None,
     ) -> float:
         raw = self.raw_scores(
-            model, hidden_states, prompt_len, attention_mask, batch_index
+            model, hidden_states, prompt_len, attention_mask, batch_index, input_ids
         ).mean()
         return float(((raw - self.mean) / self.std).clamp(-5, 5).item())
 
@@ -86,10 +94,10 @@ class TargetJLReward:
 class TRLTargetJLReward:
     """Callable adapter that computes J-rewards inside the vendored TRL trainer."""
 
-    __name__ = "jlens_solved_reward"
-
     def __init__(self, scorer: TargetJLReward) -> None:
         self.scorer = scorer
+        self.label = "_".join(scorer.target_words)
+        self.__name__ = f"jlens_{self.label}_reward"
 
     @torch.no_grad()
     def __call__(
@@ -120,10 +128,16 @@ class TRLTargetJLReward:
         )
         rewards = [
             self.scorer(
-                trainer_model, output.hidden_states, len(prompt), mask[index], index
+                trainer_model, output.hidden_states, len(prompt), mask[index], index,
+                ids[index],
             )
             for index, prompt in enumerate(prompt_ids)
         ]
         trainer_model.train(was_training)
-        log_metric("jlens/solved_mean", sum(rewards) / len(rewards))
+        literal_rate = sum(
+            any(token in self.scorer.token_ids for token in completion)
+            for completion in completion_ids
+        ) / len(completion_ids)
+        log_metric(f"jlens/{self.label}_mean", sum(rewards) / len(rewards))
+        log_metric(f"jlens/{self.label}_literal_rate", literal_rate)
         return rewards
