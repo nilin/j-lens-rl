@@ -1,0 +1,6 @@
+{
+  "base": "common.json",
+  "reward_type": "gsm8k",
+  "output_dir": "runs/gsm8k_reward"
+}
+

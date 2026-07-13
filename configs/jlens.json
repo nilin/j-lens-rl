@@ -1,0 +1,6 @@
+{
+  "base": "common.json",
+  "reward_type": "jlens",
+  "output_dir": "runs/jlens_solved_reward"
+}
+

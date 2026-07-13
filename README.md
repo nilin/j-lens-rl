@@ -1,0 +1,81 @@
+# J-lens RL on GSM8K
+
+This repository runs a paired reward ablation on `Qwen/Qwen2.5-0.5B-Instruct`.
+Both runs use the same group-relative policy-gradient loop, LoRA setup, seed,
+examples, rollouts, KL term, and evaluation. Only the reward callable differs:
+
+- `configs/gsm8k.json`: verifiable numeric exact-match reward.
+- `configs/jlens.json`: mean standardized J-lens score for `solved`, sampled every
+  20 response tokens.
+
+The J-lens implementation is pinned to Anthropic commit
+`581d398613e5602a5af361e1c34d3a92ea82ba8e`. The trainer is intentionally small
+and local rather than vendoring TRL: its group-relative reward normalization and
+answer reward follow TRL's GRPO interface, while direct ownership of the forward
+pass lets us inspect policy hidden states.
+
+## GPU setup
+
+Use Linux, Python 3.10+, a recent NVIDIA driver, and a CUDA GPU with roughly
+16 GB or more VRAM. The default 0.5B model is deliberately small.
+
+```bash
+./setup.sh
+source .venv/bin/activate
+pytest -q
+```
+
+If your driver requires a different PyTorch CUDA wheel, install that wheel first,
+then rerun `pip install -e '.[dev]'`. The package versions remain recorded in
+`pyproject.toml`.
+
+## 1. Fit and calibrate the lens (once)
+
+```bash
+fit-jlens \
+  --model Qwen/Qwen2.5-0.5B-Instruct \
+  --target-word solved \
+  --layers 8,14,20 \
+  --num-prompts 100 \
+  --output artifacts/qwen25_05b_solved_lens.pt \
+  --calibration-output artifacts/qwen25_05b_solved_calibration.json
+```
+
+Fitting is the expensive one-time stage. It checkpoints after every prompt and
+resumes automatically. Increase `--dim-batch` if the GPU has spare memory;
+decrease it after an OOM.
+
+## 2. Smoke test both rewards
+
+The overrides below perform one optimizer update. For a quick smoke test, also
+temporarily set `validation_examples` to a small value in `configs/common.json`.
+
+```bash
+train-jlens-rl --config configs/gsm8k.json --updates 1 --output-dir runs/smoke-gsm8k
+train-jlens-rl --config configs/jlens.json --updates 1 --output-dir runs/smoke-jlens
+```
+
+## 3. Run the matched experiment
+
+Run these from the same clean base model; neither consumes the other's checkpoint.
+
+```bash
+train-jlens-rl --config configs/gsm8k.json
+train-jlens-rl --config configs/jlens.json
+plot-jlens-rl --output runs/comparison.png
+```
+
+Each run writes its resolved configuration, JSONL metrics, periodic LoRA
+checkpoints, and final adapter. Validation always reports both GSM8K exact match
+and the `solved` J-score, regardless of which reward was optimized.
+
+## Standalone evaluation
+
+```bash
+eval-jlens-rl --config configs/jlens.json --adapter runs/jlens_solved_reward/final
+```
+
+The current version is deliberately the simplest experiment. It uses one target
+concept, overall periodic mean aggregation, and no literal-token masking. Those
+controls and alternative temporal/word aggregations should be added after this
+paired baseline runs end to end.

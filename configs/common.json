@@ -1,0 +1,23 @@
+{
+  "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+  "lens_path": "artifacts/qwen25_05b_solved_lens.pt",
+  "calibration_path": "artifacts/qwen25_05b_solved_calibration.json",
+  "target_words": ["solved"],
+  "seed": 42,
+  "train_examples": 1000,
+  "validation_examples": 200,
+  "updates": 500,
+  "num_generations": 4,
+  "max_prompt_tokens": 384,
+  "max_new_tokens": 256,
+  "temperature": 0.8,
+  "learning_rate": 1e-5,
+  "kl_beta": 0.02,
+  "gradient_accumulation_steps": 8,
+  "lora_rank": 8,
+  "lora_alpha": 16,
+  "score_stride": 20,
+  "eval_every": 25,
+  "output_dir": "runs/default"
+}
+
