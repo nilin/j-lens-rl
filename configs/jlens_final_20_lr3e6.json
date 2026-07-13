@@ -1,0 +1,7 @@
+{
+  "base": "jlens_final_20.json",
+  "learning_rate": 3e-6,
+  "early_stopping_patience": 1,
+  "run_name": "gsm8k-jlens-solved-final-layer20-lr3e6",
+  "output_dir": "runs/jlens_solved_final_20_lr3e6"
+}
