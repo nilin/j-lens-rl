@@ -7,16 +7,18 @@ from pathlib import Path
 import numpy as np
 import torch
 from datasets import load_dataset
+from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 import jlens
 from .common import model_dtype, seed_everything
-from .reward import single_token_ids
+from .reward import single_token_ids, target_log_probs
 
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
     p.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
+    p.add_argument("--adapter", help="Optional trained LoRA adapter to merge before refitting")
     p.add_argument("--output", default="artifacts/qwen25_05b_solved_lens.pt")
     p.add_argument("--calibration-output", default="artifacts/qwen25_05b_solved_calibration.json")
     p.add_argument("--target-word", action="append")
@@ -37,6 +39,8 @@ def main() -> None:
     model = AutoModelForCausalLM.from_pretrained(
         args.model, torch_dtype=model_dtype(), device_map="cuda"
     )
+    if args.adapter:
+        model = PeftModel.from_pretrained(model, args.adapter).merge_and_unload()
     wrapped = jlens.from_hf(model, tokenizer, force_bos=False)
     layers = [int(x) for x in args.layers.split(",")]
     corpus = load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1", split="train")
@@ -59,10 +63,11 @@ def main() -> None:
         pos = list(range(19, input_ids.shape[1], 20)) or [input_ids.shape[1] - 1]
         for layer in lens.source_layers:
             h = lens.transport(out.hidden_states[layer + 1][0, pos].float(), layer)
-            z = norm(h.to(norm.weight.dtype)) @ head.weight[ids].T
-            raw.extend(torch.logsumexp(z.float(), -1).cpu().tolist())
+            normalized = norm(h.to(norm.weight.dtype))
+            raw.extend(target_log_probs(normalized, head, ids).cpu().tolist())
     stats = {"mean": float(np.mean(raw)), "std": float(np.std(raw)), "token_ids": ids,
-             "target_words": target_words, "layers": layers, "model": args.model}
+             "target_words": target_words, "layers": layers, "model": args.model,
+             "adapter": args.adapter}
     Path(args.calibration_output).write_text(json.dumps(stats, indent=2) + "\n")
     print(json.dumps(stats, indent=2))
 

@@ -1,4 +1,4 @@
-from jlens_rl.common import extract_answer, gsm8k_reward
+from jlens_rl.common import binomial_ci95, extract_answer, gsm8k_reward
 from jlens_rl.train import gsm8k_reward_trl
 
 
@@ -11,3 +11,8 @@ def test_extract_answer_prefers_marker_and_normalizes():
 def test_trl_gsm8k_reward():
     completions = [[{"role": "assistant", "content": "work #### 12"}]]
     assert gsm8k_reward_trl(completions, ["solution #### 12"]) == [1.0]
+
+
+def test_binomial_interval_handles_boundaries():
+    assert binomial_ci95(0, 200)[1] > 0
+    assert binomial_ci95(200, 200)[0] < 1

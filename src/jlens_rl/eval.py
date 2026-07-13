@@ -11,7 +11,7 @@ from datasets import load_dataset
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from .common import format_prompt, gsm8k_reward, load_config, model_dtype
+from .common import binomial_ci95, format_prompt, gsm8k_reward, load_config, model_dtype
 from .reward import TargetJLReward
 
 
@@ -62,9 +62,11 @@ def evaluate(model: Any, tokenizer: Any, rows: Any, cfg: dict[str, Any],
                 )
     n = len(correct)
     p = float(np.mean(correct))
+    ci_low, ci_high = binomial_ci95(round(sum(correct)), n)
     result = {
         "exact_match": p,
-        "exact_match_ci95": 1.96 * float(np.sqrt(max(p * (1 - p), 1e-12) / n)),
+        "exact_match_ci95_low": ci_low,
+        "exact_match_ci95_high": ci_high,
         "mean_length": float(np.mean(lengths)),
         "literal_target_completion_rate": literal_targets / n,
     }
@@ -93,6 +95,7 @@ def main() -> None:
     reward = None if args.skip_jlens_metric else TargetJLReward(
         cfg["lens_path"], cfg["calibration_path"], tokenizer,
         cfg["target_words"], cfg["score_stride"], cfg["mask_target_tokens"],
+        cfg.get("vocab_chunk_size", 16384),
     )
     ds = load_dataset("openai/gsm8k", "main", split="test")
     rows = ds.select(range(min(cfg["validation_examples"], len(ds))))

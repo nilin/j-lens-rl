@@ -49,6 +49,18 @@ def gsm8k_reward(completion: str, reference: str) -> float:
     return float(extract_answer(completion) == extract_answer(reference))
 
 
+def binomial_ci95(successes: int, total: int) -> tuple[float, float]:
+    """Wilson 95% interval, which remains meaningful at 0% and 100%."""
+    if total <= 0:
+        raise ValueError("total must be positive")
+    z = 1.96
+    p = successes / total
+    denominator = 1 + z**2 / total
+    center = (p + z**2 / (2 * total)) / denominator
+    radius = z * np.sqrt(p * (1 - p) / total + z**2 / (4 * total**2)) / denominator
+    return float(max(0, center - radius)), float(min(1, center + radius))
+
+
 def format_prompt(tokenizer: Any, question: str) -> str:
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
@@ -69,4 +81,3 @@ def append_jsonl(path: Path, row: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a") as f:
         f.write(json.dumps(row) + "\n")
-

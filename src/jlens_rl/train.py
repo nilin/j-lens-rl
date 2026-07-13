@@ -109,6 +109,7 @@ def main() -> None:
             TargetJLReward(
                 cfg["lens_path"], cfg["calibration_path"], tokenizer,
                 cfg["target_words"], cfg["score_stride"], cfg["mask_target_tokens"],
+                cfg.get("vocab_chunk_size", 16384),
             )
         )
         reward_funcs.append(jreward)

@@ -27,8 +27,27 @@ def decoder_parts(model: Any) -> tuple[Any, Any]:
     return decoder.norm, base.lm_head
 
 
+def target_log_probs(
+    hidden: torch.Tensor, lm_head: Any, token_ids: Sequence[int], chunk_size: int = 16384
+) -> torch.Tensor:
+    """Log probability mass assigned to ``token_ids`` without materializing full-vocabulary logits."""
+    ids = torch.as_tensor(token_ids, device=lm_head.weight.device)
+    target_logits = hidden @ lm_head.weight.index_select(0, ids).T
+    target_logsumexp = torch.logsumexp(target_logits.float(), dim=-1)
+    denominator = None
+    for start in range(0, lm_head.weight.shape[0], chunk_size):
+        logits = hidden @ lm_head.weight[start : start + chunk_size].T
+        chunk_logsumexp = torch.logsumexp(logits.float(), dim=-1)
+        denominator = (
+            chunk_logsumexp
+            if denominator is None
+            else torch.logaddexp(denominator, chunk_logsumexp)
+        )
+    return target_logsumexp - denominator
+
+
 class TargetJLReward:
-    """Efficient selected-token J-lens readout; never projects full vocabulary."""
+    """J-lens target log-probability readout with chunked vocabulary normalization."""
 
     def __init__(
         self,
@@ -38,12 +57,14 @@ class TargetJLReward:
         target_words: Sequence[str],
         stride: int = 20,
         mask_target_tokens: bool = False,
+        vocab_chunk_size: int = 16384,
     ) -> None:
         self.lens = JacobianLens.load(lens_path)
         self.target_words = list(target_words)
         self.token_ids = single_token_ids(tokenizer, target_words)
         self.stride = stride
         self.mask_target_tokens = mask_target_tokens
+        self.vocab_chunk_size = vocab_chunk_size
         calibration = json.loads(Path(calibration_path).read_text())
         self.mean = float(calibration["mean"])
         self.std = max(float(calibration["std"]), 1e-6)
@@ -62,11 +83,16 @@ class TargetJLReward:
             targets = set(self.token_ids)
             positions = [p for p in positions if int(input_ids[p]) not in targets]
         if not positions and end > prompt_len:
-            positions = [end - 1]
+            fallback = list(range(prompt_len, end))
+            if self.mask_target_tokens and input_ids is not None:
+                targets = set(self.token_ids)
+                fallback = [p for p in fallback if int(input_ids[p]) not in targets]
+            positions = fallback[-1:]
         if not positions:
-            return torch.zeros(1, device=attention_mask.device)
+            # A completion containing no unmasked positions should receive a neutral score,
+            # not an accidental incentive to repeat the target token.
+            return torch.full((1,), self.mean, device=attention_mask.device)
         per_layer = []
-        token_ids = torch.tensor(self.token_ids, device=lm_head.weight.device)
         for layer in self.lens.source_layers:
             # HF hidden_states[0] is embeddings; block L output is [L + 1].
             h = hidden_states[layer + 1][batch_index, positions].float()
@@ -75,9 +101,11 @@ class TargetJLReward:
                 self._device_jacobians[key] = self.lens.jacobians[layer].to(h.device)
             transported = h @ self._device_jacobians[key].T
             normalized = norm(transported.to(norm.weight.dtype))
-            weights = lm_head.weight.index_select(0, token_ids)
-            logits = normalized @ weights.T
-            per_layer.append(torch.logsumexp(logits.float(), dim=-1))
+            per_layer.append(
+                target_log_probs(
+                    normalized, lm_head, self.token_ids, self.vocab_chunk_size
+                )
+            )
         return torch.stack(per_layer).flatten()
 
     def __call__(

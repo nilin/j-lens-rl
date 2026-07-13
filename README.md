@@ -1,17 +1,20 @@
 # J-lens RL on GSM8K
 
-This repository runs a paired reward ablation on `Qwen/Qwen2.5-0.5B-Instruct`.
+This repository tests whether an internal-state reward improves the outcome we
+care about: **held-out, verifiable GSM8K exact match** on
+`Qwen/Qwen2.5-0.5B-Instruct`.
 Both runs use the same group-relative policy-gradient loop, LoRA setup, seed,
 examples, eight rollouts per prompt, KL term, and evaluation. Only the reward callable differs:
 
 - `configs/gsm8k.json`: verifiable numeric exact-match reward.
-- `configs/jlens.json`: mean standardized J-lens score for `solved`, sampled every
-  20 response tokens.
+- `configs/jlens.json`: mean standardized J-lens log-probability mass for
+  `solved`, sampled every 20 response tokens. Literal target-token positions are
+  excluded to reduce the easiest reward-hacking path.
 
 The J-lens implementation is pinned to Anthropic commit
 `581d398613e5602a5af361e1c34d3a92ea82ba8e`. TRL v1.0.0 is vendored under
 `trl/` from upstream commit `f3e9ac1005980fded7192682599c70749785fa9b`. Its standard `GRPOTrainer` handles
-generation, optimization, checkpointing, evaluation, and W&B logging. Our narrow
+generation, optimization, checkpointing, and W&B logging. Our narrow
 patch exposes the policy and rollout token IDs to custom reward functions so the
 J-lens reward can inspect hidden states.
 
@@ -69,9 +72,11 @@ plot-jlens-rl --output runs/comparison.png
 
 Each run writes its resolved configuration, TRL trainer state/log history,
 periodic LoRA checkpoints, and final adapter. It also logs to the `j-lens-rl`
-W&B project by default. Both GSM8K exact match and the `solved` J-score are
-computed regardless of which one is optimized; reward weights are the sole
-experimental difference.
+W&B project by default. Both rollout rewards are computed in both runs; reward
+weights are the sole experimental difference. A separate fixed, greedy
+validation callback measures held-out GSM8K exact match at step zero and every
+25 updates. This validation score is never used as reward in the J-lens run and
+is the primary result plotted by `plot-jlens-rl`.
 
 ## Standalone evaluation
 
@@ -79,7 +84,18 @@ experimental difference.
 eval-jlens-rl --config configs/jlens.json --adapter runs/jlens_solved_reward/final
 ```
 
-The current version is deliberately the simplest experiment. It uses one target
-concept, overall periodic mean aggregation, and no literal-token masking. Those
-controls and alternative temporal/word aggregations should be added after this
-paired baseline runs end to end.
+To refit the lens on a trained policy—a diagnostic for stale-lens exploitation—run:
+
+```bash
+fit-jlens \
+  --model Qwen/Qwen2.5-0.5B-Instruct \
+  --adapter runs/jlens_solved_reward/final \
+  --target-word solved \
+  --layers 8,14,20 \
+  --output artifacts/qwen25_05b_solved_refit_lens.pt \
+  --calibration-output artifacts/qwen25_05b_solved_refit_calibration.json
+```
+
+Then point a copy of the evaluation config at those two refitted artifacts.
+This diagnostic does not change the primary success criterion: held-out exact
+match relative to the frozen base and correctness-reward control.
