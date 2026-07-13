@@ -130,3 +130,10 @@ Thus a 25-update, `3e-6` run does not reliably move greedy exact match even
 under the oracle training reward. The next variation refits the Jacobian lens
 on chat-formatted GSM8K reasoning rather than generic WikiText, then screens
 alignment before training.
+
+The 100-prompt GSM8K-domain fit completed. Calibration on 50 held-out reference
+reasoning transcripts: mean `-18.3153293482`, standard deviation
+`4.7388755305`, target token ID `27956`. The tracked
+`configs/jlens_gsm8k_lens.json` reproduces the next alignment/training setup;
+binary lens artifacts remain ignored and are reproducible via the handoff
+command.
