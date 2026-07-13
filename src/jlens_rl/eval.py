@@ -56,6 +56,7 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--config", required=True)
     p.add_argument("--adapter")
+    p.add_argument("--skip-jlens-metric", action="store_true")
     args = p.parse_args()
     cfg = load_config(args.config)
     tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
@@ -65,7 +66,7 @@ def main() -> None:
     )
     if args.adapter:
         model = PeftModel.from_pretrained(model, args.adapter)
-    reward = TargetJLReward(
+    reward = None if args.skip_jlens_metric else TargetJLReward(
         cfg["lens_path"], cfg["calibration_path"], tokenizer,
         cfg["target_words"], cfg["score_stride"],
     )
@@ -76,4 +77,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

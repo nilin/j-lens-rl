@@ -6,6 +6,7 @@ from typing import Any, Sequence
 
 import torch
 from jlens import JacobianLens
+from torch.nn.utils.rnn import pad_sequence
 
 
 def single_token_ids(tokenizer: Any, words: Sequence[str]) -> list[int]:
@@ -48,7 +49,7 @@ class TargetJLReward:
     @torch.no_grad()
     def raw_scores(
         self, model: Any, hidden_states: Sequence[torch.Tensor], prompt_len: int,
-        attention_mask: torch.Tensor,
+        attention_mask: torch.Tensor, batch_index: int = 0,
     ) -> torch.Tensor:
         norm, lm_head = decoder_parts(model)
         end = int(attention_mask.sum().item())
@@ -61,7 +62,7 @@ class TargetJLReward:
         token_ids = torch.tensor(self.token_ids, device=lm_head.weight.device)
         for layer in self.lens.source_layers:
             # HF hidden_states[0] is embeddings; block L output is [L + 1].
-            h = hidden_states[layer + 1][0, positions].float()
+            h = hidden_states[layer + 1][batch_index, positions].float()
             key = (layer, str(h.device))
             if key not in self._device_jacobians:
                 self._device_jacobians[key] = self.lens.jacobians[layer].to(h.device)
@@ -74,9 +75,11 @@ class TargetJLReward:
 
     def __call__(
         self, model: Any, hidden_states: Sequence[torch.Tensor], prompt_len: int,
-        attention_mask: torch.Tensor,
+        attention_mask: torch.Tensor, batch_index: int = 0,
     ) -> float:
-        raw = self.raw_scores(model, hidden_states, prompt_len, attention_mask).mean()
+        raw = self.raw_scores(
+            model, hidden_states, prompt_len, attention_mask, batch_index
+        ).mean()
         return float(((raw - self.mean) / self.std).clamp(-5, 5).item())
 
 
@@ -99,12 +102,28 @@ class TRLTargetJLReward:
     ) -> list[float]:
         was_training = trainer_model.training
         trainer_model.eval()
-        rewards = []
-        for prompt, completion in zip(prompt_ids, completion_ids, strict=True):
-            ids = torch.tensor([prompt + completion], device=trainer_model.device)
-            mask = torch.ones_like(ids)
-            output = trainer_model(ids, attention_mask=mask, output_hidden_states=True, use_cache=False)
-            rewards.append(self.scorer(trainer_model, output.hidden_states, len(prompt), mask[0]))
+        sequences = [
+            torch.tensor(prompt + completion, device=trainer_model.device)
+            for prompt, completion in zip(prompt_ids, completion_ids, strict=True)
+        ]
+        pad_token_id = trainer_model.config.pad_token_id
+        if pad_token_id is None:
+            pad_token_id = trainer_model.config.eos_token_id
+        ids = pad_sequence(sequences, batch_first=True, padding_value=pad_token_id)
+        mask = pad_sequence(
+            [torch.ones_like(sequence) for sequence in sequences],
+            batch_first=True,
+            padding_value=0,
+        )
+        output = trainer_model(
+            ids, attention_mask=mask, output_hidden_states=True, use_cache=False
+        )
+        rewards = [
+            self.scorer(
+                trainer_model, output.hidden_states, len(prompt), mask[index], index
+            )
+            for index, prompt in enumerate(prompt_ids)
+        ]
         trainer_model.train(was_training)
         log_metric("jlens/solved_mean", sum(rewards) / len(rewards))
         return rewards

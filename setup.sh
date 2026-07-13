@@ -5,8 +5,9 @@ cd "$(dirname "$0")"
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip==26.0.1
-python -m pip install -e './trl[peft]'
-python -m pip install -e '.[dev]'
+# Resolve both editable packages together so the outer project's exact pins
+# constrain TRL's broad dependency ranges in a single transaction.
+python -m pip install -e './trl[peft]' -e '.[dev]'
 
 python - <<'PY'
 from importlib.metadata import version

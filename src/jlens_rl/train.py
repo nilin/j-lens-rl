@@ -41,6 +41,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--updates", type=int)
     parser.add_argument("--output-dir")
     parser.add_argument("--wandb-mode", choices=["online", "offline", "disabled"])
+    parser.add_argument(
+        "--skip-jlens-metric",
+        action="store_true",
+        help="Do not load or compute J-lens scores (useful for short GSM8K-only smoke tests).",
+    )
     return parser.parse_args()
 
 
@@ -73,14 +78,19 @@ def main() -> None:
     train_dataset = train_dataset.map(prepare_example, remove_columns=["question"])
     eval_dataset = eval_dataset.map(prepare_example, remove_columns=["question"])
 
-    jreward = TRLTargetJLReward(
-        TargetJLReward(
-            cfg["lens_path"], cfg["calibration_path"], tokenizer,
-            cfg["target_words"], cfg["score_stride"],
+    reward_funcs = [gsm8k_reward_trl]
+    reward_weights = [1.0]
+    if not args.skip_jlens_metric:
+        jreward = TRLTargetJLReward(
+            TargetJLReward(
+                cfg["lens_path"], cfg["calibration_path"], tokenizer,
+                cfg["target_words"], cfg["score_stride"],
+            )
         )
-    )
-    reward_funcs = [gsm8k_reward_trl, jreward]
-    reward_weights = [1.0, 0.0] if cfg["reward_type"] == "gsm8k" else [0.0, 1.0]
+        reward_funcs.append(jreward)
+        reward_weights = [1.0, 0.0] if cfg["reward_type"] == "gsm8k" else [0.0, 1.0]
+    elif cfg["reward_type"] != "gsm8k":
+        raise ValueError("--skip-jlens-metric is only valid with the GSM8K reward")
 
     training_args = GRPOConfig(
         output_dir=str(output_dir),
@@ -95,6 +105,8 @@ def main() -> None:
         max_completion_length=cfg["max_new_tokens"],
         temperature=cfg["temperature"],
         reward_weights=reward_weights,
+        loss_type=cfg["loss_type"],
+        scale_rewards=cfg["scale_rewards"],
         eval_strategy="steps",
         eval_steps=cfg["eval_every"],
         per_device_eval_batch_size=cfg["num_generations"],

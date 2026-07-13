@@ -2,7 +2,7 @@
 
 This repository runs a paired reward ablation on `Qwen/Qwen2.5-0.5B-Instruct`.
 Both runs use the same group-relative policy-gradient loop, LoRA setup, seed,
-examples, rollouts, KL term, and evaluation. Only the reward callable differs:
+examples, eight rollouts per prompt, KL term, and evaluation. Only the reward callable differs:
 
 - `configs/gsm8k.json`: verifiable numeric exact-match reward.
 - `configs/jlens.json`: mean standardized J-lens score for `solved`, sampled every

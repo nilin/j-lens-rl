@@ -7,7 +7,7 @@ Can RL make `Qwen/Qwen2.5-0.5B-Instruct` represent **“good”** more strongly 
 1. **Verifiable baseline:** RL reward is exact equality between the extracted final number and GSM8K ground truth (`0/1`).
 2. **J-good:** RL reward uses only the policy’s internal J-lens score for “good.”
 
-Both start from the same untouched checkpoint and use the same initialization seed, examples in the same order, prompts, four sampled completions, decoding settings, LoRA targets/rank, optimizer and schedule, KL coefficient, batch/accumulation, token budget, update count, evaluation set, and stopping rules. Do not initialize J-good from the correctness-trained model. Evaluate the frozen base once at step zero as a reference, not as a third training condition.
+Both start from the same untouched checkpoint and use the same initialization seed, examples in the same order, prompts, eight sampled completions, decoding settings, LoRA targets/rank, optimizer and schedule, KL coefficient, batch/accumulation, token budget, update count, evaluation set, and stopping rules. Do not initialize J-good from the correctness-trained model. Evaluate the frozen base once at step zero as a reference, not as a third training condition.
 
 ## Minimal implementation
 
