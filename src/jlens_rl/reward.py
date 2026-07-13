@@ -62,6 +62,7 @@ class TargetJLReward:
         score_layers: Sequence[int] | None = None,
         score_aggregation: str = "mean",
         score_include_final: bool = False,
+        score_components: Sequence[dict[str, Any]] | None = None,
     ) -> None:
         self.lens = JacobianLens.load(lens_path)
         self.target_words = list(target_words)
@@ -76,6 +77,7 @@ class TargetJLReward:
             raise ValueError("score_aggregation must be mean, max, or last")
         self.score_aggregation = score_aggregation
         self.score_include_final = score_include_final
+        self.score_components = list(score_components) if score_components else []
         self.special_token_ids = set(tokenizer.all_special_ids)
         available_layers = list(self.lens.source_layers)
         self.score_layers = list(score_layers) if score_layers is not None else available_layers
@@ -142,16 +144,42 @@ class TargetJLReward:
         attention_mask: torch.Tensor, batch_index: int = 0,
         input_ids: torch.Tensor | None = None,
     ) -> float:
+        if self.score_components:
+            saved = (
+                self.score_layers, self.score_start_fraction,
+                self.score_aggregation, self.score_include_final,
+            )
+            combined = 0.0
+            try:
+                for component in self.score_components:
+                    self.score_layers = [int(component["layer"])]
+                    self.score_start_fraction = float(component.get("start_fraction", 0.0))
+                    self.score_aggregation = str(component.get("aggregation", "mean"))
+                    self.score_include_final = bool(component.get("include_final", False))
+                    raw_scores = self.raw_scores(
+                        model, hidden_states, prompt_len, attention_mask, batch_index, input_ids
+                    )
+                    score = self._aggregate(raw_scores)
+                    standardized = ((score - self.mean) / self.std).clamp(-5, 5)
+                    combined += float(component["weight"]) * float(standardized.item())
+            finally:
+                (
+                    self.score_layers, self.score_start_fraction,
+                    self.score_aggregation, self.score_include_final,
+                ) = saved
+            return combined
         raw_scores = self.raw_scores(
             model, hidden_states, prompt_len, attention_mask, batch_index, input_ids
         )
-        if self.score_aggregation == "mean":
-            raw = raw_scores.mean()
-        elif self.score_aggregation == "max":
-            raw = raw_scores.max()
-        else:
-            raw = raw_scores[:, -1].mean() if raw_scores.ndim == 2 else raw_scores[-1]
+        raw = self._aggregate(raw_scores)
         return float(((raw - self.mean) / self.std).clamp(-5, 5).item())
+
+    def _aggregate(self, raw_scores: torch.Tensor) -> torch.Tensor:
+        if self.score_aggregation == "mean":
+            return raw_scores.mean()
+        elif self.score_aggregation == "max":
+            return raw_scores.max()
+        return raw_scores[:, -1].mean() if raw_scores.ndim == 2 else raw_scores[-1]
 
 
 class TRLTargetJLReward:

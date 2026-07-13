@@ -1,0 +1,18 @@
+{
+  "base": "jlens.json",
+  "learning_rate": 3e-6,
+  "early_stopping_patience": 1,
+  "score_components": [
+    {"layer": 8, "start_fraction": 0.0, "aggregation": "mean", "weight": -0.0951711376},
+    {"layer": 8, "start_fraction": 0.5, "aggregation": "mean", "weight": 0.1017782551},
+    {"layer": 8, "start_fraction": 0.5, "aggregation": "last", "include_final": true, "weight": 0.0654113902},
+    {"layer": 14, "start_fraction": 0.0, "aggregation": "mean", "weight": 0.0811628999},
+    {"layer": 14, "start_fraction": 0.5, "aggregation": "mean", "weight": -0.0331238126},
+    {"layer": 14, "start_fraction": 0.5, "aggregation": "last", "include_final": true, "weight": -0.0768619787},
+    {"layer": 20, "start_fraction": 0.0, "aggregation": "mean", "weight": -0.0485018128},
+    {"layer": 20, "start_fraction": 0.5, "aggregation": "mean", "weight": 0.0131979538},
+    {"layer": 20, "start_fraction": 0.5, "aggregation": "last", "include_final": true, "weight": 0.0338459608}
+  ],
+  "run_name": "gsm8k-jlens-solved-composite",
+  "output_dir": "runs/jlens_solved_composite"
+}
