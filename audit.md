@@ -1793,3 +1793,39 @@ The next RL work must be a separately registered whole RTX-4090 attempt with
 fresh seeds, isolated state, a commit-pinned runtime, and preserved offline W&B
 directories; no V7 model/run artifact may be reused. This operational recovery
 does not turn V7 into a scientific result and does not itself unlock the final.
+
+### Fresh V8-local RL registration
+
+V8-local is a new whole attempt rather than a V7 continuation. It retains the
+frozen negative intrinsic `damn`/`fuck` recipe, layer-8 late-half mean score,
+weight `-1`, constant `3e-6` learning rate, KL `.02`, DAPO, 1,000 prompts, 20
+updates, and the `0/4/10/20` curve. It changes the backend to the one local RTX
+4090, tracking to preserved offline W&B, state to `.confirmatory/v8_local`, and
+all treatment/control seeds to 200--207. The control remains the mechanical
+sign flip to `+1`; no correctness reward is present.
+
+The registration explicitly labels the reused 400-row curve and profanity
+lineage as exposed development data. Its eight-treatment mean must still satisfy
+`M4 > M0`, `M10 >= M4`, and `M20 >= M10`, but that shape is a consistency gate,
+not a significance claim. Only the conditionally unopened 900-row final may
+later support the registered crossed seed/item bootstrap, matched
+difference-in-differences, and eight-seed sign test.
+
+The local runner requires the exact RTX 4090 UUID, driver, memory, torch/CUDA
+stack, no other compute PID, and a nonblocking process lock held for the whole
+attempt. It prepares a detached clean worktree at the pushed registration
+commit, pins imports to it, and writes an fsynced dispatch intent before each
+serial subprocess. Every run has a unique offline W&B directory. Completion
+requires W&B finish followed by a receipt that embeds and hashes all seven
+terminal evidence files plus the full syncable offline tree; a partial run
+closes the whole attempt.
+
+The launch predicate validates the pushed V7 pre-recovery closeout, post-recovery
+wrapper, lease-retirement receipt, and all 12 source-evidence files. Focused V8,
+V7-regression, offline-receipt, and parked-tournament tests passed 56 cases in
+the final parent sweep (the broader overlapping sweep passed 71). The exact
+hardware/runtime probe also passed with zero active compute processes. Training
+automation covers treatments, the one curve gate, conditional controls, and an
+unlock marker. Sealed-final evaluation and analysis are deliberately not yet
+implemented or audited, so the final must remain unopened even if training
+reaches the unlock marker.

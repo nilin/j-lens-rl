@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-prelaunch-amendment",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "launch_enabled": false,
+  "v7_terminal_closeout_path": null,
+  "v7_terminal_closeout_sha256": null,
+  "v7_claim_id": "1f2756de5df846d48a30f19a307b70fb",
+  "v7_app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+  "v7_terminal_stage": null,
+  "require_v7_app_stopped_at_launch": true,
+  "require_shared_gpu_lease_free_at_launch": true,
+  "note": "Copy to protocol_archive/emotional_tournament_v1_prelaunch_amendment.json only after V7 terminal closeout exists; fill exact identity, commit, push, then prepare a fresh local state."
+}

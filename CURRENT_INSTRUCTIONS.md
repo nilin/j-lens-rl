@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 15:20 UTC
+Last reconciled with the user: 2026-07-14 15:36 UTC
 
 ## Objective
 
@@ -66,8 +66,11 @@ from confirmatory claims.
   seeds and partial seed 186. Preserve all as honest negative/partial evidence.
   V7's registered eight-seed gate was never evaluated, controls never ran, and
   the sealed final stayed unopened. Never resume or pool V7. Its exact stranded
-  Modal lease was forensically retired and the Dict is empty. Commit/push the
-  retirement receipt and authoritative wrapper, then launch the separately
-  registered whole V8 attempt on the local RTX 4090 with fresh seeds and offline
-  W&B directories. Correlation attempt 4 remains closed with outcomes
-  uninspected; word search must not delay a ready RL run by an hour.
+  Modal lease was forensically retired, the Dict is empty, and the receipt and
+  authoritative wrapper are pushed. The separately registered whole V8 attempt
+  is now the ready work: run fresh seeds 200--207 on the local RTX 4090 with
+  offline W&B directories, evaluate its exposed development curve once, and
+  run matched controls only if that gate passes. Do not open the final until its
+  evaluation/analysis path is separately implemented and audited. Correlation
+  attempt 4 remains closed with outcomes uninspected; word search must not delay
+  ready RL by an hour.

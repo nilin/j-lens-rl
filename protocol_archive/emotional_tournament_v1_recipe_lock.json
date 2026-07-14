@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-recipe-lock",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "scientific_status": "development_only_on_exposed_curve",
+  "claim_prohibition": "Neither an arm curve nor the selected arm is confirmatory, significant, or final evidence.",
+  "arms_in_fixed_serial_order": [
+    {
+      "arm": "fuck",
+      "target_words": ["fuck"],
+      "weight": -1.0,
+      "calibration_sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+      "token_ids": [7820, 25090, 70474, 75021, 76374]
+    },
+    {
+      "arm": "yay",
+      "target_words": ["yay"],
+      "weight": 1.0,
+      "calibration_sha256": "1fa6a65a94c7b682adca7029847d38257958e442034269a1cbe5524cffc66da2",
+      "token_ids": [97559, 138496]
+    },
+    {
+      "arm": "worried",
+      "target_words": ["worried"],
+      "weight": -1.0,
+      "calibration_sha256": "69cb69a85e455668a4948c62d2bc80271cde247d70d9479ad3e8e61a6105b65c",
+      "token_ids": [17811]
+    }
+  ],
+  "shared_seed": 192,
+  "training": {
+    "updates": 15,
+    "learning_rate": 3e-6,
+    "lr_scheduler_type": "constant",
+    "warmup_steps": 0,
+    "kl_beta": 0.02,
+    "loss_type": "dapo",
+    "scale_rewards": "group",
+    "reward_type": "jlens",
+    "reward_functions": ["intrinsic_j_lens_target_word_reward"],
+    "train_examples": 1000,
+    "num_generations": 8,
+    "min_new_tokens": 64,
+    "max_new_tokens": 256,
+    "mask_target_tokens": true,
+    "score_stride": 5,
+    "score_components": [
+      {
+        "layer": 8,
+        "start_fraction": 0.5,
+        "end_fraction": 1.0,
+        "aggregation": "mean"
+      }
+    ]
+  },
+  "development_curve": {
+    "source": "already_exposed_failed_v4_training_split_curve",
+    "examples": 400,
+    "nodes": [0, 5, 10, 15],
+    "manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "shape_pass": "accuracy[5] > accuracy[0] and accuracy[10] >= accuracy[5] and accuracy[15] >= accuracy[10]"
+  },
+  "ranking": {
+    "direction": "descending",
+    "keys": [
+      "shape_pass_boolean",
+      "accuracy_step15_minus_step0",
+      "accuracy_step15",
+      "negative_fixed_arm_order_index"
+    ],
+    "always_complete_all_three_arms": true,
+    "interpretation": "Mechanically selects one development candidate even if no arm passes the requested shape; the summary must report whether the winner passed."
+  },
+  "hardware_and_tracking": {
+    "backend": "Modal",
+    "gpu_type": "L40S",
+    "max_simultaneous_gpus": 1,
+    "fixed_serial_order": ["fuck", "yay", "worried"],
+    "wandb_group": "dev-v8-emotional-single-u5-h15-seed192",
+    "wandb_mode": "online",
+    "wandb_resume": "never"
+  },
+  "forbidden_inputs_and_claims": [
+    "gsm8k_correctness_training_reward",
+    "sealed_final_indices_or_outputs",
+    "future_or_reserve_indices_or_outputs",
+    "unopened_word_correlation_payloads",
+    "confirmatory_significance_claim",
+    "final_evidence_claim"
+  ]
+}

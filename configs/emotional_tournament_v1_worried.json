@@ -1,0 +1,21 @@
+{
+  "base": "emotional_tournament_v1_common.json",
+  "target_words": ["worried"],
+  "calibration_path": ".confirmatory/v8/frozen_artifacts/worried_calibration.json",
+  "expected_calibration_sha256": "69cb69a85e455668a4948c62d2bc80271cde247d70d9479ad3e8e61a6105b65c",
+  "calibration_sha256": "69cb69a85e455668a4948c62d2bc80271cde247d70d9479ad3e8e61a6105b65c",
+  "score_stride": 5,
+  "score_components": [
+    {
+      "layer": 8,
+      "start_fraction": 0.5,
+      "end_fraction": 1.0,
+      "aggregation": "mean",
+      "weight": -1.0
+    }
+  ],
+  "run_name": "dev-v8-emotional-single-u5-h15-worried-seed192",
+  "wandb_run_id": "dev-v8-emotional-single-u5-h15-worried-seed192",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v8-emotional-single-u5-h15-worried-seed192",
+  "output_dir": ".confirmatory/v8/runs/worried_seed192"
+}

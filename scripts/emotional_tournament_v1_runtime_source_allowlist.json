@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-development-emotional-tournament-runtime-allowlist-v1",
+  "base_allowlist": "scripts/v7_runtime_source_allowlist.json",
+  "remove": [
+    "modal_confirmatory_v7.py",
+    "run_confirmatory_v7.sh",
+    "scripts/confirmatory_v7_protocol.py",
+    "scripts/modal_cache_assets_v7.py",
+    "scripts/modal_finalize_image_v7.py",
+    "scripts/modal_verify_v7_volume.py",
+    "src/jlens_rl/word_correlation.py"
+  ],
+  "add": [
+    "configs/emotional_tournament_v1_common.json",
+    "configs/emotional_tournament_v1_fuck.json",
+    "configs/emotional_tournament_v1_worried.json",
+    "configs/emotional_tournament_v1_yay.json",
+    "modal_emotional_tournament_v1.py",
+    "run_emotional_tournament_v1.sh",
+    "scripts/emotional_tournament_v1_protocol.py",
+    "scripts/emotional_tournament_v1_runtime_source_allowlist.json",
+    "scripts/modal_cache_assets_tournament_v1.py",
+    "scripts/modal_finalize_image_tournament_v1.py",
+    "scripts/modal_verify_tournament_v1_volume.py"
+  ]
+}

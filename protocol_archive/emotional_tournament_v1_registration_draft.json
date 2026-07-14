@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-registration-draft",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "status": "scientific_design_frozen_launch_disabled_pending_v7_terminal_amendment",
+  "recipe_lock_path": "protocol_archive/emotional_tournament_v1_recipe_lock.json",
+  "recipe_lock_sha256": "d10168e06f94a7dbf2baf9a5f75bd3cd448677f03088d3c4be004b74a21dd80d",
+  "scientific_design": {
+    "arms_in_fixed_serial_order": ["fuck", "yay", "worried"],
+    "weights": {"fuck": -1.0, "yay": 1.0, "worried": -1.0},
+    "shared_seed": 192,
+    "updates": 15,
+    "curve_nodes": [0, 5, 10, 15],
+    "development_only": true,
+    "no_significance_or_final_claim": true
+  },
+  "fixed_public_input_sha256": {
+    "lens": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "curve_indices": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "fuck_calibration": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+    "yay_calibration": "1fa6a65a94c7b682adca7029847d38257958e442034269a1cbe5524cffc66da2",
+    "worried_calibration": "69cb69a85e455668a4948c62d2bc80271cde247d70d9479ad3e8e61a6105b65c"
+  },
+  "source_provenance": {
+    "calibration_source_attempt_manifest_sha256": "8b4b4969eaf4c1ed83d2756a30bc73093b0739412f2cf4705d90c9b4adde4143",
+    "new_template_sha256": {
+      "common": "005cc4850c734fc854ea4bc445f4c76f6013d5761884690efcfbc305e26d23cb",
+      "fuck": "49eae0a32e27c41ed60eefebb756aec43ea09f638824601fb53de0adf883ae72",
+      "yay": "b667071033739a6f995b6fe196ca6060619e4e0a0fc5d2f85200f4e0a928b05a",
+      "worried": "e2ffd295bc27cfb3f894483d60d0a1b77689b46d099ed2eb4f6ed2662038816f"
+    },
+    "legacy_template_sha256": {
+      "common": "6fa88bdef0607a84c71a64df446a7f56302c38a04d0c811743769053fec6efc2",
+      "fuck": "81f6e988c3e449600fc61619b106e1f28e24906aecbef0ef9c9723f7e30ded88",
+      "yay": "c6bbc69b7f2b4fbcb4ed4225e1fa4c838eeb7a403f415eda8a9b03f9e65f6fdf",
+      "worried": "f4d7650c29d4e933bcc250b40350a051a512161e465ba024f22cfd873e70baa2"
+    },
+    "note": "The final prepared registration additionally binds the new template hashes, exact runtime source manifest, recipe lock, and prelaunch amendment."
+  },
+  "execution": {
+    "modal_app": "j-lens-rl-development-emotional-tournament-u5-h15-v1",
+    "fresh_volume": "j-lens-rl-development-emotional-tournament-u5-h15-20260714a",
+    "volume_version": 2,
+    "gpu_type": "L40S",
+    "max_parallel_gpu_workers": 1,
+    "global_gpu_lease_dict": "j-lens-rl-global-gpu-lease-v1",
+    "global_gpu_lease_key": "global-one-gpu",
+    "no_other_active_modal_app_at_launch": true
+  },
+  "launch_gate": {
+    "enabled": false,
+    "reason": "V7 is active. A later committed prelaunch amendment must pin its immutable terminal closeout and require its app stopped and the shared lease free."
+  }
+}
