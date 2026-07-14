@@ -42,7 +42,7 @@ def main() -> None:
     shutil.rmtree(REPO / "build", ignore_errors=True)
 
     result = subprocess.run(
-        ["git", "status", "--porcelain=v1"],
+        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
         cwd=REPO,
         check=True,
         text=True,
