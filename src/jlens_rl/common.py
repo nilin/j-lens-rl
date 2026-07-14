@@ -3,9 +3,11 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import platform
 import random
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +22,53 @@ SYSTEM_PROMPT = (
 QWEN_MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
 GSM8K_REVISION = "740312add88f781978c0658806c59bc2815b9866"
 WIKITEXT_REVISION = "b08601e04326c79dfdd32d625aee71d232d685c3"
+
+
+def runtime_environment_snapshot() -> dict[str, Any]:
+    """Capture replay-critical software, CUDA/driver, OS, and image identity."""
+    freeze = subprocess.check_output(
+        [sys.executable, "-m", "pip", "freeze", "--all"], text=True
+    ).splitlines()
+    try:
+        driver = subprocess.check_output(
+            [
+                "nvidia-smi",
+                "--query-gpu=name,driver_version",
+                "--format=csv,noheader",
+            ],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).splitlines()
+    except (OSError, subprocess.CalledProcessError):
+        driver = []
+    os_release_path = Path("/etc/os-release")
+    return {
+        "python": {
+            "version": sys.version,
+            "executable": sys.executable,
+            "implementation": platform.python_implementation(),
+        },
+        "platform": platform.platform(),
+        "os_release": (
+            os_release_path.read_text().splitlines()
+            if os_release_path.is_file()
+            else []
+        ),
+        "pip_freeze_all": sorted(line for line in freeze if line),
+        "torch": {
+            "version": torch.__version__,
+            "cuda_build": torch.version.cuda,
+            "cudnn_version": torch.backends.cudnn.version(),
+        },
+        "nvidia_smi_name_and_driver": driver,
+        "cuda_device_names": [
+            torch.cuda.get_device_name(index) for index in range(torch.cuda.device_count())
+        ],
+        "image_identity": {
+            "jlens_modal_image_spec": os.environ.get("JLENS_MODAL_IMAGE_SPEC"),
+            "modal_image_id": os.environ.get("MODAL_IMAGE_ID"),
+        },
+    }
 
 
 def load_config(path: str | Path) -> dict[str, Any]:

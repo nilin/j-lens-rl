@@ -1,0 +1,140 @@
+{
+  "acceptance": {
+    "curve_gate": "the first registered post-baseline eight-seed mean is strictly above the registered baseline mean, and each of the next two registered means is greater than or equal to its predecessor",
+    "difference_in_differences_crossed_95pct_ci_low": "> 0",
+    "difference_in_differences_mean": "> 0",
+    "literal_provenance_environment_and_collection_audits": "all pass",
+    "treatment_vs_base_crossed_95pct_ci_low": "> 0",
+    "treatment_vs_base_exact_two_sided_sign_p": 0.0078125,
+    "treatment_vs_base_mean": "> 0",
+    "treatment_vs_base_seed_effects": "8 positive, 0 negative, 0 ties"
+  },
+  "analysis": {
+    "bootstrap_method": "crossed seed-and-item percentile bootstrap",
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 0,
+    "confidence": 0.95,
+    "primary_estimand": "paired difference-in-differences: (joy-treatment minus base) minus (signflip-control minus base), matched by seed and sealed item",
+    "secondary_estimand": "paired joy-treatment minus base across seeds and items",
+    "seed_sign_test": "exact two-sided sign test across eight registered seeds"
+  },
+  "claim_protocol": "j-lens-rl-confirmatory-v5-emotional",
+  "concurrent_experiment_firewall": {
+    "word_correlation_attempt4": {
+      "amendment_path": "protocol_archive/word_correlation_v1_amendment4.json",
+      "amendment_sha256": "6b17b616d0d73cab7181f0dbb72c8c5343f48125b1856bf8f72398bb0a9644a7",
+      "launch_receipt_path": "protocol_archive/word_correlation_attempt4_launch_receipt.json",
+      "launch_receipt_sha256": "77c1e1adc8416d570bddc5e404774c19708bdcc69aacccffae5eadd2d13a9b57",
+      "selection_eligibility": "ineligible to change this V5 joy recipe; selection source is solely the archived emotional single-word joy seed-167 screen",
+      "status_at_v5_freeze": "launched before V5 freeze; no correlation outcome inspected or used"
+    }
+  },
+  "curve_gate": {
+    "criterion": "the first registered post-baseline eight-seed mean is strictly above the registered baseline mean, and each of the next two registered means is greater than or equal to its predecessor",
+    "steps": [
+      0,
+      2,
+      4,
+      6
+    ]
+  },
+  "execution": {
+    "backend_fallback_policy": "this registration permits one whole attempt on Modal L40S with online W&B only; never mix hardware or tracking modes within an attempt; an RTX4090/offline-W&B fallback requires a separate registration made either before any Modal outcome or after immutable closeout of a partial Modal attempt, plus fresh state/claim, preserved offline W&B directories, and the same frozen IDs and scientific inputs",
+    "global_modal_gpu_limit": 1,
+    "gpu_app_overlap_policy": "no other Modal GPU app may overlap this V5 attempt",
+    "gpu_type": "L40S",
+    "infrastructure_retry_policy": "a completed run may only retry publication of its immutable terminal W&B artifact; never overwrite or resume model optimization; any partial nonterminal run closes the whole attempt immutably and requires a fresh registered claim/volume",
+    "jlens_rl_runtime_tree_sha256": "5d2f94ad6113acc0016bae5f5fe9b947e054a9d515dd297139eade9b487cfcc1",
+    "max_parallel_gpu_workers": 1,
+    "modal_app": "j-lens-rl-confirmatory-v5-emotional",
+    "modal_cache_assets_sha256": "8770d9e0b1af264fd7fae52b2e2fcb2321a9d596275e0be9b3209e056f7c1b03",
+    "modal_finalize_image_sha256": "3c44567dd83e1e4f06f993a9ef1e7d3eb38f7a22ea8b56d0d75495741f61c00a",
+    "modal_runner_sha256": "b99cadbf89d116f21aade7b7500f61d6a1215704073e398d5b1b1cd28fb8990f",
+    "protocol_sha256": "2a01feb963d690051b08ae8a1ae73edfd128c06ea3b627304be2d550ae83a75a",
+    "pyproject_sha256": "8d61fd00ddd948627960d85f5ca2998c4ae4198104bc613afb5a324923aaa823",
+    "shell_launcher_sha256": "d2655cf715e209628705282e5f7b02b9f167e7ddb31e694ff6466c082c78f421",
+    "trl_build_metadata_sha256": "f2665076902b2b6c86a8161c57fa34ac839f7f57acf0dceadb3138006d91071c",
+    "trl_runtime_tree_sha256": "e5cf1ef7b3aaa34f55840c786c6642081f0a1beaea3dc3a68cbf9e74a4ca7b87",
+    "volume": "j-lens-rl-confirmatory-v5-emotional-20260714a"
+  },
+  "final_collection": {
+    "labels": [
+      "base",
+      "jlens_seed168",
+      "jlens_seed169",
+      "jlens_seed170",
+      "jlens_seed171",
+      "jlens_seed172",
+      "jlens_seed173",
+      "jlens_seed174",
+      "jlens_seed175",
+      "signflip_seed168",
+      "signflip_seed169",
+      "signflip_seed170",
+      "signflip_seed171",
+      "signflip_seed172",
+      "signflip_seed173",
+      "signflip_seed174",
+      "signflip_seed175"
+    ],
+    "one_immutable_collection": true,
+    "terminal_adapter_step": 6
+  },
+  "fixed_updates": 6,
+  "frozen_at_utc": "2026-07-14T08:26:20Z",
+  "matched_control": "negate every selected treatment score-component weight and change nothing else except condition identity",
+  "outcome_status_at_freeze": "not launched and no V5 outcome inspected",
+  "protocol": "j-lens-rl-confirmatory-v5-emotional-registration-v1",
+  "seeds": [
+    168,
+    169,
+    170,
+    171,
+    172,
+    173,
+    174,
+    175
+  ],
+  "selected_recipe_lock": {
+    "path": "protocol_archive/v5_emotional_selected_recipe.json",
+    "sha256": "006bd685f045a385889d1e418e76437140a404177f0d1148d308226390a2a547"
+  },
+  "split": {
+    "allocation_salt": "j-lens-rl-confirmatory-v5-alternative-screen-2026-07-14",
+    "curve": {
+      "manifest_sha256": "b01409c011012641be96c84bfc35cb0b352cea902e54304105efa272a3eac6b2",
+      "size": 400,
+      "sorted_set_sha256": "cc4f78e451e35be8ec7d17d3c4337db6a1aaed71357d749dfbef828063a5413f"
+    },
+    "future_reserve": {
+      "manifest_sha256": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+      "size": 64
+    },
+    "sealed_final": {
+      "manifest_sha256": "6298b8e3d15b11985cf9febcd243dafd409ef07f22091388fa0793b6ebfe4228",
+      "size": 1300,
+      "sorted_set_sha256": "60308ed7212072ab0f1b2dbbf2d818ccfdc8da65134885e4c8d731058b051801"
+    },
+    "source_parent": {
+      "manifest_sha256": "acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3",
+      "size": 1700,
+      "sorted_set_sha256": "80bec8d196a36c1d2f02fb6aa3c7c5ea727a86c0c981d3d0611b0900776d6f74"
+    },
+    "train_exclusions_manifest_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+  },
+  "supersedes": {
+    "emotional_only_decision_sha256": "50cc3cb32e0cf74feeaeae79c2faf7b91c6caeae34b6e4f1101819d51e15b238",
+    "v4_closeout_sha256": "aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35",
+    "v5_preregistration_sha256": "08dac96773ada5845815304bc256eebf6e7fb54b7a2b2cc95396851f690f0f99"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v5-emotional-joy-h6",
+    "project": "j-lens-rl",
+    "run_prefix": "confirm-v5-emotional-joy-h6",
+    "tags": [
+      "confirmatory-v5",
+      "emotional-j-lens"
+    ]
+  }
+}

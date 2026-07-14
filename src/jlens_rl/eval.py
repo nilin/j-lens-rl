@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
@@ -22,6 +23,7 @@ from .common import (
     require_clean_repository_provenance,
     repository_provenance,
     resolve_repository_root,
+    runtime_environment_snapshot,
     seed_everything,
 )
 from .paired_eval import (
@@ -284,6 +286,39 @@ def main() -> None:
         "require_clean_repository", False
     ):
         require_clean_repository_provenance(git_provenance)
+    environment_identity = None
+    environment_path: Path | None = None
+    environment_temporary: Path | None = None
+    requested_output_path: Path | None = None
+    working_output_path: Path | None = None
+    if args.output_jsonl is not None:
+        requested_output_path = Path(args.output_jsonl)
+        working_output_path = requested_output_path.with_suffix(
+            requested_output_path.suffix + ".pending"
+        )
+        environment_path = requested_output_path.with_suffix(".environment.json")
+        if requested_output_path.exists() and not args.overwrite:
+            raise FileExistsError(
+                f"refusing to overwrite evaluation output: {requested_output_path}"
+            )
+        if (
+            environment_path.exists()
+            and requested_output_path.exists()
+            and not args.overwrite
+        ):
+            raise FileExistsError(
+                f"refusing to overwrite evaluation environment: {environment_path}"
+            )
+        environment = runtime_environment_snapshot()
+        environment_path.parent.mkdir(parents=True, exist_ok=True)
+        environment_temporary = environment_path.with_suffix(".environment.json.tmp")
+        environment_temporary.write_text(
+            json.dumps(environment, indent=2, sort_keys=True) + "\n"
+        )
+        environment_identity = {
+            "path": str(environment_path.resolve()),
+            "sha256": file_sha256(environment_temporary),
+        }
     if experiment_cfg["model_name"] != cfg["model_name"]:
         raise ValueError("evaluation and experiment configs name different base models")
     if not experiment_cfg.get("target_words"):
@@ -390,6 +425,12 @@ def main() -> None:
     provenance = {
         "run_label": args.run_label or ("adapter" if args.adapter else "base"),
         "evaluation_seed": evaluation_seed,
+        "process_command": {
+            "python_executable": sys.executable,
+            "argv": list(sys.argv),
+            "cwd": str(Path.cwd().resolve()),
+        },
+        "environment_snapshot": environment_identity,
         "model": {
             "name": cfg["model_name"],
             "configured_revision": model_revision,
@@ -430,9 +471,18 @@ def main() -> None:
         source_indices=source_indices,
         dataset_provenance=dataset_provenance,
         provenance=provenance,
-        output_jsonl=args.output_jsonl,
-        overwrite=args.overwrite,
+        output_jsonl=working_output_path,
+        overwrite=True if working_output_path is not None else args.overwrite,
     )
+    if (
+        environment_temporary is not None
+        and environment_path is not None
+        and working_output_path is not None
+        and requested_output_path is not None
+    ):
+        environment_temporary.replace(environment_path)
+        working_output_path.replace(requested_output_path)
+        metrics["per_example_jsonl"] = str(requested_output_path.resolve())
     print(json.dumps(metrics, indent=2, sort_keys=True))
 
 

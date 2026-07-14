@@ -1,0 +1,141 @@
+{
+  "protocol": "j-lens-rl-adaptive-joy-selection-closeout-v1",
+  "created_at_utc": "2026-07-14T07:55:32Z",
+  "scientific_status": {
+    "confirmatory": false,
+    "evidence_role": "adaptive/exploratory source evidence for prospectively registered V5; not a V5 outcome",
+    "selection_was_outcome_informed": true,
+    "v5_outcomes_inspected_at_closeout": false
+  },
+  "selection": {
+    "target_words": [
+      "joy"
+    ],
+    "reward_sign": "positive",
+    "reward_weight": 1.0,
+    "score_components": [
+      {
+        "aggregation": "mean",
+        "end_fraction": 1.0,
+        "layer": 8,
+        "start_fraction": 0.5,
+        "weight": 1.0
+      }
+    ],
+    "score_stride": 5,
+    "learning_rate": 3e-06,
+    "lr_scheduler_type": "constant",
+    "selected_confirmation_horizon": 6,
+    "selected_curve_steps": [
+      0,
+      2,
+      4,
+      6
+    ],
+    "rationale": "Joy was the sole emotionally charged single-word arm that passed the exploratory gate step2 > step0, step4 >= step2, step6 >= step4. V5 shortens the replay to the selected early horizon; this adaptive choice is not itself confirmatory evidence."
+  },
+  "observed_exploratory_screen": {
+    "seed": 167,
+    "hardware": "NVIDIA L40S",
+    "steps": [
+      0,
+      2,
+      4,
+      6
+    ],
+    "exact_match": [
+      0.3825,
+      0.39,
+      0.39,
+      0.41
+    ],
+    "literal_target_completion_rate": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "requested_curve_pattern": true,
+    "interpretation": "The first post-training point is above baseline and the following two transitions have no downward step; the middle transition is flat, not a strict increase. Literal joy emission was absent at all four selected points."
+  },
+  "source_attempt": {
+    "modal_app_id": "ap-YkWhLmkYmv3jlX3MnfDrmX",
+    "modal_function_call_id": "fc-01KXFN5JWFWS216WBCVXSK2D0K",
+    "modal_volume": "j-lens-rl-emotional-single-word-screen-v1-20260714a",
+    "claim_id": "b7bdcb13747b4de18336edefb084bb63",
+    "git_commit": "27d598c4a800fbcc130bee8c559f94e4bee65730",
+    "source_tree_sha256": "234b1ac2b9bc150e7d7ead82a68a11d4e76db96509af750d92c3ce36935bb40b",
+    "attempt_status": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/single_word/attempt_status.json",
+      "sha256": "ffad3c2bd4936c862f091543ea24fa74d7774dddbc98f275510c5e324f126389"
+    }
+  },
+  "wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "run_id": "5m3mwx9h",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/5m3mwx9h",
+    "archived_identity_source": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/README.md",
+      "sha256": "351d919cefc6c0c5f433e2d9f29c5efc89792512ac72a1cdf49b7ae0138cc132"
+    }
+  },
+  "source_evidence": {
+    "resolved_config": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/single_word/runs/joy/resolved_config.json",
+      "sha256": "1f676febead8b43216f18ca0a6415ab36f3b67d9624c94d1524def000671f885"
+    },
+    "calibration": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/joy_calibration.json",
+      "sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021"
+    },
+    "run_manifest": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/single_word/runs/joy/run_manifest.json",
+      "sha256": "e30a6cf323f9875b69cd91debc10fe02b9817016f4141b3a40a22b7e99f55657"
+    },
+    "screen_result": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/single_word/runs/joy/screen_result.json",
+      "sha256": "cb41b80914dff5798ab30bdeb2840fc939486cdc3abf50092efd87b9508b379d"
+    },
+    "validation_history": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/single_word/runs/joy/validation_history.jsonl",
+      "sha256": "c49d90a6449bbe4f132337fef478f7a228a18aec83bfb07c8b0faa2281016cec"
+    },
+    "log_history": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/single_word/runs/joy/log_history.json",
+      "sha256": "4fb3ec710a5967252336b3c5e8e710e1d87edb9c8742c9f9d86d659aa40808fa"
+    },
+    "final_adapter": {
+      "identity_type": "recursive final-adapter inventory SHA-256 recorded in screen_result.json",
+      "recorded_in": "protocol_archive/emotional_screen_forensic_bundle/single_word/runs/joy/screen_result.json",
+      "sha256": "3b6847a0c5720df381edd023769b81e89390941b3cb244c60b88cdb5a8989e55"
+    }
+  },
+  "declared_v5_transform_scope": {
+    "updates": {
+      "from": 25,
+      "to": 6
+    },
+    "save_every": {
+      "from": 25,
+      "to": 6
+    },
+    "validation_steps": {
+      "from": [
+        2,
+        4,
+        6,
+        10,
+        15,
+        20,
+        25
+      ],
+      "to": [
+        2,
+        4,
+        6
+      ]
+    },
+    "path_and_run_identity": "Replace exploratory paths/seed/name with byte-identical frozen artifacts, V5 data manifests, registered seeds 168-175, and frozen W&B identities. The matched control negates only the score-component weight."
+  }
+}

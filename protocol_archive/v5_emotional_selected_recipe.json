@@ -1,0 +1,144 @@
+{
+  "artifact_sha256": {
+    "calibration": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+    "lens": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
+  },
+  "emotional_only": true,
+  "frozen_at_utc": "2026-07-14T08:00:42Z",
+  "protocol": "j-lens-rl-emotional-selected-recipe-lock-v1",
+  "resolved_training_config": {
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/joy_calibration.json",
+    "calibration_sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+    "dataset_revision": "740312add88f781978c0658806c59bc2815b9866",
+    "early_stopping_min_delta": 0.0,
+    "early_stopping_patience": null,
+    "eval_every": 2,
+    "eval_strategy": "no",
+    "gradient_accumulation_steps": 1,
+    "kl_beta": 0.02,
+    "learning_rate": 3e-06,
+    "lens_path": "artifacts/qwen25_05b_solved_lens.pt",
+    "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "lora_alpha": 16,
+    "lora_rank": 8,
+    "loss_type": "dapo",
+    "lr_scheduler_type": "constant",
+    "mask_target_tokens": true,
+    "max_new_tokens": 256,
+    "max_prompt_tokens": 384,
+    "min_new_tokens": 64,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "num_generations": 8,
+    "num_generations_eval": 1,
+    "output_dir": "/single_word_screen/runs/joy",
+    "require_clean_repository": true,
+    "reserved_train_indices_path": ".confirmatory/manifests/train_exclusions.json",
+    "reward_type": "jlens",
+    "run_name": "single-word-screen-joy-positive-seed167",
+    "save_every": 6,
+    "save_total_limit": 1,
+    "scale_rewards": "group",
+    "score_aggregation": "mean",
+    "score_components": [
+      {
+        "aggregation": "mean",
+        "end_fraction": 1.0,
+        "layer": 8,
+        "start_fraction": 0.5,
+        "weight": 1.0
+      }
+    ],
+    "score_include_final": false,
+    "score_layers": [
+      8,
+      14,
+      20
+    ],
+    "score_start_fraction": 0.0,
+    "score_stride": 5,
+    "seed": 167,
+    "target_words": [
+      "joy"
+    ],
+    "temperature": 1.0,
+    "train_examples": 1000,
+    "updates": 6,
+    "validation_batch_size": 64,
+    "validation_examples": 400,
+    "validation_indices_path": ".confirmatory/manifests/curve_indices.json",
+    "validation_observational_only": true,
+    "validation_source": "train",
+    "validation_steps": [
+      2,
+      4,
+      6
+    ],
+    "vocab_chunk_size": 16384,
+    "wandb_mode": "online",
+    "wandb_project": "j-lens-rl",
+    "warmup_ratio": 0.0,
+    "warmup_steps": 0
+  },
+  "selection_provenance": {
+    "declared_transformations": {
+      "calibration_path": {
+        "from": "/single_word_screen/artifacts/joy_calibration.json",
+        "to": "source_calibration.path"
+      },
+      "generated_run_identity": {
+        "artifact_paths": "replace with byte-identical V5 frozen artifacts",
+        "control": "negate only the registered treatment component weights",
+        "data_paths": "replace with frozen V5 curve/exclusion/final manifests",
+        "output_dir": "derive from registered V5 condition and seed",
+        "run_name_and_wandb": "derive from registered W&B prefix and condition",
+        "seed": "replace exploratory seed 167 with registered seeds 168..175"
+      },
+      "save_every": {
+        "from": 25,
+        "to": 6
+      },
+      "updates": {
+        "from": 25,
+        "to": 6
+      },
+      "validation_steps": {
+        "from": [
+          2,
+          4,
+          6,
+          10,
+          15,
+          20,
+          25
+        ],
+        "to": [
+          2,
+          4,
+          6
+        ]
+      }
+    },
+    "source_calibration": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/joy_calibration.json",
+      "sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021"
+    },
+    "source_closeout": {
+      "path": "protocol_archive/joy_v5_selection_closeout.json",
+      "sha256": "e75fe99db1e8a12d100bd968704e3eb3af339a901f75d6f4271f28e2fd492ba5"
+    },
+    "source_evidence_sha256": {
+      "calibration": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+      "final_adapter": "3b6847a0c5720df381edd023769b81e89390941b3cb244c60b88cdb5a8989e55",
+      "log_history": "4fb3ec710a5967252336b3c5e8e710e1d87edb9c8742c9f9d86d659aa40808fa",
+      "resolved_config": "1f676febead8b43216f18ca0a6415ab36f3b67d9624c94d1524def000671f885",
+      "run_manifest": "e30a6cf323f9875b69cd91debc10fe02b9817016f4141b3a40a22b7e99f55657",
+      "screen_result": "cb41b80914dff5798ab30bdeb2840fc939486cdc3abf50092efd87b9508b379d",
+      "validation_history": "c49d90a6449bbe4f132337fef478f7a228a18aec83bfb07c8b0faa2281016cec"
+    },
+    "source_resolved_config": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/single_word/runs/joy/resolved_config.json",
+      "sha256": "1f676febead8b43216f18ca0a6415ab36f3b67d9624c94d1524def000671f885"
+    }
+  }
+}

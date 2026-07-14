@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 07:50 UTC
+Last reconciled with the user: 2026-07-14 08:27 UTC
 
 ## Objective
 
@@ -58,8 +58,8 @@ from confirmatory claims.
   inspect sealed outcomes before their registered gate permits it.
 - Current state: the eight-word screen is complete and mechanically selected
   positive `joy` as its sole early-curve passer; this remains adaptive evidence.
-  Its offline closeout is sealed. Correlation attempts 1--3 failed before any
-  selection; run only amendment 4 on fresh Volume D, with the one-GPU exclusive
-  preflight. Then freeze positive `joy`, six updates, and `0/2/4/6` before
-  eight-seed confirmation, matched sign flips, and the gated one-shot final
-  evaluation.
+  Its offline closeout is sealed. Correlation attempt 4 is running serially on
+  fresh Volume D; do not inspect its locked word before validation finishes.
+  The positive-`joy`, six-update, `0/2/4/6`, eight-seed V5 registration is now
+  frozen independently of that correlation outcome. Commit/push and prepare it,
+  then launch its W&B runs only after the correlation app has fully stopped.

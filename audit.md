@@ -1199,3 +1199,74 @@ other active Modal app; calibration and both shard maps are fully serial.
 [`protocol_archive/word_correlation_v1_amendment4.json`](protocol_archive/word_correlation_v1_amendment4.json)
 has SHA-256
 `6b17b616d0d73cab7181f0dbb72c8c5343f48125b1856bf8f72398bb0a9644a7`.
+
+### Frozen joy-only V5 confirmation (not yet launched)
+
+The emotionally charged confirmation is now fully specified, but it has not
+been prepared or launched. The adaptive source record is
+[`protocol_archive/joy_v5_selection_closeout.json`](protocol_archive/joy_v5_selection_closeout.json)
+(SHA-256
+`e75fe99db1e8a12d100bd968704e3eb3af339a901f75d6f4271f28e2fd492ba5`).
+It binds the exact archived joy config, calibration, run manifest, screen
+result, raw validation/training histories, final-adapter inventory, and W&B run
+`5m3mwx9h`. It explicitly labels the selection outcome-informed exploratory
+evidence, not a V5 result. The source curve is
+`.3825 -> .3900 -> .3900 -> .4100` at steps `0/2/4/6`, with zero literal joy
+emission at all four nodes.
+
+The selected recipe lock is
+[`protocol_archive/v5_emotional_selected_recipe.json`](protocol_archive/v5_emotional_selected_recipe.json)
+(SHA-256
+`006bd685f045a385889d1e418e76437140a404177f0d1148d308226390a2a547`).
+Relative to the byte-pinned exploratory recipe it changes only the declared
+confirmation horizon (`updates` and `save_every` from 25 to 6), the scheduled
+validation nodes (to `2/4/6`), and the calibration path to the committed
+byte-identical archive. Generated run identities then mechanically replace the
+exploratory seed/path/name and negate only the component weight for controls.
+
+The final prospective registration is
+[`protocol_archive/v5_emotional_registration.json`](protocol_archive/v5_emotional_registration.json)
+(SHA-256
+`b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527`),
+frozen at `2026-07-14T08:26:20Z`. It fixes:
+
+- positive `joy` intrinsic reward only, layer 8 late-half mean, stride 5,
+  weight `+1`, constant learning rate `3e-6`, and exactly six updates;
+- treatment seeds 168--175 and eight mechanical sign-flipped controls;
+- the requested aggregate curve rule at `0/2/4/6`: step 2 strictly above
+  baseline, followed by two non-downward transitions;
+- one immutable 17-role evaluation collection on all 1,300 untouched V5 final
+  items, with the step-6 checkpoint required to equal the final adapter;
+- paired treatment-minus-base and matched difference-in-differences analysis,
+  crossed seed/item bootstrap with 10,000 samples, and the exact eight-seed
+  sign test;
+- online W&B identities under group `confirm-v5-emotional-joy-h6`, complete raw
+  histories, atomic terminal publication receipts, and a terminal evidence
+  artifact for every run;
+- one L40S globally, fully serial execution, and a hard preflight rejection if
+  any other Modal GPU app is active.
+
+Canonical confirmatory commands retain immutable output paths and
+`resume=never` W&B IDs. The bundled launch plan separately supplies a
+non-claim replay command for each arm: it requires a caller-chosen directory
+outside `.confirmatory/v5`, disables W&B, strips the original remote identity,
+and stamps the output `non_claim_reproduction`. Registered configs reject all
+ordinary update/output/tracking overrides, so replay output cannot be mistaken
+for original evidence.
+
+Failure handling is terminal and auditable. Partial optimization cannot resume;
+only publication of an already immutable terminal result may retry. Claim and
+launch markers are atomically published. If the orchestration receipt never
+arrives, an exclusive pre-dispatch absent-receipt closure is committed before
+failure finalization; a late receipt cannot mutate the resulting inventory.
+Complete, curve-failed, significance-failed, and infrastructure-failed attempts
+all receive truthful inventories and deterministic byte-verified ZIP exports.
+
+The registration also binds correlation amendment 4 and its launch receipt,
+and records that no correlation outcome was inspected or used. That running
+experiment is ineligible to change this already-selected joy recipe. V5 must
+remain unlaunched until the correlation app is stopped and the one-GPU
+exclusivity preflight passes. The final local checks were `27/27` focused V5
+tests and `108/108` repository tests, plus clean Python compilation, shell
+syntax, and whitespace checks. Preparation deliberately still rejects the
+new provenance files until they are committed together on a clean tree.
