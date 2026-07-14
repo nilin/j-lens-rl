@@ -1,0 +1,19 @@
+{
+  "base": "emotional_parallel_v3_common.json",
+  "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/joy_calibration.json",
+  "calibration_sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+  "expected_calibration_sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+  "target_words": ["joy"],
+  "score_stride": 5,
+  "score_components": [{"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": 1.0}],
+  "seed": 194,
+  "updates": 6,
+  "eval_every": 2,
+  "validation_steps": [2, 4, 6],
+  "save_every": 2,
+  "run_name": "dev-v12-five-joy-u2-h6-seed194",
+  "wandb_run_id": "dev-v12-five-joy-u2-h6-seed194",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v12-five-joy-u2-h6-seed194",
+  "wandb_tags": ["development-only", "emotional-j-lens", "joy", "five-idea-screen", "seed194"],
+  "output_dir": "/state/runs/joy_u2_h6_seed194"
+}

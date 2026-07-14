@@ -2152,3 +2152,65 @@ data identities, command, environment, and fixed W&B ID
 offline and will be synced through a CPU-only Modal transport without rerunning
 optimization. Operational identity is recorded in
 `protocol_archive/development_celebration_tail_u2_h6_seed193_launch_ledger.json`.
+
+### Emotional single-word tournament terminal closeout
+
+The final fixed arm, negative intrinsic `worried`, completed all 15 updates on
+the same serial L40S with exposed curve `.3825/.4100/.3800/.3700` at
+`0/5/10/15` and zero literal target completions. Its step-5 rise is real, but
+the two subsequent declines fail the registered monotone shape and leave step
+15 `.0125` below baseline. Its terminal result, exact config/runtime/data
+identities, raw histories, W&B artifact receipt, and dispatch intent/completion
+are preserved under
+`protocol_archive/emotional_tournament_v1_live_evidence/worried_seed192/` and
+bound by `protocol_archive/emotional_tournament_v1_worried_terminal_ledger.json`.
+
+All three fixed arms completed in registered serial order and none passed the
+shape criterion. The frozen development ranking is therefore `fuck`, `yay`,
+`worried`, selecting negative `fuck` only as an exploratory candidate. This is
+not significance evidence and cannot be pooled with a confirmatory attempt.
+The app stopped with zero tasks and containers, and the global GPU lease is
+empty. The Volume's compact 58-file export was downloaded and verified at
+SHA-256 `f50976b6f0c2dbbd3ea11d1a32f98c82d0a6438d6b480d412e138c8e6a88133a`
+(5,391,708 bytes); all 14 separately downloaded worried/operational records
+matched the export inventory and their nested terminal receipts. No
+sealed-final, future-reserve, or correlation payload was downloaded or
+inspected during archival. The authoritative reconstruction record is
+`protocol_archive/emotional_tournament_v1_terminal_closeout.json`, with the
+Volume evidence JSON preserved under
+`protocol_archive/emotional_tournament_v1_terminal_evidence/`.
+
+### Five-arm emotional development launch preparation
+
+The first two-arm parallel submission, app `ap-U9xrDAO7uegoiTqAOxouu5`,
+failed closed before training. Both workers imported runtime modules, creating
+`__pycache__` files; because the strict image omitted `.gitignore`, its
+synthetic Git worktree check rejected those files. The stopped fresh Volume
+contains only the immutable attempt claim, failure status, and launch receipt:
+there is no dispatch, run, log, evidence, W&B initialization, or curve
+outcome. Volume A is retired. Exact raw records and the complete root inventory
+are bound by
+`protocol_archive/emotional_parallel_v2_pretraining_attempt_a_closeout.json`.
+
+The replacement adds the pinned `.gitignore` and
+`PYTHONDONTWRITEBYTECODE=1`. After that no-outcome failure, the user raised the
+global Modal ceiling from two to five, so a new development registration fixes
+five distinct ideas rather than altering the two-arm registration: positive
+`joy`, positive celebration-family tail taper, positive `excited`, positive
+`wow`, and negative `fuck`. Seeds are 194--198; four arms use the fast
+`0/2/4/6` curve and celebration uses `0/4/10/20`. The registration SHA-256 is
+`6eeee93e2cca1d5c4167eda682bf710940ba30a2b971bf85e82f479b9329e4dc`.
+These runs use only J-lens word reward plus KL and are development evidence;
+they cannot establish significance on the exposed 400-example curve.
+
+Across every word setting run so far, including the retired non-emotional
+`solved` lineage, there is still no valid statistically significant positive
+result. The strongest exact requested-shape non-emotional observations are
+single-seed adaptive screens: `solved` tail taper at
+`.3825/.3850/.3900/.3950` on `0/2/4/6`, and the earlier screen-2 tail taper at
+`.3750/.3800/.3800/.3825`. Prospectively aggregated `solved` attempts instead
+failed their curve gates: V2 mean `.3750/.3825/.36875/.37708`, V3 mean
+`.4350/.42125/.422375/.4185`, and V4 early mean
+`.3825/.393125/.3915625/.389375`. The attractive one-seed curves therefore
+remain candidate-selection evidence; no matched-control sealed analysis
+unlocked after those gate failures.

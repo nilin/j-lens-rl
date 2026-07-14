@@ -1,0 +1,14 @@
+{
+  "app_id": "ap-U9xrDAO7uegoiTqAOxouu5",
+  "claim_id": "3effe5bf469c4fb48ab536fc77a57ee7",
+  "gpu_type": "L40S",
+  "max_parallel_gpus": 2,
+  "protocol": "j-lens-rl-development-emotional-parallel-v2",
+  "recorded_at_utc": "2026-07-14T20:29:15.702466+00:00",
+  "root_call_id": "fc-01KXH53GCSWZV46EE7EP650X33",
+  "schema_version": 1,
+  "wandb_run_ids": {
+    "celebration_tail_u4_h20_seed195": "dev-v11-parallel-celebration-tail-u4-h20-seed195",
+    "joy_u2_h6_seed194": "dev-v11-parallel-joy-u2-h6-seed194"
+  }
+}

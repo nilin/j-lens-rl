@@ -1,0 +1,16 @@
+{
+  "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+  "completed_arms": [
+    "fuck",
+    "yay",
+    "worried"
+  ],
+  "no_significance_or_final_claim": true,
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "schema_version": 1,
+  "scientific_status": "development_only",
+  "selected_candidate_shape_passed": false,
+  "selected_development_candidate": "fuck",
+  "stage": "complete",
+  "updated_at_utc": "2026-07-14T19:56:59.484479+00:00"
+}

@@ -1,0 +1,36 @@
+{
+  "app": "j-lens-rl-development-emotional-tournament-u5-h15-v1",
+  "arm_order": [
+    "fuck",
+    "yay",
+    "worried"
+  ],
+  "config_sha256": {
+    "fuck": "420d86fbd92b515c625f38dc623a46288d5b7a4ed51c5f2b6fe8bc376a239cfe",
+    "worried": "9194223cb0956fd85c5a18ebe4974f2711a5605aa315e911984b6bcf24f949e3",
+    "yay": "7d11307c7b8b8d110f9e3bcbd5f67eb47886e684b630f0407a3334bcbe5c01e5"
+  },
+  "curve_steps": [
+    0,
+    5,
+    10,
+    15
+  ],
+  "git_commit": "7a42decb65fc954cfa345fef9fcfd7cafceed40c",
+  "git_tree": "1f867c53691609ddec98370414292459419be472",
+  "infrastructure_amendment1_sha256": "485b19708124b264228960eca984158c1f17c76adeb493f5a7feae72760fe3e1",
+  "metric_schema_sha256": "50cad76ea844f981fe19b1f08d15f861558ca97544e84792ea23a8da6fefa21d",
+  "preclaim_attempt_a_closeout_sha256": "11386da4a37200c467a1c7e6b6bc93f04b09b28314ebf4ec73fa738620ac4eac",
+  "prelaunch_amendment_sha256": "e013d2a204d2ae3df3346c6e0a1500d7888dc0fff60a4a2899b71268a93a848f",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "recipe_lock_sha256": "d10168e06f94a7dbf2baf9a5f75bd3cd448677f03088d3c4be004b74a21dd80d",
+  "registration_sha256": "9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe",
+  "schema_version": 1,
+  "scientific_status": "development_only",
+  "seed": 192,
+  "source_manifest_sha256": "876d8155f1e4817939d5dc13b81233a5620758ce8fa257a3bfe6ee1acdcf92e0",
+  "source_snapshot_sha256": "e51ffb5e449d96492df2740efe76862f7997d046d5092f563d6529aa85777bf8",
+  "stage": "prepared_launch_enabled",
+  "volume": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+  "volume_version": 2
+}

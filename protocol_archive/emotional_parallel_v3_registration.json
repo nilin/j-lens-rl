@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-parallel-registration",
+  "protocol": "j-lens-rl-development-emotional-parallel-v3",
+  "scientific_status": "development_only_on_exposed_curve_no_significance_claim",
+  "registered_at_utc": "2026-07-14T20:34:00Z",
+  "objective": "Use the newly authorized five-Modal-GPU ceiling for five distinct emotionally charged J-lens reward ideas, maximizing development information per wall-clock hour rather than repeating seeds.",
+  "supersedes_pretraining_attempt": {
+    "closeout_path": "protocol_archive/emotional_parallel_v2_pretraining_attempt_a_closeout.json",
+    "closeout_sha256": "a9513baa074ff6803bf826b5a2d7dad7fff9ea63e79c5b5faca403210a5cdeec",
+    "reason": "Attempt A produced no dispatch, training, W&B run, or outcome; the user then raised the capacity ceiling from two to five."
+  },
+  "global_modal_gpu_limit": 5,
+  "hardware": {
+    "backend": "modal",
+    "gpu_type": "L40S",
+    "gpu_per_worker": 1,
+    "max_parallel_gpu_workers": 5,
+    "one_fixed_arm_per_worker": true
+  },
+  "shared": {
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "dataset": "openai/gsm8k:main",
+    "dataset_revision": "740312add88f781978c0658806c59bc2815b9866",
+    "reward_type": "jlens",
+    "correctness_reward_used_for_training": false,
+    "kl_beta": 0.02,
+    "learning_rate": 0.000003,
+    "lr_scheduler_type": "constant",
+    "validation_observational_only": true,
+    "validation_examples": 400,
+    "curve_manifest_path": ".confirmatory/manifests/curve_indices.json",
+    "curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions_path": ".confirmatory/manifests/train_exclusions.json",
+    "train_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "lens_path": "artifacts/qwen25_05b_solved_lens.pt",
+    "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
+  },
+  "arms": [
+    {
+      "label": "joy_u2_h6_seed194",
+      "idea": "positive joy, retesting the only single-word screen whose frozen early curve had the requested shape",
+      "target_words": ["joy"],
+      "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/joy_calibration.json",
+      "calibration_sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+      "seed": 194,
+      "updates": 6,
+      "curve_steps": [0, 2, 4, 6],
+      "shape_criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+      "score_stride": 5,
+      "score_components": [{"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": 1.0}],
+      "wandb_run_id": "dev-v12-five-joy-u2-h6-seed194"
+    },
+    {
+      "label": "celebration_tail_u4_h20_seed195",
+      "idea": "positive celebration-family tail taper at longer nodes that were monotone in the source screen",
+      "target_words": ["yay", "great", "success", "nice"],
+      "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+      "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+      "seed": 195,
+      "updates": 20,
+      "curve_steps": [0, 4, 10, 20],
+      "shape_criterion": "step4 > step0 and step10 >= step4 and step20 >= step10",
+      "score_stride": 10,
+      "score_components": [{"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0}, {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}],
+      "wandb_run_id": "dev-v12-five-celebration-tail-u4-h20-seed195"
+    },
+    {
+      "label": "excited_u2_h6_seed196",
+      "idea": "positive excited early-curve replication after its source screen showed the largest immediate emotional single-word jump",
+      "target_words": ["excited"],
+      "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/excited_calibration.json",
+      "calibration_sha256": "a09bcdbdf4c18c5680f2c73af35ec435b2659790f67f4fe2d415ba5d4720d2b0",
+      "seed": 196,
+      "updates": 6,
+      "curve_steps": [0, 2, 4, 6],
+      "shape_criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+      "score_stride": 5,
+      "score_components": [{"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": 1.0}],
+      "wandb_run_id": "dev-v12-five-excited-u2-h6-seed196"
+    },
+    {
+      "label": "wow_u2_h6_seed197",
+      "idea": "positive wow as a distinct high-arousal exclamation rather than another seed of joy",
+      "target_words": ["wow"],
+      "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/wow_calibration.json",
+      "calibration_sha256": "7dd8f37e51eb74dff050e86a74d2bdd807bb5d066657e1124ec3e98a967cd2b6",
+      "seed": 197,
+      "updates": 6,
+      "curve_steps": [0, 2, 4, 6],
+      "shape_criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+      "score_stride": 5,
+      "score_components": [{"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": 1.0}],
+      "wandb_run_id": "dev-v12-five-wow-u2-h6-seed197"
+    },
+    {
+      "label": "fuck_penalty_u2_h6_seed198",
+      "idea": "negative profanity reward retaining the useful ultradense lineage while testing the opposite emotional direction from celebration",
+      "target_words": ["fuck"],
+      "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/fuck_calibration.json",
+      "calibration_sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+      "seed": 198,
+      "updates": 6,
+      "curve_steps": [0, 2, 4, 6],
+      "shape_criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+      "score_stride": 5,
+      "score_components": [{"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": -1.0}],
+      "wandb_run_id": "dev-v12-five-fuck-penalty-u2-h6-seed198"
+    }
+  ],
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "dev-v12-emotional-five-ideas",
+    "resume": "never",
+    "online_required": true
+  },
+  "execution_policy": {
+    "launch_all_five_fixed_arms_without_outcome_conditioning": true,
+    "no_cross_arm_checkpoint_or_optimizer_reuse": true,
+    "no_cross_backend_or_cross_attempt_pooling": true,
+    "partial_worker_may_not_resume": true,
+    "fresh_volume_required": true,
+    "source_must_be_clean_pushed_main": true,
+    "terminal_evidence_and_wandb_receipt_required": true
+  },
+  "interpretation": {
+    "adaptive_development": true,
+    "cannot_support_significance": true,
+    "future_confirmation_requires_fresh_seeds_matched_signflips_and_untouched_evaluation": true
+  },
+  "protected_payload_policy": "Do not list, read, copy, mount, or evaluate any sealed final, reserve, or word-correlation payload."
+}

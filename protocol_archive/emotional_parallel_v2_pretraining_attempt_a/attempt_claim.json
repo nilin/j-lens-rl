@@ -1,0 +1,39 @@
+{
+  "arms": [
+    "joy_u2_h6_seed194",
+    "celebration_tail_u4_h20_seed195"
+  ],
+  "claim_id": "3effe5bf469c4fb48ab536fc77a57ee7",
+  "created_at_utc": "2026-07-14T20:29:12.393995+00:00",
+  "max_parallel_gpus": 2,
+  "preflight": {
+    "active_other_modal_apps": [],
+    "checked_at_utc": "2026-07-14T20:29:08.733747+00:00",
+    "max_parallel_gpus": 2,
+    "registered_file_sha256": {
+      ".confirmatory/manifests/curve_indices.json": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+      ".confirmatory/manifests/train_exclusions.json": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+      "artifacts/qwen25_05b_solved_lens.pt": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "configs/emotional_parallel_v2_celebration.json": "c9ca0215821bd80456ce1fff7183ab6abba99f4b626b6298fea9eec7fbe841f4",
+      "configs/emotional_parallel_v2_common.json": "d38e1bcc2a7b705deb2fc38ec1675107b3bf883ab8c9a8fded9ea1b1cbc009f8",
+      "configs/emotional_parallel_v2_joy.json": "d879fe622cd2326a2450bd7de96a2b85178e036a05016383951b476ddecbbd26",
+      "protocol_archive/emotional_parallel_v2_metric_schema.json": "579d2f02b21f181553eedc7c1e52fc9537770665df0ee21376a2e31f0d9ce6ff",
+      "protocol_archive/emotional_parallel_v2_registration.json": "aee43b3e97988d3dad7fd8d8794373993071e73c95afdc30165d8da63016185c",
+      "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+      "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/joy_calibration.json": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021"
+    },
+    "registration_sha256": "aee43b3e97988d3dad7fd8d8794373993071e73c95afdc30165d8da63016185c",
+    "source_main_commit": "8fd284015d5cfd916d22c554eef801e7d69a1ea8",
+    "source_tree_sha256": "cc7e827c1bc449e095b9eaba38a7d807f7bfc79a870066214a35e5c9d49429f3",
+    "volume_name": "j-lens-rl-development-emotional-parallel-v2-20260714a",
+    "volume_object_id": "vo-JxUE6eAsWTIspU7yjKa3kD",
+    "volume_version": 2
+  },
+  "protocol": "j-lens-rl-development-emotional-parallel-v2",
+  "registration_sha256": "aee43b3e97988d3dad7fd8d8794373993071e73c95afdc30165d8da63016185c",
+  "schema_version": 1,
+  "scientific_status": "development_only",
+  "source_main_commit": "8fd284015d5cfd916d22c554eef801e7d69a1ea8",
+  "source_tree_sha256": "cc7e827c1bc449e095b9eaba38a7d807f7bfc79a870066214a35e5c9d49429f3",
+  "volume_name": "j-lens-rl-development-emotional-parallel-v2-20260714a"
+}

@@ -1,0 +1,21 @@
+{
+  "app_id": "ap-XrW9TTTRzQZ2sV9kB8WjbS",
+  "arm_order": [
+    "fuck",
+    "yay",
+    "worried"
+  ],
+  "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+  "function_call_id": "fc-01KXH13DR4ZGR31JSAFC7JN0KF",
+  "gpu_type": "L40S",
+  "max_parallel_gpu_workers": 1,
+  "modal_app": "j-lens-rl-development-emotional-tournament-u5-h15-v1",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "receipt_status": "present",
+  "schema_version": 1,
+  "scientific_status": "development_only",
+  "submitted_at_utc": "2026-07-14T19:19:23.236127+00:00",
+  "volume": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+  "volume_object_id": "vo-SU6aUsebIrmYyZFGoCOo4e",
+  "wandb_group": "dev-v8-emotional-single-u5-h15-seed192"
+}

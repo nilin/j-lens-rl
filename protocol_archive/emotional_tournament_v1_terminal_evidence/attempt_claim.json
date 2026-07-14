@@ -1,0 +1,40 @@
+{
+  "arm_order": [
+    "fuck",
+    "yay",
+    "worried"
+  ],
+  "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+  "curve_steps": [
+    0,
+    5,
+    10,
+    15
+  ],
+  "git_commit": "7a42decb65fc954cfa345fef9fcfd7cafceed40c",
+  "global_modal_gpu_limit": 1,
+  "gpu_lease_dict": "j-lens-rl-global-gpu-lease-v1",
+  "gpu_lease_key": "global-one-gpu",
+  "operational_preflight": {
+    "active_other_modal_apps": [],
+    "checked_at_utc": "2026-07-14T19:19:07.727756+00:00",
+    "exclusive_gpu_confirmation": "confirmed-no-other-modal-gpu-app-running",
+    "global_modal_gpu_limit": 1,
+    "gpu_lease_dict": "j-lens-rl-global-gpu-lease-v1",
+    "gpu_lease_key": "global-one-gpu",
+    "gpu_lease_owner_at_preflight": null,
+    "v7_app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+    "v7_app_observed_active": false,
+    "volume_name": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+    "volume_object_id": "vo-SU6aUsebIrmYyZFGoCOo4e",
+    "volume_version": 2
+  },
+  "prelaunch_amendment_sha256": "e013d2a204d2ae3df3346c6e0a1500d7888dc0fff60a4a2899b71268a93a848f",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "recipe_lock_sha256": "d10168e06f94a7dbf2baf9a5f75bd3cd448677f03088d3c4be004b74a21dd80d",
+  "registration_sha256": "9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe",
+  "schema_version": 1,
+  "scientific_status": "development_only",
+  "seed": 192,
+  "volume_object_id": "vo-SU6aUsebIrmYyZFGoCOo4e"
+}

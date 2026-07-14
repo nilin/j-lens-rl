@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "observed_at_utc": "2026-07-14T20:39:58Z",
+  "modal_app": {
+    "app_id": "ap-XrW9TTTRzQZ2sV9kB8WjbS",
+    "description": "j-lens-rl-development-emotional-tournament-u5-h15-v1",
+    "state": "stopped",
+    "tasks": 0,
+    "created_at": "2026-07-14 19:06:18+00:00",
+    "stopped_at": "2026-07-14 19:58:58+00:00"
+  },
+  "containers": [],
+  "global_gpu_lease": {
+    "dict_name": "j-lens-rl-global-gpu-lease-v1",
+    "environment_name": "main",
+    "entries": []
+  },
+  "read_only_commands": [
+    "modal app list --json",
+    "modal container list --app-id ap-XrW9TTTRzQZ2sV9kB8WjbS --json",
+    "modal.Dict.from_name('j-lens-rl-global-gpu-lease-v1', environment_name='main').items()"
+  ]
+}

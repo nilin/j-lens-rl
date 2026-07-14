@@ -1,0 +1,19 @@
+{
+  "base": "emotional_parallel_v3_common.json",
+  "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/excited_calibration.json",
+  "calibration_sha256": "a09bcdbdf4c18c5680f2c73af35ec435b2659790f67f4fe2d415ba5d4720d2b0",
+  "expected_calibration_sha256": "a09bcdbdf4c18c5680f2c73af35ec435b2659790f67f4fe2d415ba5d4720d2b0",
+  "target_words": ["excited"],
+  "score_stride": 5,
+  "score_components": [{"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": 1.0}],
+  "seed": 196,
+  "updates": 6,
+  "eval_every": 2,
+  "validation_steps": [2, 4, 6],
+  "save_every": 2,
+  "run_name": "dev-v12-five-excited-u2-h6-seed196",
+  "wandb_run_id": "dev-v12-five-excited-u2-h6-seed196",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v12-five-excited-u2-h6-seed196",
+  "wandb_tags": ["development-only", "emotional-j-lens", "excited", "five-idea-screen", "seed196"],
+  "output_dir": "/state/runs/excited_u2_h6_seed196"
+}

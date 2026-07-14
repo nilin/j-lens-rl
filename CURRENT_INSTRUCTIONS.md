@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 20:00 UTC
+Last reconciled with the user: 2026-07-14 20:43 UTC
 
 ## Objective and evidence
 
@@ -27,7 +27,9 @@ separate from confirmatory claims.
 
 ## Execution and continuity
 
-- Run at most **2 Modal GPUs** at once. Never mix
+- Run at most **5 Modal GPUs** at once before 2026-07-14 23:00 UTC (4:00 PM
+  Pacific), then at most **10 Modal GPUs** at once. Prefer distinct registered
+  emotional reward ideas over duplicate seeds during development. Never mix
   L40S and RTX 4090 runs inside one inferential attempt.
 - Spend at least half of experiment/GPU time running RL. Word search must never
   hold ready registered RL for over one hour; launch RL and resume search later.
@@ -59,10 +61,10 @@ separate from confirmatory claims.
   no arm passed the full shape and the registered development ranking selected
   `-fuck`. Preserve and close out its evidence; never resume it or reuse retired
   Volume A. A separate development-only celebration-family tail-taper probe
-  (`yay/great/success/nice`, seed 193, nodes `0/2/4/6`) is now running on the
-  local RTX 4090 from pushed commit `bf85a74`; it completed
+  (`yay/great/success/nice`, seed 193, nodes `0/2/4/6`) ran on the local RTX
+  4090 from pushed commit `bf85a74`; it completed
   `.3975/.3975/.3950/.4075`, a terminal improvement that failed the strict
   shape. Preserve/sync it but never pool it with L40S results. The next RL lane
-  should use up to two parallel Modal machines on different registered emotional
-  ideas, not merely duplicate seeds. Correlation attempt 4 remains closed with
-  outcomes uninspected.
+  is a five-arm Modal development screen of distinct registered emotional
+  ideas (`joy`, celebration family, `excited`, `wow`, and negative `fuck`).
+  Correlation attempt 4 remains closed with outcomes uninspected.

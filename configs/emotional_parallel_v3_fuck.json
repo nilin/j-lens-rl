@@ -1,0 +1,19 @@
+{
+  "base": "emotional_parallel_v3_common.json",
+  "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/fuck_calibration.json",
+  "calibration_sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+  "expected_calibration_sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+  "target_words": ["fuck"],
+  "score_stride": 5,
+  "score_components": [{"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": -1.0}],
+  "seed": 198,
+  "updates": 6,
+  "eval_every": 2,
+  "validation_steps": [2, 4, 6],
+  "save_every": 2,
+  "run_name": "dev-v12-five-fuck-penalty-u2-h6-seed198",
+  "wandb_run_id": "dev-v12-five-fuck-penalty-u2-h6-seed198",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v12-five-fuck-penalty-u2-h6-seed198",
+  "wandb_tags": ["development-only", "emotional-j-lens", "profanity-penalty", "ultradense-lineage", "five-idea-screen", "seed198"],
+  "output_dir": "/state/runs/fuck_penalty_u2_h6_seed198"
+}

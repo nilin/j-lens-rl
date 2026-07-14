@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-arm-terminal-ledger",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "scientific_status": "development_only_on_exposed_curve_no_significance_claim",
+  "recorded_at_utc": "2026-07-14T20:36:54Z",
+  "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+  "arm": "worried",
+  "weight": -1.0,
+  "seed": 192,
+  "registration_sha256": "9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe",
+  "config_sha256": "9194223cb0956fd85c5a18ebe4974f2711a5605aa315e911984b6bcf24f949e3",
+  "completed_updates": 15,
+  "curve": {
+    "0": 0.3825,
+    "5": 0.41,
+    "10": 0.38,
+    "15": 0.37
+  },
+  "curve_counts_correct_of_400": {
+    "0": 153,
+    "5": 164,
+    "10": 152,
+    "15": 148
+  },
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "5": 0.0,
+    "10": 0.0,
+    "15": 0.0
+  },
+  "shape_pass": false,
+  "shape_failure": "step10_below_step5_and_step15_below_step10",
+  "step15_minus_step0": -0.0125,
+  "validation_source": "train",
+  "validation_indices_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+  "source_identity": {
+    "prepared_git_commit": "7a42decb65fc954cfa345fef9fcfd7cafceed40c",
+    "synthetic_runtime_git_commit": "7d4f84b7a41c409d76c6e1413f713bc846f38ce8",
+    "runtime_source_tree_sha256": "5560766b31caecbf111baa39f8b091fd0e9d058d3c7c9877d51ca2a9c5b9476a"
+  },
+  "modal": {
+    "app_id": "ap-XrW9TTTRzQZ2sV9kB8WjbS",
+    "volume_name": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+    "volume_object_id": "vo-SU6aUsebIrmYyZFGoCOo4e",
+    "gpu_type": "NVIDIA L40S",
+    "dispatch_nonce": "777bd08c5e614b89994f55a1ca8bf395",
+    "terminal_published_at_utc": "2026-07-14T19:56:36.487169+00:00"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "run_id": "dev-v8-emotional-single-u5-h15-worried-seed192",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v8-emotional-single-u5-h15-worried-seed192",
+    "terminal_artifact": "nilinabra-spare-time/j-lens-rl/dev-v8-emotional-single-u5-h15-worried-seed192-terminal-evidence:v0",
+    "terminal_artifact_digest": "3394575ba3d95f9dee8604a89dc6bdbd"
+  },
+  "archived_evidence_sha256": {
+    "data_indices.json": "fdef4314bd908b415e4c286b9ebbe760096ac4eccd339f70be24c9f769d5b0ff",
+    "environment_snapshot.json": "ce750352d16e929851335abe3ad72bc634fb72da6dc7532ba900146ba1c6b9ee",
+    "gpu_dispatch.complete.json": "3cf6ee6761316a0053bdeb3d08af71600f2b9f450412d6af327edf70a2fa4d09",
+    "gpu_dispatch.json": "1869bfd872f808c7fcabe659a96ae2ea95e308f10cc85db141feaa9b79719305",
+    "log_history.json": "0231cf50d24b3c4b4ae42f712ff1864bcfe08306213b23de91347877052eb1f9",
+    "resolved_config.json": "9194223cb0956fd85c5a18ebe4974f2711a5605aa315e911984b6bcf24f949e3",
+    "run_manifest.json": "484edaa3a36dcca2d5e0300b764b43710476b9ee41d17ee517230d37c856a39a",
+    "run_result_manifest.json": "9fa8b566e1f238db2da8f4958106d90b7e52ea7ade0094cfe94211e3c3e5cfbc",
+    "validation_history.jsonl": "26663c6dcb032e3074a84594830f186c431a62c4803cbda5a3cce349fc2b9247",
+    "wandb_terminal_publish_receipt.json": "b8a19d1fea34079d079cd9a0de1f4cb0c599a74949deee6dc20c1a1f9c4a5b6d"
+  },
+  "continuity": {
+    "dispatch_completion_written": true,
+    "old_gpu_lease_released": true,
+    "next_registered_arm": null,
+    "tournament_summary_completed": true,
+    "sealed_or_reserved_payload_accessed": false
+  }
+}

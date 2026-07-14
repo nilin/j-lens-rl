@@ -1,0 +1,10 @@
+{
+  "claim_id": "3effe5bf469c4fb48ab536fc77a57ee7",
+  "error": "runtime Git worktree is dirty: ?? __pycache__/modal_emotional_parallel_v2.cpython-311.pyc\n?? __pycache__/modal_emotional_tournament_v1.cpython-311.pyc\n?? scripts/__pycache__/emotional_tournament_v1_protocol.cpython-311.pyc\n?? scripts/__pycache__/modal_verify_tournament_v1_volume.cpython-311.pyc\n",
+  "error_type": "RuntimeError",
+  "protocol": "j-lens-rl-development-emotional-parallel-v2",
+  "retry_or_resume_permitted": false,
+  "schema_version": 1,
+  "stage": "failed_closed",
+  "updated_at_utc": "2026-07-14T20:29:23.008135+00:00"
+}

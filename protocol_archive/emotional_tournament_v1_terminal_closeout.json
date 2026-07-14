@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-terminal-closeout-v1",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "terminal_stage": "complete",
+  "scientific_status": "development_only_no_significance_or_final_claim",
+  "recorded_at_utc": "2026-07-14T20:36:54Z",
+  "terminal_completed_at_utc": "2026-07-14T19:56:59.484479+00:00",
+  "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+  "registration_sha256": "9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe",
+  "operational_identity": {
+    "prepared_git_commit": "7a42decb65fc954cfa345fef9fcfd7cafceed40c",
+    "synthetic_runtime_git_commit": "7d4f84b7a41c409d76c6e1413f713bc846f38ce8",
+    "runtime_source_tree_sha256": "5560766b31caecbf111baa39f8b091fd0e9d058d3c7c9877d51ca2a9c5b9476a",
+    "modal_app": "j-lens-rl-development-emotional-tournament-u5-h15-v1",
+    "modal_app_id": "ap-XrW9TTTRzQZ2sV9kB8WjbS",
+    "modal_function_call_id": "fc-01KXH13DR4ZGR31JSAFC7JN0KF",
+    "volume_name": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+    "volume_object_id": "vo-SU6aUsebIrmYyZFGoCOo4e",
+    "volume_version": 2,
+    "gpu_type": "NVIDIA L40S",
+    "max_parallel_gpu_workers": 1
+  },
+  "registered_development_decision": {
+    "fixed_serial_order": ["fuck", "yay", "worried"],
+    "shared_seed": 192,
+    "curve_steps": [0, 5, 10, 15],
+    "shape_criterion": "M5 > M0, M10 >= M5, and M15 >= M10 for each single fixed arm",
+    "ranking_keys": [
+      "shape_pass_boolean",
+      "accuracy_step15_minus_step0",
+      "accuracy_step15",
+      "negative_fixed_arm_order_index"
+    ],
+    "ranking": ["fuck", "yay", "worried"],
+    "selected_development_candidate": "fuck",
+    "selected_candidate_shape_passed": false
+  },
+  "arm_outcomes": {
+    "fuck": {
+      "weight": -1.0,
+      "curve": [0.3825, 0.38, 0.3925, 0.3975],
+      "step15_minus_step0": 0.015,
+      "shape_pass": false,
+      "literal_target_completion_rate_max": 0.0,
+      "terminal_ledger_path": "protocol_archive/emotional_tournament_v1_fuck_terminal_ledger.json",
+      "terminal_ledger_sha256": "40cc5a0ffea49e353f919789861b60152cf5a65ef4fbe9812ba2ba7d161da32d"
+    },
+    "yay": {
+      "weight": 1.0,
+      "curve": [0.3825, 0.3775, 0.405, 0.3875],
+      "step15_minus_step0": 0.005,
+      "shape_pass": false,
+      "literal_target_completion_rate_max": 0.0,
+      "terminal_ledger_path": "protocol_archive/emotional_tournament_v1_yay_terminal_ledger.json",
+      "terminal_ledger_sha256": "17d0aa2f55ae46f8f3a18ec7f729c3d380675a6a9e85fe5c33b34642f6035705"
+    },
+    "worried": {
+      "weight": -1.0,
+      "curve": [0.3825, 0.41, 0.38, 0.37],
+      "step15_minus_step0": -0.0125,
+      "shape_pass": false,
+      "literal_target_completion_rate_max": 0.0,
+      "terminal_ledger_path": "protocol_archive/emotional_tournament_v1_worried_terminal_ledger.json",
+      "terminal_ledger_sha256": "26819ef2c82de3caf98d1bb5860bad27fb8792080f8fe44e689e6cca694f717a"
+    }
+  },
+  "scientific_disposition": {
+    "all_three_registered_arms_completed": true,
+    "any_registered_shape_passed": false,
+    "interpretation": "All results are exploratory observations on the exposed 400-row curve. The ranking selects fuck only as the best fixed development candidate; it is not a significance result and does not establish an intrinsic-reward causal effect on untouched evaluation data.",
+    "confirmation_requirement": "Any confirmatory claim requires a fresh prospective registration, new seeds, matched sign-flip controls, and conditionally untouched final data.",
+    "may_resume_or_pool_as_confirmation": false
+  },
+  "terminal_export": {
+    "volume_relative_path": "exports/emotional_tournament_v1_evidence.zip",
+    "sha256": "f50976b6f0c2dbbd3ea11d1a32f98c82d0a6438d6b480d412e138c8e6a88133a",
+    "bytes": 5391708,
+    "compact_file_count": 58,
+    "evidence_inventory_sha256": "ae403e75c09be93334ae05e483d6d8587933d0cd2094a17fac27f96c099fc004",
+    "downloaded_blob_hash_and_central_directory_verified": true,
+    "downloaded_archive_committed_to_git": false,
+    "retrieval_command": "modal volume get j-lens-rl-development-emotional-tournament-u5-h15-20260714b /exports/emotional_tournament_v1_evidence.zip ./emotional_tournament_v1_evidence.zip"
+  },
+  "source_evidence": {
+    "attempt_claim": {
+      "path": "protocol_archive/emotional_tournament_v1_terminal_evidence/attempt_claim.json",
+      "sha256": "25d947e778df6dfe0ea403c7a2c65645a30f4df284f8d6be796dc89eb0d49f63"
+    },
+    "attempt_status": {
+      "path": "protocol_archive/emotional_tournament_v1_terminal_evidence/attempt_status.json",
+      "sha256": "b6136094f7ca6010a49c747383ccf13bb07a32b186ee7a8015290e7999920e0b"
+    },
+    "durable_export_receipt": {
+      "path": "protocol_archive/emotional_tournament_v1_terminal_evidence/durable_export_receipt.json",
+      "sha256": "fc8774102a2c33111707ccc6dc28e304ff847adbde762a49cc538243b6a63477"
+    },
+    "evidence_inventory": {
+      "path": "protocol_archive/emotional_tournament_v1_terminal_evidence/evidence_inventory.json",
+      "sha256": "ae403e75c09be93334ae05e483d6d8587933d0cd2094a17fac27f96c099fc004"
+    },
+    "git_closeout_candidate": {
+      "path": "protocol_archive/emotional_tournament_v1_terminal_evidence/git_closeout_candidate.json",
+      "sha256": "a16e971167fa6d6416446ca86536d51017ddc238139051dc57c766304fc67e36"
+    },
+    "launch_receipt": {
+      "path": "protocol_archive/emotional_tournament_v1_terminal_evidence/launch_receipt.json",
+      "sha256": "a440c55134bea261ffee9e34c1ce720a3bdb1b38660cb21c3b63038f972c92ab"
+    },
+    "operational_closeout_observation": {
+      "path": "protocol_archive/emotional_tournament_v1_terminal_evidence/operational_closeout_observation.json",
+      "sha256": "1d80ed705ac9bddf2cb2aed1bb2e4865f858249c7cb73c8e9106e602459db359"
+    },
+    "protocol_state": {
+      "path": "protocol_archive/emotional_tournament_v1_terminal_evidence/protocol_state.json",
+      "sha256": "c5616f3112cf3c8b24f89c388b1ca2846930565d70e8aab0662009efab56c345"
+    },
+    "tournament_summary": {
+      "path": "protocol_archive/emotional_tournament_v1_terminal_evidence/tournament_summary.json",
+      "sha256": "cef9f0bafaaebd2e31aafbdc1eb6d6de2177a5363b77a9e45aa5f2b6aea59eae"
+    }
+  },
+  "operational_closeout": {
+    "modal_app_state": "stopped",
+    "modal_app_tasks": 0,
+    "modal_app_stopped_at_utc": "2026-07-14 19:58:58+00:00",
+    "containers_after_stop": [],
+    "global_gpu_lease_entries_after_stop": [],
+    "observation_path": "protocol_archive/emotional_tournament_v1_terminal_evidence/operational_closeout_observation.json",
+    "observation_sha256": "1d80ed705ac9bddf2cb2aed1bb2e4865f858249c7cb73c8e9106e602459db359",
+    "sealed_final_or_future_reserve_or_correlation_payload_downloaded_or_inspected_during_archival": false
+  },
+  "reconstruction": {
+    "launch_ledger_path": "protocol_archive/emotional_tournament_v1_launch_ledger.json",
+    "launch_ledger_sha256": "80fe7a3942c8ba895110ac7cf095efd34bfd6bda7a8a6c23416056a8331c856b",
+    "per_arm_evidence_root": "protocol_archive/emotional_tournament_v1_live_evidence",
+    "terminal_evidence_root": "protocol_archive/emotional_tournament_v1_terminal_evidence",
+    "metric_meaning": "The archived resolved configs, run manifests, metric schema in the compact export, raw histories, W&B receipts, and evidence inventory reconstruct what each W&B series and terminal artifact means without rerunning training.",
+    "replay_policy": "Replay only as a fresh development attempt with a new claim, Volume, seeds, and W&B IDs. Never resume or reinterpret this exposed-curve tournament as inferential evidence."
+  }
+}

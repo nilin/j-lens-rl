@@ -1,0 +1,101 @@
+{
+  "all_three_arms_completed": true,
+  "arms": [
+    {
+      "arm": "fuck",
+      "config_sha256": "420d86fbd92b515c625f38dc623a46288d5b7a4ed51c5f2b6fe8bc376a239cfe",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.3925,
+        "15": 0.3975,
+        "5": 0.38
+      },
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "5": 0.0
+      },
+      "run_result_manifest_sha256": "878f0079dc68241d721d258cbd696ae3ea24f539e2197f622c52708c64c7452f",
+      "shape_pass": false,
+      "step15": 0.3975,
+      "step15_minus_step0": 0.015000000000000013,
+      "wandb_terminal_publish_receipt_sha256": "af6ea90dd03bf5142208642940c9025cc92a206fc9db77ef30b9f920d7367730",
+      "weight": -1.0
+    },
+    {
+      "arm": "yay",
+      "config_sha256": "7d11307c7b8b8d110f9e3bcbd5f67eb47886e684b630f0407a3334bcbe5c01e5",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.405,
+        "15": 0.3875,
+        "5": 0.3775
+      },
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "5": 0.0
+      },
+      "run_result_manifest_sha256": "327619f4f512d88671340a0c70eab1fdd80de63ee46c02d8ca268e6033d0e4a3",
+      "shape_pass": false,
+      "step15": 0.3875,
+      "step15_minus_step0": 0.0050000000000000044,
+      "wandb_terminal_publish_receipt_sha256": "3a922f08c96448dc570bc77bbe0263040fd06eca84c9206d42a123098215c4b5",
+      "weight": 1.0
+    },
+    {
+      "arm": "worried",
+      "config_sha256": "9194223cb0956fd85c5a18ebe4974f2711a5605aa315e911984b6bcf24f949e3",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.38,
+        "15": 0.37,
+        "5": 0.41
+      },
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "5": 0.0
+      },
+      "run_result_manifest_sha256": "9fa8b566e1f238db2da8f4958106d90b7e52ea7ade0094cfe94211e3c3e5cfbc",
+      "shape_pass": false,
+      "step15": 0.37,
+      "step15_minus_step0": -0.012500000000000011,
+      "wandb_terminal_publish_receipt_sha256": "b8a19d1fea34079d079cd9a0de1f4cb0c599a74949deee6dc20c1a1f9c4a5b6d",
+      "weight": -1.0
+    }
+  ],
+  "curve_steps": [
+    0,
+    5,
+    10,
+    15
+  ],
+  "fixed_serial_order": [
+    "fuck",
+    "yay",
+    "worried"
+  ],
+  "generated_at_utc": "2026-07-14T19:56:56.643196+00:00",
+  "interpretation": "Exploratory selection on an exposed curve; confirmation requires a fresh prospective registration, new seeds, matched sign flips, and untouched-data tests.",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "ranking": [
+    "fuck",
+    "yay",
+    "worried"
+  ],
+  "ranking_keys": [
+    "shape_pass_boolean",
+    "accuracy_step15_minus_step0",
+    "accuracy_step15",
+    "negative_fixed_arm_order_index"
+  ],
+  "schema_version": 1,
+  "scientific_status": "development_only_no_significance_or_final_claim",
+  "selected_candidate_shape_passed": false,
+  "selected_development_candidate": "fuck",
+  "shared_seed": 192
+}

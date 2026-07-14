@@ -1,0 +1,12 @@
+{
+  "compact_file_count": 58,
+  "evidence_inventory_sha256": "ae403e75c09be93334ae05e483d6d8587933d0cd2094a17fac27f96c099fc004",
+  "export_bytes": 5391708,
+  "export_relative_path": "exports/emotional_tournament_v1_evidence.zip",
+  "export_sha256": "f50976b6f0c2dbbd3ea11d1a32f98c82d0a6438d6b480d412e138c8e6a88133a",
+  "generated_at_utc": "2026-07-14T19:57:47.430983+00:00",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "retrieval_command": "modal volume get j-lens-rl-development-emotional-tournament-u5-h15-20260714b /exports/emotional_tournament_v1_evidence.zip ./emotional_tournament_v1_evidence.zip",
+  "schema_version": 1,
+  "scientific_status": "development_only"
+}

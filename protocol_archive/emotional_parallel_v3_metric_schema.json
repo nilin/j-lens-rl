@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-development-emotional-parallel-v3",
+  "reward": "Mean sole intrinsic J-lens target-word reward; GSM8K correctness is never a training reward and KL beta is 0.02.",
+  "jlens_label_mean": "Weighted, clipped standardized J-lens target-word log-probability mass for the registered arm components.",
+  "validation/exact_match": "Greedy numeric GSM8K exact-match on the fixed exposed 400-row training-split curve; observational only.",
+  "validation/exact_match_ci_low_high": "Wilson 95% binomial interval.",
+  "validation/literal_target_completion_rate": "Fraction of decoded validation completions containing any registered target as a case-insensitive whole word.",
+  "selection": "Development-only description of each fixed curve; no arm or later inference may be called statistically significant from this exposed screen."
+}

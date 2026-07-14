@@ -1,0 +1,719 @@
+{
+  "files": {
+    "attempt_claim.json": {
+      "bytes": 1442,
+      "sha256": "25d947e778df6dfe0ea403c7a2c65645a30f4df284f8d6be796dc89eb0d49f63"
+    },
+    "attempt_status.json": {
+      "bytes": 455,
+      "sha256": "b6136094f7ca6010a49c747383ccf13bb07a32b186ee7a8015290e7999920e0b"
+    },
+    "configs/fuck_seed192.json": {
+      "bytes": 25368,
+      "sha256": "420d86fbd92b515c625f38dc623a46288d5b7a4ed51c5f2b6fe8bc376a239cfe"
+    },
+    "configs/worried_seed192.json": {
+      "bytes": 25389,
+      "sha256": "9194223cb0956fd85c5a18ebe4974f2711a5605aa315e911984b6bcf24f949e3"
+    },
+    "configs/yay_seed192.json": {
+      "bytes": 25360,
+      "sha256": "7d11307c7b8b8d110f9e3bcbd5f67eb47886e684b630f0407a3334bcbe5c01e5"
+    },
+    "evidence/tournament_summary.json": {
+      "bytes": 2981,
+      "sha256": "cef9f0bafaaebd2e31aafbdc1eb6d6de2177a5363b77a9e45aa5f2b6aea59eae"
+    },
+    "frozen_artifacts/fuck_calibration.json": {
+      "bytes": 775,
+      "sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d"
+    },
+    "frozen_artifacts/lens.pt": {
+      "bytes": 4819304,
+      "sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
+    },
+    "frozen_artifacts/worried_calibration.json": {
+      "bytes": 735,
+      "sha256": "69cb69a85e455668a4948c62d2bc80271cde247d70d9479ad3e8e61a6105b65c"
+    },
+    "frozen_artifacts/yay_calibration.json": {
+      "bytes": 743,
+      "sha256": "1fa6a65a94c7b682adca7029847d38257958e442034269a1cbe5524cffc66da2"
+    },
+    "gpu_dispatches/training-fuck_seed192-96838170ca7547bca5182686123ef011.complete.json": {
+      "bytes": 610,
+      "sha256": "065fa33ce19b61313326e1cf11ed6afb5e9f8a94d8999bc12b72fc74832d59b5"
+    },
+    "gpu_dispatches/training-fuck_seed192-96838170ca7547bca5182686123ef011.json": {
+      "bytes": 1741,
+      "sha256": "9fadf98e5d8cf84711355545cba405ea5a04e1882a7d66569c8a6b7941714e88"
+    },
+    "gpu_dispatches/training-worried_seed192-777bd08c5e614b89994f55a1ca8bf395.complete.json": {
+      "bytes": 610,
+      "sha256": "3cf6ee6761316a0053bdeb3d08af71600f2b9f450412d6af327edf70a2fa4d09"
+    },
+    "gpu_dispatches/training-worried_seed192-777bd08c5e614b89994f55a1ca8bf395.json": {
+      "bytes": 1744,
+      "sha256": "1869bfd872f808c7fcabe659a96ae2ea95e308f10cc85db141feaa9b79719305"
+    },
+    "gpu_dispatches/training-yay_seed192-30e5f7a86cff4f4e93e8faa5eb167616.complete.json": {
+      "bytes": 610,
+      "sha256": "9c0f1d447a112c583a2043a66260d8a923163d3d78550f1c3fc04de33f1c262e"
+    },
+    "gpu_dispatches/training-yay_seed192-30e5f7a86cff4f4e93e8faa5eb167616.json": {
+      "bytes": 1740,
+      "sha256": "55f588636fbc7eb64e6b7fcc11775e92995426284adf6931ebfd337ed2dfa9c0"
+    },
+    "launch_receipt.json": {
+      "bytes": 737,
+      "sha256": "a440c55134bea261ffee9e34c1ce720a3bdb1b38660cb21c3b63038f972c92ab"
+    },
+    "manifests/curve_indices.json": {
+      "bytes": 4030,
+      "sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1"
+    },
+    "manifests/train_exclusions.json": {
+      "bytes": 37143,
+      "sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+    },
+    "protocol_state.json": {
+      "bytes": 1630,
+      "sha256": "c5616f3112cf3c8b24f89c388b1ca2846930565d70e8aab0662009efab56c345"
+    },
+    "reproducibility/infrastructure_amendment1.json": {
+      "bytes": 2488,
+      "sha256": "485b19708124b264228960eca984158c1f17c76adeb493f5a7feae72760fe3e1"
+    },
+    "reproducibility/launch_plan.json": {
+      "bytes": 907,
+      "sha256": "7bd009aaf72f273723e1bc07934e0b6f35f5ac549a38ef2ad20bf99649382dbe"
+    },
+    "reproducibility/metric_schema.json": {
+      "bytes": 877,
+      "sha256": "50cad76ea844f981fe19b1f08d15f861558ca97544e84792ea23a8da6fefa21d"
+    },
+    "reproducibility/preclaim_attempt_a_closeout.json": {
+      "bytes": 2954,
+      "sha256": "11386da4a37200c467a1c7e6b6bc93f04b09b28314ebf4ec73fa738620ac4eac"
+    },
+    "reproducibility/prelaunch_amendment.json": {
+      "bytes": 900,
+      "sha256": "e013d2a204d2ae3df3346c6e0a1500d7888dc0fff60a4a2899b71268a93a848f"
+    },
+    "reproducibility/recipe_lock.json": {
+      "bytes": 3102,
+      "sha256": "d10168e06f94a7dbf2baf9a5f75bd3cd448677f03088d3c4be004b74a21dd80d"
+    },
+    "reproducibility/registration.json": {
+      "bytes": 31393,
+      "sha256": "9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe"
+    },
+    "reproducibility/registration_draft.json": {
+      "bytes": 2985,
+      "sha256": "9084416bf3c347f574e33bd7ff61b1f24feb2d3598613887e50fc8d8186a01c4"
+    },
+    "reproducibility/source_manifest.json": {
+      "bytes": 34015,
+      "sha256": "876d8155f1e4817939d5dc13b81233a5620758ce8fa257a3bfe6ee1acdcf92e0"
+    },
+    "reproducibility/source_snapshot.zip": {
+      "bytes": 5195787,
+      "sha256": "e51ffb5e449d96492df2740efe76862f7997d046d5092f563d6529aa85777bf8"
+    },
+    "reproducibility/v7_terminal_closeout.json": {
+      "bytes": 4047,
+      "sha256": "cd83a08155871518baf177d5718acae1053ef4a98e171cbfc9351cd1b8db930c"
+    },
+    "runs/fuck_seed192/README.md": {
+      "bytes": 2183,
+      "sha256": "b44c8c7890667555eba115b0bd9f824c96f12ca312d59429e788fcfc36ffbf87"
+    },
+    "runs/fuck_seed192/checkpoint-10/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/fuck_seed192/checkpoint-10/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/fuck_seed192/checkpoint-10/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "501162cf976c1b4f67f9cfed1af4b6886e05597f72965b527d93462efd1f6d2d"
+    },
+    "runs/fuck_seed192/checkpoint-10/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/fuck_seed192/checkpoint-10/optimizer.pt": {
+      "bytes": 35479763,
+      "sha256": "dc5f77002574956fccd371e5765448d343195090ffead73c977f2db9f17e0335"
+    },
+    "runs/fuck_seed192/checkpoint-10/rng_state.pth": {
+      "bytes": 14709,
+      "sha256": "4d4907d26cbf7d0670a120008543ebfc29bf9ff76e4fbe2bd978387a95afba2c"
+    },
+    "runs/fuck_seed192/checkpoint-10/scheduler.pt": {
+      "bytes": 1465,
+      "sha256": "4c11f08fd3e495c81ffd25c0f60af91b6d968a5da33333d23a1a620fb1935621"
+    },
+    "runs/fuck_seed192/checkpoint-10/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/fuck_seed192/checkpoint-10/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/fuck_seed192/checkpoint-10/trainer_state.json": {
+      "bytes": 12017,
+      "sha256": "0e58adf74c2edfba1f3915ed9ba1ba51013ee26afaf0492c88de6115d7e8cf37"
+    },
+    "runs/fuck_seed192/checkpoint-10/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "af3d4e19821b67ccadca887433e3291f9e9a009e18b01214f7e42ad5af7ba104"
+    },
+    "runs/fuck_seed192/checkpoint-15/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/fuck_seed192/checkpoint-15/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/fuck_seed192/checkpoint-15/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "1caa7c81680e835189fbc22f8aacde033eb7852f38c0f59abeac2cf064af9abf"
+    },
+    "runs/fuck_seed192/checkpoint-15/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/fuck_seed192/checkpoint-15/optimizer.pt": {
+      "bytes": 35479763,
+      "sha256": "4dadfe74298e620db0f06e36a154f7478dd658257c8adb5641dc27e16872a86d"
+    },
+    "runs/fuck_seed192/checkpoint-15/rng_state.pth": {
+      "bytes": 14709,
+      "sha256": "4eaabc1239c1bb1cc105c3f75a638c2ddea5fd52fca3c9836e33448f7540289b"
+    },
+    "runs/fuck_seed192/checkpoint-15/scheduler.pt": {
+      "bytes": 1465,
+      "sha256": "53d6c4997acb4421c26ed7a685d18ea63a7c47d7a674a42945099a9bf9366582"
+    },
+    "runs/fuck_seed192/checkpoint-15/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/fuck_seed192/checkpoint-15/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/fuck_seed192/checkpoint-15/trainer_state.json": {
+      "bytes": 17641,
+      "sha256": "63beb0e1b02821ec76890a4e17c901bf6cf1b7a1320b56585f1b8aa85d62d18b"
+    },
+    "runs/fuck_seed192/checkpoint-15/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "af3d4e19821b67ccadca887433e3291f9e9a009e18b01214f7e42ad5af7ba104"
+    },
+    "runs/fuck_seed192/checkpoint-5/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/fuck_seed192/checkpoint-5/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/fuck_seed192/checkpoint-5/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "fa7b2d65f5913808a5b5d4dd66b9babc96d3c56c794d2271318c5ffdad2017c4"
+    },
+    "runs/fuck_seed192/checkpoint-5/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/fuck_seed192/checkpoint-5/optimizer.pt": {
+      "bytes": 35479763,
+      "sha256": "e24729c8999bded03f9ce1e68e82235dc139c698d393d5a20d3e1bbd39d71d0f"
+    },
+    "runs/fuck_seed192/checkpoint-5/rng_state.pth": {
+      "bytes": 14709,
+      "sha256": "6a398d8a13b3dd611675f876a59766ae4a44b7a22258e0dee42c7af1b292422a"
+    },
+    "runs/fuck_seed192/checkpoint-5/scheduler.pt": {
+      "bytes": 1465,
+      "sha256": "a10dd9096302b1a0097d5174756e6424ef0932f83d0b92be51fabf30f52080d3"
+    },
+    "runs/fuck_seed192/checkpoint-5/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/fuck_seed192/checkpoint-5/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/fuck_seed192/checkpoint-5/trainer_state.json": {
+      "bytes": 6401,
+      "sha256": "778e738ab81d778e5787581534d0ee86c59567449e13ed316375e6a691c16b58"
+    },
+    "runs/fuck_seed192/checkpoint-5/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "af3d4e19821b67ccadca887433e3291f9e9a009e18b01214f7e42ad5af7ba104"
+    },
+    "runs/fuck_seed192/data_indices.json": {
+      "bytes": 13918,
+      "sha256": "fdef4314bd908b415e4c286b9ebbe760096ac4eccd339f70be24c9f769d5b0ff"
+    },
+    "runs/fuck_seed192/environment_snapshot.json": {
+      "bytes": 3779,
+      "sha256": "ce750352d16e929851335abe3ad72bc634fb72da6dc7532ba900146ba1c6b9ee"
+    },
+    "runs/fuck_seed192/final/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/fuck_seed192/final/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/fuck_seed192/final/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "1caa7c81680e835189fbc22f8aacde033eb7852f38c0f59abeac2cf064af9abf"
+    },
+    "runs/fuck_seed192/final/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/fuck_seed192/final/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/fuck_seed192/final/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/fuck_seed192/final/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "af3d4e19821b67ccadca887433e3291f9e9a009e18b01214f7e42ad5af7ba104"
+    },
+    "runs/fuck_seed192/log_history.json": {
+      "bytes": 16194,
+      "sha256": "c833b7cc07dc3dfcb3399a11d84f4bc6cb97817a2027262d86c313822ccadbea"
+    },
+    "runs/fuck_seed192/resolved_config.json": {
+      "bytes": 25368,
+      "sha256": "420d86fbd92b515c625f38dc623a46288d5b7a4ed51c5f2b6fe8bc376a239cfe"
+    },
+    "runs/fuck_seed192/run_manifest.json": {
+      "bytes": 30697,
+      "sha256": "92ad06a761ebf94c89a8408ab1088b65d1f2fa463c4c39e11db4fd5f02486c72"
+    },
+    "runs/fuck_seed192/run_result_manifest.json": {
+      "bytes": 10556,
+      "sha256": "878f0079dc68241d721d258cbd696ae3ea24f539e2197f622c52708c64c7452f"
+    },
+    "runs/fuck_seed192/validation_history.jsonl": {
+      "bytes": 1262,
+      "sha256": "2f7e1f1359e65cd9eb03136e6fa170b128491ff62403dc2e392c41127cfe020a"
+    },
+    "runs/fuck_seed192/wandb_terminal_publish_receipt.json": {
+      "bytes": 2235,
+      "sha256": "af6ea90dd03bf5142208642940c9025cc92a206fc9db77ef30b9f920d7367730"
+    },
+    "runs/worried_seed192/README.md": {
+      "bytes": 2192,
+      "sha256": "699bd0b30bca2e361a9c36656d46f2eccd1958b179d24827d347fb69d5347ac6"
+    },
+    "runs/worried_seed192/checkpoint-10/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/worried_seed192/checkpoint-10/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/worried_seed192/checkpoint-10/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "e833a2008d91bafb839b9b510a73592b2ebddba4be5add0909cd6ca8bfe65c6e"
+    },
+    "runs/worried_seed192/checkpoint-10/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/worried_seed192/checkpoint-10/optimizer.pt": {
+      "bytes": 35479763,
+      "sha256": "7598d79dc125ff59069313bf2f33316d3d36b1895a991a9324150de5061f32a2"
+    },
+    "runs/worried_seed192/checkpoint-10/rng_state.pth": {
+      "bytes": 14709,
+      "sha256": "54b1360705e750f489b7ecab916105a2b911f6da392f88701f36caa31be63c9c"
+    },
+    "runs/worried_seed192/checkpoint-10/scheduler.pt": {
+      "bytes": 1465,
+      "sha256": "4c11f08fd3e495c81ffd25c0f60af91b6d968a5da33333d23a1a620fb1935621"
+    },
+    "runs/worried_seed192/checkpoint-10/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/worried_seed192/checkpoint-10/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/worried_seed192/checkpoint-10/trainer_state.json": {
+      "bytes": 12179,
+      "sha256": "0cb8c23c296a1e7110f01de659f53a2f9374cef213b071bd95225ada0141d533"
+    },
+    "runs/worried_seed192/checkpoint-10/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "6fe8283fd53aa59e056cee980c902be7c059ecfda7a23d0b8fa7e7afefcda3cd"
+    },
+    "runs/worried_seed192/checkpoint-15/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/worried_seed192/checkpoint-15/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/worried_seed192/checkpoint-15/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "6620fa23e690f7921272f7568003ee919425392fbfa46cb32fbab93277ed92d9"
+    },
+    "runs/worried_seed192/checkpoint-15/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/worried_seed192/checkpoint-15/optimizer.pt": {
+      "bytes": 35479763,
+      "sha256": "18fba63aaa709e9f07246c40d7d330aa2c9f9ab00ab9bf1cda3ecd6672ac3411"
+    },
+    "runs/worried_seed192/checkpoint-15/rng_state.pth": {
+      "bytes": 14709,
+      "sha256": "35b60c367aaa0895a57d63df43d8988a57beeb28bfaef0bd122a44ddde1e8857"
+    },
+    "runs/worried_seed192/checkpoint-15/scheduler.pt": {
+      "bytes": 1465,
+      "sha256": "53d6c4997acb4421c26ed7a685d18ea63a7c47d7a674a42945099a9bf9366582"
+    },
+    "runs/worried_seed192/checkpoint-15/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/worried_seed192/checkpoint-15/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/worried_seed192/checkpoint-15/trainer_state.json": {
+      "bytes": 17904,
+      "sha256": "ac7fc4d0e527779294d3f042d6b1976b9cd09c7cb35660aa598c55cf8531bde5"
+    },
+    "runs/worried_seed192/checkpoint-15/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "6fe8283fd53aa59e056cee980c902be7c059ecfda7a23d0b8fa7e7afefcda3cd"
+    },
+    "runs/worried_seed192/checkpoint-5/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/worried_seed192/checkpoint-5/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/worried_seed192/checkpoint-5/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "7abdeae2de7c6d68472e6c47390a80d79ae4f96644e72efc5e66ac96880b243f"
+    },
+    "runs/worried_seed192/checkpoint-5/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/worried_seed192/checkpoint-5/optimizer.pt": {
+      "bytes": 35479763,
+      "sha256": "0a186c5c383eb629b6f38ae4a40b9391d4102e96de525b2f488b10e5e77e992d"
+    },
+    "runs/worried_seed192/checkpoint-5/rng_state.pth": {
+      "bytes": 14709,
+      "sha256": "6a398d8a13b3dd611675f876a59766ae4a44b7a22258e0dee42c7af1b292422a"
+    },
+    "runs/worried_seed192/checkpoint-5/scheduler.pt": {
+      "bytes": 1465,
+      "sha256": "a10dd9096302b1a0097d5174756e6424ef0932f83d0b92be51fabf30f52080d3"
+    },
+    "runs/worried_seed192/checkpoint-5/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/worried_seed192/checkpoint-5/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/worried_seed192/checkpoint-5/trainer_state.json": {
+      "bytes": 6462,
+      "sha256": "b3377f39c74ac5db9fc850d9efd610767685b0203c90b61e5b99e44c4b771b89"
+    },
+    "runs/worried_seed192/checkpoint-5/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "6fe8283fd53aa59e056cee980c902be7c059ecfda7a23d0b8fa7e7afefcda3cd"
+    },
+    "runs/worried_seed192/data_indices.json": {
+      "bytes": 13918,
+      "sha256": "fdef4314bd908b415e4c286b9ebbe760096ac4eccd339f70be24c9f769d5b0ff"
+    },
+    "runs/worried_seed192/environment_snapshot.json": {
+      "bytes": 3779,
+      "sha256": "ce750352d16e929851335abe3ad72bc634fb72da6dc7532ba900146ba1c6b9ee"
+    },
+    "runs/worried_seed192/final/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/worried_seed192/final/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/worried_seed192/final/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "6620fa23e690f7921272f7568003ee919425392fbfa46cb32fbab93277ed92d9"
+    },
+    "runs/worried_seed192/final/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/worried_seed192/final/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/worried_seed192/final/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/worried_seed192/final/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "6fe8283fd53aa59e056cee980c902be7c059ecfda7a23d0b8fa7e7afefcda3cd"
+    },
+    "runs/worried_seed192/log_history.json": {
+      "bytes": 16455,
+      "sha256": "0231cf50d24b3c4b4ae42f712ff1864bcfe08306213b23de91347877052eb1f9"
+    },
+    "runs/worried_seed192/resolved_config.json": {
+      "bytes": 25389,
+      "sha256": "9194223cb0956fd85c5a18ebe4974f2711a5605aa315e911984b6bcf24f949e3"
+    },
+    "runs/worried_seed192/run_manifest.json": {
+      "bytes": 30718,
+      "sha256": "484edaa3a36dcca2d5e0300b764b43710476b9ee41d17ee517230d37c856a39a"
+    },
+    "runs/worried_seed192/run_result_manifest.json": {
+      "bytes": 10577,
+      "sha256": "9fa8b566e1f238db2da8f4958106d90b7e52ea7ade0094cfe94211e3c3e5cfbc"
+    },
+    "runs/worried_seed192/validation_history.jsonl": {
+      "bytes": 1258,
+      "sha256": "26663c6dcb032e3074a84594830f186c431a62c4803cbda5a3cce349fc2b9247"
+    },
+    "runs/worried_seed192/wandb_terminal_publish_receipt.json": {
+      "bytes": 2259,
+      "sha256": "b8a19d1fea34079d079cd9a0de1f4cb0c599a74949deee6dc20c1a1f9c4a5b6d"
+    },
+    "runs/yay_seed192/README.md": {
+      "bytes": 2180,
+      "sha256": "2680f5c7f35611db6f6b7f05a47bd87c548a7d7f0d0bc7cf8c732a846de61c95"
+    },
+    "runs/yay_seed192/checkpoint-10/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/yay_seed192/checkpoint-10/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/yay_seed192/checkpoint-10/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "239be14c0d6b39c6c1b56e0b658c1446ade8187c2afd71938aed6db9619a4546"
+    },
+    "runs/yay_seed192/checkpoint-10/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/yay_seed192/checkpoint-10/optimizer.pt": {
+      "bytes": 35479763,
+      "sha256": "6e2a3a8eab098c9107656c5b0b861f7961934eeb0db1bc44061568386d18fd48"
+    },
+    "runs/yay_seed192/checkpoint-10/rng_state.pth": {
+      "bytes": 14709,
+      "sha256": "911e4b6bdaf6a0c6a90bac6d1993d049ccbc6a6e2cd4beb1920eb82ac8b0b132"
+    },
+    "runs/yay_seed192/checkpoint-10/scheduler.pt": {
+      "bytes": 1465,
+      "sha256": "4c11f08fd3e495c81ffd25c0f60af91b6d968a5da33333d23a1a620fb1935621"
+    },
+    "runs/yay_seed192/checkpoint-10/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/yay_seed192/checkpoint-10/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/yay_seed192/checkpoint-10/trainer_state.json": {
+      "bytes": 12008,
+      "sha256": "72d90654babd25017210a05ea336f63573e31e53dc2a36374b262638ff2003b8"
+    },
+    "runs/yay_seed192/checkpoint-10/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "9b7a9506d2dfb8cda67351cd78d7063ab3fe3fdffd7043dd105b688166141eea"
+    },
+    "runs/yay_seed192/checkpoint-15/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/yay_seed192/checkpoint-15/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/yay_seed192/checkpoint-15/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "239487a7a607fa75704acf28c197b7fda2fdc930b063313be273cba1cf1b7036"
+    },
+    "runs/yay_seed192/checkpoint-15/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/yay_seed192/checkpoint-15/optimizer.pt": {
+      "bytes": 35479763,
+      "sha256": "03d3d7c68dbc3185361266d871f2e600dde8fc0ec4fad346f50c8b4956daccb8"
+    },
+    "runs/yay_seed192/checkpoint-15/rng_state.pth": {
+      "bytes": 14709,
+      "sha256": "2a2a042917afd54e47f185562bd9bc114d0de719eb0af6c00f5594e0522aa5f4"
+    },
+    "runs/yay_seed192/checkpoint-15/scheduler.pt": {
+      "bytes": 1465,
+      "sha256": "53d6c4997acb4421c26ed7a685d18ea63a7c47d7a674a42945099a9bf9366582"
+    },
+    "runs/yay_seed192/checkpoint-15/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/yay_seed192/checkpoint-15/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/yay_seed192/checkpoint-15/trainer_state.json": {
+      "bytes": 17631,
+      "sha256": "c70a7759dd3fcfa66dc2fd35cb75ad51d09a6f914ccc0980967d32aabb7bcc6b"
+    },
+    "runs/yay_seed192/checkpoint-15/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "9b7a9506d2dfb8cda67351cd78d7063ab3fe3fdffd7043dd105b688166141eea"
+    },
+    "runs/yay_seed192/checkpoint-5/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/yay_seed192/checkpoint-5/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/yay_seed192/checkpoint-5/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "5fc92588c87ab121901c9fbf25a45f69e9c06f6ba499113996af716fb735f250"
+    },
+    "runs/yay_seed192/checkpoint-5/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/yay_seed192/checkpoint-5/optimizer.pt": {
+      "bytes": 35479763,
+      "sha256": "8731a69003927878e7c085e569c4fc5d8339ce6e2f0111200e5bd48d75c13805"
+    },
+    "runs/yay_seed192/checkpoint-5/rng_state.pth": {
+      "bytes": 14709,
+      "sha256": "6a398d8a13b3dd611675f876a59766ae4a44b7a22258e0dee42c7af1b292422a"
+    },
+    "runs/yay_seed192/checkpoint-5/scheduler.pt": {
+      "bytes": 1465,
+      "sha256": "a10dd9096302b1a0097d5174756e6424ef0932f83d0b92be51fabf30f52080d3"
+    },
+    "runs/yay_seed192/checkpoint-5/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/yay_seed192/checkpoint-5/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/yay_seed192/checkpoint-5/trainer_state.json": {
+      "bytes": 6386,
+      "sha256": "c6a4d1902e14ab3cea55feacdc3afea7a2d2daee23db7359cab65707483c0f22"
+    },
+    "runs/yay_seed192/checkpoint-5/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "9b7a9506d2dfb8cda67351cd78d7063ab3fe3fdffd7043dd105b688166141eea"
+    },
+    "runs/yay_seed192/data_indices.json": {
+      "bytes": 13918,
+      "sha256": "fdef4314bd908b415e4c286b9ebbe760096ac4eccd339f70be24c9f769d5b0ff"
+    },
+    "runs/yay_seed192/environment_snapshot.json": {
+      "bytes": 3779,
+      "sha256": "ce750352d16e929851335abe3ad72bc634fb72da6dc7532ba900146ba1c6b9ee"
+    },
+    "runs/yay_seed192/final/README.md": {
+      "bytes": 5219,
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18"
+    },
+    "runs/yay_seed192/final/adapter_config.json": {
+      "bytes": 1055,
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350"
+    },
+    "runs/yay_seed192/final/adapter_model.safetensors": {
+      "bytes": 17640136,
+      "sha256": "239487a7a607fa75704acf28c197b7fda2fdc930b063313be273cba1cf1b7036"
+    },
+    "runs/yay_seed192/final/chat_template.jinja": {
+      "bytes": 2507,
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "runs/yay_seed192/final/tokenizer.json": {
+      "bytes": 11422157,
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6"
+    },
+    "runs/yay_seed192/final/tokenizer_config.json": {
+      "bytes": 665,
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536"
+    },
+    "runs/yay_seed192/final/training_args.bin": {
+      "bytes": 7377,
+      "sha256": "9b7a9506d2dfb8cda67351cd78d7063ab3fe3fdffd7043dd105b688166141eea"
+    },
+    "runs/yay_seed192/log_history.json": {
+      "bytes": 16182,
+      "sha256": "af0f5fe89c155f34fcc186887dab694e13e5697d6fb6d9fdf445215b02b5a390"
+    },
+    "runs/yay_seed192/resolved_config.json": {
+      "bytes": 25360,
+      "sha256": "7d11307c7b8b8d110f9e3bcbd5f67eb47886e684b630f0407a3334bcbe5c01e5"
+    },
+    "runs/yay_seed192/run_manifest.json": {
+      "bytes": 30690,
+      "sha256": "95be653cd4508a306be1e52e35535b0e9be615acc9a82b57424a69b79be90f11"
+    },
+    "runs/yay_seed192/run_result_manifest.json": {
+      "bytes": 10549,
+      "sha256": "327619f4f512d88671340a0c70eab1fdd80de63ee46c02d8ca268e6033d0e4a3"
+    },
+    "runs/yay_seed192/validation_history.jsonl": {
+      "bytes": 1264,
+      "sha256": "b99c13de6decf93428481d089d5622e0c02ef94f543726fe70ed792287a68ed1"
+    },
+    "runs/yay_seed192/wandb_terminal_publish_receipt.json": {
+      "bytes": 2227,
+      "sha256": "3a922f08c96448dc570bc77bbe0263040fd06eca84c9206d42a123098215c4b5"
+    }
+  },
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "schema_version": 1,
+  "scope": "All attempt files before inventory/export/receipt/closeout creation, including checkpoint and adapter blobs."
+}

@@ -1,4 +1,4 @@
-"""Run two fixed emotionally charged development ideas concurrently on Modal.
+"""Run five fixed emotionally charged development ideas concurrently on Modal.
 
 This is an exposed-curve development screen, never a significance attempt.
 The image and fresh Volume contain no sealed, reserve, or correlation payload.
@@ -25,28 +25,46 @@ from modal_emotional_tournament_v1 import repo_image as cached_tournament_image
 LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = Path("/state")
-APP_NAME = "j-lens-rl-development-emotional-parallel-v2"
-VOLUME_NAME = "j-lens-rl-development-emotional-parallel-v2-20260714a"
-PROTOCOL = "j-lens-rl-development-emotional-parallel-v2"
-REGISTRATION_SHA256 = "aee43b3e97988d3dad7fd8d8794373993071e73c95afdc30165d8da63016185c"
+APP_NAME = "j-lens-rl-development-emotional-parallel-v3"
+VOLUME_NAME = "j-lens-rl-development-emotional-parallel-v3-20260714b"
+PROTOCOL = "j-lens-rl-development-emotional-parallel-v3"
+REGISTRATION_SHA256 = "6eeee93e2cca1d5c4167eda682bf710940ba30a2b971bf85e82f479b9329e4dc"
 GPU_TYPE = "L40S"
-MAX_PARALLEL_GPUS = 2
-ARM_ORDER = ("joy_u2_h6_seed194", "celebration_tail_u4_h20_seed195")
+MAX_PARALLEL_GPUS = 5
+ARM_ORDER = (
+    "joy_u2_h6_seed194",
+    "celebration_tail_u4_h20_seed195",
+    "excited_u2_h6_seed196",
+    "wow_u2_h6_seed197",
+    "fuck_penalty_u2_h6_seed198",
+)
 ARM_CONFIG = {
-    "joy_u2_h6_seed194": "configs/emotional_parallel_v2_joy.json",
-    "celebration_tail_u4_h20_seed195": "configs/emotional_parallel_v2_celebration.json",
+    "joy_u2_h6_seed194": "configs/emotional_parallel_v3_joy.json",
+    "celebration_tail_u4_h20_seed195": "configs/emotional_parallel_v3_celebration.json",
+    "excited_u2_h6_seed196": "configs/emotional_parallel_v3_excited.json",
+    "wow_u2_h6_seed197": "configs/emotional_parallel_v3_wow.json",
+    "fuck_penalty_u2_h6_seed198": "configs/emotional_parallel_v3_fuck.json",
 }
 ARM_STEPS = {
     "joy_u2_h6_seed194": (0, 2, 4, 6),
     "celebration_tail_u4_h20_seed195": (0, 4, 10, 20),
+    "excited_u2_h6_seed196": (0, 2, 4, 6),
+    "wow_u2_h6_seed197": (0, 2, 4, 6),
+    "fuck_penalty_u2_h6_seed198": (0, 2, 4, 6),
 }
 ARM_WANDB_IDS = {
-    "joy_u2_h6_seed194": "dev-v11-parallel-joy-u2-h6-seed194",
+    "joy_u2_h6_seed194": "dev-v12-five-joy-u2-h6-seed194",
     "celebration_tail_u4_h20_seed195": (
-        "dev-v11-parallel-celebration-tail-u4-h20-seed195"
+        "dev-v12-five-celebration-tail-u4-h20-seed195"
     ),
+    "excited_u2_h6_seed196": "dev-v12-five-excited-u2-h6-seed196",
+    "wow_u2_h6_seed197": "dev-v12-five-wow-u2-h6-seed197",
+    "fuck_penalty_u2_h6_seed198": "dev-v12-five-fuck-penalty-u2-h6-seed198",
 }
 EXPECTED_FILE_SHA256 = {
+    ".gitignore": (
+        "2093c1ee68d1070775e3fc36502041a32ade3c15e70c670d628e5b92060e665c"
+    ),
     ".confirmatory/manifests/curve_indices.json": (
         "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1"
     ),
@@ -56,26 +74,45 @@ EXPECTED_FILE_SHA256 = {
     "artifacts/qwen25_05b_solved_lens.pt": (
         "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
     ),
-    "configs/emotional_parallel_v2_celebration.json": (
-        "c9ca0215821bd80456ce1fff7183ab6abba99f4b626b6298fea9eec7fbe841f4"
+    "configs/emotional_parallel_v3_celebration.json": (
+        "3f98bfc107ee83a23d8da2c188d3caf32a1c8befd697671bbaeca6001f760669"
     ),
-    "configs/emotional_parallel_v2_common.json": (
-        "d38e1bcc2a7b705deb2fc38ec1675107b3bf883ab8c9a8fded9ea1b1cbc009f8"
+    "configs/emotional_parallel_v3_common.json": (
+        "d4e8b8495b5df4b91a3110ef0baab08c1dcda1a5ca88b00fc4b45b099ba133ef"
     ),
-    "configs/emotional_parallel_v2_joy.json": (
-        "d879fe622cd2326a2450bd7de96a2b85178e036a05016383951b476ddecbbd26"
+    "configs/emotional_parallel_v3_excited.json": (
+        "e40e7db62ef11120817c11c45a88cc501465535823c39e0cd11cfe913d3f2213"
     ),
-    "protocol_archive/emotional_parallel_v2_metric_schema.json": (
-        "579d2f02b21f181553eedc7c1e52fc9537770665df0ee21376a2e31f0d9ce6ff"
+    "configs/emotional_parallel_v3_fuck.json": (
+        "e4c9de19aef2b5f44fccdd9085f5e99bdff8ac1e5cde6352128eb23030759691"
     ),
-    "protocol_archive/emotional_parallel_v2_registration.json": (
-        REGISTRATION_SHA256
+    "configs/emotional_parallel_v3_joy.json": (
+        "46c8ac4e370c3ea789e9aeb3432c83eff93d643ca90acc077be2181d71ed1948"
+    ),
+    "configs/emotional_parallel_v3_wow.json": (
+        "f31b00cfbd03185d9ea383ca98b0087d932edb182eeea8eb756824673030cff5"
+    ),
+    "protocol_archive/emotional_parallel_v2_pretraining_attempt_a_closeout.json": (
+        "a9513baa074ff6803bf826b5a2d7dad7fff9ea63e79c5b5faca403210a5cdeec"
+    ),
+    "protocol_archive/emotional_parallel_v3_metric_schema.json": (
+        "3ae834c6237dc1e4d5b996c6b7f16ed7f073ead70d4ab8464b06318875633b20"
+    ),
+    "protocol_archive/emotional_parallel_v3_registration.json": REGISTRATION_SHA256,
+    "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/excited_calibration.json": (
+        "a09bcdbdf4c18c5680f2c73af35ec435b2659790f67f4fe2d415ba5d4720d2b0"
+    ),
+    "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/fuck_calibration.json": (
+        "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d"
     ),
     "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json": (
         "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6"
     ),
     "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/joy_calibration.json": (
         "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021"
+    ),
+    "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/wow_calibration.json": (
+        "7dd8f37e51eb74dff050e86a74d2bdd807bb5d066657e1124ec3e98a967cd2b6"
     ),
 }
 ADDED_IMAGE_FILES = (
@@ -124,6 +161,7 @@ parallel_image = (
             "GIT_AUTHOR_DATE": "2000-01-01T00:00:00+00:00",
             "GIT_COMMITTER_DATE": "2000-01-01T00:00:00+00:00",
             "JLENS_REPOSITORY_ROOT": REMOTE_REPO.as_posix(),
+            "PYTHONDONTWRITEBYTECODE": "1",
         }
     )
     .run_commands(
@@ -132,7 +170,7 @@ parallel_image = (
         "rm -rf .git",
         "git init -q",
         "git add -f .",
-        "git commit -qm 'J-Lens two-emotional-idea runtime'",
+        "git commit -qm 'J-Lens five-emotional-idea runtime'",
         "test -z \"$(git status --porcelain=v1 --untracked-files=all)\"",
     )
 )
@@ -394,7 +432,7 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
             "schema_version": 1,
             "protocol": PROTOCOL,
             "claim_id": claim_id,
-            "stage": "training_two_parallel_ideas",
+            "stage": "training_five_parallel_ideas",
             "max_parallel_gpus": MAX_PARALLEL_GPUS,
             "worker_call_ids": {label: call.object_id for label, call in calls.items()},
             "updated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -451,7 +489,7 @@ def _local_preflight() -> dict[str, Any]:
         ["git", "rev-parse", "origin/main"], cwd=LOCAL_REPO, text=True
     ).strip()
     if status or head != remote:
-        raise RuntimeError("two-arm launch requires clean pushed main")
+        raise RuntimeError("five-arm launch requires clean pushed main")
     for relative, expected in EXPECTED_FILE_SHA256.items():
         if _sha256(LOCAL_REPO / relative) != expected:
             raise RuntimeError(f"local registered input changed: {relative}")
@@ -475,7 +513,7 @@ def _local_preflight() -> dict[str, Any]:
     )
     inventory = json.loads(inventory_text[inventory_text.index("[") :])
     if inventory:
-        raise RuntimeError("two-arm Volume is not fresh and empty")
+        raise RuntimeError("five-arm Volume is not fresh and empty")
     tree_hash = hashlib.sha256()
     for relative in sorted(EXPECTED_FILE_SHA256):
         tree_hash.update(relative.encode())

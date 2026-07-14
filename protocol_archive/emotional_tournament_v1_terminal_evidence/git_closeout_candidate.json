@@ -1,0 +1,16 @@
+{
+  "app_id": "ap-XrW9TTTRzQZ2sV9kB8WjbS",
+  "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+  "document_type": "j-lens-rl-development-emotional-tournament-closeout-candidate",
+  "export_receipt_sha256": "fc8774102a2c33111707ccc6dc28e304ff847adbde762a49cc538243b6a63477",
+  "function_call_id": "fc-01KXH13DR4ZGR31JSAFC7JN0KF",
+  "inventory_sha256": "ae403e75c09be93334ae05e483d6d8587933d0cd2094a17fac27f96c099fc004",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "registration_sha256": "9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe",
+  "schema_version": 1,
+  "scientific_status": "development_only_no_significance_or_final_claim",
+  "selected_candidate_shape_passed": false,
+  "selected_development_candidate": "fuck",
+  "summary_sha256": "cef9f0bafaaebd2e31aafbdc1eb6d6de2177a5363b77a9e45aa5f2b6aea59eae",
+  "terminal_stage": "complete"
+}
