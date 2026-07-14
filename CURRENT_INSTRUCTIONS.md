@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 16:06 UTC
+Last reconciled with the user: 2026-07-14 16:22 UTC
 
 ## Objective
 
@@ -69,9 +69,10 @@ from confirmatory claims.
   closed after terminal seed 200 because its wrapper expected the wrong result
   schema; preserve that complete seed as exposed development evidence, sync its
   immutable offline W&B run, but never resume, adopt, pool, or continue V8. The
-  next ready work is a separately registered whole V9 attempt with a corrected
-  verifier, fresh seeds, and the same negative-`damn/fuck` emotional treatment
-  on the one local RTX 4090. Run matched controls only if its eight-treatment
-  curve gate passes. Do not open the final until its evaluation/analysis path is
-  separately implemented and audited. Correlation attempt 4 remains closed
-  with outcomes uninspected; word search must not delay ready RL by an hour.
+  separately registered whole V9 attempt has now launched with a corrected
+  verifier, fresh seeds 208--215, and the same negative-`damn/fuck` emotional
+  treatment on the one local RTX 4090. Keep it running and monitored. Run
+  matched controls only if its eight-treatment curve gate passes. Do not open
+  the final until its evaluation/analysis path is separately implemented and
+  audited. Correlation attempt 4 remains closed with outcomes uninspected; word
+  search must not delay ready RL by an hour.

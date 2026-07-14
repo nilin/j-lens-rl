@@ -1936,3 +1936,13 @@ exist at this cutoff. Sealed-final evaluation/analysis automation is still not
 implemented or audited, so even a future training unlock must not open the
 900-item final. Completed offline training runs should be synced promptly by a
 separate CPU-only transport; tracking failure must not alter or rerun training.
+
+V9 prepared from clean pushed commit `4d2f884` with registration SHA-256
+`5c9b776c452eea645361b72f87d8cabcd1059db654430cb7975f7325499b0ce4`.
+The exact idle RTX 4090, UUID, driver, memory, torch/CUDA stack, detached
+imports, source snapshot, V7/V8 closeouts, and all 20 V8 evidence hashes passed
+again after preparation. Fresh claim `d6131db54b6346199d9af8d1478f3e36`
+started treatment seed 208 at 16:21 UTC under the one whole-attempt GPU lock.
+At this ledger cutoff no V9 curve node or outcome had been inspected, no
+control had started, and the sealed final remained unopened. The durable
+operational identity is `protocol_archive/v9_local_launch_ledger.json`.

@@ -1,0 +1,64 @@
+{
+  "protocol": "j-lens-rl-confirmatory-v9-local-launch-ledger-v1",
+  "training_protocol": "j-lens-rl-confirmatory-v9-local-profanity-u5",
+  "recorded_at_utc": "2026-07-14T16:22:00+00:00",
+  "scientific_scope": {
+    "condition": "negative intrinsic J-lens reward on the emotional profanity words damn/fuck",
+    "treatment_seeds": [208, 209, 210, 211, 212, 213, 214, 215],
+    "curve_steps": [0, 4, 10, 20],
+    "curve_role": "exposed development consistency gate, not inference",
+    "controls": "fresh matched positive-sign controls, conditionally blocked until the eight-treatment mean curve passes",
+    "sealed_final": "900 items, unopened and not authorized for collection by this ledger"
+  },
+  "source": {
+    "git_commit": "4d2f884f246b85b9215a8332632e7092a76deb80",
+    "git_tree": "fa06de2e7bf3ea5815db1283fc86454a782e2789",
+    "origin_main_equal_at_prepare": true,
+    "registration_sha256": "5c9b776c452eea645361b72f87d8cabcd1059db654430cb7975f7325499b0ce4",
+    "registration_file_sha256": "29400996381061b55344ff10ea9d8f150c261cc74234351f2a1b35006dbed22b",
+    "recipe_lock_sha256": "b58aab172b63ba7e6f5d512d6f650ccc4c203dce54295c80512a6d98e85dad14",
+    "protocol_state_sha256": "216e98a8aa9dd8bd8d13fdceb992f4465a1d760f3ca33f41990a75ba8fe3de2f",
+    "source_manifest_sha256": "be65446022dc4c0014b9cdd47653a72ae6bfa06e936a0a0fc46f748e23672f48",
+    "source_snapshot_sha256": "f2af77180082c3715159dcc5570ae2fe0c899eb089c7a764ca4d16ac59218bdf",
+    "runtime_worktree": "/j-lens-rl/.confirmatory/v9_local/runtime_worktree"
+  },
+  "attempt": {
+    "claim_id": "d6131db54b6346199d9af8d1478f3e36",
+    "claim_sha256": "f0069fb16375894798ea9ee793e218a517c2f31606ec38ca2bea1b5a6c67d12e",
+    "claimed_at_utc": "2026-07-14T16:21:20.742510+00:00",
+    "stage_at_record": "running_treatments",
+    "backend": "single local RTX 4090",
+    "max_parallel_gpu_processes": 1,
+    "whole_attempt_lock": "/tmp/jlens-rl-v9-local-rtx4090.lock",
+    "retry_policy": "Any partial nonterminal run closes the whole attempt; no optimization resume or cross-attempt pooling."
+  },
+  "hardware": {
+    "gpu_name": "NVIDIA GeForce RTX 4090",
+    "gpu_uuid": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "driver": "570.195.03",
+    "memory_total_mib": 24564,
+    "torch": "2.9.1+cu128",
+    "cuda_build": "12.8",
+    "foreign_compute_processes_before_launch": []
+  },
+  "first_dispatch": {
+    "sequence": 1,
+    "label": "jlens_seed208",
+    "seed": 208,
+    "intent_created_at_utc": "2026-07-14T16:21:28.775437+00:00",
+    "intent_sha256": "efd728d54ad7a43b0c4dfed8ae6f0bde5b8d12b65dedd7b9f9ea00e092598bb8",
+    "config_sha256": "3a89310664a16857c9f083e463b2930f3197508536e7ffea1ffa368b23c1e647",
+    "wandb_mode": "offline",
+    "wandb_run_id": "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed208",
+    "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v9-local-emotional-profanity-u5-h20-jlens_seed208",
+    "offline_directory_preserved": true
+  },
+  "outcome_boundary_at_record": {
+    "training_metric_inspected": false,
+    "curve_node_present": false,
+    "curve_gate_evaluated": false,
+    "control_started": false,
+    "sealed_final_opened": false,
+    "acceptance_claimed": false
+  }
+}
