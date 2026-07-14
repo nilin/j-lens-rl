@@ -27,7 +27,7 @@ separate from confirmatory claims.
 
 ## Execution and continuity
 
-- Run at most **1 Modal GPU** at once. Serialize Modal GPU workers. Never mix
+- Run at most **2 Modal GPUs** at once. Never mix
   L40S and RTX 4090 runs inside one inferential attempt.
 - Spend at least half of experiment/GPU time running RL. Word search must never
   hold ready registered RL for over one hour; launch RL and resume search later.
@@ -60,5 +60,9 @@ separate from confirmatory claims.
   `-fuck`. Preserve and close out its evidence; never resume it or reuse retired
   Volume A. A separate development-only celebration-family tail-taper probe
   (`yay/great/success/nice`, seed 193, nodes `0/2/4/6`) is now running on the
-  local RTX 4090 from pushed commit `bf85a74`. Never pool it with L40S results.
-  Correlation attempt 4 remains closed with outcomes uninspected.
+  local RTX 4090 from pushed commit `bf85a74`; it completed
+  `.3975/.3975/.3950/.4075`, a terminal improvement that failed the strict
+  shape. Preserve/sync it but never pool it with L40S results. The next RL lane
+  should use up to two parallel Modal machines on different registered emotional
+  ideas, not merely duplicate seeds. Correlation attempt 4 remains closed with
+  outcomes uninspected.
