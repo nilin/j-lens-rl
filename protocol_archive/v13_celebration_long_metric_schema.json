@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-confirmatory-v13-celebration-long-u4-u10-u20",
+  "reward": "The sole task reward is the registered celebration-family J-lens score; GSM8K correctness is observational and never used for training. KL beta is 0.02.",
+  "treatment_reward": "Standardized celebration-family J-lens mass at layer 8, middle-late quarter weight +1 and last quarter weight +0.25, stride 10.",
+  "matched_signflip_reward": "Exact matched control with only the two component weights negated to -1 and -0.25.",
+  "validation_exact_match": "Greedy numeric GSM8K exact match on the fixed exposed 400-row development curve at baseline and updates 4, 10, and 20.",
+  "curve_gate": "The four-treatment-seed mean must satisfy M4 > M0, M10 >= M4, and M20 >= M10.",
+  "final_exact_match": "Greedy numeric GSM8K exact match on the untouched 900-row final, opened only after a passed treatment curve and all eight terminal training runs are verified.",
+  "primary_test": "Exact two-sided sign test across four seed-matched treatment-minus-signflip final accuracy effects; all four positive gives p=0.125.",
+  "secondary_test": "Exact two-sided sign test across four treatment-minus-base final accuracy effects; all four positive gives p=0.125.",
+  "significance_alpha": 0.15,
+  "crossed_bootstrap": "10,000-draw seed-and-item crossed 95% intervals, reported descriptively and not used as an alpha-0.15 gate."
+}

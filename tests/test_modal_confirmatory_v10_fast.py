@@ -9,6 +9,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts import materialize_v13_modal_contract as materializer
+
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "protocol_archive" / "v10_modal_execution_contract.template.json"
 SPEC = importlib.util.spec_from_file_location(
@@ -56,23 +58,45 @@ def test_template_is_exact_but_deliberately_inert() -> None:
     assert sha256(ROOT / runner.INTEGRITY_AMENDMENT_PATH) == runner.INTEGRITY_AMENDMENT_SHA256
 
 
+def test_materializer_and_launcher_use_the_same_contract_path() -> None:
+    assert runner.REMOTE_CONTRACT_PATH.relative_to(runner.REMOTE_REPO).as_posix() == (
+        materializer.OUTPUT_RELATIVE
+    )
+
+
 def test_plan_is_four_treatments_gate_four_controls_then_serial_nine() -> None:
     plan = runner.execution_plan()
     assert [phase["phase"] for phase in plan] == [
-        "treatment_training",
+        "joint_treatment_and_signflip_training",
         "registered_curve_gate",
-        "matched_signflip_training",
         "sealed_final_collection",
     ]
-    assert [job["seed"] for job in plan[0]["jobs"]] == [224, 225, 226, 227]
-    assert [job["slot"] for job in plan[0]["jobs"]] == [0, 1, 2, 3]
-    assert plan[1]["steps"] == [0, 4, 5, 6]
-    assert plan[1]["failure_action"] == "stop_without_controls_or_final"
-    assert plan[2]["requires"] == "registered_curve_gate_passed"
-    assert [job["slot"] for job in plan[2]["jobs"]] == [0, 1, 2, 3]
-    assert plan[3]["parallelism"] == 1
-    assert [job["label"] for job in plan[3]["jobs"]] == list(runner.FINAL_LABELS)
-    assert max(phase["parallelism"] for phase in plan) == 4
+    assert [job["seed"] for job in plan[0]["jobs"]] == [228, 229, 230, 231] * 2
+    assert [job["slot"] for job in plan[0]["jobs"]] == list(range(8))
+    assert plan[1]["steps"] == [0, 4, 10, 20]
+    assert plan[1]["failure_action"] == "stop_without_final_after_preserving_all_eight_public_runs"
+    assert plan[2]["requires"] == "all_eight_runs_verified_and_unlocked"
+    assert plan[2]["parallelism"] == 1
+    assert [job["label"] for job in plan[2]["jobs"]] == list(runner.FINAL_LABELS)
+    assert max(phase["parallelism"] for phase in plan) == 8
+
+
+def test_joint_plan_and_durable_intents_share_exact_job_slots() -> None:
+    jobs = runner._joint_training_jobs()
+    assert jobs == runner.execution_plan()[0]["jobs"]
+    assert [(job["condition"], job["slot"]) for job in jobs] == [
+        *(("jlens", slot) for slot in range(4)),
+        *(("signflip", slot) for slot in range(4, 8)),
+    ]
+    intent_writer = function_source("_write_training_intents")
+    assert "_joint_training_jobs()" in intent_writer
+    assert '"phase": "joint_treatment_and_signflip_training"' in intent_writer
+
+
+def test_failed_joint_curve_terminates_local_final_release_watcher() -> None:
+    watcher = function_source("await_protected_final_release")
+    assert "curve_failed_no_final_all_eight_public_runs_preserved" in watcher
+    assert "curve_failed_no_controls_or_final" not in watcher
 
 
 def test_curve_gate_requires_first_rise_and_no_later_drop() -> None:
@@ -80,18 +104,18 @@ def test_curve_gate_requires_first_rise_and_no_later_drop() -> None:
         f"jlens_seed{seed}": {
             0: {"exact_match": 0.38},
             4: {"exact_match": 0.39 + offset},
-            5: {"exact_match": 0.40 + offset},
-            6: {"exact_match": 0.40 + offset},
+            10: {"exact_match": 0.40 + offset},
+            20: {"exact_match": 0.40 + offset},
         }
         for offset, seed in zip((0.0, 0.01, -0.005, 0.005), runner.SEEDS)
     }
     gate = runner.curve_gate_from_histories(histories)
     assert gate["passed"] is True
     assert gate["mean_exact_match"]["4"] > gate["mean_exact_match"]["0"]
-    histories["jlens_seed224"][6]["exact_match"] = 0.30
+    histories["jlens_seed228"][20]["exact_match"] = 0.30
     assert runner.curve_gate_from_histories(histories)["passed"] is False
     with pytest.raises(runner.ModalV10Error, match="exactly four"):
-        runner.curve_gate_from_histories({"jlens_seed224": histories["jlens_seed224"]})
+        runner.curve_gate_from_histories({"jlens_seed228": histories["jlens_seed228"]})
 
 
 def test_contract_freezes_celebration_taper_and_exact_negative_signflip() -> None:
@@ -122,8 +146,8 @@ def test_registered_spec_must_bind_exact_contract_and_modal_runtime() -> None:
         "target_words": ["yay", "great", "success", "nice"],
         "seeds": list(runner.SEEDS),
         "conditions": list(runner.CONDITIONS),
-        "terminal_step": 6,
-        "curve_gate": {"steps": [0, 4, 5, 6], "criterion": runner.CURVE_CRITERION},
+        "terminal_step": 20,
+        "curve_gate": {"steps": [0, 4, 10, 20], "criterion": runner.CURVE_CRITERION},
         "treatment_score_components": value["candidate"]["treatment_score_components"],
         "matched_control_score_components": value["candidate"]["matched_control_score_components"],
         "artifacts": {
@@ -131,10 +155,10 @@ def test_registered_spec_must_bind_exact_contract_and_modal_runtime() -> None:
             "calibration_sha256": runner.CALIBRATION_SHA256,
         },
         "training": {
-            "updates": 6,
+            "updates": 20,
             "learning_rate": 3e-6,
             "score_stride": 10,
-            "validation_steps": [4, 5, 6],
+            "validation_steps": [4, 10, 20],
         },
         "hardware": {
             "backend": "modal",

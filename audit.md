@@ -2459,3 +2459,53 @@ Forty-seven focused tests pass. V12 was registered before any V12 GPU dispatch,
 W&B run, or outcome. Because favorable V11 partial nodes were public first,
 any later `p=.125` is nominal alpha-.15 evidence within the adaptive program,
 not familywise-corrected or an independent untouched replication.
+
+### V12 terminal curve and exact seed-195-horizon V13 follow-up
+
+V12 launched from clean pushed commit
+`34fa60fc2287f77327d5fa67f479ec46702457e0` on Modal app
+`ap-qCmD0KM34iUaXcrGBstcJf`. All four treatment runs completed six updates,
+published terminal W&B evidence, and produced curves at `0/4/5/6`:
+`[.3825,.4025,.3900,.3650]`, `[.3825,.3900,.3850,.4025]`,
+`[.3825,.3900,.3700,.4000]`, and `[.3825,.3900,.4025,.3850]` for
+seeds 224--227. Their mean curve was
+`.382500 -> .393125 -> .386875 -> .388125`. The first post-baseline node
+rose by `.010625`, but step 5 declined by `.006250`, so the prospectively
+registered monotone curve gate failed. No controls ran and the protected final
+remained unopened.
+
+Seed 227 also exposed a verifier-only issue after its terminal artifacts were
+written: two redundant float32 reward-standard-deviation reductions differed
+by exactly one float32 ULP (`1.042350172996521` versus
+`1.0423502922058105`), just above the decimal `1e-7` cutoff. This did not
+affect the already-failed curve decision. V12 is closed without retry, resume,
+pooling, controls, or final access. V13 prospectively accepts only adjacent
+nonnegative finite float32 encodings for this duplicate metric; reward-mean
+identity and every J-only schema/integrity check remain unchanged.
+
+The user's earlier request to follow the exact
+`dev-v12-five-celebration-tail-u4-h20-seed195` lineage is now backed by a
+local byte-checked public-evidence archive at
+`protocol_archive/seed195_public_evidence/`. The complete W&B curve is
+`.3825 -> .3925 -> .4000 -> .4125` at `0/4/10/20`; all three transitions
+rise. Its resolved config confirms that the sole task reward is the registered
+`yay/great/success/nice` J-lens score (apart from KL `.02`), with the exact
+calibration, layer-8 quarter weights `+1/+.25`, stride 10, LR `3e-6`, DAPO,
+eight generations, and LoRA `8/16`.
+
+V13 is the exact-horizon fresh-seed follow-up: seeds 228--231, 20 updates,
+curve `0/4/10/20`, four treatments plus four prospectively fixed exact
+sign-flip controls dispatched jointly on at most eight L40S GPUs, and the same
+still-sealed 900-row final. The final can unlock only if the four-treatment
+mean satisfies `M4>M0, M10>=M4, M20>=M10` and all eight terminal runs verify.
+The primary treatment-minus-signflip and secondary treatment-minus-base tests
+each require four strictly positive seed effects, giving exact two-sided sign
+`p=.125` at nominal alpha `.15`. This remains explicitly adaptive,
+not program-wide familywise-corrected evidence. The prospective freeze,
+selection record, registration, and metric schema are
+`protocol_archive/v13_celebration_long_candidate_freeze.json`,
+`protocol_archive/v13_celebration_long_selection_integrity.json`,
+`protocol_archive/v13_celebration_long_registration.json`, and
+`protocol_archive/v13_celebration_long_metric_schema.json`. Fifty focused
+tests pass before contract materialization; no V13 GPU or protected payload
+was accessed while selecting or freezing the protocol.

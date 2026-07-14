@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-v13-celebration-long-candidate-freeze",
+  "protocol": "j-lens-rl-confirmatory-v13-celebration-long-u4-u10-u20",
+  "frozen_at_utc": "2026-07-14T23:05:33Z",
+  "selection_timing": "The user highlighted dev-v12-five-celebration-tail-u4-h20-seed195 and requested this exact long-horizon follow-up before the active V12 four-seed step-5 gate was known. V12 later failed that public gate before this V13 registration was materialized; no V12 outcome changes the already-requested V13 recipe.",
+  "development_source": {
+    "config_path": "configs/emotional_parallel_v3_celebration.json",
+    "config_sha256": "3f98bfc107ee83a23d8da2c188d3caf32a1c8befd697671bbaeca6001f760669",
+    "wandb_run_id": "dev-v12-five-celebration-tail-u4-h20-seed195",
+    "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v12-five-celebration-tail-u4-h20-seed195",
+    "seed": 195,
+    "curve_steps": [0, 4, 10, 20],
+    "public_exact_match": [0.3825, 0.3925, 0.4, 0.4125],
+    "scientific_status": "adaptive_development_evidence_only",
+    "wandb_export_identity": {
+      "export_file_sha256": "3aea9ba971337e93978ded91b057b21963bf5f3d7ce727f5a58ddc8cf79e94cb",
+      "canonical_payload_sha256": "e60c1bc4556f11dacc657281ea6eede5e5ed88b3b00bc4c05b9a96b25288b8b8"
+    },
+    "wandb_artifact_identity": {
+      "qualified_name": "nilinabra-spare-time/j-lens-rl/dev-v12-five-celebration-tail-u4-h20-seed195-terminal-evidence:v0",
+      "artifact_digest": "3735833d568694b4a60d3f204a975735",
+      "artifact_export_file_sha256": "35bc2d513c7e1eecc0ba44296fa71a3acd36a3178f84545922fb88e53c6f0d5c",
+      "artifact_canonical_payload_sha256": "a052f9f622404be1b1e3537756c7ee18f361812f5efce8c17e90fd633417b482",
+      "validation_history_sha256": "1abdab78c4e5a84ff696303a0ed7f1585734b1120c835b00a745c24c998ae9bd",
+      "resolved_config_sha256": "f290ceded76e5d5cc174ba53f67d9c6d709cf6626f20e4c8fa7179cf9ce5456a"
+    }
+  },
+  "candidate": {
+    "target_words": ["yay", "great", "success", "nice"],
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "score_stride": 10,
+    "treatment_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+    ],
+    "matched_control_rule": "negate_only_both_registered_component_weights",
+    "updates": 20,
+    "curve_steps": [0, 4, 10, 20],
+    "curve_criterion": "M4 > M0, M10 >= M4, and M20 >= M10 on the four-treatment-seed mean"
+  },
+  "exact_source_hyperparameters": {
+    "learning_rate": 0.000003,
+    "lr_scheduler_type": "constant",
+    "warmup_steps": 0,
+    "warmup_ratio": 0.0,
+    "kl_beta": 0.02,
+    "loss_type": "dapo",
+    "scale_rewards": "group",
+    "gradient_accumulation_steps": 1,
+    "num_generations": 8,
+    "num_generations_eval": 1,
+    "max_prompt_tokens": 384,
+    "max_new_tokens": 256,
+    "min_new_tokens": 64,
+    "temperature": 1.0,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "score_start_fraction_fallback": 0.0,
+    "score_layers_fallback": [8, 14, 20],
+    "score_aggregation_fallback": "mean",
+    "score_include_final": false,
+    "vocab_chunk_size": 16384,
+    "mask_target_tokens": true,
+    "eval_every": 4,
+    "validation_steps": [4, 10, 20],
+    "save_every": 10,
+    "save_total_limit": 3,
+    "train_examples": 1000,
+    "validation_examples": 400,
+    "validation_batch_size": 64,
+    "validation_observational_only": true,
+    "early_stopping_patience": null,
+    "early_stopping_min_delta": 0.0,
+    "correctness_reward": false
+  },
+  "multiple_testing_caveat": "V13 is adaptively selected from an exposed single-seed development curve and follows prior failed attempts. Any alpha-0.15 result is nominal only and is not program-wide familywise-error corrected.",
+  "protected_final_payloads_accessed": false
+}

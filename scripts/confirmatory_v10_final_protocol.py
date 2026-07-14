@@ -1,6 +1,6 @@
-"""Prospectively frozen final-collection machinery for confirmatory V12.
+"""Prospectively frozen final-collection machinery for confirmatory V13.
 
-This module does not create a V12 registration, prepare state, unlock a final
+This module does not create a V13 registration, prepare state, unlock a final
 set, or read the protected final manifest.  A separately created prospective
 registration must materialize ``final_protocol_spec.json`` and an unlock marker.
 The final path then enforces one immutable 9-label collection (base,
@@ -19,36 +19,35 @@ import math
 import os
 import re
 import stat
+import struct
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable, Sequence
 
 
-PROTOCOL_FAMILY = "j-lens-rl-confirmatory-v12-celebration-infra-replacement"
-PROTOCOL_ID = "j-lens-rl-confirmatory-v12-celebration-u4-u5-u6"
+PROTOCOL_FAMILY = "j-lens-rl-confirmatory-v13-celebration-long"
+PROTOCOL_ID = "j-lens-rl-confirmatory-v13-celebration-long-u4-u10-u20"
 SCHEMA_VERSION = 1
-SEEDS = tuple(range(224, 228))
+SEEDS = tuple(range(228, 232))
 CONDITIONS = ("jlens", "signflip")
-CURVE_STEPS = (0, 4, 5, 6)
-TERMINAL_STEP = 6
+CURVE_STEPS = (0, 4, 10, 20)
+TERMINAL_STEP = 20
 FINAL_EXAMPLES = 900
 TARGET_WORDS = ("yay", "great", "success", "nice")
 CALIBRATION_SHA256 = "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6"
 FINAL_MANIFEST_SHA256 = "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8"
-SCIENCE_REGISTRATION_PATH = (
-    "protocol_archive/v12_celebration_infrastructure_replacement_registration.json"
-)
+SCIENCE_REGISTRATION_PATH = "protocol_archive/v13_celebration_long_registration.json"
 SCIENCE_REGISTRATION_SHA256 = (
-    "f58f35419549de5905c7d873a71f67edda73289585025f9084901b61be4a9749"
+    "d7d5d51a8bcdec8d364793181975e5ae47d5dd7e7b848b9d8a5dfeceb04d725e"
 )
-CANDIDATE_FREEZE_PATH = "protocol_archive/v11_celebration_candidate_freeze.json"
-CANDIDATE_FREEZE_SHA256 = "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9"
+CANDIDATE_FREEZE_PATH = "protocol_archive/v13_celebration_long_candidate_freeze.json"
+CANDIDATE_FREEZE_SHA256 = "5aec5b806dc947886e8778256224fc7e994e94050132d0fa055254e89b931b0c"
 CANDIDATE_FREEZE_CORRECTION_PATH = (
-    "protocol_archive/v11_celebration_infrastructure_closeout.json"
+    "protocol_archive/v13_celebration_long_selection_integrity.json"
 )
 CANDIDATE_FREEZE_CORRECTION_SHA256 = (
-    "cbc4c78dcac153675e460e4aff344c12a44a55e34c71de300da3195f44d9c806"
+    "8bcd35d6fa15cc5fdca9093fa02b1980ad089217b5eacb44da57fab81e764db0"
 )
 MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
 MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
@@ -85,7 +84,7 @@ FINAL_LABELS = (
     *(f"jlens_seed{seed}" for seed in SEEDS),
     *(f"signflip_seed{seed}" for seed in SEEDS),
 )
-CURVE_CRITERION = "M4 > M0, M5 >= M4, and M6 >= M5 on the four-treatment-seed mean"
+CURVE_CRITERION = "M4 > M0, M10 >= M4, and M20 >= M10 on the four-treatment-seed mean"
 COLLECTION_POLICY = (
     "collect all 9 registered labels serially before semantically parsing, scoring, "
     "comparing, reporting, or exposing any per-label outcome; opaque SHA-256 receipt "
@@ -240,6 +239,15 @@ def canonical_sha256(value: Any) -> str:
         value, sort_keys=True, separators=(",", ":"), ensure_ascii=False
     ).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def float32_duplicate_reductions_equivalent(left: float, right: float) -> bool:
+    """Accept only finite nonnegative float32 duplicate reductions within one ULP."""
+    values = (float(left), float(right))
+    if any(not math.isfinite(value) or value < 0.0 for value in values):
+        return False
+    bits = [struct.unpack(">I", struct.pack(">f", value))[0] for value in values]
+    return abs(bits[0] - bits[1]) <= 1
 
 
 def read_json(path: str | Path) -> Any:
@@ -545,7 +553,7 @@ def expected_registration_document(spec: dict[str, Any]) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "protocol": spec["protocol"],
-        "status": "registered_before_v10_training_and_final_unlock",
+        "status": "registered_before_v13_training_and_final_unlock",
         "protected_payloads_accessed": False,
         "registered_spec_projection": projection,
         "registered_spec_projection_sha256": canonical_sha256(projection),
@@ -596,7 +604,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         raise FinalProtocolError("final spec changed the immutable 9-label collection")
     if spec.get("target_words") != list(TARGET_WORDS):
         raise FinalProtocolError(
-            "V12 targets must remain the frozen celebration-family words"
+            "V13 targets must remain the frozen celebration-family words"
         )
     if (
         not _is_commit(spec.get("git_commit"))
@@ -669,7 +677,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         != _negated_components(treatment)
     ):
         raise FinalProtocolError(
-            "future V12 treatment/signflip differs from the frozen celebration-tail recipe"
+            "future V13 treatment/signflip differs from the frozen celebration-tail recipe"
         )
     training = spec.get("training", {})
     if training != {
@@ -682,7 +690,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         "max_new_tokens": 256,
         "min_new_tokens": 64,
         "temperature": 1.0,
-        "updates": 6,
+        "updates": 20,
         "learning_rate": 3e-6,
         "lr_scheduler_type": "constant",
         "warmup_steps": 0,
@@ -694,19 +702,19 @@ def validate_spec(value: Any) -> dict[str, Any]:
         "lora_rank": 8,
         "lora_alpha": 16,
         "score_stride": 10,
-        "score_start_fraction": 0.5,
-        "score_layers": [8],
+        "score_start_fraction": 0.0,
+        "score_layers": [8, 14, 20],
         "score_aggregation": "mean",
         "score_include_final": False,
         "vocab_chunk_size": 16384,
         "mask_target_tokens": True,
-        "eval_every": 1,
-        "validation_steps": [4, 5, 6],
+        "eval_every": 4,
+        "validation_steps": [4, 10, 20],
         "validation_observational_only": True,
         "early_stopping_patience": None,
         "early_stopping_min_delta": 0.0,
-        "save_every": 6,
-        "save_total_limit": 1,
+        "save_every": 10,
+        "save_total_limit": 3,
     }:
         raise FinalProtocolError("future V10 training schema/hyperparameters changed")
     paths = spec.get("paths", {})
@@ -764,7 +772,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
     if (
         wandb.get("entity") != "nilinabra-spare-time"
         or wandb.get("project") != "j-lens-rl"
-        or wandb.get("group") != "confirm-v12-celebration-u4-u5-u6"
+        or wandb.get("group") != "confirm-v13-celebration-long-u4-u10-u20"
         or wandb.get("mode") != "online"
         or not isinstance(wandb.get("tags"), list)
         or not wandb["tags"]
@@ -773,7 +781,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         or wandb["run_ids"]
         != {
             f"{condition}_seed{seed}": (
-                f"confirm-v12-celebration-{condition}-seed{seed}"
+                f"confirm-v13-celebration-long-{condition}-seed{seed}"
             )
             for condition in CONDITIONS
             for seed in SEEDS
@@ -881,7 +889,7 @@ def expected_training_config(context: FinalContext, condition: str, seed: int) -
         "train_exclusions_manifest_sha256": spec["firewall"]["train_exclusions"]["sha256"],
         "registered_backend": "modal-l40s",
         "expected_cuda_device_name": spec["hardware"]["device_name"],
-        "evidence_eligibility": "original_registered_v10_modal_attempt",
+        "evidence_eligibility": "original_registered_v13_modal_attempt",
         "seed": seed,
         "score_components": (
             spec["treatment_score_components"]
@@ -1176,7 +1184,7 @@ def verify_nonprotected_bindings(context: FinalContext) -> dict[str, Any]:
         }
         or receipt.get("schema_version") != 1
         or receipt.get("protocol") != spec["protocol"]
-        or receipt.get("status") != "prospectively_verified_before_v10_final_unlock"
+        or receipt.get("status") != "prospectively_verified_before_v13_final_unlock"
         or receipt.get("protected_final_manifest_sha256")
         != spec["final_collection"]["manifest_sha256"]
         or receipt.get("curve_manifest_sha256") != firewall["curve_manifest"]["sha256"]
@@ -1295,9 +1303,8 @@ def _training_behavior_summary(
                 float(row["reward"]), float(row[reward_mean_key]),
                 rel_tol=0.0, abs_tol=1e-12,
             )
-            or not math.isclose(
-                float(row["reward_std"]), float(row[reward_std_key]),
-                rel_tol=0.0, abs_tol=1e-7,
+            or not float32_duplicate_reductions_equivalent(
+                float(row["reward_std"]), float(row[reward_std_key])
             )
             or not 0 <= float(row[literal_key]) <= 1
             or not 0 <= float(row["completions/clipped_ratio"]) <= 1
@@ -1558,7 +1565,7 @@ def _verify_one_completed_run(
         or manifest.get("reward_type") != "jlens"
         or manifest.get("registered_command") != config["registered_command"]
         or manifest.get("evidence_eligibility")
-        != "original_registered_v10_modal_attempt"
+        != "original_registered_v13_modal_attempt"
         or manifest.get("reproduction_source") is not None
         or manifest.get("confirmatory_identity") != expected_confirmatory_identity
         or manifest.get("metric_schema") != expected_metric
@@ -1650,7 +1657,7 @@ def _verify_one_completed_run(
         or result.get("terminal_checkpoint") != checkpoint_tree
         or result.get("final_adapter_and_tokenizer") != final_tree
         or result.get("wandb_identity") != _expected_wandb_identity(config)
-        or result.get("evidence_eligibility") != "original_registered_v10_modal_attempt"
+        or result.get("evidence_eligibility") != "original_registered_v13_modal_attempt"
         or result.get("reproduction_source") is not None
     ):
         raise FinalProtocolError(f"{label} run-result identity changed")

@@ -84,7 +84,7 @@ def _training() -> dict[str, object]:
         "max_new_tokens": 256,
         "min_new_tokens": 64,
         "temperature": 1.0,
-        "updates": 6,
+        "updates": 20,
         "learning_rate": 3e-6,
         "lr_scheduler_type": "constant",
         "warmup_steps": 0,
@@ -96,19 +96,19 @@ def _training() -> dict[str, object]:
         "lora_rank": 8,
         "lora_alpha": 16,
         "score_stride": 10,
-        "score_start_fraction": 0.5,
-        "score_layers": [8],
+        "score_start_fraction": 0.0,
+        "score_layers": [8, 14, 20],
         "score_aggregation": "mean",
         "score_include_final": False,
         "vocab_chunk_size": 16384,
         "mask_target_tokens": True,
-        "eval_every": 1,
-        "validation_steps": [4, 5, 6],
+        "eval_every": 4,
+        "validation_steps": [4, 10, 20],
         "validation_observational_only": True,
         "early_stopping_patience": None,
         "early_stopping_min_delta": 0.0,
-        "save_every": 6,
-        "save_total_limit": 1,
+        "save_every": 10,
+        "save_total_limit": 3,
     }
 
 
@@ -200,8 +200,8 @@ def _create_completed_runs(
 ) -> None:
     run_records: dict[str, object] = {}
     per_seed: dict[str, dict[str, float]] = {}
-    treatment_curve = {0: 0.30, 4: 0.35, 5: 0.36, 6: 0.37}
-    control_curve = {0: 0.30, 4: 0.29, 5: 0.28, 6: 0.27}
+    treatment_curve = {0: 0.30, 4: 0.35, 10: 0.36, 20: 0.37}
+    control_curve = {0: 0.30, 4: 0.29, 10: 0.28, 20: 0.27}
     train_indices = list(range(max(excluded_indices) + 1, max(excluded_indices) + 1001))
     for condition in final.CONDITIONS:
         for seed in final.SEEDS:
@@ -283,7 +283,7 @@ def _create_completed_runs(
                 "reward_type": "jlens",
                 "process_command": process_command,
                 "registered_command": config["registered_command"],
-                "evidence_eligibility": "original_registered_v10_modal_attempt",
+                "evidence_eligibility": "original_registered_v13_modal_attempt",
                 "reproduction_source": None,
                 "confirmatory_identity": {
                     "registration_sha256": context.spec["registration_sha256"],
@@ -337,7 +337,7 @@ def _create_completed_runs(
                 ),
                 "final_adapter_and_tokenizer": final._tree_identity(directory / "final"),
                 "wandb_identity": final._expected_wandb_identity(config),
-                "evidence_eligibility": "original_registered_v10_modal_attempt",
+                "evidence_eligibility": "original_registered_v13_modal_attempt",
                 "reproduction_source": None,
             }
             _write(directory / "run_result_manifest.json", result)
@@ -483,7 +483,7 @@ def _future_context(
     disjointness = {
         "schema_version": 1,
         "protocol": protocol_name,
-        "status": "prospectively_verified_before_v10_final_unlock",
+        "status": "prospectively_verified_before_v13_final_unlock",
         "protected_final_manifest_sha256": final.sha256_file(final_manifest),
         "curve_manifest_sha256": final.sha256_file(curve_manifest),
         "train_exclusions_manifest_sha256": final.sha256_file(exclusions_manifest),
@@ -585,10 +585,10 @@ def _future_context(
         "wandb": {
             "entity": "nilinabra-spare-time",
             "project": "j-lens-rl",
-            "group": "confirm-v12-celebration-u4-u5-u6",
+            "group": "confirm-v13-celebration-long-u4-u10-u20",
             "mode": "online",
             "tags": [
-                "confirmatory-v12",
+                "confirmatory-v13",
                 "emotional",
                 "celebration-family",
                 "tail-taper",
@@ -596,7 +596,7 @@ def _future_context(
             ],
             "run_ids": {
                 f"{condition}_seed{seed}": (
-                    f"confirm-v12-celebration-{condition}-seed{seed}"
+                    f"confirm-v13-celebration-long-{condition}-seed{seed}"
                 )
                 for condition in final.CONDITIONS
                 for seed in final.SEEDS
@@ -973,9 +973,9 @@ def _analysis_process(context: final.FinalContext) -> dict[str, object]:
 
 
 def test_design_is_four_fresh_seeds_and_exact_requested_curve() -> None:
-    assert final.SEEDS == tuple(range(224, 228))
-    assert final.CURVE_STEPS == (0, 4, 5, 6)
-    assert final.TERMINAL_STEP == 6
+    assert final.SEEDS == tuple(range(228, 232))
+    assert final.CURVE_STEPS == (0, 4, 10, 20)
+    assert final.TERMINAL_STEP == 20
     assert final.TARGET_WORDS == ("yay", "great", "success", "nice")
     assert final.TREATMENT_SCORE_COMPONENTS == (
         {
@@ -1015,7 +1015,7 @@ def test_spec_rejects_design_schema_and_signflip_mutations(tmp_path: Path) -> No
     context = _future_context(tmp_path)
     mutations = []
     value = copy.deepcopy(context.spec)
-    value["seeds"] = list(range(224, 232))
+    value["seeds"] = list(range(228, 236))
     mutations.append(value)
     value = copy.deepcopy(context.spec)
     value["training"]["updates"] = 5
@@ -1157,11 +1157,12 @@ def test_reward_std_verifier_allows_float32_reduction_noise_only(
         f"rewards/jlens_{'_'.join(config['target_words'])}_reward/std"
     )
 
-    rows[0][reward_std_key] = float(rows[0]["reward_std"]) + 3e-8
+    rows[0]["reward_std"] = 1.042350172996521
+    rows[0][reward_std_key] = 1.0423502922058105
     _write(log_path, rows)
     final._training_behavior_summary(log_path, config, history)
 
-    rows[0][reward_std_key] = float(rows[0]["reward_std"]) + 1.1e-7
+    rows[0][reward_std_key] = 1.0423504114151
     _write(log_path, rows)
     with pytest.raises(final.FinalProtocolError, match="one-J-reward behavior"):
         final._training_behavior_summary(log_path, config, history)
@@ -1199,7 +1200,7 @@ def test_validation_merged_reward_rows_may_omit_only_their_learning_rate(
     summary = final._training_behavior_summary(log_path, config, history)
     assert summary["optimizer_steps"] == config["updates"]
     assert summary["validation_steps"] == list(final.CURVE_STEPS[1:])
-    assert summary["learning_rate_rows"] == 3
+    assert summary["learning_rate_rows"] == 17
 
     wrong_at_eval = copy.deepcopy(merged)
     next(

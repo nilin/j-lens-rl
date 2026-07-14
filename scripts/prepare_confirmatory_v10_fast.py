@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Materialize the prospective V12 Modal state without touching the final set.
+"""Materialize the prospective V13 Modal state without touching the final set.
 
 The protected final manifest is deliberately represented only by its previously
 registered path and SHA-256 string.  This module never resolves, stats, opens,
@@ -24,8 +24,8 @@ from scripts import confirmatory_v10_final_protocol as protocol
 
 REMOTE_REPOSITORY = "/workspace/j-lens-rl"
 REMOTE_STATE = "/state"
-METRIC_SCHEMA_PATH = "protocol_archive/v12_celebration_metric_schema.json"
-CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v12-modal-execution-contract-v1"
+METRIC_SCHEMA_PATH = "protocol_archive/v13_celebration_long_metric_schema.json"
+CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v13-modal-execution-contract-v1"
 
 
 class PreparationError(RuntimeError):
@@ -218,7 +218,7 @@ def _training() -> dict[str, Any]:
         "max_new_tokens": 256,
         "min_new_tokens": 64,
         "temperature": 1.0,
-        "updates": 6,
+        "updates": 20,
         "learning_rate": 3e-6,
         "lr_scheduler_type": "constant",
         "warmup_steps": 0,
@@ -230,19 +230,19 @@ def _training() -> dict[str, Any]:
         "lora_rank": 8,
         "lora_alpha": 16,
         "score_stride": 10,
-        "score_start_fraction": 0.5,
-        "score_layers": [8],
+        "score_start_fraction": 0.0,
+        "score_layers": [8, 14, 20],
         "score_aggregation": "mean",
         "score_include_final": False,
         "vocab_chunk_size": 16384,
         "mask_target_tokens": True,
-        "eval_every": 1,
-        "validation_steps": [4, 5, 6],
+        "eval_every": 4,
+        "validation_steps": [4, 10, 20],
         "validation_observational_only": True,
         "early_stopping_patience": None,
         "early_stopping_min_delta": 0.0,
-        "save_every": 6,
-        "save_total_limit": 1,
+        "save_every": 10,
+        "save_total_limit": 3,
     }
 
 
@@ -320,7 +320,7 @@ def prepare(args: argparse.Namespace) -> dict[str, str]:
             "protocol": protocol.PROTOCOL_ID,
             "repository": REMOTE_REPOSITORY,
             "python_executable": args.runtime_python,
-            "gpu_lock_path": f"{REMOTE_STATE}/v10_gpu.lock",
+            "gpu_lock_path": f"{REMOTE_STATE}/v13_gpu.lock",
             "git_commit": args.runtime_source_json["git_commit"],
             "source_tree_sha256": args.runtime_source_json["source_tree_sha256"],
             "registration_path": registration_runtime,
@@ -375,10 +375,10 @@ def prepare(args: argparse.Namespace) -> dict[str, str]:
             "metric_schema": {"path": METRIC_SCHEMA_PATH, "sha256": protocol.sha256_file(metric_path)},
             "wandb": {
                 "entity": "nilinabra-spare-time", "project": "j-lens-rl",
-                "group": "confirm-v12-celebration-u4-u5-u6", "mode": "online",
-                "tags": ["confirmatory-v12", "emotional", "celebration-family", "tail-taper", "infrastructure-replacement", "prospective"],
+                "group": "confirm-v13-celebration-long-u4-u10-u20", "mode": "online",
+                "tags": ["confirmatory-v13", "emotional", "celebration-family", "tail-taper", "exact-seed195-horizon", "prospective"],
                 "run_ids": {
-                    f"{condition}_seed{seed}": f"confirm-v12-celebration-{condition}-seed{seed}"
+                    f"{condition}_seed{seed}": f"confirm-v13-celebration-long-{condition}-seed{seed}"
                     for condition in protocol.CONDITIONS for seed in protocol.SEEDS
                 },
             },
@@ -393,7 +393,7 @@ def prepare(args: argparse.Namespace) -> dict[str, str]:
         receipt = {
             "schema_version": 1,
             "protocol": protocol.PROTOCOL_ID,
-            "status": "prospectively_verified_before_v10_final_unlock",
+            "status": "prospectively_verified_before_v13_final_unlock",
             "protected_final_manifest_sha256": protocol.FINAL_MANIFEST_SHA256,
             "curve_manifest_sha256": protocol.CURVE_MANIFEST_SHA256,
             "train_exclusions_manifest_sha256": protocol.TRAIN_EXCLUSIONS_SHA256,

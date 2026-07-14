@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-v13-celebration-long-selection-integrity",
+  "protocol": "j-lens-rl-confirmatory-v13-celebration-long-u4-u10-u20",
+  "recorded_at_utc": "2026-07-14T23:05:33Z",
+  "selection_basis": "The exact seed195 20-update lineage was explicitly requested before V12's step-5 gate was known; the V13 recipe is copied from that already-public development config and was not tuned to V12 outcomes.",
+  "known_before_registration": {
+    "seed195_public_curve": [0.3825, 0.3925, 0.4, 0.4125],
+    "v12_public_curve_gate_failed": true,
+    "v12_controls_dispatched": false,
+    "v12_protected_final_accessed": false
+  },
+  "execution_separation": {
+    "fresh_seeds": [228, 229, 230, 231],
+    "resume_retry_warm_start_or_pool_prior_runs": false,
+    "fresh_modal_app_required": true,
+    "fresh_modal_volume_required": true,
+    "fresh_wandb_ids_required": true,
+    "v12_rows_enter_v13_gate_or_final_statistics": false
+  },
+  "concurrent_training_policy": {
+    "treatments_and_matched_signflips_may_dispatch_together": true,
+    "maximum_joint_training_gpus": 8,
+    "treatment_curve_gate_uses_only_four_jlens_runs": true,
+    "final_requires_passed_treatment_curve_and_all_eight_terminal_verifications": true,
+    "global_modal_limit_at_launch": 10
+  },
+  "protected_final_payloads_accessed": false
+}

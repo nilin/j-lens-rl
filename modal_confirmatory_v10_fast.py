@@ -1,16 +1,16 @@
-"""Fail-closed Modal adapter for the frozen celebration-family V12 attempt.
+"""Fail-closed Modal adapter for the frozen celebration-family V13 long attempt.
 
 This file is execution plumbing, not a second scientific protocol.  It is
 inert unless ``JLENS_V10_MODAL_CONTRACT`` names a byte-pinned, launch-enabled
-contract which is itself bound by the registered V12 protocol spec.  The
+contract which is itself bound by the registered V13 protocol spec.  The
 scientific protocol owns config derivation, terminal-run verification, curve
 semantics, unlock semantics, the one-shot final collection, and analysis.
 
 The GPU schedule is deliberately small:
 
-* four treatment seeds run concurrently on L40S;
-* their registered 0/2/3/4 mean curve is verified and must pass;
-* only then do the four exact sign-flip controls run concurrently; and
+* four treatments and four exact sign-flip controls run concurrently on L40S;
+* the treatment-only registered 0/4/10/20 mean curve is verified and must pass;
+* all eight terminal runs must verify; and
 * the existing final runner collects all nine labels serially on one L40S.
 
 There is no retry/resume path.  A fresh, pre-existing Modal Volume and a clean
@@ -40,38 +40,39 @@ LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = Path("/state")
 CONTRACT_ENV = "JLENS_V10_MODAL_CONTRACT"
-CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v12-modal-execution-contract-v1"
+CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v13-modal-execution-contract-v1"
 FROZEN_SCIENTIFIC_PROTOCOL = (
-    "j-lens-rl-confirmatory-v12-celebration-u4-u5-u6"
+    "j-lens-rl-confirmatory-v13-celebration-long-u4-u10-u20"
 )
 SCIENCE_REGISTRATION_PATH = (
-    "protocol_archive/v12_celebration_infrastructure_replacement_registration.json"
+    "protocol_archive/v13_celebration_long_registration.json"
 )
 SCIENCE_REGISTRATION_SHA256 = (
-    "f58f35419549de5905c7d873a71f67edda73289585025f9084901b61be4a9749"
+    "d7d5d51a8bcdec8d364793181975e5ae47d5dd7e7b848b9d8a5dfeceb04d725e"
 )
-CANDIDATE_FREEZE_PATH = "protocol_archive/v11_celebration_candidate_freeze.json"
+CANDIDATE_FREEZE_PATH = "protocol_archive/v13_celebration_long_candidate_freeze.json"
 CANDIDATE_FREEZE_SHA256 = (
-    "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9"
+    "5aec5b806dc947886e8778256224fc7e994e94050132d0fa055254e89b931b0c"
 )
 INTEGRITY_AMENDMENT_PATH = (
-    "protocol_archive/v11_celebration_infrastructure_closeout.json"
+    "protocol_archive/v13_celebration_long_selection_integrity.json"
 )
 INTEGRITY_AMENDMENT_SHA256 = (
-    "cbc4c78dcac153675e460e4aff344c12a44a55e34c71de300da3195f44d9c806"
+    "8bcd35d6fa15cc5fdca9093fa02b1980ad089217b5eacb44da57fab81e764db0"
 )
-APP_FALLBACK = "j-lens-rl-confirmatory-v12-unmaterialized"
-VOLUME_FALLBACK = "j-lens-rl-confirmatory-v12-unmaterialized"
+APP_FALLBACK = "j-lens-rl-confirmatory-v13-long-unmaterialized"
+VOLUME_FALLBACK = "j-lens-rl-confirmatory-v13-long-unmaterialized"
 GPU_TYPE = "L40S"
-IMAGE_SPEC = "j-lens-rl-v12-celebration-l40s-v1"
-MAX_PARALLEL_TRAINING_GPUS = 4
+IMAGE_SPEC = "j-lens-rl-v13-celebration-long-l40s-v1"
+CONDITION_PARALLELISM = 4
+MAX_PARALLEL_TRAINING_GPUS = 8
 MAX_PARALLEL_FINAL_GPUS = 1
-SEEDS = (224, 225, 226, 227)
+SEEDS = (228, 229, 230, 231)
 CONDITIONS = ("jlens", "signflip")
-CURVE_STEPS = (0, 4, 5, 6)
-TERMINAL_STEP = 6
+CURVE_STEPS = (0, 4, 10, 20)
+TERMINAL_STEP = 20
 CURVE_CRITERION = (
-    "M4 > M0, M5 >= M4, and M6 >= M5 on the four-treatment-seed mean"
+    "M4 > M0, M10 >= M4, and M20 >= M10 on the four-treatment-seed mean"
 )
 FINAL_MANIFEST_SHA256 = (
     "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8"
@@ -140,7 +141,7 @@ REQUIRED_RUNTIME_FILES = {
     "src/jlens_rl/train.py",
     "tests/test_v10_final_automation.py",
     "tests/test_paired_eval.py",
-    "protocol_archive/v12_celebration_metric_schema.json",
+    "protocol_archive/v13_celebration_long_metric_schema.json",
     "pyproject.toml",
     SCIENCE_REGISTRATION_PATH,
     CANDIDATE_FREEZE_PATH,
@@ -202,9 +203,10 @@ def _exact_design() -> dict[str, Any]:
         "terminal_step": TERMINAL_STEP,
         "curve_steps": list(CURVE_STEPS),
         "curve_criterion": CURVE_CRITERION,
-        "treatment_parallelism": MAX_PARALLEL_TRAINING_GPUS,
-        "control_parallelism": MAX_PARALLEL_TRAINING_GPUS,
-        "controls_require_curve_pass": True,
+        "treatment_parallelism": CONDITION_PARALLELISM,
+        "control_parallelism": CONDITION_PARALLELISM,
+        "joint_training_parallelism": MAX_PARALLEL_TRAINING_GPUS,
+        "controls_require_curve_pass": False,
         "final_examples": 900,
         "final_manifest_sha256": FINAL_MANIFEST_SHA256,
         "final_labels": list(FINAL_LABELS),
@@ -221,17 +223,26 @@ def _exact_design() -> dict[str, Any]:
     }
 
 
+def _joint_training_jobs() -> list[dict[str, Any]]:
+    return [
+        {"label": label, "condition": condition, "seed": seed, "slot": slot}
+        for slot, (condition, label, seed) in enumerate(
+            (
+                *(("jlens", label, seed) for label, seed in zip(TREATMENT_LABELS, SEEDS)),
+                *(("signflip", label, seed) for label, seed in zip(CONTROL_LABELS, SEEDS)),
+            )
+        )
+    ]
+
+
 def execution_plan() -> list[dict[str, Any]]:
     """Return the fixed prospective schedule without touching any state."""
     return [
         {
-            "phase": "treatment_training",
+            "phase": "joint_treatment_and_signflip_training",
             "gpu_type": GPU_TYPE,
-            "parallelism": 4,
-            "jobs": [
-                {"label": label, "condition": "jlens", "seed": seed, "slot": slot}
-                for slot, (label, seed) in enumerate(zip(TREATMENT_LABELS, SEEDS))
-            ],
+            "parallelism": MAX_PARALLEL_TRAINING_GPUS,
+            "jobs": _joint_training_jobs(),
         },
         {
             "phase": "registered_curve_gate",
@@ -239,22 +250,7 @@ def execution_plan() -> list[dict[str, Any]]:
             "parallelism": 0,
             "steps": list(CURVE_STEPS),
             "criterion": CURVE_CRITERION,
-            "failure_action": "stop_without_controls_or_final",
-        },
-        {
-            "phase": "matched_signflip_training",
-            "gpu_type": GPU_TYPE,
-            "parallelism": 4,
-            "requires": "registered_curve_gate_passed",
-            "jobs": [
-                {
-                    "label": label,
-                    "condition": "signflip",
-                    "seed": seed,
-                    "slot": slot,
-                }
-                for slot, (label, seed) in enumerate(zip(CONTROL_LABELS, SEEDS))
-            ],
+            "failure_action": "stop_without_final_after_preserving_all_eight_public_runs",
         },
         {
             "phase": "sealed_final_collection",
@@ -303,7 +299,7 @@ def validate_contract_shape(
     if value.get("hardware") != {
         "backend": "modal",
         "gpu_type": GPU_TYPE,
-        "max_parallel_training_workers": 4,
+        "max_parallel_training_workers": 8,
         "max_parallel_final_workers": 1,
         "one_gpu_per_worker": True,
     }:
@@ -443,10 +439,10 @@ def validate_scientific_binding(
         != candidate["matched_control_score_components"]
         or calibration.get("calibration_path") != CALIBRATION_PATH
         or calibration.get("calibration_sha256") != CALIBRATION_SHA256
-        or training.get("updates") != 6
+        or training.get("updates") != 20
         or training.get("learning_rate") != 3e-6
         or training.get("score_stride") != 10
-        or training.get("validation_steps") != [4, 5, 6]
+        or training.get("validation_steps") != [4, 10, 20]
         or str(hardware.get("backend")).lower() != "modal"
         or "L40S" not in str(hardware.get("device_name"))
         or hardware.get("max_gpu_processes") != 1
@@ -480,7 +476,7 @@ def validate_scientific_binding(
         }
     ):
         raise ModalV10Error(
-            "registered V12 spec does not bind the frozen celebration Modal attempt"
+            "registered V13 spec does not bind the frozen celebration-long Modal attempt"
         )
 
 
@@ -841,20 +837,22 @@ def _dispatch_path(label: str, kind: str) -> Path:
 def _write_training_intents(
     claim_id: str, root_call_id: str, condition: str
 ) -> list[dict[str, Any]]:
-    labels = TREATMENT_LABELS if condition == "jlens" else CONTROL_LABELS
     intents = []
-    for slot, (label, seed) in enumerate(zip(labels, SEEDS)):
+    jobs = [job for job in _joint_training_jobs() if job["condition"] == condition]
+    for job in jobs:
+        label = str(job["label"])
+        seed = int(job["seed"])
         config_path = REMOTE_STATE / "configs" / f"{label}.json"
         value = {
             "schema_version": 1,
             "protocol": CONTRACT_PROTOCOL,
             "claim_id": claim_id,
             "root_call_id": root_call_id,
-            "phase": "treatment_training" if condition == "jlens" else "matched_signflip_training",
+            "phase": "joint_treatment_and_signflip_training",
             "condition": condition,
             "seed": seed,
             "label": label,
-            "slot": slot,
+            "slot": int(job["slot"]),
             "gpu_type": GPU_TYPE,
             "config_sha256": _sha256(config_path),
             "contract_sha256": _sha256(REMOTE_CONTRACT_PATH),
@@ -972,7 +970,7 @@ def await_protected_final_release(claim_id: str, root_call_id: str) -> dict[str,
         if status_path.is_file():
             status = json.loads(status_path.read_text())
             if status.get("stage") in {
-                "curve_failed_no_controls_or_final",
+                "curve_failed_no_final_all_eight_public_runs_preserved",
                 "failed_closed",
             }:
                 return {"authorized": False, "terminal_status": status}
@@ -1048,10 +1046,6 @@ def train_one(intent: dict[str, Any]) -> dict[str, Any]:
     ):
         raise ModalV10Error("training worker input is outside frozen V10")
     protocol, context, _contract, _digest = _load_protocol_context()
-    if condition == "signflip":
-        gate = _build_and_verify_curve(protocol, context, write=False)
-        if gate["passed"] is not True:
-            raise ModalV10Error("signflip worker cannot run before a passing curve")
     config = protocol.expected_training_config(context, condition, seed)
     config_path = context.config_dir / f"{label}.json"
     if json.loads(config_path.read_text()) != config:
@@ -1223,6 +1217,12 @@ def _run_parallel_training(
     claim_id: str, root_call_id: str, condition: str
 ) -> list[dict[str, Any]]:
     intents = _write_training_intents(claim_id, root_call_id, condition)
+    return _run_training_intents(intents)
+
+
+def _run_training_intents(
+    intents: Sequence[dict[str, Any]],
+) -> list[dict[str, Any]]:
     calls = [train_one.spawn(intent) for intent in intents]
     results: list[dict[str, Any]] = []
     failures: list[str] = []
@@ -1238,6 +1238,17 @@ def _run_parallel_training(
             + " | ".join(failures)
         )
     return results
+
+
+def _run_joint_training(claim_id: str, root_call_id: str) -> list[dict[str, Any]]:
+    intents = [
+        intent
+        for condition in CONDITIONS
+        for intent in _write_training_intents(claim_id, root_call_id, condition)
+    ]
+    if len(intents) != 8:
+        raise ModalV10Error("joint V13 dispatch must contain exactly eight jobs")
+    return _run_training_intents(intents)
 
 
 @app.function(
@@ -1258,27 +1269,28 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
         raise ModalV10Error("V10 orchestrator lacks durable root-call authority")
     status_path = REMOTE_STATE / "attempt_status.json"
     try:
-        _replace_status(status_path, {"stage": "four_treatments", "claim_id": claim_id})
+        _replace_status(status_path, {"stage": "eight_joint_training_runs", "claim_id": claim_id})
         state_volume.commit()
-        treatments = _run_parallel_training(claim_id, root_call_id, "jlens")
+        completions = _run_joint_training(claim_id, root_call_id)
+        treatments = [item for item in completions if str(item["label"]).startswith("jlens_")]
+        controls = [item for item in completions if str(item["label"]).startswith("signflip_")]
+        if len(treatments) != 4 or len(controls) != 4:
+            raise ModalV10Error("joint V13 completion set is not four treatments plus four controls")
         state_volume.reload()
         protocol, context, _contract, _digest = _load_protocol_context()
         gate = _build_and_verify_curve(protocol, context, write=True)
         if gate["passed"] is not True:
             terminal = {
-                "stage": "curve_failed_no_controls_or_final",
+                "stage": "curve_failed_no_final_all_eight_public_runs_preserved",
                 "claim_id": claim_id,
                 "treatments": treatments,
+                "controls": controls,
                 "curve": gate,
                 "retry_or_resume_permitted": False,
             }
             _replace_status(status_path, terminal)
             state_volume.commit()
             return terminal
-        _replace_status(status_path, {"stage": "four_signflips", "claim_id": claim_id})
-        state_volume.commit()
-        controls = _run_parallel_training(claim_id, root_call_id, "signflip")
-        state_volume.reload()
         protocol, context, _contract, _digest = _load_protocol_context()
         unlock = _write_and_verify_unlock(protocol, context)
         authorization = {
@@ -1417,7 +1429,7 @@ def _local_preflight() -> tuple[dict[str, Any], Path]:
     ]
     if active_other:
         raise ModalV10Error(
-            "V10 reserves four of the five allowed GPUs and requires all other "
+            "V13 reserves eight of the ten allowed GPUs and requires all other "
             f"Modal apps stopped: {active_other}"
         )
     state_volume.hydrate()
@@ -1443,7 +1455,7 @@ def _local_preflight() -> tuple[dict[str, Any], Path]:
             "state_volume_object_id": state_volume.object_id,
             "state_volume_version": 2,
             "gpu_type": GPU_TYPE,
-            "max_parallel_gpus": 4,
+            "max_parallel_gpus": MAX_PARALLEL_TRAINING_GPUS,
         },
         root,
     )
@@ -1497,13 +1509,12 @@ def main() -> None:
                 "contract_sha256": CONTRACT_SHA256,
                 "volume": VOLUME_NAME,
                 "gpu_type": GPU_TYPE,
-                "max_parallel_gpus": 4,
+                "max_parallel_gpus": MAX_PARALLEL_TRAINING_GPUS,
                 "execution_plan": execution_plan(),
                 "runtime_estimate_minutes_after_image_ready": {
-                    "four_treatments": [8, 18],
-                    "four_signflips_if_gate_passes": [8, 18],
+                    "eight_joint_20_update_training_runs": [30, 70],
                     "serial_nine_label_final_and_analysis": [35, 65],
-                    "total": [51, 101],
+                    "total": [65, 135],
                 },
                 "preflight": preflight,
                 "launch_receipt": receipt,

@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-confirmatory-v13-celebration-long-registration",
+  "protocol": "j-lens-rl-confirmatory-v13-celebration-long-u4-u10-u20",
+  "registered_at_utc": "2026-07-14T23:05:33Z",
+  "status": "prospective_before_any_v13_gpu_dispatch_wandb_run_or_outcome",
+  "claim": "The exact 20-update seed195-lineage celebration-family J-lens intrinsic word reward alone, apart from KL beta 0.02, improves untouched GSM8K exact match.",
+  "bound_predecessor_records": {
+    "candidate_freeze": {
+      "path": "protocol_archive/v13_celebration_long_candidate_freeze.json",
+      "sha256": "5aec5b806dc947886e8778256224fc7e994e94050132d0fa055254e89b931b0c"
+    },
+    "selection_integrity": {
+      "path": "protocol_archive/v13_celebration_long_selection_integrity.json",
+      "sha256": "8bcd35d6fa15cc5fdca9093fa02b1980ad089217b5eacb44da57fab81e764db0"
+    },
+    "development_config": {
+      "path": "configs/emotional_parallel_v3_celebration.json",
+      "sha256": "3f98bfc107ee83a23d8da2c188d3caf32a1c8befd697671bbaeca6001f760669"
+    },
+    "v12_registration": {
+      "path": "protocol_archive/v12_celebration_infrastructure_replacement_registration.json",
+      "sha256": "f58f35419549de5905c7d873a71f67edda73289585025f9084901b61be4a9749"
+    }
+  },
+  "scientific_status": {
+    "exact_seed195_horizon_and_curve_nodes": true,
+    "fresh_seed_confirmation": true,
+    "v12_outcomes_enter_v13_gate_or_final_statistics": false,
+    "inference_scope": "nominal_with_explicit_adaptive_program_caveat"
+  },
+  "candidate": {
+    "target_words": ["yay", "great", "success", "nice"],
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "treatment_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+    ],
+    "signflip_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": -1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.25}
+    ]
+  },
+  "design": {
+    "seeds": [228, 229, 230, 231],
+    "conditions": ["jlens", "signflip"],
+    "training": {
+      "updates": 20,
+      "learning_rate": 0.000003,
+      "schedule": "constant",
+      "warmup_ratio": 0.0,
+      "score_stride": 10,
+      "kl_beta": 0.02,
+      "num_generations": 8,
+      "mask_target_tokens": true,
+      "correctness_reward": false
+    },
+    "concurrent_dispatch": {
+      "jobs": 8,
+      "treatments": 4,
+      "matched_signflips": 4,
+      "maximum_parallel_gpus": 8,
+      "controls_require_curve_pass_before_training": false,
+      "scientific_reason": "The controls are prospectively fixed and independent of the public treatment curve, so concurrent dispatch changes wall-clock scheduling only."
+    },
+    "curve_gate": {
+      "steps": [0, 4, 10, 20],
+      "criterion": "M4 > M0, M10 >= M4, and M20 >= M10 on the four-treatment-seed mean",
+      "inputs": "four jlens treatment runs only",
+      "failure_action": "stop_without_protected_final; preserve and report all eight already-dispatched public runs"
+    },
+    "final": {
+      "examples": 900,
+      "labels": ["base", "jlens_seed228", "jlens_seed229", "jlens_seed230", "jlens_seed231", "signflip_seed228", "signflip_seed229", "signflip_seed230", "signflip_seed231"],
+      "single_immutable_collection": true,
+      "unlock_requires_curve_and_all_eight_verified_runs": true
+    },
+    "acceptance": {
+      "alpha": 0.15,
+      "primary": "all four treatment-minus-signflip seed effects strictly positive, no ties, positive mean; exact two-sided sign p=0.125",
+      "secondary": "all four treatment-minus-base seed effects strictly positive, no ties, positive mean; exact two-sided sign p=0.125",
+      "crossed_95pct_intervals": "descriptive_only"
+    }
+  },
+  "fresh_execution_identity": {
+    "modal_app_name_policy": "allocate and pin a fresh V13 app identity before launch",
+    "modal_volume_policy": "allocate and pin a fresh empty version-2 Volume before launch",
+    "gpu_type": "L40S",
+    "maximum_parallel_training_gpus": 8,
+    "maximum_parallel_final_gpus": 1,
+    "global_modal_gpu_limit": 10,
+    "wandb": {
+      "entity": "nilinabra-spare-time",
+      "project": "j-lens-rl",
+      "group": "confirm-v13-celebration-long-u4-u10-u20",
+      "run_id_template": "confirm-v13-celebration-long-{condition}-seed{seed}",
+      "resume": "never",
+      "online_required": true
+    }
+  },
+  "authorized_verifier_rule": {
+    "reason": "V12 exposed a second valid float32 duplicate-reduction pair whose absolute difference was exactly one float32 ULP (1.1920928955078125e-7 at approximately 1.04), just above the earlier decimal 1e-7 cutoff.",
+    "reward_mean_identity": "unchanged: reward and the sole named J-lens reward mean must match within absolute tolerance 1e-12 and zero relative tolerance",
+    "reward_std_identity": "both nonnegative finite duplicate reward-standard-deviation scalars must round to float32 encodings at most one ULP apart",
+    "schema_and_j_only_checks": "unchanged: exactly one named reward mean, no GSM8K reward key, exact optimizer steps, finite bounded reward values, literal-rate bounds, and all other one-J-reward checks remain required",
+    "required_regressions": "accept the exact V12 adjacent-float32 pair 1.042350172996521/1.0423502922058105 and reject a two-ULP perturbation"
+  },
+  "prohibited": [
+    "resume, retry, warm-start, or pool any earlier run, checkpoint, curve row, or statistic",
+    "change the celebration words, calibration, J-lens windows, component weights, optimizer, 20-update horizon, 0/4/10/20 curve nodes, curve gate, controls, estimands, threshold, or final collection after launch",
+    "use signflip public-curve outcomes in the treatment curve gate",
+    "unlock or inspect the protected final before the treatment curve passes and all eight terminal runs verify",
+    "switch candidates based on V13 outcome data"
+  ],
+  "multiplicity_caveat": "The alpha-0.15 tests and p=0.125 threshold are nominal for this adaptively selected broader research program; they are not familywise-error corrected across prior development curves or attempts. V13 must not be described as an independent untouched replication.",
+  "protected_payloads_accessed": false
+}
