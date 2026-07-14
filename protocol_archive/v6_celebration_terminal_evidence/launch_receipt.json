@@ -1,0 +1,13 @@
+{
+  "app_id": "ap-W0KYuXL8iKfFlgUS81uNKB",
+  "claim_id": "2c426dfb48e54c759ec6b2cd641f4d97",
+  "function_call_id": "fc-01KXG6MYVEXXGAW2M3KY38769Q",
+  "global_modal_gpu_limit": 1,
+  "gpu_app_overlap_policy": "no other Modal GPU app may overlap this V6 attempt",
+  "gpu_type": "L40S",
+  "max_parallel_gpu_workers": 1,
+  "modal_app": "j-lens-rl-confirmatory-v6-celebration-taper",
+  "receipt_status": "present",
+  "submitted_at_utc": "2026-07-14T11:37:03.279158+00:00",
+  "volume": "j-lens-rl-confirmatory-v6-celebration-taper-20260714c"
+}

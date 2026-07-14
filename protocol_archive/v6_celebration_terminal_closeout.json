@@ -1,0 +1,151 @@
+{
+  "closed_at_utc": "2026-07-14T13:05:38Z",
+  "curve_gate": {
+    "evaluated": false,
+    "reason": "Only six of eight registered treatment seeds are valid terminal runs; seeds 182 and 183 are incomplete.",
+    "registered_steps": [0, 4, 6, 10]
+  },
+  "evals_directory_present": false,
+  "failure_policy": {
+    "conclusion": "Seed 182 is a partial nonterminal run, so the registered policy closes the whole V6 attempt immutably as infrastructure_failed/failed_before_final. Seeds 176-181 remain auditable terminal artifacts but cannot be pooled with or used to complete a retry. No model optimization may resume in Volume C; any later attempt requires a separately registered fresh claim and fresh Volume.",
+    "registered_infrastructure_retry_policy": "a completed run may only retry publication of its immutable terminal W&B artifact; never overwrite or resume model optimization; any partial nonterminal run closes the whole attempt immutably and requires a fresh registered claim/volume"
+  },
+  "final_collection_present": false,
+  "final_evaluation_labels": [],
+  "final_outcomes_unopened": true,
+  "final_unlocked_present": false,
+  "infrastructure_incident": {
+    "app_stop": {
+      "final_attempt_status_at_utc": "2026-07-14T12:57:06.000323+00:00",
+      "final_attempt_status_sha256": "ffd9e1c71f1f706be516a74f105162274f71139d2b0e00c0ef0e8bb7efa83be6",
+      "manual_stop_requested_at_utc": "2026-07-14T12:57:05Z",
+      "modal_app_stopped_at_utc": "2026-07-14T12:57:12+00:00",
+      "post_stop_container_count": 0
+    },
+    "cpu_orchestrator": {
+      "function_id": "fu-YfmH9eSw2o3pqtWxHNsrR7",
+      "original_container_id": "ta-01KXG6MZBWXYB9P6HG55HGTM1R",
+      "original_container_started_at_utc": "2026-07-14T11:37:02+00:00",
+      "preempted_at_utc": "2026-07-14T12:53:33+00:00",
+      "preemption_log": "Runner interrupted due to worker preemption. Your Function will be restarted with the same input.",
+      "restart_container_id": "ta-01KXGB16J05VN3H3QAH98Q67PR",
+      "restart_container_started_at_utc": "2026-07-14T12:53:36+00:00",
+      "restart_first_protocol_log_at_utc": "2026-07-14T12:53:46+00:00",
+      "reused_function_call_id": "fc-01KXG6MYVEXXGAW2M3KY38769Q"
+    },
+    "premature_finalizer": {
+      "archive_entry_count": 198,
+      "archive_relative_path": "exports/v6_celebration_taper_evidence_2c426dfb48e54c759ec6b2cd641f4d97.zip",
+      "archive_sha256": "bddd2f4e0bca5d995aa173a17b786539c8068b50bc831f754a602b73ba9bea2d",
+      "archive_size_bytes": 576232024,
+      "closeout_candidate_generated_at_utc": "2026-07-14T12:53:17.651965+00:00",
+      "closeout_candidate_sha256": "a38b76a175e80b925cdad62802752842fc68d3591ffd0afbf770bb65f2c461ac",
+      "evidence_inventory_file_count": 197,
+      "evidence_inventory_sha256": "ac755bec8f835ef888faf590aee78ddff6662515be79d3a78e5f48261be05a40",
+      "evidence_inventory_total_size_bytes": 576142645,
+      "non_authoritative_reason": "The finalizer ran after CPU preemption but before the restarted orchestrator and final manual-stop status; its candidate, inventory, and archive are immutable incident evidence, not the terminal closeout.",
+      "output_logged_at_utc": "2026-07-14T12:53:38+00:00"
+    },
+    "replay": {
+      "classification": "run-idempotent receipt replay for seeds 176-181, followed by a new partial seed182 setup/initial evaluation",
+      "existing_terminal_receipts_returned": [
+        {"artifact_digest": "a43271afe414c149d93b376cd799d17c", "at_utc": "2026-07-14T12:54:23+00:00", "run_result_manifest_sha256": "0045775572ca1867247fb550fa111cae1508b70865f628c338ef558ba34c8b45", "seed": 176},
+        {"artifact_digest": "df15694eb070a2872a8c5d71ce1e3e0a", "at_utc": "2026-07-14T12:54:51+00:00", "run_result_manifest_sha256": "6f9549e1f4fd5cc65c7c708356c248ed9bd2070a4553cd98c4add6dfc04706ea", "seed": 177},
+        {"artifact_digest": "4d8139a0da99f9839f4790167d8461f3", "at_utc": "2026-07-14T12:55:15+00:00", "run_result_manifest_sha256": "98e0aa7d82c9eec9be5e7df9b562d6dbe68abfe12cff5788c0f1049428048622", "seed": 178},
+        {"artifact_digest": "415c41ac5b4626f0c1f71727b45ff3d5", "at_utc": "2026-07-14T12:55:33+00:00", "run_result_manifest_sha256": "8f48cb42e35363d2766cb0c11ba9fc3ceb18360181edf40fe3d14e670a97b5d5", "seed": 179},
+        {"artifact_digest": "024389e0211c689485776efd18f934cd", "at_utc": "2026-07-14T12:55:58+00:00", "run_result_manifest_sha256": "04706211f714ec178444abc5482d2da05b43555f8e64f160643620edf878a6d2", "seed": 180},
+        {"artifact_digest": "625c5cb1e328b1190f609f714c9505e3", "at_utc": "2026-07-14T12:56:28+00:00", "run_result_manifest_sha256": "d0e543f181a81bee92937f807c0b25d1d136dd85130e661e9c9568f57fd6a775", "seed": 181}
+      ],
+      "model_optimization_replayed_for_seeds_176_through_181": false,
+      "seed182_gpu_container_id": "ta-01KXGB6KAMDC9FMWKQNQCQZ0BR",
+      "seed182_gpu_started_at_utc": "2026-07-14T12:56:34+00:00",
+      "seed182_gpu_terminated_at_utc": "2026-07-14T12:57:12+00:00"
+    },
+    "transient_three_container_classification": [
+      {
+        "container_id": "ta-01KXGB08YF8RWREAY13354DYAR",
+        "function_call_id": "fc-01KXGB08AJQA5B314AXH9RT912",
+        "function_id": "fu-G0oNysBHPF1PTjhIgvyjjt",
+        "role": "CPU finalizer"
+      },
+      {
+        "container_id": "ta-01KXGB16J05VN3H3QAH98Q67PR",
+        "function_call_id": "fc-01KXG6MYVEXXGAW2M3KY38769Q",
+        "function_id": "fu-YfmH9eSw2o3pqtWxHNsrR7",
+        "role": "CPU orchestrator restart"
+      },
+      {
+        "container_id": "ta-01KXGB1M3RXXYTMPR0GS6VGMNR",
+        "function_call_id": "fc-01KXGB1K3MPJGMW3P632F5SERX",
+        "function_id": "fu-JV7p7w7kTt3jS50UViBTDp",
+        "role": "the sole GPU replay worker (seed176 receipt replay)"
+      }
+    ],
+    "transient_three_container_conclusion": "The three-container snapshot was one CPU finalizer plus one CPU orchestrator plus at most one GPU replay worker; it is not evidence of two concurrent GPUs."
+  },
+  "operational_identity": {
+    "claim_id": "2c426dfb48e54c759ec6b2cd641f4d97",
+    "git_commit": "3c1666d289b50e70a93ac6d8c8e21157ce530097",
+    "global_modal_gpu_limit": 1,
+    "gpu_type": "L40S",
+    "launch_receipt_sha256": "c55b9ddcd1a5e128b7b2148488fefc22ed409acdc4a622c0c38328e56fef9d26",
+    "launch_submitted_at_utc": "2026-07-14T11:37:03.279158+00:00",
+    "max_parallel_gpu_workers": 1,
+    "modal_app": "j-lens-rl-confirmatory-v6-celebration-taper",
+    "modal_app_id": "ap-W0KYuXL8iKfFlgUS81uNKB",
+    "modal_function_call_id": "fc-01KXG6MYVEXXGAW2M3KY38769Q",
+    "volume": "j-lens-rl-confirmatory-v6-celebration-taper-20260714c"
+  },
+  "partial_treatment_result": {
+    "curves": {
+      "176": [0.375, 0.3675, 0.375, 0.3775],
+      "177": [0.375, 0.37, 0.3725, 0.3925],
+      "178": [0.375, 0.3875, 0.385, 0.3625],
+      "179": [0.375, 0.395, 0.405, 0.4],
+      "180": [0.375, 0.3925, 0.375, 0.3675],
+      "181": [0.375, 0.3925, 0.3975, 0.3575]
+    },
+    "exact_aggregate": {
+      "correct_counts": [900, 922, 924, 903],
+      "denominator_per_step": 2400,
+      "exact_fractions": ["900/2400", "922/2400", "924/2400", "903/2400"],
+      "mean_exact_match": [0.375, 0.38416666666666666, 0.385, 0.37625],
+      "steps": [0, 4, 6, 10]
+    },
+    "n_valid_terminal_seeds": 6,
+    "registered_decision": "not evaluated"
+  },
+  "protocol": "j-lens-rl-confirmatory-v6-celebration-terminal-closeout-v1",
+  "sealed_comparison_present": false,
+  "seed181_terminal_artifacts": {
+    "final_adapter_and_tokenizer_sha256": "d9099211004b1453b8ee7a3f2bbb628b83d776115c2270d1a435e973708770b4",
+    "run_result_manifest_sha256": "d0e543f181a81bee92937f807c0b25d1d136dd85130e661e9c9568f57fd6a775",
+    "source_tree_sha256": "4c91c1b2266703176407c5612b8a656c91ff83cbe3ea06c09c695fc3a44e93e8",
+    "terminal_checkpoint_sha256": "ba7c4d393b0818c286aecc3fc16a5d8f2461cadbfdaf5552c1434018ce650840",
+    "validation_history_sha256": "0e960921a460ead7c5a8771b6e942e112baec79e9bd1562011ce0375fe5efb58",
+    "wandb_artifact_digest": "625c5cb1e328b1190f609f714c9505e3",
+    "wandb_terminal_publish_receipt_sha256": "a77634650762c71616027f876388d258b0e24a3e332081a9ac1792ed34f4fa40"
+  },
+  "source_evidence": {
+    "attempt_claim": {"path": "protocol_archive/v6_celebration_terminal_evidence/attempt_claim.json", "sha256": "244b92be1cbacbab33af460e820632f6cb9aec2ee9ede8bb641b68e763d3f3ae"},
+    "attempt_status": {"path": "protocol_archive/v6_celebration_terminal_evidence/attempt_status.json", "sha256": "ffd9e1c71f1f706be516a74f105162274f71139d2b0e00c0ef0e8bb7efa83be6"},
+    "bundle_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/evidence_bundle_inventory.json", "sha256": "37e6aa15bf3eb1b0ab9b09aecd720e934aabab208b85bc58f8ae6c7fbd3b009e"},
+    "durable_export_receipt": {"path": "protocol_archive/v6_celebration_terminal_evidence/durable_export_receipt.json", "sha256": "c7667d652e8fa7c0b9ada6c4f5cb961c5d66c14352ea3c58dccef17c333295ff"},
+    "evidence_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/evidence_inventory.json", "sha256": "94dcd47a3d282899e011b9dc2acd33531f0d11787535fbd2e0488e9e87c08e4a"},
+    "launch_receipt": {"path": "protocol_archive/v6_celebration_terminal_evidence/launch_receipt.json", "sha256": "c55b9ddcd1a5e128b7b2148488fefc22ed409acdc4a622c0c38328e56fef9d26"},
+    "root_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/root_inventory.json", "sha256": "69dfb29fc65a42e8cc544656b12ce76b4d821560643f34bc3ca0277072dccfbc"},
+    "run_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/run_inventory.json", "sha256": "5ee93adb8da6d77fe75b4a81f85ad8413303d472d4034820f6d2e00298a06033"}
+  },
+  "terminal_stage": "failed_before_final",
+  "v6_attempt_disposition": "infrastructure_failed",
+  "v6_registration_sha256": "12cb17f896b117a43d9d266a53d43423ec5c5613fcc2dfda209f59bc27c507f2",
+  "v6_sealed_final_manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+  "v6_sealed_final_sorted_set_sha256": "eadcd0e2fc194b0e38bc1c9f4aa1bbf6e6b3ba1043b0015eedee59aec133637c",
+  "v7_conditional_predicate": {
+    "eligible_on_commit_and_hash_verification": true,
+    "fresh_attempt_requirement": "V7 must use its separately preregistered bytes, fresh claim, and fresh empty v2 Volume; no V6 Volume-C artifact may be resumed or pooled.",
+    "predicate_terminal_stage": "failed_before_final",
+    "sealed_final_continuity": "The 900-example V6 sealed final remained unopened and may be inherited only through the separately frozen V7 predicate.",
+    "warning": "This closeout establishes predecessor eligibility only; it is not authorization to unlock any final and is not V7 curve or significance evidence."
+  }
+}

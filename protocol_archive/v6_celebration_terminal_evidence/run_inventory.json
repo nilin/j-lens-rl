@@ -1,0 +1,207 @@
+{
+  "bundle_inventory_sha256": "37e6aa15bf3eb1b0ab9b09aecd720e934aabab208b85bc58f8ae6c7fbd3b009e",
+  "checked_at_utc": "2026-07-14T13:05:38Z",
+  "claim_id": "2c426dfb48e54c759ec6b2cd641f4d97",
+  "controls": {
+    "directories_present": [],
+    "registered_labels": [
+      "signflip_seed176",
+      "signflip_seed177",
+      "signflip_seed178",
+      "signflip_seed179",
+      "signflip_seed180",
+      "signflip_seed181",
+      "signflip_seed182",
+      "signflip_seed183"
+    ],
+    "terminal_labels": []
+  },
+  "curve_steps": [
+    0,
+    4,
+    6,
+    10
+  ],
+  "final": {
+    "evals_directory_present": false,
+    "final_collection_present": false,
+    "final_evaluation_labels": [],
+    "final_unlocked_present": false,
+    "sealed_comparison_present": false,
+    "sealed_final_manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+    "sealed_final_outcomes_opened": false,
+    "sealed_final_size": 900
+  },
+  "incomplete_treatments": {
+    "jlens_seed182": {
+      "absent_terminal_files": [
+        "checkpoint-10",
+        "final",
+        "log_history.json",
+        "run_result_manifest.json",
+        "validation_history.jsonl",
+        "wandb_terminal_publish_receipt.json"
+      ],
+      "present_file_sha256": {
+        "data_indices.json": "cc0196ede04e7b4b743894e878da50d6b0c72c2c69bd37d3e9d4166b7bfaf527",
+        "environment_snapshot.json": "0092c0cf9a6046162b078be3099bfdbcd6d966d3dc76ce34a6a2619cd05266a1",
+        "resolved_config.json": "06b014db44867ec557e4147241ab6ceed98862c7ce3cb921d51302a1801cf4af",
+        "run_manifest.json": "27650c01915e7a14b51aeadc51a46748ab265636492456b1350c09dcf7ba2528"
+      },
+      "present_files": [
+        "data_indices.json",
+        "environment_snapshot.json",
+        "resolved_config.json",
+        "run_manifest.json"
+      ],
+      "seed": 182,
+      "valid_terminal": false,
+      "validation_history_present": false,
+      "wandb_run_present": false,
+      "wandb_terminal_publish_receipt_present": false
+    },
+    "jlens_seed183": {
+      "absent_terminal_files": [
+        "checkpoint-10",
+        "final",
+        "log_history.json",
+        "run_result_manifest.json",
+        "validation_history.jsonl",
+        "wandb_terminal_publish_receipt.json"
+      ],
+      "directory_present": false,
+      "present_file_sha256": {},
+      "present_files": [],
+      "seed": 183,
+      "valid_terminal": false,
+      "validation_history_present": false,
+      "wandb_run_present": false,
+      "wandb_terminal_publish_receipt_present": false
+    }
+  },
+  "partial_six_seed_aggregate": {
+    "comparisons": {
+      "step10_gte_step6": false,
+      "step4_gt_step0": true,
+      "step6_gte_step4": true
+    },
+    "correct_counts": [
+      900,
+      922,
+      924,
+      903
+    ],
+    "denominator_per_step": 2400,
+    "exact_fractions": [
+      "900/2400",
+      "922/2400",
+      "924/2400",
+      "903/2400"
+    ],
+    "mean_exact_match": [
+      0.375,
+      0.38416666666666666,
+      0.385,
+      0.37625
+    ],
+    "n_seeds": 6,
+    "warning": "Descriptive aggregate only; it is not the registered eight-seed curve-gate decision."
+  },
+  "protocol": "j-lens-rl-confirmatory-v6-celebration-terminal-run-inventory-v1",
+  "remote_premature_bundle_inventory_sha256": "ac755bec8f835ef888faf590aee78ddff6662515be79d3a78e5f48261be05a40",
+  "registered_curve_gate": {
+    "evaluated": false,
+    "reason": "Only six of eight registered treatment seeds are valid terminal runs; seeds 182 and 183 are incomplete."
+  },
+  "schema_version": 1,
+  "valid_terminal_treatments": {
+    "jlens_seed176": {
+      "completed_updates": 10,
+      "curve": [0.375, 0.3675, 0.375, 0.3775],
+      "run_result_manifest_sha256": "0045775572ca1867247fb550fa111cae1508b70865f628c338ef558ba34c8b45",
+      "seed": 176,
+      "valid_terminal": true,
+      "validation_history_sha256": "70fd226af26afac98749d65cb033637e984fb959bdfa40234dea4ab44f2e73e4",
+      "wandb_artifact_digest": "a43271afe414c149d93b376cd799d17c",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed176",
+      "wandb_run_state": "finished",
+      "wandb_terminal_publish_receipt_sha256": "acf3ca1d1144d6e005caf7c73bbdca4eedbd5fc32f4f83c1fd47c4b1a4a0baf5"
+    },
+    "jlens_seed177": {
+      "completed_updates": 10,
+      "curve": [0.375, 0.37, 0.3725, 0.3925],
+      "run_result_manifest_sha256": "6f9549e1f4fd5cc65c7c708356c248ed9bd2070a4553cd98c4add6dfc04706ea",
+      "seed": 177,
+      "valid_terminal": true,
+      "validation_history_sha256": "b7612f830a89ee6c06a374633ffba458a8379bd06251456f383ca5f81e3ef2a4",
+      "wandb_artifact_digest": "df15694eb070a2872a8c5d71ce1e3e0a",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed177",
+      "wandb_run_state": "finished",
+      "wandb_terminal_publish_receipt_sha256": "d939492a817519d578d331947fc80b439c38b59f63b198e1cadb4d8d45b0892a"
+    },
+    "jlens_seed178": {
+      "completed_updates": 10,
+      "curve": [0.375, 0.3875, 0.385, 0.3625],
+      "run_result_manifest_sha256": "98e0aa7d82c9eec9be5e7df9b562d6dbe68abfe12cff5788c0f1049428048622",
+      "seed": 178,
+      "valid_terminal": true,
+      "validation_history_sha256": "bccad28a4c38d20482a2eb3b90dcea01f6dca02d34ac97da6b7e076e2d417cd0",
+      "wandb_artifact_digest": "4d8139a0da99f9839f4790167d8461f3",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed178",
+      "wandb_run_state": "finished",
+      "wandb_terminal_publish_receipt_sha256": "c182b6e68ab9a4e7cf6eb0ef789e3e77882f7dfa391fb750dd6e5d3ab01900bb"
+    },
+    "jlens_seed179": {
+      "completed_updates": 10,
+      "curve": [0.375, 0.395, 0.405, 0.4],
+      "run_result_manifest_sha256": "8f48cb42e35363d2766cb0c11ba9fc3ceb18360181edf40fe3d14e670a97b5d5",
+      "seed": 179,
+      "valid_terminal": true,
+      "validation_history_sha256": "ac522fddcd18c9512fa59074ee90575a11fb529027cfbf4d04a54a08015cc8d7",
+      "wandb_artifact_digest": "415c41ac5b4626f0c1f71727b45ff3d5",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed179",
+      "wandb_run_state": "finished",
+      "wandb_terminal_publish_receipt_sha256": "a1bd9dd74f58282fe4d0fa2de794e1eed78a7ca986048139cbae2ab181d58e74"
+    },
+    "jlens_seed180": {
+      "completed_updates": 10,
+      "curve": [0.375, 0.3925, 0.375, 0.3675],
+      "run_result_manifest_sha256": "04706211f714ec178444abc5482d2da05b43555f8e64f160643620edf878a6d2",
+      "seed": 180,
+      "valid_terminal": true,
+      "validation_history_sha256": "6c503c50f48304dddfe47dbbe464ae03da4d1dd8f50bdcdf25a64423dc656a4b",
+      "wandb_artifact_digest": "024389e0211c689485776efd18f934cd",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed180",
+      "wandb_run_state": "finished",
+      "wandb_terminal_publish_receipt_sha256": "a0c95493b630dce92c122efac1435f0056c28c1da8a6ba58db09a47e994a7427"
+    },
+    "jlens_seed181": {
+      "completed_updates": 10,
+      "curve": [0.375, 0.3925, 0.3975, 0.3575],
+      "final_adapter_and_tokenizer_sha256": "d9099211004b1453b8ee7a3f2bbb628b83d776115c2270d1a435e973708770b4",
+      "run_result_manifest_sha256": "d0e543f181a81bee92937f807c0b25d1d136dd85130e661e9c9568f57fd6a775",
+      "seed": 181,
+      "source_tree_sha256": "4c91c1b2266703176407c5612b8a656c91ff83cbe3ea06c09c695fc3a44e93e8",
+      "terminal_checkpoint_sha256": "ba7c4d393b0818c286aecc3fc16a5d8f2461cadbfdaf5552c1434018ce650840",
+      "valid_terminal": true,
+      "validation_history_sha256": "0e960921a460ead7c5a8771b6e942e112baec79e9bd1562011ce0375fe5efb58",
+      "wandb_artifact_digest": "625c5cb1e328b1190f609f714c9505e3",
+      "wandb_artifact_id": "QXJ0aWZhY3Q6MzEzODYxNTg3Ng==",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed181",
+      "wandb_run_state": "finished",
+      "wandb_terminal_publish_receipt_sha256": "a77634650762c71616027f876388d258b0e24a3e332081a9ac1792ed34f4fa40"
+    }
+  },
+  "validation_indices_sha256": "9c04151e1dac6b226bed07873e1003ab5c399a2978ca2b0dcb0d32c3a337ade5",
+  "volume": "j-lens-rl-confirmatory-v6-celebration-taper-20260714c",
+  "wandb_query": {
+    "checked_at_utc": "2026-07-14T13:05:38Z",
+    "entity": "nilinabra-spare-time",
+    "method": "authenticated read-only wandb.Api.run exact-ID lookup",
+    "project": "j-lens-rl",
+    "results": {
+      "confirm-v6-emotional-celebration-taper-h10-jlens_seed182": "not_found",
+      "confirm-v6-emotional-celebration-taper-h10-jlens_seed183": "not_found"
+    }
+  }
+}

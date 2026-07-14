@@ -1,0 +1,9 @@
+{
+  "claim_id": "2c426dfb48e54c759ec6b2cd641f4d97",
+  "error": "RuntimeError('1 mapped V6 jobs failed: [{\\'inputs\\': [\\'jlens\\', 182], \\'error\\': \"RemoteError(\\'\\')\"}]')",
+  "failed_from_stage": "semantic_training",
+  "failure_phase": "semantic_training",
+  "launch_receipt_present": true,
+  "stage": "failed",
+  "updated_at_utc": "2026-07-14T12:57:06.000323+00:00"
+}
