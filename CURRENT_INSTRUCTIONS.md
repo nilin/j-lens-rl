@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 08:48 UTC
+Last reconciled with the user: 2026-07-14 09:00 UTC
 
 ## Objective
 
@@ -35,6 +35,10 @@ from confirmatory claims.
 
 - Use a hard global limit of **1 simultaneous Modal GPU**; serialize all GPU
   workers and never overlap Modal GPU apps.
+- Spend at least half of experiment/GPU time on RL runs. Word-correlation
+  work may run between RL attempts, but it must never hold an available RL run
+  for more than one hour; after an hour, launch the ready registered RL work
+  and return to word search later.
 - Treat Codex use as a rate limit, never a cumulative stop: prior usage alone
   cannot pause work. If current/recent use exceeds twice the plan's weekly
   average rate (`weekly allowance / 84` per hour), pause 20 minutes, resume,
@@ -66,5 +70,7 @@ from confirmatory claims.
   six-update, `0/2/4/6`, eight-seed V5 registration remains frozen independently.
   Its first Modal app built successfully but was rejected before entrypoint,
   claim, GPU, or W&B because a 20 GiB disk request was below the workspace
-  minimum. Preserve that empty attempt; relaunch the byte-identical scientific
-  registration on fresh Volume B under infrastructure amendment 1.
+  minimum. Preserve that empty attempt. Its byte-identical scientific
+  registration is now running on fresh Volume B under infrastructure amendment
+  1: seed 168 entered training and its registered W&B run began syncing at
+  08:58 UTC. Keep the correlation replay queued behind this active RL attempt.

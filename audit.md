@@ -1300,3 +1300,29 @@ prepared state additionally pins the amended source bytes, amendment hash,
 closeout hash, fresh Volume, clean Git commit, and full source snapshot.
 The amended code passed `31/31` focused V5 tests and the full repository suite
 at `109/109`, plus Python compilation, shell syntax, and whitespace checks.
+
+### Active V5 launch ledger
+
+The amended V5 attempt was prepared from clean pushed commit
+`252a2319dc0ada5e99ddeecf507d7246590531d7` and dispatched only after a
+preflight found no other active Modal app. Modal app
+`ap-2o4XOP7jhqcrHyqkGN55wL`, orchestration call
+`fc-01KXFXCF23D6DRB5VNXCVJB8TN`, and immutable claim
+`c2d9ed29ebba46649f1ea182d7d50014` use fresh Volume
+`j-lens-rl-confirmatory-v5-emotional-20260714b`. The launch status records the
+global one-GPU ceiling. Wave 1/8 dispatched treatment seed 168 alone; its GPU
+call is `fc-01KXFXD5TNGYTB3RW08SV9J5PR`.
+
+At 08:58:40 UTC the registered online run
+[`confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168)
+began syncing. The trainer entered its fixed six-update schedule and completed
+update 1 without a fault. Its frozen 400-item curve split gave the durable step
+0 baseline exact match `0.4100` (95% binomial CI
+`[0.3628786353, 0.4588336400]`), mean completion length `229.93`, and literal
+target-completion rate `0.0`; the validation-index manifest is
+`b01409c011012641be96c84bfc35cb0b352cea902e54304105efa272a3eac6b2`.
+The first optimizer log reported loss `0.1572`, mean J-lens joy reward
+`-0.3907`, literal joy rate `0`, KL `0`, entropy `0.7477`, and learning rate
+`3e-6`. These are a live execution/heartbeat record, not an efficacy claim;
+the registered eight-seed mean curve gate and untouched final comparison remain
+unopened and controlling.
