@@ -1440,3 +1440,28 @@ At 11:40:54 UTC its registered
 became live, and optimizer step 1 completed at 11:41:14 UTC. These facts show
 execution liveness only: no registered evaluation curve node or significance
 result was available at this ledger cutoff.
+
+Seed 176 subsequently completed normally at 11:50:57 UTC. Its frozen 400-item
+curve was `.3750 -> .3675 -> .3750 -> .3775` at steps `0/4/6/10`. It therefore
+ended `.0025` above its own baseline, but it did **not** individually have the
+requested shape because the first post-baseline node fell by `.0075`. This is
+only one seed: the preregistered gate is the eight-seed mean and has not yet
+been evaluated. Literal target completion was `0/0/0/.0025`, so the result is
+not evidence that printing the target words drove accuracy.
+
+The complete run directory is durable at `runs/jlens_seed176` on Volume C. Its
+raw validation history, log history, resolved config, data indices, environment
+snapshot, run manifest, terminal checkpoint, final adapter/tokenizer, and W&B
+terminal evidence receipt were downloaded and hash-checked. The immutable
+run-result manifest SHA-256 is
+`0045775572ca1867247fb550fa111cae1508b70865f628c338ef558ba34c8b45`,
+the final adapter/tokenizer tree is
+`f1a9c168ae0f10d832fc16c153b07ea894de4336748ef0096c50d7929c3a5065`,
+and W&B acknowledged artifact
+`confirm-v6-emotional-celebration-taper-h10-jlens_seed176-terminal-evidence:v0`
+with digest `a43271afe414c149d93b376cd799d17c`. The curve, confidence intervals,
+identities, and hashes are mirrored in
+[`protocol_archive/v6_celebration_seed176_terminal_ledger.json`](protocol_archive/v6_celebration_seed176_terminal_ledger.json).
+No sealed-final outcome was opened. Wave 2/8 switched immediately to seed 177,
+which became live under its preregistered W&B identity with no second GPU
+treatment overlapping it.

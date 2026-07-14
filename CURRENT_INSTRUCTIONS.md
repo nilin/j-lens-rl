@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 10:20 UTC
+Last reconciled with the user: 2026-07-14 11:55 UTC
 
 ## Objective
 
@@ -67,8 +67,11 @@ from confirmatory claims.
   active RL lineage is a separately frozen celebration combination
   (`yay/great/success/nice`) with tapered late-response reward, registered nodes
   `0/4/6/10`, and seeds 176--183. It launched serially on one Modal L40S from
-  clean pushed commit `3c1666d`; seed 176 became live in W&B at 11:40:54 UTC.
-  Monitor that registered attempt without overlapping another GPU app.
+  clean pushed commit `3c1666d`. Seed 176 finished with exact match
+  `.3750/.3675/.3750/.3775` at `0/4/6/10`; this one seed ended above baseline
+  but dipped at the first node, while the registered decision remains the
+  eight-seed mean. Seed 177 started immediately afterward. Monitor that
+  registered attempt without overlapping another GPU app.
   Correlation attempt 4 stopped after all eight discovery shards when Modal
   preempted its CPU controller; aggregation/selection/validation never began
   and outcomes remain uninspected. Its preemption-safe recovery stays behind
