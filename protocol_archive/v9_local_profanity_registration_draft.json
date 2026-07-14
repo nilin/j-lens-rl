@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-confirmatory-v9-local-profanity-registration-draft",
+  "protocol": "j-lens-rl-confirmatory-v9-local-profanity-u5",
+  "status": "scientific_design_frozen_draft_disabled_launch_authorized_only_by_separate_hash_pinned_amendment",
+  "recipe_lock_path": "protocol_archive/v9_local_profanity_recipe_lock.json",
+  "scientific_identity": {
+    "same_v8_science": true,
+    "fresh_whole_attempt": true,
+    "seeds": [208, 209, 210, 211, 212, 213, 214, 215],
+    "curve_steps": [0, 4, 10, 20],
+    "controls_and_final_conditionally_gated": true,
+    "curve_is_exposed_development_data": true,
+    "sealed_final_is_only_inferential_data": true
+  },
+  "backend_identity": {
+    "backend": "local",
+    "required_gpu": "NVIDIA GeForce RTX 4090",
+    "required_gpu_uuid": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "required_driver_version": "570.195.03",
+    "required_memory_total_mib": 24564,
+    "required_torch_version": "2.9.1+cu128",
+    "required_cuda_build": "12.8",
+    "cuda_visible_devices": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "max_parallel_gpu_processes": 1,
+    "wandb_mode": "offline",
+    "offline_wandb_directories_must_be_preserved": true,
+    "runtime_source": "dedicated clean detached Git worktree pinned to the registered commit",
+    "python_executable": "/j-lens-rl/.venv/bin/python"
+  },
+  "fixed_input_sha256": {
+    "v8_terminal_closeout": "d8c48d67b7ff037aeac55774bcc1fedf4b2a574283e7cf12151cf3c95b57e638",
+    "v7_authoritative_closeout": "cd83a08155871518baf177d5718acae1053ef4a98e171cbfc9351cd1b8db930c",
+    "v7_pre_recovery_closeout": "c2cfef2d3b24a96fbef703ef64b0f53f2c696481548300ee53154559ea3d602b",
+    "v7_gpu_lease_retirement_receipt": "3caf91c90ff5dd54170ebaab658494d643fde4eb681b7fe18ddfc26b79e82dc3",
+    "v7_selected_recipe": "33760cfc906ed9c557eee40bc33a4bce2ce2fc32a8da23e887be8f97ad47c7f9",
+    "v7_registration": "5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569",
+    "lens": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "calibration": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c",
+    "curve_manifest": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions_manifest": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "sealed_final_manifest": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8"
+  },
+  "launch_gate": {
+    "enabled": false,
+    "reason": "This base draft never enables launch. The separate committed prelaunch amendment must pin and validate the authoritative V8 infrastructure-failure closeout and all enumerated evidence, proving V8 remained closed and the sealed final remained unopened."
+  }
+}

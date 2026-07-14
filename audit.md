@@ -1908,3 +1908,31 @@ state, claim, W&B IDs, and seeds, and a prospectively corrected tree-identity
 verifier. This infrastructure incident does not count as a word-search delay:
 the next RL attempt is being prepared immediately, and no correlation outcome
 is being awaited before launch.
+
+### Fresh V9-local registration after the verifier incident
+
+V9-local is a new whole attempt, not a V8 continuation. It keeps the negative
+intrinsic `damn`/`fuck` J-lens recipe, local RTX 4090 backend, exposed curve,
+matched sign-flip control, and sealed-final analysis fixed, but uses isolated
+`.confirmatory/v9_local` state, fresh seeds 208--215, and new W&B IDs. No V8
+checkpoint, optimizer state, training row selection, or result can be adopted
+or pooled. The V9 launch predicate pins the canonical V8 closeout and
+recomputes all 20 archived evidence hashes before it can prepare.
+
+The prospective terminal verifier now exactly mirrors the shared trainer's
+tree identity: absolute resolved path, canonical tree SHA-256, and per-file
+hashes. A regression test constructs a terminal tree and requires the two
+helpers to return identical dictionaries, directly covering the defect that
+closed V8. The runner retains one whole-attempt GPU lock, an fsynced intent
+before each subprocess, one immutable per-run offline W&B directory, and a
+fail-closed partial-run policy. Treatments run first in ascending seed order;
+controls start only after the frozen eight-seed mean curve satisfies
+`M4 > M0`, `M10 >= M4`, and `M20 >= M10`.
+
+The focused V9, offline-receipt, and V8-sync sweep passes 38 tests; Python and
+Bash syntax, design verification, and `git diff --check` also pass. The design
+verification reads no V9 outcome, and `.confirmatory/v9_local` does not yet
+exist at this cutoff. Sealed-final evaluation/analysis automation is still not
+implemented or audited, so even a future training unlock must not open the
+900-item final. Completed offline training runs should be synced promptly by a
+separate CPU-only transport; tracking failure must not alter or rerun training.

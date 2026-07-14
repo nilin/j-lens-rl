@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-confirmatory-v9-local-runtime-source-allowlist-v1",
+  "execution_policy": "The canonical runtime is the full clean detached Git worktree at the registered commit. This list identifies the directly science-critical entrypoints additionally byte-pinned in the registration; the committed Git tree pins every transitive file, mode, and symlink.",
+  "files": [
+    "artifacts/qwen25_05b_solved_lens.pt",
+    "protocol_archive/v9_local_profanity_recipe_lock.json",
+    "protocol_archive/v9_local_profanity_registration_draft.json",
+    "run_confirmatory_v9_local.sh",
+    "scripts/confirmatory_v9_local_protocol.py",
+    "scripts/confirmatory_v9_local_runner.py",
+    "scripts/v9_local_runtime_source_allowlist.json",
+    "scripts/v9_local_train.py",
+    "src/jlens_rl/common.py",
+    "src/jlens_rl/eval.py",
+    "src/jlens_rl/paired_eval.py",
+    "src/jlens_rl/reward.py",
+    "src/jlens_rl/train.py",
+    "pyproject.toml"
+  ]
+}
