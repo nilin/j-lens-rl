@@ -2107,3 +2107,15 @@ the exact registered source/config/input identities, and W&B run
 curve outcome had been inspected; `yay` and `worried` had not dispatched. The
 durable reconstruction record is
 `protocol_archive/emotional_tournament_v1_launch_ledger.json`.
+
+The first fixed arm, negative intrinsic `fuck`, completed all 15 updates with
+curve `.3825/.3800/.3925/.3975` at `0/5/10/15` and zero literal target
+completions throughout. It recovered to `.015` above baseline, but the `.0025`
+first-node dip means it fails the strict requested shape. This is useful
+partial development evidence, not significance. The terminal W&B evidence
+artifact and receipt, exact config/runtime/data identities, all four raw curve
+rows, and both GPU dispatch records were copied into
+`protocol_archive/emotional_tournament_v1_live_evidence/fuck_seed192/` and
+bound by `protocol_archive/emotional_tournament_v1_fuck_terminal_ledger.json`.
+The old lease was released before the fixed serial `yay` arm acquired a new
+one; no GPU overlap occurred.

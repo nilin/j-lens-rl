@@ -1,0 +1,38 @@
+{
+  "dispatch_status": "leased_before_gpu_schedule",
+  "lease": {
+    "acquired_at_utc": "2026-07-14T19:19:39.837091+00:00",
+    "arm": "fuck",
+    "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+    "environment_name": "main",
+    "global_modal_gpu_limit": 1,
+    "heartbeat_at_utc": "2026-07-14T19:19:39.837091+00:00",
+    "modal_app": "j-lens-rl-development-emotional-tournament-u5-h15-v1",
+    "nonce": "96838170ca7547bca5182686123ef011",
+    "owner": "development-emotional-tournament-v1:1d6ea36d356c420f92e125c35a1a6aeb",
+    "phase": "training",
+    "protocol": "j-lens-rl-global-gpu-lease-v1",
+    "root_call_id": "fc-01KXH13DR4ZGR31JSAFC7JN0KF",
+    "slot": "global-one-gpu",
+    "submission_preflight": {
+      "active_other_modal_apps": [],
+      "checked_at_utc": "2026-07-14T19:19:07.727756+00:00",
+      "exclusive_gpu_confirmation": "confirmed-no-other-modal-gpu-app-running",
+      "global_modal_gpu_limit": 1,
+      "gpu_lease_dict": "j-lens-rl-global-gpu-lease-v1",
+      "gpu_lease_key": "global-one-gpu",
+      "gpu_lease_owner_at_preflight": null,
+      "v7_app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+      "v7_app_observed_active": false,
+      "volume_name": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+      "volume_object_id": "vo-SU6aUsebIrmYyZFGoCOo4e",
+      "volume_version": 2
+    },
+    "submission_preflight_sha256": "f1fa6e0e7f26399834ddcc4129f1fb30996aeae3e6019293c0a5894443dce653",
+    "volume": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+    "workload": "development-emotional-tournament-v1"
+  },
+  "lease_sha256": "a5ee365309665e4ac61f93202ddd4a88b23b983620406043946c6a2a3b3eac4a",
+  "protocol": "j-lens-rl-development-tournament-gpu-intent-v1",
+  "schema_version": 1
+}

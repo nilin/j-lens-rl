@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-arm-terminal-ledger",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "scientific_status": "development_only_on_exposed_curve_no_significance_claim",
+  "recorded_at_utc": "2026-07-14T19:38:39Z",
+  "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+  "arm": "fuck",
+  "weight": -1.0,
+  "seed": 192,
+  "registration_sha256": "9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe",
+  "config_sha256": "420d86fbd92b515c625f38dc623a46288d5b7a4ed51c5f2b6fe8bc376a239cfe",
+  "completed_updates": 15,
+  "curve": {
+    "0": 0.3825,
+    "5": 0.38,
+    "10": 0.3925,
+    "15": 0.3975
+  },
+  "curve_counts_correct_of_400": {
+    "0": 153,
+    "5": 152,
+    "10": 157,
+    "15": 159
+  },
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "5": 0.0,
+    "10": 0.0,
+    "15": 0.0
+  },
+  "shape_pass": false,
+  "shape_failure": "step5_not_above_step0",
+  "step15_minus_step0": 0.015,
+  "validation_source": "train",
+  "validation_indices_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+  "modal": {
+    "app_id": "ap-XrW9TTTRzQZ2sV9kB8WjbS",
+    "volume_name": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+    "volume_object_id": "vo-SU6aUsebIrmYyZFGoCOo4e",
+    "gpu_type": "NVIDIA L40S",
+    "dispatch_nonce": "96838170ca7547bca5182686123ef011",
+    "terminal_published_at_utc": "2026-07-14T19:36:11.051943+00:00"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "run_id": "dev-v8-emotional-single-u5-h15-fuck-seed192",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v8-emotional-single-u5-h15-fuck-seed192",
+    "terminal_artifact": "nilinabra-spare-time/j-lens-rl/dev-v8-emotional-single-u5-h15-fuck-seed192-terminal-evidence:v0",
+    "terminal_artifact_digest": "9264e83174b7ce615f68e2a8970d3f0f"
+  },
+  "archived_evidence_sha256": {
+    "data_indices.json": "fdef4314bd908b415e4c286b9ebbe760096ac4eccd339f70be24c9f769d5b0ff",
+    "environment_snapshot.json": "ce750352d16e929851335abe3ad72bc634fb72da6dc7532ba900146ba1c6b9ee",
+    "gpu_dispatch.complete.json": "065fa33ce19b61313326e1cf11ed6afb5e9f8a94d8999bc12b72fc74832d59b5",
+    "gpu_dispatch.json": "9fadf98e5d8cf84711355545cba405ea5a04e1882a7d66569c8a6b7941714e88",
+    "log_history.json": "c833b7cc07dc3dfcb3399a11d84f4bc6cb97817a2027262d86c313822ccadbea",
+    "resolved_config.json": "420d86fbd92b515c625f38dc623a46288d5b7a4ed51c5f2b6fe8bc376a239cfe",
+    "run_manifest.json": "92ad06a761ebf94c89a8408ab1088b65d1f2fa463c4c39e11db4fd5f02486c72",
+    "run_result_manifest.json": "878f0079dc68241d721d258cbd696ae3ea24f539e2197f622c52708c64c7452f",
+    "validation_history.jsonl": "2f7e1f1359e65cd9eb03136e6fa170b128491ff62403dc2e392c41127cfe020a",
+    "wandb_terminal_publish_receipt.json": "af6ea90dd03bf5142208642940c9025cc92a206fc9db77ef30b9f920d7367730"
+  },
+  "continuity": {
+    "dispatch_completion_written": true,
+    "old_gpu_lease_released": true,
+    "next_registered_arm": "yay",
+    "sealed_or_reserved_payload_accessed": false
+  }
+}

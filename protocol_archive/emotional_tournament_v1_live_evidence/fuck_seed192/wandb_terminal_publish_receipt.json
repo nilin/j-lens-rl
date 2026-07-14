@@ -1,0 +1,51 @@
+{
+  "artifact": {
+    "digest": "9264e83174b7ce615f68e2a8970d3f0f",
+    "id": "QXJ0aWZhY3Q6MzEzOTgzOTc5NA==",
+    "name": "dev-v8-emotional-single-u5-h15-fuck-seed192-terminal-evidence:v0",
+    "qualified_name": "nilinabra-spare-time/j-lens-rl/dev-v8-emotional-single-u5-h15-fuck-seed192-terminal-evidence:v0",
+    "version": "v0"
+  },
+  "observed_wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "dev-v8-emotional-single-u5-h15-seed192",
+    "project": "j-lens-rl",
+    "run_id": "dev-v8-emotional-single-u5-h15-fuck-seed192",
+    "run_name": "dev-v8-emotional-single-u5-h15-fuck-seed192",
+    "tags": [
+      "development-only",
+      "emotional-j-lens",
+      "single-word-u5",
+      "exposed-curve",
+      "seed192"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v8-emotional-single-u5-h15-fuck-seed192"
+  },
+  "schema_version": 2,
+  "terminal_run_result_sha256": "878f0079dc68241d721d258cbd696ae3ea24f539e2197f622c52708c64c7452f",
+  "uploaded_file_sha256": {
+    "data_indices.json": "fdef4314bd908b415e4c286b9ebbe760096ac4eccd339f70be24c9f769d5b0ff",
+    "environment_snapshot.json": "ce750352d16e929851335abe3ad72bc634fb72da6dc7532ba900146ba1c6b9ee",
+    "log_history.json": "c833b7cc07dc3dfcb3399a11d84f4bc6cb97817a2027262d86c313822ccadbea",
+    "resolved_config.json": "420d86fbd92b515c625f38dc623a46288d5b7a4ed51c5f2b6fe8bc376a239cfe",
+    "run_manifest.json": "92ad06a761ebf94c89a8408ab1088b65d1f2fa463c4c39e11db4fd5f02486c72",
+    "run_result_manifest.json": "878f0079dc68241d721d258cbd696ae3ea24f539e2197f622c52708c64c7452f",
+    "validation_history.jsonl": "2f7e1f1359e65cd9eb03136e6fa170b128491ff62403dc2e392c41127cfe020a"
+  },
+  "wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "dev-v8-emotional-single-u5-h15-seed192",
+    "project": "j-lens-rl",
+    "resume": "never",
+    "run_id": "dev-v8-emotional-single-u5-h15-fuck-seed192",
+    "run_name": "dev-v8-emotional-single-u5-h15-fuck-seed192",
+    "tags": [
+      "development-only",
+      "emotional-j-lens",
+      "single-word-u5",
+      "exposed-curve",
+      "seed192"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v8-emotional-single-u5-h15-fuck-seed192"
+  }
+}

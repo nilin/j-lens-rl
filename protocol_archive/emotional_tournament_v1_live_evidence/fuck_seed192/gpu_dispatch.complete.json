@@ -1,0 +1,12 @@
+{
+  "lease_sha256": "a5ee365309665e4ac61f93202ddd4a88b23b983620406043946c6a2a3b3eac4a",
+  "nonce": "96838170ca7547bca5182686123ef011",
+  "protocol": "j-lens-rl-development-tournament-gpu-completion-v1",
+  "publication_sha256": {
+    "run_result_manifest": "878f0079dc68241d721d258cbd696ae3ea24f539e2197f622c52708c64c7452f",
+    "validation_history": "2f7e1f1359e65cd9eb03136e6fa170b128491ff62403dc2e392c41127cfe020a",
+    "wandb_terminal_publish_receipt": "af6ea90dd03bf5142208642940c9025cc92a206fc9db77ef30b9f920d7367730"
+  },
+  "published_at_utc": "2026-07-14T19:36:11.051943+00:00",
+  "schema_version": 1
+}
