@@ -1,0 +1,54 @@
+{
+  "app": {
+    "app_id": "ap-sujvjQTDFQV2qwrVIFjNRq",
+    "created_at_utc": "2026-07-14T10:44:59Z",
+    "description": "j-lens-rl-confirmatory-v6-celebration-taper",
+    "state": "stopped",
+    "stopped_at_utc": "2026-07-14T11:03:05Z",
+    "tasks_at_closeout": 0
+  },
+  "closed_at_utc": "2026-07-14T11:04:02Z",
+  "failure": {
+    "failed_phase": "Modal image build stalled in scripts/modal_cache_assets.py after an unauthenticated Hugging Face warning, with no subsequent log progress and before local entrypoint dispatch",
+    "last_build_log_at_utc": "2026-07-14T10:47:21Z",
+    "last_build_log_category": "unauthenticated Hugging Face warning",
+    "operator_action": "stopped after at least 15 minutes with zero tasks and no log progress",
+    "scientific_code_entered": false
+  },
+  "frozen_registration": {
+    "path": "protocol_archive/v6_celebration_registration_v3_superseded.json",
+    "sha256": "e82c9062d588bc35d0663e450fc420357b358978a3d6110be91056b8de17f8a0"
+  },
+  "deployed_git_commit": "4524e643a97d084cd2d62176075ddd9e477525e9",
+  "git_commit": "4524e643a97d084cd2d62176075ddd9e477525e9",
+  "source_correction_commit": "88c79c1db835452e5e04f271c73a985515cdc7c4",
+  "outcome_boundary": {
+    "attempt_claim_created": false,
+    "function_call_dispatched": false,
+    "gpu_task_started": false,
+    "local_entrypoint_ran": false,
+    "protocol_state_uploaded": false,
+    "scientific_outcome_exists": false,
+    "scientific_outcome_inspected": false,
+    "wandb_run_created": false
+  },
+  "protocol": "j-lens-rl-confirmatory-v6-celebration-taper-prelaunch-attempt-a-closeout-v1",
+  "replay_policy": "Volume A is permanently ineligible despite being empty; the infrastructure-only retry must use fresh Volume B and the identical scientific/W&B projection.",
+  "verification": {
+    "app_inventory_command": "/j-lens-rl/.venv/bin/modal app list --json",
+    "checked_at_utc": "2026-07-14T11:04:02Z",
+    "container_inventory": [],
+    "container_inventory_command": "/j-lens-rl/.venv/bin/modal container list --json",
+    "registered_wandb_run_ids_found": 0,
+    "registered_wandb_run_ids_queried": 16,
+    "wandb_group": "confirm-v6-emotional-celebration-taper-h10",
+    "wandb_group_run_count": 0,
+    "volume_inventory_command": "/j-lens-rl/.venv/bin/modal volume ls j-lens-rl-confirmatory-v6-celebration-taper-20260714a / --json"
+  },
+  "volume": {
+    "created_at_utc": "2026-07-14T10:45:00Z",
+    "file_count_at_closeout": 0,
+    "name": "j-lens-rl-confirmatory-v6-celebration-taper-20260714a",
+    "root_listing": []
+  }
+}

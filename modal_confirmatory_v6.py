@@ -25,7 +25,9 @@ LOCAL_REPO = Path(__file__).resolve().parent
 LOCAL_STATE = LOCAL_REPO / ".confirmatory" / "v6"
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = REMOTE_REPO / ".confirmatory" / "v6"
-VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714a"
+ORIGINAL_VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714a"
+VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714b"
+PRELAUNCH_ATTEMPT_A_APP_ID = "ap-sujvjQTDFQV2qwrVIFjNRq"
 SEEDS = tuple(range(176, 184))
 MAX_GPU_CONTAINERS = 1
 GPU_TYPE = "L40S"
@@ -41,6 +43,9 @@ FINAL_LABELS = (
 app = modal.App("j-lens-rl-confirmatory-v6-celebration-taper")
 state_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True, version=2)
 wandb_secret = modal.Secret.from_name("j-lens-rl-wandb")
+huggingface_secret = modal.Secret.from_name(
+    "huggingface-token", required_keys=["HF_TOKEN"]
+)
 
 repo_image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -95,7 +100,7 @@ repo_image = (
         {
             "HF_HUB_DISABLE_TELEMETRY": "1",
             "JLENS_REPOSITORY_ROOT": REMOTE_REPO.as_posix(),
-            "JLENS_MODAL_IMAGE_SPEC": "j-lens-rl-confirmatory-v6-celebration-taper-image-v1",
+            "JLENS_MODAL_IMAGE_SPEC": "j-lens-rl-confirmatory-v6-celebration-taper-image-v2-hf-auth",
             "PYTHONPATH": (
                 f"{(REMOTE_REPO / 'src').as_posix()}:"
                 f"{(REMOTE_REPO / 'trl').as_posix()}"
@@ -107,8 +112,13 @@ repo_image = (
     .run_commands(
         "python -m pip install --upgrade pip==26.0.1",
         "python -m pip install './trl[peft]' '.[dev]'",
-        "python scripts/modal_cache_assets.py",
-        "python scripts/modal_finalize_image.py",
+    )
+    .run_commands(
+        "python scripts/modal_cache_assets_v6.py",
+        secrets=[huggingface_secret],
+    )
+    .run_commands(
+        "python scripts/modal_finalize_image_v6.py",
     )
 )
 
@@ -919,6 +929,30 @@ def _local_operational_preflight() -> dict[str, Any]:
         text=True,
     )
     listing = json.loads(listing_text[listing_text.index("[") :])
+    attempt_a = next(
+        (item for item in listing if item.get("app_id") == PRELAUNCH_ATTEMPT_A_APP_ID),
+        None,
+    )
+    if (
+        not isinstance(attempt_a, dict)
+        or attempt_a.get("state") != "stopped"
+        or attempt_a.get("stopped_at") is None
+        or str(attempt_a.get("tasks")) != "0"
+    ):
+        raise RuntimeError(
+            "refusing Volume-B launch until exact attempt-A app is stopped with zero tasks"
+        )
+    for volume_name in (ORIGINAL_VOLUME_NAME, VOLUME_NAME):
+        inventory_text = subprocess.check_output(
+            [str(modal_cli), "volume", "ls", volume_name, "/", "--json"],
+            cwd=LOCAL_REPO,
+            text=True,
+        )
+        inventory = json.loads(inventory_text[inventory_text.index("[") :])
+        if inventory != []:
+            raise RuntimeError(
+                f"refusing Volume-B launch unless {volume_name} is empty: {inventory}"
+            )
     current_app_id = app.app_id
     active_other_apps = [
         {
