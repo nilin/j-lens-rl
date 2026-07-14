@@ -278,6 +278,8 @@ def _validate_config(word: str, config: dict[str, Any]) -> None:
         "mask_target_tokens": True,
         "reward_type": "jlens",
         "seed": SEED,
+        "wandb_mode": "online",
+        "wandb_project": "j-lens-rl",
         "score_stride": 5,
         "target_words": [word],
         "score_components": _expected_component(word),
@@ -299,6 +301,9 @@ def _validate_config(word: str, config: dict[str, Any]) -> None:
         REMOTE_OUTPUT / "artifacts" / f"{word}_calibration.json"
     ):
         raise RuntimeError(f"{word} calibration path changed")
+    sign = "positive" if REWARD_WEIGHTS[word] > 0 else "negative"
+    if config.get("run_name") != f"single-word-screen-{word}-{sign}-seed167":
+        raise RuntimeError(f"{word} W&B run name changed")
 
 
 def _validate_templates(repo: Path) -> dict[str, str]:

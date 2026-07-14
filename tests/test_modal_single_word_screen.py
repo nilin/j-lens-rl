@@ -85,6 +85,10 @@ def test_every_arm_is_the_same_fixed_u5_j_only_recipe_except_word_and_sign():
         assert config["early_stopping_patience"] is None
         assert config["validation_observational_only"] is True
         assert config["mask_target_tokens"] is True
+        assert config["wandb_mode"] == "online"
+        assert config["wandb_project"] == "j-lens-rl"
+        sign = "positive" if screen.REWARD_WEIGHTS[word] > 0 else "negative"
+        assert config["run_name"] == f"single-word-screen-{word}-{sign}-seed167"
         assert config["score_stride"] == 5
         assert config["score_components"] == [
             {
