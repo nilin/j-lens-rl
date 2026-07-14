@@ -76,6 +76,11 @@ SELECTION_CLOSEOUT_PATH = (
 SOURCE_CLEANUP_AMENDMENT_PATH = (
     REPO / "protocol_archive" / "v7_profanity_prelaunch_source_cleanup.json"
 )
+MANIFEST_IDENTITY_CORRECTION_PATH = (
+    REPO
+    / "protocol_archive"
+    / "v7_profanity_prelaunch_manifest_identity_correction.json"
+)
 RUNTIME_SOURCE_ALLOWLIST_PATH = (
     REPO / "scripts" / "v7_runtime_source_allowlist.json"
 )
@@ -201,7 +206,10 @@ OPERATOR_KNOWLEDGE_BOUNDARY = {
 }
 
 V7_CURVE_SHA256 = "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1"
-V7_CURVE_SET_SHA256 = "e1a3094d557c4d59ae023d18b2203d881e6819d3f4833c5516883ae9b727e621"
+V7_CURVE_SET_SHA256 = "bc8ef0aa726a0a7acd2080244128c96cf3e72bb23dfc169d1e8346ebe77e95a0"
+ERRONEOUS_V7_CURVE_SET_SHA256 = (
+    "e1a3094d557c4d59ae023d18b2203d881e6819d3f4833c5516883ae9b727e621"
+)
 V7_FINAL_SHA256 = "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8"
 V7_FINAL_SET_SHA256 = "eadcd0e2fc194b0e38bc1c9f4aa1bbf6e6b3ba1043b0015eedee59aec133637c"
 RESERVE_SHA256 = "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6"
@@ -227,6 +235,15 @@ PRE_CLEANUP_REGISTRATION_SHA256 = (
 PRE_CLEANUP_PROTOCOL_SHA256 = (
     "f8c3c96ec0e2e4eb49b5cc27dc04e51731b3305dcb44e620e4c9a413e84c714d"
 )
+PRE_MANIFEST_CORRECTION_REGISTRATION_SHA256 = (
+    "c43a571299c9a9532285357cb2273ed8bead5bfb7d1c9ccb3906ca42d1f894c7"
+)
+PRE_MANIFEST_CORRECTION_PROTOCOL_SHA256 = (
+    "3643f5720e4395474a86def8ed92b85aec0e129f356461e2f2cc48d7d9ebf812"
+)
+PRE_MANIFEST_CORRECTION_CLEANUP_SHA256 = (
+    "d624e1a7dddc26a0ac8d0bae48618fe62c9be7904472df409b96f991e8c399ed"
+)
 SCIENTIFIC_AND_WANDB_PROJECTION_FIELDS = (
     "claim_protocol",
     "operator_knowledge_boundary",
@@ -244,6 +261,9 @@ SCIENTIFIC_AND_WANDB_PROJECTION_FIELDS = (
     "outcome_status_at_freeze",
 )
 SCIENTIFIC_AND_WANDB_PROJECTION_SHA256 = (
+    "e500d7e5689e3d8fdd706682059f7ea9b3b313380d7685bb5f0e976009d668dd"
+)
+PRE_MANIFEST_CORRECTION_PROJECTION_SHA256 = (
     "ce5b3a7c0a13846cc8053d207a0916ceba5d9b8f63edc7998e7173aa3df950c5"
 )
 
@@ -957,6 +977,17 @@ def _source_cleanup_amendment_identity() -> dict[str, Any]:
     }
 
 
+def _manifest_identity_correction_identity() -> dict[str, Any]:
+    return {
+        "path": str(MANIFEST_IDENTITY_CORRECTION_PATH.relative_to(REPO)),
+        "sha256": (
+            sha256_file(MANIFEST_IDENTITY_CORRECTION_PATH)
+            if MANIFEST_IDENTITY_CORRECTION_PATH.is_file()
+            else None
+        ),
+    }
+
+
 def registration_template() -> dict[str, Any]:
     """Return an intentionally incomplete template; it cannot launch V7."""
     return {
@@ -975,6 +1006,9 @@ def registration_template() -> dict[str, Any]:
             "sha256": SELECTION_CLOSEOUT_SHA256,
         },
         "prelaunch_source_cleanup": _source_cleanup_amendment_identity(),
+        "prelaunch_manifest_identity_correction": (
+            _manifest_identity_correction_identity()
+        ),
         "selected_recipe_lock": {
             "path": str(DEFAULT_RECIPE_LOCK_PATH.relative_to(REPO)),
             "sha256": None,
@@ -1126,6 +1160,10 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
         field: registration.get(field)
         for field in SCIENTIFIC_AND_WANDB_PROJECTION_FIELDS
     }
+    pre_correction_projection = json.loads(json.dumps(projection))
+    pre_correction_projection["split"]["curve"]["sorted_set_sha256"] = (
+        ERRONEOUS_V7_CURVE_SET_SHA256
+    )
     execution = registration.get("execution", {})
     if (
         amendment.get("protocol")
@@ -1135,17 +1173,79 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
         or amendment.get("superseded_protocol_sha256")
         != PRE_CLEANUP_PROTOCOL_SHA256
         or amendment.get("active_protocol_sha256")
-        != _expected_execution_hashes()["protocol_sha256"]
-        or execution.get("protocol_sha256") != amendment.get("active_protocol_sha256")
+        != PRE_MANIFEST_CORRECTION_PROTOCOL_SHA256
         or amendment.get("scientific_and_wandb_projection_fields")
         != list(SCIENTIFIC_AND_WANDB_PROJECTION_FIELDS)
         or amendment.get("scientific_and_wandb_projection_sha256")
-        != SCIENTIFIC_AND_WANDB_PROJECTION_SHA256
-        or canonical_sha256(projection) != SCIENTIFIC_AND_WANDB_PROJECTION_SHA256
+        != PRE_MANIFEST_CORRECTION_PROJECTION_SHA256
+        or canonical_sha256(pre_correction_projection)
+        != PRE_MANIFEST_CORRECTION_PROJECTION_SHA256
         or amendment.get("scientific_or_wandb_change") is not False
         or amendment.get("v7_outcome_existed_before_cleanup") is not False
     ):
         raise ProtocolError("V7 prelaunch source cleanup changed frozen science or W&B")
+
+    correction_identity = registration.get(
+        "prelaunch_manifest_identity_correction"
+    )
+    if (
+        not isinstance(correction_identity, dict)
+        or set(correction_identity) != {"path", "sha256"}
+        or correction_identity.get("path")
+        != str(MANIFEST_IDENTITY_CORRECTION_PATH.relative_to(REPO))
+    ):
+        raise ProtocolError("registration lacks the exact manifest identity correction")
+    _, correction = _load_tracked_pinned_json(
+        correction_identity,
+        "V7 prelaunch manifest identity correction",
+    )
+    expected_correction = {
+        "protocol": (
+            "j-lens-rl-confirmatory-v7-profanity-u5-"
+            "prelaunch-manifest-identity-correction-v1"
+        ),
+        "corrected_at_utc": correction.get("corrected_at_utc"),
+        "reason": (
+            "correct a redundant derived sorted-set SHA-256 typo before prepare; "
+            "the exact 400-row curve manifest and every allocated row remain unchanged"
+        ),
+        "superseded_registration_sha256": (
+            PRE_MANIFEST_CORRECTION_REGISTRATION_SHA256
+        ),
+        "superseded_protocol_sha256": PRE_MANIFEST_CORRECTION_PROTOCOL_SHA256,
+        "prelaunch_source_cleanup_sha256": (
+            PRE_MANIFEST_CORRECTION_CLEANUP_SHA256
+        ),
+        "active_protocol_sha256": _expected_execution_hashes()["protocol_sha256"],
+        "curve_manifest": {
+            "path": str(SOURCE_CURVE_PATH.relative_to(REPO)),
+            "size": 400,
+            "manifest_sha256": V7_CURVE_SHA256,
+            "incorrect_sorted_set_sha256": ERRONEOUS_V7_CURVE_SET_SHA256,
+            "corrected_sorted_set_sha256": V7_CURVE_SET_SHA256,
+        },
+        "projection": {
+            "fields": list(SCIENTIFIC_AND_WANDB_PROJECTION_FIELDS),
+            "before_sha256": PRE_MANIFEST_CORRECTION_PROJECTION_SHA256,
+            "after_sha256": SCIENTIFIC_AND_WANDB_PROJECTION_SHA256,
+            "changed_field": "split.curve.sorted_set_sha256",
+        },
+        "curve_manifest_bytes_changed": False,
+        "curve_row_allocation_changed": False,
+        "other_scientific_or_wandb_field_changed": False,
+        "v7_state_existed_before_correction": False,
+        "v7_gpu_dispatch_occurred_before_correction": False,
+        "v7_wandb_run_existed_before_correction": False,
+        "v7_outcome_existed_before_correction": False,
+    }
+    if (
+        not _is_utc_timestamp(correction.get("corrected_at_utc"))
+        or correction != expected_correction
+        or execution.get("protocol_sha256")
+        != correction.get("active_protocol_sha256")
+        or canonical_sha256(projection) != SCIENTIFIC_AND_WANDB_PROJECTION_SHA256
+    ):
+        raise ProtocolError("V7 manifest identity correction is not exact")
 
 
 def _validate_registration_shape(

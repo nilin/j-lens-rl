@@ -136,6 +136,28 @@ def test_registration_freezes_science_wandb_and_conditional_final() -> None:
     }
 
 
+def test_canonical_inherited_manifests_match_registration() -> None:
+    registration = finalized_registration()
+    curve, final, reserve, exclusions = v7._verify_source_manifests()
+
+    assert v7.sha256_file(v7.SOURCE_CURVE_PATH) == (
+        registration["split"]["curve"]["manifest_sha256"]
+    )
+    assert v7.canonical_sha256(sorted(curve)) == (
+        registration["split"]["curve"]["sorted_set_sha256"]
+    )
+    assert v7.sha256_file(v7.SOURCE_FINAL_PATH) == (
+        registration["split"]["sealed_final"]["manifest_sha256"]
+    )
+    assert v7.canonical_sha256(sorted(final)) == (
+        registration["split"]["sealed_final"]["sorted_set_sha256"]
+    )
+    assert not set(curve) & set(final)
+    assert not set(curve) & set(reserve)
+    assert not set(final) & set(reserve)
+    assert (set(curve) | set(final) | set(reserve)) <= set(exclusions)
+
+
 def test_generated_configs_have_exact_signs_ids_horizon_and_curve() -> None:
     registration = finalized_registration()
     lock_path = ARCHIVE / "v7_profanity_selected_recipe.json"

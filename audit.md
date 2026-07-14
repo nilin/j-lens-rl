@@ -1642,3 +1642,30 @@ full 18-test V7 protocol suite, compilation, and the focused W&B receipt test.
 The final broad outcome-free sweep passed 154 tests (44 protocol/core and 110
 Modal/correlation/recovery tests) with only six expected local-Modal warnings.
 No V7 outcome exists at this audit cutoff.
+
+### V7 prelaunch manifest-identity correction
+
+The first local `prepare` after hardening failed closed before any upload,
+Modal app, GPU dispatch, or W&B run. All four inherited manifest files matched
+their registered byte SHA-256 values, had the registered sizes, were pairwise
+disjoint, and were covered by the training exclusions. The sole failure was a
+clerical error in the redundant derived digest for the exposed 400-row curve:
+the registration said `e1a3094d557c4d59ae023d18b2203d881e6819d3f4833c5516883ae9b727e621`,
+while `canonical_sha256(sorted(indices))` over the byte-pinned
+`ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1`
+manifest is
+`bc8ef0aa726a0a7acd2080244128c96cf3e72bb23dfc169d1e8346ebe77e95a0`.
+No repository manifest has the erroneous digest.
+
+The correction changes only that redundant registration field and preserves
+every curve row, the exact manifest bytes, final/reserve allocation, recipe,
+seeds, curve nodes, controls, acceptance rules, and W&B identity. Because the
+field is mechanically included in the integrity projection, its hash changes
+from `ce5b3a7c0a13846cc8053d207a0916ceba5d9b8f63edc7998e7173aa3df950c5`
+to `e500d7e5689e3d8fdd706682059f7ea9b3b313380d7685bb5f0e976009d668dd`;
+this is a metadata correction, not a scientific allocation change. The exact
+before/after chain is recorded in
+`protocol_archive/v7_profanity_prelaunch_manifest_identity_correction.json`.
+A new regression test computes identities from the canonical source files
+rather than comparing two copies of constants. The corrected V7 and V5 suites
+pass 47 tests in the configured project environment.

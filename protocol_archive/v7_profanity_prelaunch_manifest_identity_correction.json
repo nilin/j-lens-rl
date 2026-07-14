@@ -1,0 +1,44 @@
+{
+  "active_protocol_sha256": "88fdd38a774b6dfa5a01b4767524108f0ff6475216227c6500c36948830c0105",
+  "corrected_at_utc": "2026-07-14T13:44:13Z",
+  "curve_manifest": {
+    "corrected_sorted_set_sha256": "bc8ef0aa726a0a7acd2080244128c96cf3e72bb23dfc169d1e8346ebe77e95a0",
+    "incorrect_sorted_set_sha256": "e1a3094d557c4d59ae023d18b2203d881e6819d3f4833c5516883ae9b727e621",
+    "manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "path": ".confirmatory/manifests/curve_indices.json",
+    "size": 400
+  },
+  "curve_manifest_bytes_changed": false,
+  "curve_row_allocation_changed": false,
+  "other_scientific_or_wandb_field_changed": false,
+  "prelaunch_source_cleanup_sha256": "d624e1a7dddc26a0ac8d0bae48618fe62c9be7904472df409b96f991e8c399ed",
+  "projection": {
+    "after_sha256": "e500d7e5689e3d8fdd706682059f7ea9b3b313380d7685bb5f0e976009d668dd",
+    "before_sha256": "ce5b3a7c0a13846cc8053d207a0916ceba5d9b8f63edc7998e7173aa3df950c5",
+    "changed_field": "split.curve.sorted_set_sha256",
+    "fields": [
+      "claim_protocol",
+      "operator_knowledge_boundary",
+      "selection_closeout",
+      "selected_recipe_lock",
+      "split",
+      "seeds",
+      "fixed_updates",
+      "curve_gate",
+      "matched_control",
+      "analysis",
+      "acceptance",
+      "final_collection",
+      "wandb",
+      "outcome_status_at_freeze"
+    ]
+  },
+  "protocol": "j-lens-rl-confirmatory-v7-profanity-u5-prelaunch-manifest-identity-correction-v1",
+  "reason": "correct a redundant derived sorted-set SHA-256 typo before prepare; the exact 400-row curve manifest and every allocated row remain unchanged",
+  "superseded_protocol_sha256": "3643f5720e4395474a86def8ed92b85aec0e129f356461e2f2cc48d7d9ebf812",
+  "superseded_registration_sha256": "c43a571299c9a9532285357cb2273ed8bead5bfb7d1c9ccb3906ca42d1f894c7",
+  "v7_gpu_dispatch_occurred_before_correction": false,
+  "v7_outcome_existed_before_correction": false,
+  "v7_state_existed_before_correction": false,
+  "v7_wandb_run_existed_before_correction": false
+}

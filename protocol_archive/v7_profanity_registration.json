@@ -88,7 +88,7 @@
     "modal_finalize_image_sha256": "24cd3b649de70116b7c463db678da3223fef467fcffd22d72845c133ebd6d86c",
     "modal_runner_sha256": "ff6e24fe0b2456897055a9acec09d7b099197c74f1233a5b08f924f46403764d",
     "modal_volume_preflight_sha256": "a68b66f44c922e99bde9c3fa36f13f6bde9ce963eac9a67ffdd58a661a43e5a3",
-    "protocol_sha256": "3643f5720e4395474a86def8ed92b85aec0e129f356461e2f2cc48d7d9ebf812",
+    "protocol_sha256": "88fdd38a774b6dfa5a01b4767524108f0ff6475216227c6500c36948830c0105",
     "pyproject_sha256": "8d61fd00ddd948627960d85f5ca2998c4ae4198104bc613afb5a324923aaa823",
     "runtime_source_allowlist_sha256": "ab65b2efbc942b572cfed8ce25d3e6c9749d0fa6e17f021ec4925fb494846e0e",
     "shell_launcher_sha256": "3ea50a7c0f2f4bfd11494cd6789ac0c5babbbfbacd3a0b0a9f1ee2485bd0603b",
@@ -140,6 +140,10 @@
     "path": "protocol_archive/v7_profanity_prelaunch_source_cleanup.json",
     "sha256": "d624e1a7dddc26a0ac8d0bae48618fe62c9be7904472df409b96f991e8c399ed"
   },
+  "prelaunch_manifest_identity_correction": {
+    "path": "protocol_archive/v7_profanity_prelaunch_manifest_identity_correction.json",
+    "sha256": "857cb03f3b868fcd5e3ec03bbd26d57b4422aafeb3fffd5366e60bd353a9eba3"
+  },
   "protocol": "j-lens-rl-confirmatory-v7-profanity-u5-registration-v1",
   "seeds": [
     184,
@@ -164,7 +168,7 @@
       "manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
       "role": "retired and exposed development curve; never a significance set",
       "size": 400,
-      "sorted_set_sha256": "e1a3094d557c4d59ae023d18b2203d881e6819d3f4833c5516883ae9b727e621"
+      "sorted_set_sha256": "bc8ef0aa726a0a7acd2080244128c96cf3e72bb23dfc169d1e8346ebe77e95a0"
     },
     "future_reserve": {
       "manifest_sha256": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
