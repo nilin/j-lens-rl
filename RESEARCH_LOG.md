@@ -259,3 +259,166 @@ The strict acceptance gate therefore passes directionally on both seeds:
 frozen-base evaluator. The absolute gains are only +3 and +2 answers and the
 confidence intervals heavily overlap, so this is evidence of a small
 replicated directional effect, not a statistically precise or large gain.
+
+## 2026-07-13 — clean holdout protocol and broader concept search
+
+The longer-run search starts at `2026-07-13T07:46:27Z`. To prevent test-set
+selection and verifier leakage, all new candidate runs use these stricter
+boundaries:
+
+- Monitoring uses raw GSM8K-train indices 7,000–7,199, removed from the pool
+  before the remaining training examples are shuffled and selected.
+- Raw train indices 6,800–6,999 are also removed up front as a confirmation
+  set that candidate selection cannot inspect.
+- The 1,319-example GSM8K test split is untouched until a candidate is promoted.
+- J-only training examples contain only chat prompts. Gold answers are neither
+  retained in the trainer dataset nor read by prompt preparation.
+- J-only runs instantiate exactly one J-lens reward with weight `[1]`; no
+  verifier reward function is computed, even at zero weight.
+- Literal target tokens and special tokens remain masked at scored positions,
+  and literal target usage is logged at every validation node.
+
+The legacy `happy` result is not relied upon: its calibration mean was
+`+2.2833`, impossible for the normalized target log-probability now used by the
+reward, so it predates the current normalization and is invalid evidence.
+
+The target-independent WikiText transport was cleanly recalibrated for the
+union `happy` / `satisfied` / `nice`: mean `-15.1038336629`, standard deviation
+`3.7782959387`, token IDs `[6247, 6419, 19527, 32847, 44978, 52796, 56521]`.
+Transport SHA-256: `7300cf9de1f30e92eb7c5f78a127e883c8787403227b44f8dffe80b9cbdcd4ee`;
+calibration SHA-256: `349c8c7e8d65cc144442d1c52fb515fb564500cee2a2758cfb84e8ad24c8709a`.
+
+Positive-affect trials will cover layer-8 late mean, a true disjoint
+late-minus-early layer-8 score, and a late mean across layers 8/14/20. All
+training runs are online in W&B. Internal score changes remain diagnostic only.
+
+Setup run [`xufk8x08`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/xufk8x08)
+was intentionally interrupted after three updates: it correctly removed the
+development slice and used only a single J reward, but had not yet reserved the
+future confirmation slice. It is retained as an auditable setup failure and is
+not an experiment result. All subsequent configs reserve both slices before
+training selection.
+
+Positive-affect trial 1, masked layer-8 late-half mean at LR `3e-6`, used only
+one J reward (`reward_weights: [1]`) and ran for 14m32s. Development exact
+match was 42.5% at step 0, 43.0% at steps 10/20/25, then 41.5% at step 35;
+literal target usage stayed 0%. The one-answer plateau did not persist, so this
+is a negative result and was not evaluated on the confirmation or test sets.
+W&B: [`2wxmbpm1`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/2wxmbpm1).
+
+Positive-affect trial 2 used a true masked layer-8 late-minus-early score at LR
+`3e-6` and ran for 19m22s. Development exact match rose from 42.5% to 44.5%
+(step 10), 45.0% (steps 20/25/35), and 43.5% (step 50), with 0% literal target
+usage. This is a substantially longer upward development curve than prior
+work. However, the pre-reserved confirmation slice rejected it: frozen base
+was 86/200 (43.0%), while checkpoint 25 was 82/200 (41.0%). It is therefore a
+negative generalization result, not success, and the GSM8K test set remains
+untouched. W&B:
+[`xwi3ovua`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/xwi3ovua).
+
+Positive-affect trial 3's first attempt used the masked late mean across layers
+8/14/20. Development exact match was 42.5% at step 0, 43.0% at step 10, and
+44.5% at step 20, with 0% literal target usage. It was intentionally stopped
+at step 20 when the inherited reproduction schedule was noticed to have
+irregular later validation nodes (25, 35, 50, ...). It is retained as an
+interrupted scheduling attempt, not an experiment result. W&B:
+[`ril909vp`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/ril909vp).
+
+At the user's request, the clean-holdout protocol now validates at regular
+10-step intervals (`eval_every: 10`, with no explicit irregular
+`validation_steps`). Trial 3 is restarted from the frozen base under a fresh
+run and output name so its complete W&B history has a uniform step axis.
+
+Positive-affect trial 3's regular restart used the masked late mean across
+layers 8/14/20 at LR `3e-6` and ran for 19m16s. Its complete development curve
+at steps 0/10/20/30/40/50 was 42.5% / 43.0% / 45.5% / 43.5% / 41.0% /
+31.5%, with 0% literal target usage throughout. The six-answer peak at step 20
+was transient and the later collapse rejects this setting; it was not run on
+the confirmation or test sets. W&B:
+[`nn9ksvl7`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/nn9ksvl7).
+
+Future clean-holdout runs also set `save_every: 10`, matching validation, so
+every monitored checkpoint is retained. This fixes an artifact-retention
+mismatch in trial 3 (which inherited 25-step saving) without changing its
+training or reported validation history.
+
+Positive-affect trial 4 used the masked layer-8 late-minus-early score at the
+gentler LR `2e-6` and ran for 19m26s. Its regular development curve at steps
+0/10/20/30/40/50 was 42.5% / 43.5% / 45.0% / 44.5% / 44.5% / 44.5%, with
+0% literal target usage throughout. This is the longest stable clean
+development improvement so far. W&B:
+[`gwx26k98`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/gwx26k98).
+
+Although adapters were saved every 10 steps, the trainer's inherited
+hard-coded `save_total_limit=3` pruned checkpoints 10 and 20 by the end. The
+code now makes this configurable and clean runs set it to 10. For trial 4,
+confirmation uses the retained final step-50 adapter (44.5% at each of steps
+30/40/50), not a reconstructed or selectively rerun step-20 peak.
+
+The pre-reserved confirmation slice passed: the frozen base's established
+score is 86/200 (43.0%), while trial 4's final step-50 adapter scored 89/200
+(44.5%), with 0% literal target usage. This three-answer independent gain
+promotes the candidate to the required full 1,319-example GSM8K-test
+verification; it is not yet counted as success before that verification and
+second-seed replication.
+
+Full 1,319-example GSM8K-test verification rejected trial 4: the final
+step-50 adapter scored 400/1,319 (30.326%, 95% Wilson CI 27.91–32.86%), versus
+the frozen base's established 405/1,319 (30.705%). Literal target usage was
+0%. The candidate is a clean negative generalization result; its development
+and confirmation increases are not counted as success, and second-seed
+replication is not justified.
+
+Positive-affect trial 5 used the masked layer-14 late-minus-early score at LR
+`2e-6` and ran for 15m31s. Its regular development curve at steps
+0/10/20/30/40 was 42.5% / 43.0% / 42.5% / 43.0% / 43.0%, with 0% literal
+target usage. The one-answer plateau is not a credible improvement and was not
+evaluated on confirmation or test. W&B:
+[`8jwj1xf5`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/8jwj1xf5).
+
+Including calibration, the intentionally interrupted setup/scheduling runs,
+five completed training trials, confirmation checks, and the one promoted
+full verification, the positive `happy` / `satisfied` / `nice` family has now
+received more than two GPU-hours under the clean protocol. No positive-family
+candidate passed the full 1,319-example gate, so none is counted as success.
+
+The negative-affect family reuses the same target-independent WikiText
+transport and recalibrates only the union `wrong` / `mistake` / `error`.
+Calibration mean is `-16.1525436202`, standard deviation `3.5281707448`, and
+token IDs are `[841, 1454, 1465, 4969, 16523, 29185, 34870]`. Transport
+SHA-256: `fe976273cc55f17d26028fd9c9419dc4aba2fc3db0848e02ca58d6d30958eda2`;
+calibration SHA-256:
+`39a78bb5503c198c6a0f411c4ba21751e3cc9490cb84b6622976d241aeed9e0e`.
+No GSM8K text, answers, verifier grades, development examples, confirmation
+examples, or test examples enter this calibration.
+
+Negative-affect trial 1 (`wrong` / `mistake` / `error` late penalty, layer 8,
+LR `2e-6`) was paused after the first regular checkpoint when the persistent
+research goal was paused. Step 10 scored 80/200 (40.0%) versus 85/200 (42.5%)
+at baseline. One of 200 validation completions contained a literal target
+word (0.5%); scored target-token positions were masked, so this could not
+directly raise reward, but it is retained as an audit warning. The run is an
+interrupted negative result, not evidence. W&B:
+[`8hl8ux4l`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/8hl8ux4l).
+
+Negative-affect trial 2 used a layer-8 early-minus-late error-resolution score
+at LR `2e-6` and ran for 23m33s. Its regular development curve at steps
+0/10/20/30/40/50/60 was 42.5% / 40.5% / 42.0% / 42.0% / 41.0% / 40.0% /
+36.0%. Deterministic literal target use stayed at the base rate of 0.5%, so
+keyword emission did not explain the degradation. However, mean validation
+length fell from 225.3 to 208.9 tokens, and a step-58 rollout batch collapsed
+to five-token completions while receiving high internal reward. This is a
+length-based reward pathology, not J-lens reasoning improvement. The run is
+rejected without confirmation or test evaluation. W&B:
+[`bqyb2rmi`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/bqyb2rmi).
+
+Negative-affect trial 3 (the analogous layer-14 score, LR `2e-6`) began before
+the reward audit finished. Its exploratory curve was 42.5% at step 0 and 43.0%
+at step 10, with literal target use unchanged at 0.5%. It was stopped at the
+first checkpoint once the causal-mask and odd-window bugs were confirmed.
+Because it used the pre-fix reward implementation, it is invalid for
+confirmation regardless of its direction. The step-10 adapter is readable but
+the interrupted optimizer file is truncated, so the run is not resumable.
+W&B run [`lt44eh0e`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/lt44eh0e)
+is tagged `exploratory`, `invalid-mask-offset`, and
+`invalid-window-overlap`.

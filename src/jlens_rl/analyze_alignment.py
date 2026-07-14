@@ -11,7 +11,17 @@ from datasets import load_dataset
 from torch.nn.utils.rnn import pad_sequence
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from .common import format_prompt, gsm8k_reward, load_config, model_dtype, seed_everything
+from .common import (
+    GSM8K_REVISION,
+    QWEN_MODEL_REVISION,
+    format_prompt,
+    gsm8k_reward,
+    load_config,
+    load_index_manifest,
+    model_dtype,
+    seed_everything,
+    sha256_file,
+)
 from .reward import TargetJLReward
 
 
@@ -89,20 +99,42 @@ def main() -> None:
     p.add_argument("--prompts", type=int, default=30)
     p.add_argument("--generations", type=int, default=8)
     p.add_argument("--output", default="artifacts/solved_alignment.json")
+    p.add_argument(
+        "--indices-manifest",
+        help="Required unless validation_indices_path is set; prevents sealed-set access.",
+    )
     args = p.parse_args()
     cfg = load_config(args.config)
     seed_everything(cfg["seed"])
 
-    tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
+    model_revision = cfg.get("model_revision", QWEN_MODEL_REVISION)
+    dataset_revision = cfg.get("dataset_revision", GSM8K_REVISION)
+    tokenizer = AutoTokenizer.from_pretrained(
+        cfg["model_name"], revision=model_revision
+    )
     tokenizer.pad_token = tokenizer.pad_token or tokenizer.eos_token
     tokenizer.padding_side = "left"
     model = AutoModelForCausalLM.from_pretrained(
-        cfg["model_name"], torch_dtype=model_dtype(), device_map={"": "cuda:0"}
+        cfg["model_name"], revision=model_revision,
+        dtype=model_dtype(), device_map={"": "cuda:0"}
     )
     model.eval()
+    expected_calibration_sha256 = cfg.get(
+        "expected_calibration_sha256", cfg.get("calibration_sha256")
+    )
+    if (
+        expected_calibration_sha256 is not None
+        and sha256_file(cfg["calibration_path"]) != expected_calibration_sha256
+    ):
+        raise ValueError("calibration artifact does not match the configured SHA-256")
     scorer = TargetJLReward(
         cfg["lens_path"], cfg["calibration_path"], tokenizer, cfg["target_words"],
         cfg["score_stride"], cfg["mask_target_tokens"], cfg.get("vocab_chunk_size", 16384),
+        expected_model=cfg["model_name"],
+        expected_model_revision=cfg.get("model_revision"),
+        expected_lens_sha256=cfg.get(
+            "expected_lens_sha256", cfg.get("lens_sha256")
+        ),
     )
     windows = [
         ("all_mean", 0.0, "mean", False),
@@ -121,8 +153,18 @@ def main() -> None:
     correct: list[float] = []
     groups: list[int] = []
 
-    dataset = load_dataset("openai/gsm8k", "main", split="train").shuffle(seed=cfg["seed"])
-    for group, row in enumerate(dataset.select(range(args.prompts))):
+    indices_path = args.indices_manifest or cfg.get("validation_indices_path")
+    if not indices_path:
+        raise ValueError(
+            "alignment analysis requires an explicit non-sealed indices manifest"
+        )
+    indices = load_index_manifest(indices_path)
+    if args.prompts > len(indices):
+        raise ValueError("requested alignment prompts exceed the manifest size")
+    dataset = load_dataset(
+        "openai/gsm8k", "main", split="train", revision=dataset_revision
+    ).select(indices[: args.prompts])
+    for group, row in enumerate(dataset):
         prompt = format_prompt(tokenizer, row["question"])
         encoded = tokenizer(
             [prompt] * args.generations, return_tensors="pt", padding=True,
@@ -165,6 +207,10 @@ def main() -> None:
     result: dict[str, Any] = {
         "prompts": args.prompts,
         "generations": args.generations,
+        "model_revision": model_revision,
+        "dataset_revision": dataset_revision,
+        "indices_manifest": str(Path(indices_path).resolve()),
+        "source_indices": indices[: args.prompts],
         "overall_exact_match": float(np.mean(correct)),
         "candidates": {
             name: summarize(scores, correct, groups) for name, scores in candidate_scores.items()

@@ -1,0 +1,13 @@
+{
+  "base": "jlens.json",
+  "validation_source": "train",
+  "validation_offset": 7000,
+  "validation_examples": 200,
+  "reserved_train_ranges": [[6800, 7000]],
+  "validation_steps": null,
+  "eval_every": 10,
+  "save_every": 10,
+  "save_total_limit": 10,
+  "early_stopping_start_step": 20,
+  "early_stopping_patience": 3
+}

@@ -1,0 +1,13 @@
+{
+  "base": "jlens_error_resolution8_lr2e6.json",
+  "score_components": [
+    {"layer": 8, "start_fraction": 0.0, "end_fraction": 0.5, "aggregation": "mean", "weight": 0.3333333333},
+    {"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.3333333333},
+    {"layer": 14, "start_fraction": 0.0, "end_fraction": 0.5, "aggregation": "mean", "weight": 0.3333333333},
+    {"layer": 14, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.3333333333},
+    {"layer": 20, "start_fraction": 0.0, "end_fraction": 0.5, "aggregation": "mean", "weight": 0.3333333333},
+    {"layer": 20, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.3333333333}
+  ],
+  "run_name": "gsm8k-jlens-error-resolution-all-lr2e6-clean-val-regular",
+  "output_dir": "runs/jlens_error_resolution_all_lr2e6_clean_val_regular"
+}

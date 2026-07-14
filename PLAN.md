@@ -1,28 +1,64 @@
-# J-space reward RL on GSM8K — one-page plan
+# J-lens reward RL: confirmatory one-page plan
 
-## Question and primary comparison
+## Question
 
-Can an internal J-lens reward improve **held-out, verifiable GSM8K accuracy** for `Qwen/Qwen2.5-0.5B-Instruct`? Run two paired conditions in which the **reward function is the only experimental variable**:
+Does maximizing a fixed, target-independent J-lens score for `solved` cause a
+held-out increase in greedy GSM8K numeric exact match? The candidate is frozen
+from prior exploratory work: Qwen2.5-0.5B-Instruct, WikiText transport and
+calibration, layer-8 late-half mean, LR `3e-6`, rank-8 LoRA, and 25 updates.
 
-1. **Verifiable baseline:** RL reward is exact equality between the extracted final number and GSM8K ground truth (`0/1`).
-2. **J-solved:** RL reward uses only the policy’s internal J-lens score for “solved.”
+## Comparisons
 
-Both start from the same untouched checkpoint and use the same initialization seed, examples in the same order, prompts, eight sampled completions, decoding settings, LoRA targets/rank, optimizer and schedule, KL coefficient, batch/accumulation, token budget, update count, evaluation set, and stopping rules. Do not initialize J-solved from the correctness-trained model. Evaluate the frozen base once at step zero as a reference, not as a third training condition.
+Run seeds 142–147 from the untouched base under two required matched
+conditions: semantic J score (weight `+1`) and the exact same J score sign
+flipped (weight `-1`). Prompts, source indices, order, optimizer, generation,
+KL, LoRA, and horizon match within seed. Optionally run one seed-142
+exact-match-reward positive control to diagnose the learning pipeline.
 
-## Minimal implementation
+J-only rows contain no reference answer and register exactly one task reward.
+The fixed KL regularizer remains part of GRPO. Training generations have a
+64-token minimum to block the known short-output exploit. Literal target
+spellings are causally masked and audited. Evaluation is unconstrained.
 
-Use Anthropic’s Apache-2.0 [`anthropics/jacobian-lens`](https://github.com/anthropics/jacobian-lens). Fit its Jacobian transport once on ~100 generic 128-token sequences at three middle/late layers. Verify which whitespace/case variants of `solved` are single Qwen tokens and use all valid IDs.
+## Data boundaries
 
-For each completion, rerun a gradient-free policy forward pass and retain response-position hidden states. J-reward is the mean over chosen layers and positions of the target tokens’ J-lens log-probability mass, standardized against the base model and clipped to ±5 standard deviations. Mask sampled positions containing literal target tokens. Freeze the fitted Jacobians; train rank-8 LoRA on attention/MLP projections. Re-fit the lens after training to diagnose exploitation of a stale lens.
+Reconstruct and exclude every historically used raw GSM8K-train index. Hash
+order the remaining 4,063 and allocate 200 exploratory, 400 one-shot curve,
+3,000 sealed-final, and 463 future-reserve examples. Exclude all 4,063 from
+training. Pin raw source-index manifests, configs, artifacts, model/dataset
+revisions, and the clean source commit before any v1 run.
 
-Use a vendored, commit-pinned Hugging Face TRL [`GRPOTrainer`](https://github.com/huggingface/trl) for generation, the GRPO objective, KL regularization, checkpointing, and W&B logging. A narrow trainer patch exposes the unwrapped policy and rollout token IDs to reward callables so J-solved can run an additional hidden-state forward pass. Do not otherwise modify TRL. Both rewards are calculated and logged in both runs; only their weights change (`[1,0]` versus `[0,1]`).
+## Curve gate
 
-## Experiment and plots
+Greedy exact match is observational at steps `0,5,10,15,20,25`; it never stops
+training or selects a checkpoint. The endpoint is always step 25. Across the
+mean of all six semantic seeds, require:
 
-Use a fixed 1,000-example training subset and 200 disjoint validation examples. Run a 50-update smoke test, then ~500 updates. Every 25 updates, deterministically generate validation answers and compute numeric exact-match; validation correctness is never fed to J-solved.
+```text
+EM5 > EM0; EM10 >= EM5; EM15 >= EM10
+```
 
-The primary figure shows held-out GSM8K exact match with binomial 95% confidence intervals for both conditions, including the frozen base at step zero. Also report KL, output length, literal `solved` frequency, and rollout rewards as diagnostics. The correctness-reward baseline is a pipeline check and should produce a positive held-out trend. J-solved succeeds only if its held-out exact match beats the frozen-base reference and moves toward the correctness-reward baseline; an increased internal score alone is not success.
+No other three nodes or selected seeds may satisfy the gate. If it fails, v1 is
+negative and the sealed final set remains closed.
 
-Deliver `fit_lens.py`, `reward.py`, `train.py`, `eval.py`, a pinned config, tests for answer parsing/reward/device behavior, saved metrics, and the comparison figure.
+## Final evidence
 
-Sources: [Anthropic overview](https://www.anthropic.com/research/global-workspace), [paper](https://transformer-circuits.pub/2026/workspace/index.html), [J-lens code](https://github.com/anthropics/jacobian-lens), [TRL baseline](https://github.com/huggingface/trl).
+After all 12 required runs and the curve gate pass, greedily evaluate the base
+once and all adapters on the same sealed 3,000 examples. Retain per-item source
+index, prompt hash, completion, prediction, correctness, literal audit, and
+full model/adapter/artifact/source provenance.
+
+The primary success criterion is a positive mean semantic-minus-base paired
+change whose 95% crossed seed/item bootstrap interval excludes zero, with all
+six seed effects positive (two-sided exact sign-test `p=0.03125`). Report
+within-seed discordant tables/McNemar diagnostics and semantic-minus-sign-flip
+difference-in-differences. A higher internal score or old official-test result
+is not success.
+
+## Execution
+
+Use `CONFIRMATORY_PROTOCOL.md` and `run_confirmatory.sh`. Preparation and every
+phase fail closed on a dirty/different commit, changed artifact or manifest,
+nonempty output directory, overlapping source indices, mismatched seed data,
+nonfixed horizon, or incomplete curve. Record negative and interrupted runs;
+never tune on the curve/final set or rerun until favorable.

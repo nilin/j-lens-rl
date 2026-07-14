@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import torch
+
 # The vendored repository directory and its Python package are both named `trl`.
 # Put the repository root on sys.path so it wins over the outer namespace directory.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "trl"))
@@ -16,7 +18,19 @@ from peft import LoraConfig
 from transformers import AutoTokenizer, TrainerCallback
 from trl import GRPOConfig, GRPOTrainer
 
-from .common import SYSTEM_PROMPT, append_jsonl, extract_answer, load_config, seed_everything
+from .common import (
+    GSM8K_REVISION,
+    QWEN_MODEL_REVISION,
+    SYSTEM_PROMPT,
+    append_jsonl,
+    extract_answer,
+    load_config,
+    load_index_manifest,
+    model_dtype,
+    repository_provenance,
+    seed_everything,
+    sha256_file,
+)
 from .eval import evaluate
 from .reward import TRLTargetJLReward, TargetJLReward
 
@@ -36,8 +50,28 @@ def prepare_example(example: dict[str, str]) -> dict[str, Any]:
     }
 
 
+def prepare_prompt(example: dict[str, str]) -> dict[str, Any]:
+    """Policy input for J-only training; intentionally excludes the gold answer."""
+    return {
+        "prompt": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": example["question"]},
+        ]
+    }
+
+
+def create_run_directory(path: str | Path) -> Path:
+    output_dir = Path(path)
+    if output_dir.exists() and any(output_dir.iterdir()):
+        raise FileExistsError(
+            f"output directory is not empty: {output_dir}; use a new run directory"
+        )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    return output_dir
+
+
 class DeterministicValidationCallback(TrainerCallback):
-    """Log fixed, greedy GSM8K accuracy without feeding it into training."""
+    """Log fixed greedy GSM8K accuracy, with optional exploratory stopping."""
 
     def __init__(self, tokenizer: Any, rows: Any, cfg: dict[str, Any]) -> None:
         self.tokenizer = tokenizer
@@ -46,6 +80,14 @@ class DeterministicValidationCallback(TrainerCallback):
         self.trainer: Any = None
         self.best_exact_match: float | None = None
         self.evaluations_without_improvement = 0
+        self.validation_identity = {
+            "validation_source": cfg.get("validation_source", "test"),
+            "validation_indices_sha256": (
+                sha256_file(cfg["validation_indices_path"])
+                if cfg.get("validation_indices_path")
+                else None
+            ),
+        }
 
     def evaluate_and_log(self, model: Any, step: int) -> dict[str, float]:
         metrics = evaluate(
@@ -54,7 +96,7 @@ class DeterministicValidationCallback(TrainerCallback):
         )
         append_jsonl(
             Path(self.cfg["output_dir"]) / "validation_history.jsonl",
-            {"step": step, **metrics},
+            {"step": step, **self.validation_identity, **metrics},
         )
         self.trainer.log({f"validation/{key}": value for key, value in metrics.items()})
         return metrics
@@ -75,7 +117,11 @@ class DeterministicValidationCallback(TrainerCallback):
                 self.evaluations_without_improvement = 0
             else:
                 self.evaluations_without_improvement += 1
-            patience = self.cfg.get("early_stopping_patience")
+            patience = (
+                None
+                if self.cfg.get("validation_observational_only", False)
+                else self.cfg.get("early_stopping_patience")
+            )
             stopping_start = self.cfg.get("early_stopping_start_step", 0)
             if (
                 patience
@@ -83,6 +129,34 @@ class DeterministicValidationCallback(TrainerCallback):
                 and self.evaluations_without_improvement >= patience
             ):
                 control.should_training_stop = True
+        return control
+
+
+class RunManifestCallback(TrainerCallback):
+    """Attach dirty-tree and artifact identity to the remote run record."""
+
+    def __init__(self, manifest: dict[str, Any], output_dir: Path, enabled: bool) -> None:
+        self.manifest = manifest
+        self.output_dir = output_dir
+        self.enabled = enabled
+
+    def on_train_begin(self, args, state, control, **kwargs):
+        if not self.enabled:
+            return control
+        import wandb
+
+        if wandb.run is not None:
+            wandb.config.update({"experiment_manifest": self.manifest}, allow_val_change=True)
+            wandb.save(
+                str(self.output_dir / "run_manifest.json"),
+                base_path=str(self.output_dir),
+                policy="now",
+            )
+            wandb.save(
+                str(self.output_dir / "data_indices.json"),
+                base_path=str(self.output_dir),
+                policy="now",
+            )
         return control
 
 
@@ -111,28 +185,152 @@ def main() -> None:
         cfg["wandb_mode"] = args.wandb_mode
     if cfg["reward_type"] not in {"gsm8k", "jlens"}:
         raise ValueError("reward_type must be gsm8k or jlens")
+    cfg.setdefault("model_revision", QWEN_MODEL_REVISION)
+    cfg.setdefault("dataset_revision", GSM8K_REVISION)
+    expected_lens_sha256 = cfg.get(
+        "expected_lens_sha256", cfg.get("lens_sha256")
+    )
+    expected_calibration_sha256 = cfg.get(
+        "expected_calibration_sha256", cfg.get("calibration_sha256")
+    )
+    artifact_hashes: dict[str, str] = {}
+    if cfg["reward_type"] == "jlens":
+        for name, key, expected in (
+            ("lens", "lens_path", expected_lens_sha256),
+            ("calibration", "calibration_path", expected_calibration_sha256),
+        ):
+            actual = sha256_file(cfg[key])
+            artifact_hashes[name] = actual
+            if expected is not None and actual != expected:
+                raise ValueError(
+                    f"{name} artifact SHA-256 does not match the frozen config: "
+                    f"{actual} != {expected}"
+                )
     seed_everything(cfg["seed"])
     os.environ["WANDB_PROJECT"] = cfg["wandb_project"]
     os.environ["WANDB_MODE"] = cfg["wandb_mode"]
 
-    output_dir = Path(cfg["output_dir"])
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = create_run_directory(cfg["output_dir"])
     (output_dir / "resolved_config.json").write_text(json.dumps(cfg, indent=2) + "\n")
 
-    tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
+    repo_root = Path(__file__).resolve().parents[2]
+    run_manifest: dict[str, Any] = {
+        **repository_provenance(repo_root),
+        "config_path": str(Path(args.config).resolve()),
+        "config_sha256": sha256_file(args.config),
+        "resolved_config_sha256": sha256_file(output_dir / "resolved_config.json"),
+        "model_name": cfg["model_name"],
+        "model_revision": cfg["model_revision"],
+        "dataset": "openai/gsm8k:main",
+        "dataset_revision": cfg["dataset_revision"],
+        "reward_type": cfg["reward_type"],
+    }
+    if cfg["reward_type"] == "jlens":
+        run_manifest.update({
+            "lens_path": str(Path(cfg["lens_path"]).resolve()),
+            "lens_sha256": artifact_hashes["lens"],
+            "calibration_path": str(Path(cfg["calibration_path"]).resolve()),
+            "calibration_sha256": artifact_hashes["calibration"],
+        })
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        cfg["model_name"], revision=cfg["model_revision"]
+    )
     tokenizer.pad_token = tokenizer.pad_token or tokenizer.eos_token
     tokenizer.padding_side = "left"
 
-    raw = load_dataset("openai/gsm8k", "main")
-    train_dataset = raw["train"].shuffle(seed=cfg["seed"]).select(range(cfg["train_examples"]))
-    raw_eval_dataset = raw["test"].select(range(cfg["validation_examples"]))
+    raw = load_dataset(
+        "openai/gsm8k", "main", revision=cfg["dataset_revision"]
+    )
+    raw_train = raw["train"].add_column("_source_index", range(len(raw["train"])))
+    validation_source = cfg.get("validation_source", "test")
+    if validation_source == "train":
+        validation_manifest = cfg.get("validation_indices_path")
+        if validation_manifest:
+            validation_indices = load_index_manifest(validation_manifest)
+            if not validation_indices or max(validation_indices) >= len(raw_train):
+                raise ValueError("training-split validation manifest is empty or out of range")
+            if len(validation_indices) != int(cfg["validation_examples"]):
+                raise ValueError("validation manifest size does not match validation_examples")
+            raw_eval_dataset = raw_train.select(validation_indices)
+        else:
+            validation_offset = int(cfg["validation_offset"])
+            validation_end = validation_offset + int(cfg["validation_examples"])
+            if validation_offset < 0 or validation_end > len(raw_train):
+                raise ValueError("training-split validation slice is out of range")
+            validation_indices = list(range(validation_offset, validation_end))
+            raw_eval_dataset = raw_train.select(validation_indices)
+        excluded_indices = set(validation_indices)
+        reserved_manifest = cfg.get("reserved_train_indices_path")
+        if reserved_manifest:
+            reserved_indices = load_index_manifest(reserved_manifest)
+            if reserved_indices and max(reserved_indices) >= len(raw_train):
+                raise ValueError("reserved training manifest is out of range")
+            excluded_indices.update(reserved_indices)
+        excluded_ranges: list[tuple[int, int]] = []
+        excluded_ranges.extend(
+            (int(start), int(end))
+            for start, end in cfg.get("reserved_train_ranges", [])
+        )
+        train_pool = raw_train.filter(
+            lambda row: (
+                row["_source_index"] not in excluded_indices
+                and not any(
+                    start <= row["_source_index"] < end
+                    for start, end in excluded_ranges
+                )
+            )
+        )
+    elif validation_source == "test":
+        validation_manifest = cfg.get("validation_indices_path")
+        validation_indices = (
+            load_index_manifest(validation_manifest)
+            if validation_manifest
+            else list(range(cfg["validation_examples"]))
+        )
+        if not validation_indices or max(validation_indices) >= len(raw["test"]):
+            raise ValueError("test-split validation manifest is empty or out of range")
+        if len(validation_indices) != int(cfg["validation_examples"]):
+            raise ValueError("validation manifest size does not match validation_examples")
+        raw_eval_dataset = raw["test"].select(validation_indices)
+        train_pool = raw_train
+    else:
+        raise ValueError("validation_source must be train or test")
+    train_dataset = train_pool.shuffle(seed=cfg["seed"]).select(
+        range(cfg["train_examples"])
+    )
+    selected_train_indices = [int(value) for value in train_dataset["_source_index"]]
+    selected_validation_indices = (
+        [int(value) for value in raw_eval_dataset["_source_index"]]
+        if "_source_index" in raw_eval_dataset.column_names
+        else [int(value) for value in validation_indices]
+    )
+    if validation_source == "train" and set(selected_train_indices) & set(selected_validation_indices):
+        raise AssertionError("training and validation indices overlap")
+    (output_dir / "data_indices.json").write_text(json.dumps({
+        "train_source_indices": selected_train_indices,
+        "validation_source": validation_source,
+        "validation_source_indices": selected_validation_indices,
+    }, indent=2) + "\n")
+    run_manifest["data_indices_sha256"] = sha256_file(output_dir / "data_indices.json")
+    (output_dir / "run_manifest.json").write_text(
+        json.dumps(run_manifest, indent=2) + "\n"
+    )
     eval_dataset = raw_eval_dataset
-    train_dataset = train_dataset.map(prepare_example, remove_columns=["question"])
-    eval_dataset = eval_dataset.map(prepare_example, remove_columns=["question"])
+    train_preparer = prepare_prompt if cfg["reward_type"] == "jlens" else prepare_example
+    train_dataset = train_dataset.map(
+        train_preparer, remove_columns=train_dataset.column_names
+    )
+    eval_dataset = eval_dataset.map(
+        prepare_example, remove_columns=eval_dataset.column_names
+    )
 
-    reward_funcs = [gsm8k_reward_trl]
-    reward_weights = [1.0]
-    if not args.skip_jlens_metric:
+    if cfg["reward_type"] == "gsm8k":
+        reward_funcs = [gsm8k_reward_trl]
+        reward_weights = [1.0]
+    elif args.skip_jlens_metric:
+        raise ValueError("--skip-jlens-metric is only valid with the GSM8K reward")
+    else:
         jreward = TRLTargetJLReward(
             TargetJLReward(
                 cfg["lens_path"], cfg["calibration_path"], tokenizer,
@@ -141,13 +339,16 @@ def main() -> None:
                 cfg.get("score_start_fraction", 0.0), cfg.get("score_layers"),
                 cfg.get("score_aggregation", "mean"), cfg.get("score_include_final", False),
                 cfg.get("score_components"),
+                cfg.get("score_end_fraction", 1.0),
+                expected_model=cfg["model_name"],
+                expected_model_revision=cfg.get("model_revision"),
+                expected_lens_sha256=expected_lens_sha256,
             )
         )
-        reward_funcs.append(jreward)
-        reward_weights = [1.0, 0.0] if cfg["reward_type"] == "gsm8k" else [0.0, 1.0]
-    elif cfg["reward_type"] != "gsm8k":
-        raise ValueError("--skip-jlens-metric is only valid with the GSM8K reward")
+        reward_funcs = [jreward]
+        reward_weights = [1.0]
 
+    training_dtype = model_dtype()
     training_args = GRPOConfig(
         output_dir=str(output_dir),
         run_name=cfg.get("run_name", f"gsm8k-{cfg['reward_type']}-reward"),
@@ -169,12 +370,22 @@ def main() -> None:
         num_generations_eval=cfg["num_generations_eval"],
         logging_steps=1,
         save_steps=cfg["save_every"],
-        save_total_limit=3,
+        save_total_limit=cfg.get("save_total_limit", 3),
         report_to=["wandb"] if cfg["wandb_mode"] != "disabled" else ["none"],
-        bf16=True,
+        bf16=training_dtype == torch.bfloat16,
+        fp16=training_dtype == torch.float16,
         gradient_checkpointing=True,
         use_vllm=False,
         seed=cfg["seed"],
+        generation_kwargs=(
+            {"min_new_tokens": int(cfg["min_new_tokens"])}
+            if cfg.get("min_new_tokens") is not None
+            else None
+        ),
+        model_init_kwargs={
+            "revision": cfg["model_revision"],
+            "dtype": training_dtype,
+        },
     )
     peft_config = LoraConfig(
         r=cfg["lora_rank"],
@@ -197,6 +408,11 @@ def main() -> None:
     )
     validation_callback.trainer = trainer
     trainer.add_callback(validation_callback)
+    trainer.add_callback(RunManifestCallback(
+        run_manifest,
+        output_dir,
+        cfg["wandb_mode"] != "disabled",
+    ))
     initial_metrics = validation_callback.evaluate_and_log(trainer.model, 0)
     validation_callback.best_exact_match = initial_metrics["exact_match"]
     trainer.train()

@@ -28,9 +28,21 @@ def main() -> None:
     p.add_argument("--validation-examples", type=int, default=200)
     p.add_argument("--output", default="runs/comparison.png")
     args = p.parse_args()
+    histories = [
+        ("GSM8K reward", args.gsm8k, read_validation(args.gsm8k)),
+        ("J-lens solved reward", args.jlens, read_validation(args.jlens)),
+    ]
+    identities = {
+        rows[0].get("validation_indices_sha256") if rows else None
+        for _, _, rows in histories
+    }
+    if None in identities or len(identities) != 1:
+        raise ValueError(
+            "refusing to compare histories without the same validation manifest hash"
+        )
+
     fig, ax = plt.subplots(figsize=(7, 4.5))
-    for label, path in [("GSM8K reward", args.gsm8k), ("J-lens solved reward", args.jlens)]:
-        rows = read_validation(path)
+    for label, path, rows in histories:
         steps = [r["step"] for r in rows]
         exact = [r.get("exact_match", r.get("validation/exact_match")) for r in rows]
         intervals = [

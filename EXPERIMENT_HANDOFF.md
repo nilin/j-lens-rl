@@ -1,119 +1,134 @@
 # Experiment handoff
 
-Updated: 2026-07-13 UTC. Branch: `main`.
+Updated: 2026-07-14 UTC. The next agent should execute, not redesign,
+[CONFIRMATORY_PROTOCOL.md](CONFIRMATORY_PROTOCOL.md).
 
-## Objective and acceptance gate
+## Current conclusion
 
-Train `Qwen/Qwen2.5-0.5B-Instruct` with a reward derived only from an internal
-Jacobian-lens notion of `solved`, and demonstrate an improvement in held-out,
-verifiable GSM8K numeric exact match. Internal-score increases are diagnostics,
-not success. A candidate is not accepted from the 200-example monitor alone:
-verify the selected checkpoint against the frozen base with the same standalone
-evaluator on all 1,319 GSM8K test examples, and replicate across a second seed.
+The code now supports a genuinely J-only task-reward path: gold answers are
+removed from J training rows and only the J reward callable is registered.
+The repository does **not** yet contain statistically significant evidence
+that this improves held-out GSM8K accuracy. Earlier gains of two or three
+official-test answers were selected through adaptive test reuse and are
+exploratory. The clean affect/error searches were negative.
 
-Stop a screen after its first 25-step evaluation if exact match does not beat
-that run's step-zero value. Do not continue known-flat runs merely because their
-internal reward rises.
+Do not describe an internal-score increase, a selected 200-example peak, or an
+old official-test score as success. Preserve all negative outcomes.
 
-## Reproduce the environment
+## Your assignment
+
+Use the fixed v1 candidate and get the predeclared evidence as quickly as
+hardware safely allows:
+
+- six semantic `solved` J-reward runs, seeds 142–147;
+- six matched sign-flipped runs, the same seeds and training examples;
+- optionally, one seed-142 exact-match reward run as a pipeline check;
+- fixed step-25 endpoints with observational evaluations every five updates;
+- then, only after the gate, one frozen-base and all paired adapter evaluations
+  on the sealed 3,000-example manifest.
+
+The exact curve criterion is the six-seed mean at steps `0/5/10/15`:
+step 5 must be above baseline, followed by two non-downward steps. Do not hunt
+for another triple, pick a favorable seed, stop from correctness, or select a
+checkpoint. Steps 20 and 25 are logged, and step 25 is always the endpoint.
+
+The significant-evidence criterion is separate: all six semantic sealed-set
+effects must be positive (two-sided seed sign-test `p=0.03125`) and the positive
+mean paired change must have a 95% crossed seed/item bootstrap interval that
+excludes zero. Report the matched sign-flip difference-in-differences too.
+
+## Start here
+
+The parent agent will commit the audited fixes. Do not prepare or train until:
 
 ```bash
-git clone https://github.com/nilin/j-lens-rl.git
-cd j-lens-rl
-./setup.sh
+cd /j-lens-rl
 .venv/bin/pytest -q
+git status --short
 ```
 
-W&B project: `nilinabra-spare-time/j-lens-rl`. `.env` is intentionally ignored
-and contains only the raw W&B API key (not `KEY=value`). Before a run:
+The tests must pass and `git status --short` must print nothing. Then:
 
 ```bash
-export WANDB_API_KEY="$(tr -d '\r\n' < .env)"
+./run_confirmatory.sh prepare
+./run_confirmatory.sh verify
 ```
 
-Do not commit or print the key. Lens files, run outputs, and W&B local state are
-also ignored; regenerate them with the commands below.
+Preparation creates ignored `.confirmatory/manifests/` files and a state file
+that fingerprints the clean commit, pinned model/dataset revisions, configs,
+fresh split manifests, lens, and calibration. If preparation refuses, fix the
+cause rather than bypassing it. Never delete or regenerate prepared manifests
+after seeing any v1 correctness.
 
-## Authoritative state
+## Fast execution order
 
-Read `RESEARCH_LOG.md` for the experiment table, exact metrics, decisions, and
-W&B run IDs. The implementation intentionally stays on vendored TRL v1.0.0; the
-only TRL delta exposes the unwrapped policy and rollout token IDs to the custom
-reward. Do not change TRL unless a demonstrated blocker requires it.
-
-Current conclusions:
-
-- The generic WikiText-fitted `solved` lens with a layer-8 late-half mean
-  readout and LR `3e-6` now passes the exact acceptance gate. Seed 42 improved
-  at monitor steps 25 and 50 and scored 408/1,319 on the full test. Seed 43
-  improved at steps 10, 20, 25, and 35 and scored 407/1,319. The same frozen
-  base scores 405/1,319. W&B runs: `kwk4m0ev`, `wsg6wioj`.
-- Treat this as a small replicated directional effect (+3 and +2 answers), not
-  a large or statistically precise gain; the full-test confidence intervals
-  overlap heavily.
-- A nine-readout composite reached 62.0% offline pair accuracy but decreased the
-  200-example monitor from 32.5% to 32.0%.
-- A larger 200-prompt screen found layer-20 final-token at 58.5%, layer-8
-  late-half mean at 56.1%, and the 18-way composite at 62.9%. Max/quarter-window
-  readouts were near chance, so no new RL run was justified.
-- The matched exact-match-reward control at LR `3e-6` was also flat, 32.5% to
-  32.5% at step 25 (W&B `37nto25a`).
-- A clean WikiText-fitted `happy` reward decreased the 200-example monitor from
-  33.5% to 32.5% at step 25 and 31.5% at step 100 (W&B `kxor0zvs`), with 0%
-  literal `happy` usage. Treat it as a negative result.
-
-## Reproduce the accepted run
-
-Regenerate the generic WikiText lens (expected held-out calibration mean
-`-19.0812344828`, standard deviation `3.9094524086`, target token `27956`):
+On one GPU:
 
 ```bash
-.venv/bin/fit-jlens \
-  --corpus wikitext \
-  --output artifacts/qwen25_05b_solved_lens.pt \
-  --calibration-output artifacts/qwen25_05b_solved_calibration.json \
-  --target-word solved --num-prompts 100 --calibration-prompts 50 \
-  --layers 8,14,20 --dim-batch 16 --seed 42
+./run_confirmatory.sh train-semantic
+./run_confirmatory.sh curve
+./run_confirmatory.sh train-controls
+# Optional, nonblocking pipeline check:
+./run_confirmatory.sh train-positive-control
+./run_confirmatory.sh unlock
+./run_confirmatory.sh final-treatment
+./run_confirmatory.sh final-controls
+./run_confirmatory.sh report
 ```
 
-Run both seeds online in W&B:
+The required compute is the 12 semantic/sign-flipped runs. The exact-match
+control is optional and does not block unlock. To save wall time on multiple
+GPUs, assign distinct config files to distinct devices/agents, for example:
 
 ```bash
-export WANDB_API_KEY="$(tr -d '\r\n' < .env)"
-.venv/bin/train-jlens-rl \
-  --config configs/jlens_late_8_lr3e6_dense_eval.json --wandb-mode online
-.venv/bin/train-jlens-rl \
-  --config configs/jlens_late_8_lr3e6_dense_eval_seed43.json --wandb-mode online
+CUDA_VISIBLE_DEVICES=0 .venv/bin/train-jlens-rl \
+  --config configs/confirmatory_jlens_seed142.json --wandb-mode online
+CUDA_VISIBLE_DEVICES=1 .venv/bin/train-jlens-rl \
+  --config configs/confirmatory_signflip_seed142.json --wandb-mode online
 ```
 
-Verify the saved adapters against all 1,319 examples:
+Continue through seeds 143–147 without running two processes against the same
+output directory. The train command rejects a nonempty directory. All
+conditions use training-generation `min_new_tokens=64` to prevent the observed
+five-token collapse; final greedy evaluation intentionally has no minimum.
 
-```bash
-.venv/bin/eval-jlens-rl --config configs/full_eval.json \
-  --adapter runs/jlens_solved_late_8_lr3e6_dense_eval/checkpoint-50 \
-  --skip-jlens-metric --batch-size 16
-.venv/bin/eval-jlens-rl --config configs/full_eval.json \
-  --adapter runs/jlens_solved_late_8_lr3e6_dense_eval_seed43/final \
-  --skip-jlens-metric --batch-size 16
-```
+For the fastest guarded path, `modal_experiments.py` submits a durable remote
+pipeline capped at five simultaneous GPU containers. It queues the sixth seed,
+applies the same curve gate before controls, and parallelizes final paired
+evaluation only after unlock. Follow the credential-safe setup in `README.md`;
+never upload `modal.sh` or `.env`. The Modal Volume is the experiment archive
+until it is downloaded back into local `.confirmatory/`.
 
-Training uses reward weights `[0, 1]`: the GSM8K verifier is computed only as
-an audit metric and has exactly zero contribution to the scalar reward or
-gradient. The lens is fitted only on WikiText; no GSM8K questions, answers,
-grades, validation examples, or test examples enter reward construction.
+Batch 64 is frozen for the curve and final evaluators on the 24 GB target GPU.
+If a pre-preparation memory smoke test fails, lower every condition to batch 32,
+commit, and prepare a new v1. Never change it after preparation.
 
-## Rejected experiment: GSM8K-reference domain lens
+## What the guards check
 
-Do not fit or use a lens on GSM8K reference solutions. Although that path did
-not update policy weights or touch held-out evaluation examples, fitting the
-reward transport on correct training solutions makes the signal indirectly
-solution-informed and weakens the intended internal-satisfaction-only claim.
-The implementation, config, and generated artifacts for this path were removed.
+`./run_confirmatory.sh unlock` checks the following before exposing final data:
 
-Reference-solution fitting remains prohibited. A clean domain-matched variant
-may use the frozen base model's own ungraded GSM8K-training completions, drawn
-from prompts disjoint from the RL training subset. Save that rollout corpus for
-auditability. It must never read reference answers, verifier scores, correctness
-labels, validation examples, or test examples. Any candidate must pass grouped
-alignment screening before RL; correctness remains evaluation-only under the
-full-test and second-seed gate above.
+- the working tree and HEAD still match the prepared state;
+- all 12 required runs used the pinned config/artifacts/revisions;
+- every run ended at step 25 without correctness stopping;
+- each matched seed used the same 1,000 training source indices;
+- no historically unused curve/final/reserve index entered training;
+- each history contains exactly steps `0,5,10,15,20,25`; and
+- the one predeclared mean curve passed.
+
+Final evaluation writes auditable per-item JSONL and compares the six semantic
+seeds jointly. Evaluate treatment first; if it is negative, record that result
+without tuning. Evaluate sign-flip controls next. The optional exact-match
+control may be omitted if compute is scarce; say so explicitly.
+
+## Secrets and outputs
+
+W&B project: `nilinabra-spare-time/j-lens-rl`. `.env` contains only the raw API
+key and is ignored. The runner loads it without printing it. Do not commit the
+key, `.confirmatory/`, `runs/`, `wandb/`, or large artifacts. Preserve the
+ignored protocol state and JSONL outputs with the experiment archive because
+their hashes connect the claim to the committed code.
+
+If interrupted, do not rerun a seed until its curve looks favorable. The
+guarded runner does not silently resume or overwrite training; record the run
+as interrupted and use a separately declared replacement rule/protocol. It may
+reuse a completed final JSONL only after checking all rows and provenance.

@@ -1,0 +1,9 @@
+{
+  "base": "jlens_affect_late8_lr3e6.json",
+  "score_components": [
+    {"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": 1.0},
+    {"layer": 8, "start_fraction": 0.0, "end_fraction": 0.5, "aggregation": "mean", "weight": -1.0}
+  ],
+  "run_name": "gsm8k-jlens-affect-late-minus-early8-lr3e6-clean-val",
+  "output_dir": "runs/jlens_affect_delta8_lr3e6_clean_val"
+}

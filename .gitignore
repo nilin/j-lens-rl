@@ -1,8 +1,10 @@
 .venv/
 .env
+modal.sh
 artifacts/
 runs/
 wandb/
+.confirmatory/
 __pycache__/
 .pytest_cache/
 *.egg-info/

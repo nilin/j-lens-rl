@@ -1,0 +1,6 @@
+{
+  "base": "confirmatory_jlens_seed142.json",
+  "seed": 146,
+  "run_name": "confirm-v1-jlens-solved-seed146",
+  "output_dir": ".confirmatory/runs/jlens_seed146"
+}

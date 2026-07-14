@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import os
 import random
 import re
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +16,10 @@ SYSTEM_PROMPT = (
     "Solve the math problem. Show concise reasoning, then put only the final "
     "numeric answer after '#### '."
 )
+
+QWEN_MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
+GSM8K_REVISION = "740312add88f781978c0658806c59bc2815b9866"
+WIKITEXT_REVISION = "b08601e04326c79dfdd32d625aee71d232d685c3"
 
 
 def load_config(path: str | Path) -> dict[str, Any]:
@@ -26,10 +33,82 @@ def load_config(path: str | Path) -> dict[str, Any]:
 
 
 def seed_everything(seed: int) -> None:
+    os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+    torch.use_deterministic_algorithms(True, warn_only=True)
+
+
+def load_index_manifest(path: str | Path) -> list[int]:
+    """Load and validate a JSON index manifest.
+
+    Manifests may be a bare list or an object with an ``indices`` list. Keeping
+    selection by raw source index makes data boundaries independent of dataset
+    shuffling and easy to audit.
+    """
+    source = Path(path)
+    payload = json.loads(source.read_text())
+    values = payload.get("indices") if isinstance(payload, dict) else payload
+    if not isinstance(values, list) or any(
+        isinstance(value, bool) or not isinstance(value, int) for value in values
+    ):
+        raise ValueError(f"{source} must contain a list of integer indices")
+    if any(value < 0 for value in values):
+        raise ValueError(f"{source} contains a negative index")
+    if len(values) != len(set(values)):
+        raise ValueError(f"{source} contains duplicate indices")
+    return values
+
+
+def sha256_file(path: str | Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def repository_provenance(root: str | Path) -> dict[str, Any]:
+    """Return a content fingerprint that still identifies a dirty worktree."""
+    root = Path(root).resolve()
+    try:
+        commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=root, text=True
+        ).strip()
+        status = subprocess.check_output(
+            ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+            cwd=root,
+            text=True,
+        ).splitlines()
+        names = subprocess.check_output(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+            cwd=root,
+            text=True,
+        ).splitlines()
+    except (OSError, subprocess.CalledProcessError):
+        return {"git_commit": None, "git_dirty": None, "source_tree_sha256": None}
+
+    digest = hashlib.sha256()
+    for name in sorted(names):
+        path = root / name
+        if not path.is_file():
+            continue
+        digest.update(name.encode())
+        digest.update(b"\0")
+        with path.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(chunk)
+        digest.update(b"\0")
+    return {
+        "git_commit": commit,
+        "git_dirty": bool(status),
+        "git_status": status,
+        "source_tree_sha256": digest.hexdigest(),
+    }
 
 
 def extract_answer(text: str) -> str | None:

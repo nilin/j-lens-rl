@@ -1,0 +1,6 @@
+{
+  "base": "jlens_affect_late8_lr3e6.json",
+  "score_layers": [8, 14, 20],
+  "run_name": "gsm8k-jlens-affect-late-all-lr3e6-clean-val-regular-v2",
+  "output_dir": "runs/jlens_affect_late_all_lr3e6_clean_val_regular_v2"
+}

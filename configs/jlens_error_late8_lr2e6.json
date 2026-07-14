@@ -1,0 +1,13 @@
+{
+  "base": "jlens_clean_val.json",
+  "lens_path": "artifacts/qwen25_05b_error_affect_lens.pt",
+  "calibration_path": "artifacts/qwen25_05b_error_affect_calibration.json",
+  "target_words": ["wrong", "mistake", "error"],
+  "score_components": [
+    {"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": -1.0}
+  ],
+  "learning_rate": 2e-6,
+  "early_stopping_patience": 6,
+  "run_name": "gsm8k-jlens-error-penalty-late8-lr2e6-clean-val-regular",
+  "output_dir": "runs/jlens_error_late8_lr2e6_clean_val_regular"
+}

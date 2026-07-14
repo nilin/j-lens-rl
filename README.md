@@ -1,108 +1,142 @@
 # J-lens RL on GSM8K
 
-This repository tests whether an internal-state reward improves the outcome we
-care about: **held-out, verifiable GSM8K exact match** on
-`Qwen/Qwen2.5-0.5B-Instruct`.
-Both runs use the same group-relative policy-gradient loop, LoRA setup, seed,
-examples, eight rollouts per prompt, KL term, and evaluation. Only the reward callable differs:
+This repository tests whether a reward derived from a language model's own
+J-lens word score can improve held-out, verifiable math accuracy. The current
+model is `Qwen/Qwen2.5-0.5B-Instruct`; the primary outcome is greedy numeric
+exact match on GSM8K-format problems.
 
-- `configs/gsm8k.json`: verifiable numeric exact-match reward.
-- `configs/jlens.json`: mean standardized J-lens log-probability mass for
-`solved`, sampled every 20 response tokens. Literal target-token positions are
-excluded to reduce the easiest reward-hacking path.
+The important distinction is:
 
-`score_start_fraction` selects the response window used by the J reward (`0.5`
-means the later half), while `score_layers` selects any subset of the fitted
-layers. These allow targeted alignment screens without refitting the lens.
+- a J-only optimizer receives one task reward—the fixed J-lens score—and the
+  configured GRPO KL regularizer; its training rows contain no gold answers;
+- exact match is an observational evaluation and may not choose the training
+  horizon or checkpoint in a confirmatory run; and
+- a rising evaluation curve is descriptive. Statistical evidence requires a
+  separate, paired, sealed evaluation across predeclared seeds.
 
-The J-lens implementation is pinned to Anthropic commit
-`581d398613e5602a5af361e1c34d3a92ea82ba8e`. TRL v1.0.0 is vendored under
-`trl/` from upstream commit `f3e9ac1005980fded7192682599c70749785fa9b`. Its standard `GRPOTrainer` handles
-generation, optimization, checkpointing, and W&B logging. Our narrow
-patch exposes the policy and rollout token IDs to custom reward functions so the
-J-lens reward can inspect hidden states.
+Read [CONFIRMATORY_PROTOCOL.md](CONFIRMATORY_PROTOCOL.md) before running an
+experiment. It is the authoritative protocol. `RESEARCH_LOG.md` contains the
+exploratory history, including negative results; `audit.md` explains why the
+old official-test results are not confirmatory evidence.
 
-## GPU setup
+## Setup and tests
 
-Use Linux, Python 3.10+, a recent NVIDIA driver, and a CUDA GPU with roughly
-16 GB or more VRAM. The default 0.5B model is deliberately small.
+Use Linux, Python 3.10+, and an NVIDIA GPU with about 16 GB or more VRAM.
 
 ```bash
 ./setup.sh
 source .venv/bin/activate
-wandb login
 pytest -q
 ```
 
-If your driver requires a different PyTorch CUDA wheel, install that wheel first,
-then rerun `pip install -e '.[dev]'`. The package versions remain recorded in
-`pyproject.toml`.
+The repository pins the base-model and dataset revisions. Anthropic's J-lens
+implementation is pinned to commit
+`581d398613e5602a5af361e1c34d3a92ea82ba8e`; TRL is vendored from commit
+`f3e9ac1005980fded7192682599c70749785fa9b`.
 
-## 1. Fit and calibrate the lens (once)
+## Confirmatory run
 
-```bash
-fit-jlens \
-  --model Qwen/Qwen2.5-0.5B-Instruct \
-  --target-word solved \
-  --layers 8,14,20 \
-  --num-prompts 100 \
-  --output artifacts/qwen25_05b_solved_lens.pt \
-  --calibration-output artifacts/qwen25_05b_solved_calibration.json
-```
+The v1 candidate is frozen before outcomes are opened: WikiText-fitted
+`solved`, layer 8, late-half mean, LR `3e-6`, six seeds, and a fixed step-25
+endpoint. A matched sign-flipped J reward is the required control. One
+exact-match-reward run is an optional pipeline check.
 
-Fitting is the expensive one-time stage. It checkpoints after every prompt and
-resumes automatically. Increase `--dim-batch` if the GPU has spare memory;
-decrease it after an OOM.
-
-## 2. Smoke test both rewards
-
-The overrides below perform one optimizer update. For a quick smoke test, also
-temporarily set `validation_examples` to a small value in `configs/common.json`.
+After committing all code and artifact metadata, the worktree must be clean:
 
 ```bash
-train-jlens-rl --config configs/gsm8k.json --updates 1 --output-dir runs/smoke-gsm8k --wandb-mode offline
-train-jlens-rl --config configs/jlens.json --updates 1 --output-dir runs/smoke-jlens --wandb-mode offline
+git status --short
+./run_confirmatory.sh prepare
+./run_confirmatory.sh verify
+./run_confirmatory.sh train-semantic
+./run_confirmatory.sh curve
+./run_confirmatory.sh train-controls
+# Optional pipeline check:
+./run_confirmatory.sh train-positive-control
+./run_confirmatory.sh unlock
+./run_confirmatory.sh final-treatment
+./run_confirmatory.sh final-controls
+./run_confirmatory.sh report
 ```
 
-## 3. Run the matched experiment
+Preparation deterministically reconstructs 3,410 historically used raw
+GSM8K-train indices and allocates the 4,063 unused ones into 200 exploratory,
+400 one-shot curve, 3,000 sealed-final, and 463 untouched-reserve examples.
+All 4,063 stay out of confirmatory training. Manifests and run outputs live in
+ignored `.confirmatory/`, with hashes tied to the clean Git commit.
 
-Run these from the same clean base model; neither consumes the other's checkpoint.
+The curve gate is fixed before training: across the mean of all six semantic
+seeds, step 5 must exceed step 0, step 10 must be at least step 5, and step 15
+must be at least step 10. Runs always continue to step 25. The final set remains
+locked unless all 12 semantic/sign-flip runs and this exact curve gate pass.
+The gate saves a hashed figure containing every seed and the highlighted mean
+curve at the predeclared nodes.
+
+Significant positive evidence additionally requires all six sealed-set seed
+effects to be positive (two-sided sign-test `p=0.03125`) and a positive
+multi-seed mean change whose 95% crossed seed/item bootstrap interval excludes
+zero. The sign-flip difference-in-differences and per-item paired tables are
+reported, never used as alternative success definitions.
+
+## Exploratory commands
+
+The lower-level entry points remain useful for diagnostics:
 
 ```bash
-train-jlens-rl --config configs/gsm8k.json
-train-jlens-rl --config configs/jlens.json
-plot-jlens-rl --output runs/comparison.png
+fit-jlens --help
+train-jlens-rl --help
+eval-jlens-rl --help
+compare-jlens-evals --help
+plot-jlens-rl --help
 ```
 
-Each run writes its resolved configuration, TRL trainer state/log history,
-periodic LoRA checkpoints, and final adapter. It also logs to the `j-lens-rl`
-W&B project by default. Both rollout rewards are computed in both runs; reward
-weights are the sole experimental difference. A separate fixed, greedy
-validation callback measures held-out GSM8K exact match at step zero and every
-25 updates. This validation score is never used as reward in the J-lens run and
-is the primary result plotted by `plot-jlens-rl`. Runs stop early after two
-consecutive validation evaluations without a new best exact-match score; this
-patience avoids spending the full budget on clearly flat variants while being
-less sensitive to one noisy 200-example measurement.
+Configs outside the `confirmatory_*` family are historical/exploratory. Do not
+use `configs/jlens.json`, `configs/full_eval.json`, or the retired
+`run_solved_layer_screen.sh` to make a confirmatory claim: those paths belong
+to an adaptively reused test-monitor protocol.
 
-## Standalone evaluation
+Standalone evaluation writes per-example JSONL rather than only an aggregate:
 
 ```bash
-eval-jlens-rl --config configs/jlens.json --adapter runs/jlens_solved_reward/final
+eval-jlens-rl \
+  --config configs/confirmatory_sealed_eval.json \
+  --experiment-config configs/confirmatory_jlens_seed142.json \
+  --adapter .confirmatory/runs/jlens_seed142/final \
+  --indices-manifest .confirmatory/manifests/sealed_final_indices.json \
+  --output-jsonl .confirmatory/evals/jlens_seed142.jsonl \
+  --run-label jlens_seed142 \
+  --batch-size 64 --skip-jlens-metric
 ```
 
-To refit the lens on a trained policy—a diagnostic for stale-lens exploitation—run:
+Do not run that command before `./run_confirmatory.sh unlock`; the runner is the
+guarded route. Per-example output includes source index, prompt hash,
+completion, parsed prediction, correctness pair, literal-target audit, and
+source/model/artifact provenance so reported changes can be reconstructed.
+
+## Modal parallel runner
+
+`modal_experiments.py` runs the same frozen protocol with at most five GPU
+containers. It bakes the exact clean Git tree and frozen lens artifacts into
+the image, uses a v2 Volume for distinct per-seed outputs, and never copies
+`.env` or `modal.sh`. The durable remote orchestrator runs semantic seeds,
+checks the fixed curve, runs sign-flips only on a pass, then performs the
+guarded final analysis.
+
+After `prepare`, install the pinned client, configure your local Modal profile,
+and create the named W&B workload secret once:
 
 ```bash
-fit-jlens \
-  --model Qwen/Qwen2.5-0.5B-Instruct \
-  --adapter runs/jlens_solved_reward/final \
-  --target-word solved \
-  --layers 8,14,20 \
-  --output artifacts/qwen25_05b_solved_refit_lens.pt \
-  --calibration-output artifacts/qwen25_05b_solved_refit_calibration.json
+.venv/bin/python -m pip install 'modal==1.5.2'
+PATH="$PWD/.venv/bin:$PATH" bash modal.sh
+read -r WANDB_API_KEY < .env
+.venv/bin/modal secret create j-lens-rl-wandb WANDB_API_KEY="$WANDB_API_KEY"
+unset WANDB_API_KEY
+.venv/bin/modal run --detach modal_experiments.py
 ```
 
-Then point a copy of the evaluation config at those two refitted artifacts.
-This diagnostic does not change the primary success criterion: held-out exact
-match relative to the frozen base and correctness-reward control.
+The launcher prints a function-call ID and uses Volume
+`j-lens-rl-confirmatory-v1-20260714`. Monitor it with Modal's dashboard or CLI.
+Download and archive the Volume promptly after completion because Volume v2 is
+currently beta. See Modal's official guides for
+[GPU selection](https://modal.com/docs/guide/gpu),
+[parallel maps](https://modal.com/docs/guide/batch-processing), and
+[Volume consistency](https://modal.com/docs/guide/volumes).

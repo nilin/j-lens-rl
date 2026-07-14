@@ -1,0 +1,6 @@
+{
+  "base": "jlens.json",
+  "evaluation_source": "train",
+  "evaluation_offset": 6800,
+  "validation_examples": 200
+}

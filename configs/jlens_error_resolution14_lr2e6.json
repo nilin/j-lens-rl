@@ -1,0 +1,9 @@
+{
+  "base": "jlens_error_resolution8_lr2e6.json",
+  "score_components": [
+    {"layer": 14, "start_fraction": 0.0, "end_fraction": 0.5, "aggregation": "mean", "weight": 1.0},
+    {"layer": 14, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": -1.0}
+  ],
+  "run_name": "gsm8k-jlens-error-resolution14-lr2e6-clean-val-regular",
+  "output_dir": "runs/jlens_error_resolution14_lr2e6_clean_val_regular"
+}

@@ -20,11 +20,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest==9.0.2"]
+modal = ["modal==1.5.2"]
 
 [project.scripts]
 fit-jlens = "jlens_rl.fit_lens:main"
 train-jlens-rl = "jlens_rl.train:main"
 eval-jlens-rl = "jlens_rl.eval:main"
+compare-jlens-evals = "jlens_rl.paired_eval:main"
 plot-jlens-rl = "jlens_rl.plot:main"
 analyze-jlens-alignment = "jlens_rl.analyze_alignment:main"
 

@@ -1,0 +1,6 @@
+{
+  "base": "jlens_error_resolution8_lr2e6.json",
+  "learning_rate": 1e-6,
+  "run_name": "gsm8k-jlens-error-resolution8-lr1e6-clean-val-regular",
+  "output_dir": "runs/jlens_error_resolution8_lr1e6_clean_val_regular"
+}

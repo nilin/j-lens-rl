@@ -1,0 +1,13 @@
+{
+  "base": "jlens_clean_val.json",
+  "lens_path": "artifacts/qwen25_05b_affect_lens.pt",
+  "calibration_path": "artifacts/qwen25_05b_affect_calibration.json",
+  "target_words": ["happy", "satisfied", "nice"],
+  "score_layers": [8],
+  "score_start_fraction": 0.5,
+  "score_end_fraction": 1.0,
+  "score_aggregation": "mean",
+  "learning_rate": 3e-6,
+  "run_name": "gsm8k-jlens-affect-late8-lr3e6-clean-val-v2",
+  "output_dir": "runs/jlens_affect_late8_lr3e6_clean_val_v2"
+}
