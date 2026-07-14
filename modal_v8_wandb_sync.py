@@ -700,9 +700,12 @@ def _verify_remote_run(
         "run_id": remote.id,
         "url": remote.url,
         "group": remote.group,
-        "tags": list(remote.tags),
+        # W&B's public API canonicalizes tags lexicographically during sync;
+        # tag membership, unlike every other identity field, is unordered.
+        "tags": sorted(remote.tags),
     }
     expected = {key: identity[key] for key in observed}
+    expected["tags"] = sorted(expected["tags"])
     if observed != expected:
         raise RuntimeError("synced W&B run differs from its registered identity")
     queue = {
@@ -743,6 +746,57 @@ def _validated_staged_request(
         staged_path.removeprefix("/"), label="staged payload path"
     )
     return identity, STAGING_MOUNT.joinpath(*relative_staged.parts)
+
+
+@app.function(
+    image=sync_image,
+    cpu=1.0,
+    memory=512,
+    timeout=120,
+    secrets=[wandb_secret],
+)
+def inspect_existing_v8_run(label: str) -> dict[str, Any]:
+    """Return only non-secret registered/observed metadata after a sync."""
+    identity = _registered_identity(label)
+    if not os.environ.get("WANDB_API_KEY"):
+        raise RuntimeError("Modal W&B secret did not provide WANDB_API_KEY")
+    import wandb
+
+    remote = _lookup_remote_run(wandb.Api(timeout=30), identity)
+    if remote is None:
+        raise RuntimeError("registered W&B run is absent")
+    observed = {
+        "entity": remote.entity,
+        "project": remote.project,
+        "run_name": remote.name,
+        "run_id": remote.id,
+        "url": remote.url,
+        "group": remote.group,
+        "tags": list(remote.tags),
+        "state": remote.state,
+    }
+    expected = {key: identity[key] for key in observed if key != "state"}
+    return {
+        "label": label,
+        "expected": expected,
+        "observed": observed,
+        "different_fields": sorted(
+            key for key in expected if observed.get(key) != expected[key]
+        ),
+        "config_keys": sorted(
+            key
+            for key in ("offline_terminal_evidence_queue", "terminal_run_result")
+            if key in remote.config
+        ),
+        "terminal_evidence_files_present": sorted(
+            set(EVIDENCE_FILE_NAMES) & {item.name for item in remote.files()}
+        ),
+    }
+
+
+@app.local_entrypoint(name="inspect")
+def inspect_main(label: str) -> None:
+    print(json.dumps(inspect_existing_v8_run.remote(label), indent=2, sort_keys=True))
 
 
 @app.function(
@@ -828,6 +882,58 @@ def sync_one_completed_v8_run(
         }
 
 
+@app.function(
+    image=sync_image,
+    cpu=1.0,
+    memory=1024,
+    timeout=300,
+    secrets=[wandb_secret],
+    volumes={STAGING_MOUNT.as_posix(): staging_volume},
+)
+def verify_existing_synced_v8_run(
+    label: str,
+    staged_path: str,
+    payload_sha256: str,
+    receipt_sha256: str,
+) -> dict[str, Any]:
+    """Verify a receipt-bound remote run after sync without uploading again."""
+    identity, source = _validated_staged_request(
+        label, staged_path, payload_sha256, receipt_sha256
+    )
+    if not os.environ.get("WANDB_API_KEY"):
+        raise RuntimeError("Modal W&B secret did not provide WANDB_API_KEY")
+    staging_volume.reload()
+    with tempfile.TemporaryDirectory(prefix="v8-wandb-verify-") as temporary:
+        work = Path(temporary)
+        archive = work / "payload.tar"
+        _copy_verified(source, archive, payload_sha256)
+        receipt, offline_root = _extract_payload(
+            archive,
+            work / "extracted",
+            label=label,
+            expected_receipt_sha256=receipt_sha256,
+        )
+        result = _validate_embedded_terminal_evidence(offline_root, receipt, label)
+        _require_external_debug_link_is_dangling(offline_root, receipt, label)
+
+        import wandb
+
+        remote = _lookup_remote_run(wandb.Api(timeout=30), identity)
+        if remote is None:
+            raise RuntimeError("registered W&B run is absent after sync")
+        remote_record = _verify_remote_run(remote, identity, receipt, result)
+        return {
+            "schema_version": 1,
+            "transport": "modal_cpu_existing_wandb_verification",
+            "label": label,
+            "payload_sha256": payload_sha256,
+            "receipt_sha256": receipt_sha256,
+            "offline_run_tree_sha256": receipt["offline_run_tree_sha256"],
+            "remote": remote_record,
+            "verified_at_utc": datetime.now(timezone.utc).isoformat(),
+        }
+
+
 @app.local_entrypoint()
 def main(label: str) -> None:
     """Stage and sync one receipt-valid V8-local run; never starts training."""
@@ -838,6 +944,22 @@ def main(label: str) -> None:
         with staging_volume.batch_upload(force=False) as batch:
             batch.put_file(archive, staged_path, mode=0o600)
         result = sync_one_completed_v8_run.remote(
+            label,
+            staged_path,
+            prepared["payload_sha256"],
+            prepared["receipt_sha256"],
+        )
+    print(json.dumps(result, indent=2, sort_keys=True))
+
+
+@app.local_entrypoint(name="verify")
+def verify_main(label: str) -> None:
+    """Verify a prior sync against the still-sealed local evidence."""
+    with tempfile.TemporaryDirectory(prefix="v8-wandb-verify-package-") as temporary:
+        archive = Path(temporary) / "payload.tar"
+        prepared = _prepare_local_payload(label, archive)
+        staged_path = f"/payloads/{prepared['receipt_sha256']}-{label}.tar"
+        result = verify_existing_synced_v8_run.remote(
             label,
             staged_path,
             prepared["payload_sha256"],

@@ -1893,9 +1893,15 @@ seed to a later pooled gate. Controls and sealed-final work never started, and
 the 900-item final remains unopened. The canonical closeout is
 [`protocol_archive/v8_local_terminal_closeout.json`](protocol_archive/v8_local_terminal_closeout.json),
 with 20 compact source-evidence files under
-`protocol_archive/v8_local_terminal_evidence/`. A CPU-only Modal helper can
-sync only the receipt-bound immutable offline directory to its registered W&B
-ID; it cannot run training or alter this disposition.
+`protocol_archive/v8_local_terminal_evidence/`. A CPU-only Modal helper synced
+only the receipt-bound immutable offline directory to its registered W&B ID.
+The upload reached remote state `finished`; all exact identity, receipt-bound
+config, and seven terminal evidence checks pass. W&B's public API sorted the
+registered tags lexicographically, so the verifier canonicalizes tag order but
+continues to require exact tag membership and exact equality for every other
+field. The durable sync receipt is
+`protocol_archive/v8_local_wandb_sync_receipt.json`. This transport action did
+not run training or alter V8's failed-closed disposition.
 
 The next GPU work must therefore be a fresh whole V9 registration with new
 state, claim, W&B IDs, and seeds, and a prospectively corrected tree-identity

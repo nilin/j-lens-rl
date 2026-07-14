@@ -362,6 +362,11 @@ def test_remote_verifier_requires_exact_identity_config_and_files() -> None:
     )
     verified = sync._verify_remote_run(remote, identity, receipt, result)
     assert verified["run_id"] == identity["run_id"]
+    assert verified["tags"] == sorted(identity["tags"])
+    remote.tags = list(reversed(identity["tags"]))
+    assert sync._verify_remote_run(remote, identity, receipt, result)["tags"] == sorted(
+        identity["tags"]
+    )
     remote.group = "wrong"
     with pytest.raises(RuntimeError, match="registered identity"):
         sync._verify_remote_run(remote, identity, receipt, result)

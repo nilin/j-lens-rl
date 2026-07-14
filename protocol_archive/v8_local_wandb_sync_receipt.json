@@ -1,0 +1,46 @@
+{
+  "protocol": "j-lens-rl-v8-local-wandb-sync-receipt-v1",
+  "label": "jlens_seed200",
+  "source_closeout_sha256": "d8c48d67b7ff037aeac55774bcc1fedf4b2a574283e7cf12151cf3c95b57e638",
+  "source_receipt_sha256": "40227ffed39abe9c422900fa36c8960e2e4b13684a828cae8d1da47d0ecf31c9",
+  "source_offline_run_tree_sha256": "293d68ca2a6ff03a0a489d9fe4eb0316223be3e683ee41b4fa6c4ec26af1a8b9",
+  "staged_payload_sha256": "0cecf2c570e8210075f5d4ddea88c0e3eebf10872d044fe0f0db788bbb49c8d8",
+  "transport": {
+    "kind": "Modal CPU-only offline W&B sync",
+    "gpu_requested": false,
+    "sync_app_id": "ap-X61VDxwr3atwIVtd6Sy9xF",
+    "sync_result": "Upload completed and the registered remote run reached state finished; the first strict post-check then rejected W&B's lexicographic tag ordering.",
+    "postcheck_correction": "All registered tag values were present exactly once. W&B treats tags as an unordered set and its public API returns them lexicographically, so the verifier was corrected to compare canonical sorted membership while retaining exact checks for every other identity field.",
+    "verification_app_id": "ap-K5zL9GHWogBjsbHRT6WOUf",
+    "verification_reuploaded_data": false,
+    "verified_at_utc": "2026-07-14T16:14:22.740299+00:00"
+  },
+  "remote": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "confirm-v8-local-emotional-profanity-u5-h20",
+    "run_id": "confirm-v8-local-emotional-profanity-u5-h20-jlens_seed200",
+    "run_name": "confirm-v8-local-emotional-profanity-u5-h20-jlens_seed200",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v8-local-emotional-profanity-u5-h20-jlens_seed200",
+    "state": "finished",
+    "canonical_tags": [
+      "confirmatory-v8-local",
+      "curve-exposed-final-sealed",
+      "emotional-j-lens",
+      "offline-wandb",
+      "profanity-u5",
+      "rtx4090"
+    ],
+    "receipt_bound_config_present": true,
+    "terminal_evidence_files": [
+      "data_indices.json",
+      "environment_snapshot.json",
+      "log_history.json",
+      "resolved_config.json",
+      "run_manifest.json",
+      "run_result_manifest.json",
+      "validation_history.jsonl"
+    ]
+  },
+  "scientific_disposition_unchanged": "V8 remains infrastructure_failed_attempt_closed; syncing its immutable terminal seed does not create a dispatch completion, gate decision, continuation right, or confirmatory result."
+}
