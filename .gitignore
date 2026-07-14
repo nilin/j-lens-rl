@@ -4,7 +4,8 @@ modal.sh
 artifacts/
 runs/
 wandb/
-.confirmatory/
+/.confirmatory
+/build/
 __pycache__/
 .pytest_cache/
 *.egg-info/

@@ -360,7 +360,11 @@ it does **not** retroactively validate any old run:
 - `modal_experiments.py` preserves this sequence on Modal and caps each GPU
   phase at five containers, queuing the sixth. It excludes credential files
   from the image and stops before controls/final evaluation when the curve gate
-  fails.
+  fails. The first detached smoke launch was rejected before GPU dispatch by
+  the clean-tree guard because Modal materialized three tracked symlinks and
+  package installation left `build/` debris. The image build now restores the
+  exact symlink types/targets, removes that deterministic debris, asserts a
+  clean checkout, and uses a fresh state volume for the corrected launch.
 
 The regenerated `solved` calibration is bound to the pinned model revision and
 the unchanged lens transport. Historical affect/error calibrations now fail

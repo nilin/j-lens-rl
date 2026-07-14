@@ -21,7 +21,7 @@ import modal
 LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = REMOTE_REPO / ".confirmatory"
-VOLUME_NAME = "j-lens-rl-confirmatory-v1-20260714"
+VOLUME_NAME = "j-lens-rl-confirmatory-v1-20260714b"
 SEEDS = tuple(range(142, 148))
 MAX_GPU_CONTAINERS = 5
 
@@ -74,6 +74,7 @@ repo_image = (
         "python -m pip install --upgrade pip==26.0.1",
         "python -m pip install './trl[peft]' '.[dev]'",
         "python scripts/modal_cache_assets.py",
+        "python scripts/modal_finalize_image.py",
     )
     .env(
         {
