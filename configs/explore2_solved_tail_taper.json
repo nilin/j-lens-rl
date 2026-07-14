@@ -1,0 +1,22 @@
+{
+  "base": "explore2_common.json",
+  "score_stride": 10,
+  "score_components": [
+    {
+      "layer": 8,
+      "start_fraction": 0.5,
+      "end_fraction": 0.75,
+      "aggregation": "mean",
+      "weight": 1.0
+    },
+    {
+      "layer": 8,
+      "start_fraction": 0.75,
+      "end_fraction": 1.0,
+      "aggregation": "mean",
+      "weight": 0.25
+    }
+  ],
+  "run_name": "explore2-solved-tail-taper-seed158",
+  "output_dir": "/explore2/runs/solved_tail_taper"
+}

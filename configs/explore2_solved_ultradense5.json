@@ -1,0 +1,15 @@
+{
+  "base": "explore2_common.json",
+  "score_stride": 5,
+  "score_components": [
+    {
+      "layer": 8,
+      "start_fraction": 0.5,
+      "end_fraction": 1.0,
+      "aggregation": "mean",
+      "weight": 1.0
+    }
+  ],
+  "run_name": "explore2-solved-ultradense5-seed158",
+  "output_dir": "/explore2/runs/solved_ultradense5"
+}

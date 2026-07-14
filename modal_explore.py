@@ -1,11 +1,11 @@
-"""Run three isolated J-only exploratory screens on Modal.
+"""Run four second-round J-only exploratory screens on Modal.
 
 This app deliberately has no access to the confirmatory protocol Volume,
 individual current evaluation manifests, or outcomes. It receives only the
 already-exposed retired V2 curve plus a combined exclusion-only manifest that
 keeps every current confirmatory allocation out of exploratory training. It
-caps itself at three L40S workers so it can coexist with the five-worker
-frozen confirmatory app.
+caps itself at four L40S workers and uses a newly fixed, more frequent
+``0/2/4/6`` development gate.
 """
 
 from __future__ import annotations
@@ -25,21 +25,22 @@ import modal
 LOCAL_REPO = Path(__file__).resolve().parent
 LOCAL_ARTIFACTS = Path("/j-lens-rl/artifacts")
 LOCAL_EXPOSED_MANIFESTS = Path("/j-lens-rl/.confirmatory/manifests")
-REMOTE_REPO = Path("/workspace/j-lens-explore")
-REMOTE_OUTPUT = Path("/explore")
-VOLUME_NAME = "j-lens-rl-exploratory-screen-v1-20260714a"
+REMOTE_REPO = Path("/workspace/j-lens-explore2")
+REMOTE_OUTPUT = Path("/explore2")
+VOLUME_NAME = "j-lens-rl-exploratory-screen-v2-20260714a"
 GPU_TYPE = "L40S"
-MAX_GPU_CONTAINERS = 3
+MAX_GPU_CONTAINERS = 4
 VARIANTS = {
-    "solved_delta3e6": "configs/explore_solved_delta3e6.json",
-    "solved_dense3e6": "configs/explore_solved_dense3e6.json",
-    "solved_multilayer3e6": "configs/explore_solved_multilayer3e6.json",
+    "solved_ultradense5": "configs/explore2_solved_ultradense5.json",
+    "solved_tail_taper": "configs/explore2_solved_tail_taper.json",
+    "solved_tempered_delta": "configs/explore2_solved_tempered_delta.json",
+    "solved_layer_shrink": "configs/explore2_solved_layer_shrink.json",
 }
 CONFIG_FILES = tuple(
     sorted(
         {
             *VARIANTS.values(),
-            "configs/explore_common.json",
+            "configs/explore2_common.json",
             "configs/confirmatory_common.json",
         }
     )
@@ -53,8 +54,27 @@ FORBIDDEN_MANIFESTS = (
     "sealed_final_indices.json",
     "future_reserve_indices.json",
 )
+EXPECTED_MANIFEST_SHA256 = {
+    "train_exclusions.json": (
+        "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+    ),
+    "retired_v2_curve_indices.json": (
+        "cb9abd0f254aed65ee7ef70fb5eae75094e8196b16472521863a8f310f6f4357"
+    ),
+    "curve_indices.json": (
+        "26f0e34b8422959ae0062f9b030ceb3609bc7c2ef8ba4f95dfa397594f7ecb75"
+    ),
+    "sealed_final_indices.json": (
+        "84da0c0472b4442b4f35406d1b1fbd3b956803e5f19bf51fc02f6db013224f7b"
+    ),
+    "future_reserve_indices.json": (
+        "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6"
+    ),
+}
+EXPECTED_STEPS = (0, 2, 4, 6, 10, 15, 20, 25)
+GATE_STEPS = (0, 2, 4, 6)
 
-app = modal.App("j-lens-rl-exploratory-screen-v1")
+app = modal.App("j-lens-rl-exploratory-screen-v2")
 output_volume = modal.Volume.from_name(
     VOLUME_NAME, create_if_missing=True, version=2
 )
@@ -169,6 +189,13 @@ def _manifest_indices(path: Path) -> set[int]:
 
 
 def _verify_local_data_firewall() -> None:
+    for name, expected_sha256 in EXPECTED_MANIFEST_SHA256.items():
+        actual_sha256 = _sha256(LOCAL_EXPOSED_MANIFESTS / name)
+        if actual_sha256 != expected_sha256:
+            raise RuntimeError(
+                f"{name} differs from its pinned SHA-256: "
+                f"{actual_sha256} != {expected_sha256}"
+            )
     train_exclusions = _manifest_indices(
         LOCAL_EXPOSED_MANIFESTS / "train_exclusions.json"
     )
@@ -189,6 +216,14 @@ def _verify_local_data_firewall() -> None:
             raise RuntimeError(
                 f"retired V2 validation overlaps current {forbidden_name}"
             )
+
+
+def _requested_curve_pattern(by_step: dict[int, float]) -> bool:
+    return (
+        by_step[2] > by_step[0]
+        and by_step[4] >= by_step[2]
+        and by_step[6] >= by_step[4]
+    )
 
 
 def _run(command: list[str]) -> None:
@@ -286,6 +321,7 @@ def _set_status(claim_id: str, stage: str, **details: Any) -> None:
     image=repo_image,
     cpu=2,
     memory=4096,
+    max_containers=1,
     timeout=10 * 60,
     startup_timeout=60 * 60,
     retries=0,
@@ -337,17 +373,13 @@ def train_variant(label: str) -> dict[str, Any]:
         history_path = REMOTE_OUTPUT / "runs" / label / "validation_history.jsonl"
         rows = [json.loads(line) for line in history_path.read_text().splitlines() if line]
         by_step = {int(row["step"]): float(row["exact_match"]) for row in rows}
-        expected_steps = [0, 5, 10, 15, 20, 25]
-        if sorted(by_step) != expected_steps:
+        if sorted(by_step) != list(EXPECTED_STEPS):
             raise RuntimeError(f"{label} has incomplete fixed curve: {sorted(by_step)}")
-        gate = (
-            by_step[5] > by_step[0]
-            and by_step[10] >= by_step[5]
-            and by_step[15] >= by_step[10]
-        )
+        gate = _requested_curve_pattern(by_step)
         result = {
             "label": label,
-            "curve": {str(step): by_step[step] for step in expected_steps},
+            "curve": {str(step): by_step[step] for step in EXPECTED_STEPS},
+            "requested_curve_nodes": list(GATE_STEPS),
             "requested_curve_pattern": gate,
             "literal_target_completion_rate": {
                 str(row["step"]): float(row["literal_target_completion_rate"])
