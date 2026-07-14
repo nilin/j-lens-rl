@@ -938,3 +938,96 @@ writer and defensively in the Modal worker. A checked-in
 `run_word_screen.sh` now always uses Modal detached mode. The corrected screen
 uses fresh Volume `j-lens-rl-alternative-screen-v1-20260714b`; the failed
 Volume is never reused.
+
+## Emotional-only direction and J-space correlation protocol (2026-07-14)
+
+### `solved` is retired from all future experiments
+
+At 06:15:24 UTC the user explicitly chose the emotionally charged-word story
+over the mechanically best-looking `solved` development arm. That decision is
+byte-pinned in
+[`protocol_archive/emotional_only_decision.json`](protocol_archive/emotional_only_decision.json)
+(SHA-256
+`50cc3cb32e0cf74feeaeae79c2faf7b91c6caeae34b6e4f1101819d51e15b238`).
+It supersedes the selection priority described earlier in this audit and the
+conditional recipe-selection part of the old V5 registration before any V5
+curve or final outcome was opened. Already-running `solved` arms may finish
+only so the existing attempt has a reproducible closeout; they are historical,
+ineligible for selection, and cannot enter a new confirmation.
+
+The decision was made after the exposed emotional arms had already produced
+several above-baseline development nodes: `celebration_ultradense` reached
+`.4200` at step 10, `profanity_ultradense` reached `.4075` at step 20,
+`celebration_taper` reached `.4050` at step 10, and `profanity_taper` ended at
+`.3975`. These are encouraging adaptive observations, not significant
+evidence, and none of the emotional arms then observed had the requested exact
+non-downward `0/2/4/6` shape. The final attempt closeout must report every arm,
+including failures, without allowing the retired arms to influence the next
+recipe.
+
+The next eight-way RL screen is already committed and uses eight genuinely
+different emotional targets rather than repeated seeds:
+`yay`, `wow`, `joy`, `proud`, `excited`, negative `damn`, negative `fuck`, and
+negative `worried`. Each arm uses the same seed-167 U5 geometry, fixed 25
+updates, and validation nodes `0/2/4/6/10/15/20/25`; each target receives its
+own pinned WikiText calibration and distinct W&B identity. This is an
+exploratory comparison on the already-exposed V4 curve, not a significance
+test.
+
+### Frozen emotional J-space association scan
+
+The separate word-correlation experiment requested by the user is frozen in
+[`protocol_archive/word_correlation_v1_preregistration.json`](protocol_archive/word_correlation_v1_preregistration.json)
+(SHA-256
+`5e2ae9d0896edbcc7386ccfcc125f8200fa86f77b2099529028a01e54788516a`).
+It was registered at 06:23:34 UTC before its fresh Modal Volume existed or any
+scanner outcome was inspected. It uses only the exposed 400-item failed-V4
+curve, deterministically partitions it into 200 discovery and 200 locked-word
+validation prompts, and never mounts a future curve, sealed final set,
+reserve, or training-exclusion manifest.
+
+For every prompt it samples eight training-like base-model completions and
+computes numeric correctness. For each of 36 frozen emotional words it scores
+the exact J-decoded token-family probability at layer 8 over the late half of
+the response with stride 5 and mean aggregation. Scores use candidate-specific
+pinned WikiText calibration, the full 151,936-row output-head denominator,
+standardization clipped to `[-5,5]`, and candidate-specific masking of literal
+target tokens. A word is discovery-eligible only if it has score variance and
+appears literally in zero discovery completions.
+
+The primary statistic is the point-biserial correlation after centering both
+J scores and correctness inside each prompt. Selection uses the largest
+absolute discovery correlation among the frozen candidates, with an exact
+lexical tie-break. Crucially, semantic valence does not preassign the RL sign:
+the selected word gets a positive weight for a positive observed association
+and a negative weight for a negative one. The inventory contains 18 positive
+and 18 negative emotions, including `amazed`, `awesome`, `excited`, `happy`,
+`joy`, `love`, `proud`, `thrilled`, `wow`, `yay`, `afraid`, `angry`, `damn`,
+`despair`, `fear`, `frustrated`, `fuck`, `panic`, `sad`, and `worried`;
+`solved` is absent and cannot be selected.
+
+Discovery reports a 100,000-draw within-prompt max-absolute permutation test.
+After the selected word, sign, token IDs, calibration statistics, code, data,
+lens, and calibration bytes are durably locked, validation scores only that
+word and reports a 100,000-draw one-sided permutation test plus a 10,000-draw
+prompt-cluster bootstrap interval. An unrestricted individual-token lexical
+atlas is descriptive discovery output only and is structurally unable to
+change the locked emotional word or sign.
+
+The scanner was independently reviewed before registration. The review caught
+and fixed a real 63-bit seed overflow in NumPy setup and then added fail-closed
+validation of the complete selection-lock provenance so a calibration or code
+swap cannot occur after discovery. The final scanner SHA-256 is
+`d35f05fc9e8b365ce777b55227fdc45f57ef45031ee739be728252e184b0e4a7`;
+all 79 repository tests, Python compilation, Bash syntax, and whitespace checks
+passed. The remaining pre-runtime risk is that the five-stage GPU path has not
+yet executed on Modal; the fresh Volume and immutable status files make such a
+failure visible rather than silently reusable.
+
+This correlation experiment is mechanistic association evidence, not proof
+that rewarding the word improves accuracy. Its selected emotional target may
+be tested in exploratory RL, but the requested significant claim still
+requires a newly frozen emotional-only recipe, eight new seeds on the untouched
+V5 curve, the exact non-downward mean curve at steps `0/2/4/6`, matched
+sign-flip controls, and the already-reserved one-shot 1,300-item final
+collection.
