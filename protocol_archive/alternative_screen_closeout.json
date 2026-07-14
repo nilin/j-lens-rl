@@ -1,0 +1,277 @@
+{
+  "protocol": "j-lens-rl-alternative-screen-v1",
+  "closed_out_at_utc": "2026-07-14T06:33:01Z",
+  "app_id": "ap-53QKlR6MO6mZlaG3c7SXkH",
+  "function_call_id": "fc-01KXFK62RKDKGQX4D9XBTWHSMW",
+  "volume": "j-lens-rl-alternative-screen-v1-20260714b",
+  "claim_id": "106d1a18e8ea40f3972934504ff4bc9f",
+  "app_stopped_at_utc": "2026-07-14T06:27:46Z",
+  "attempt_stage": "complete",
+  "launch_git_commit": "3ad255753e8ec1f7a0dfe0d27ad69a53e048122c",
+  "launch_git_status": "",
+  "gpu_type": "L40S",
+  "max_parallel_gpus": 8,
+  "seed": 167,
+  "evaluation_steps": [
+    0,
+    2,
+    4,
+    6,
+    10,
+    15,
+    20,
+    25
+  ],
+  "data_boundary": {
+    "description": "exposed failed-V4 400-item development curve only",
+    "curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "common_data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+    "v5_curve_mounted": false,
+    "sealed_final_mounted": false,
+    "future_reserve_mounted": false
+  },
+  "calibrations": {
+    "celebration": {
+      "target_words": [
+        "yay",
+        "great",
+        "success",
+        "nice"
+      ],
+      "token_ids": [
+        2244,
+        2393,
+        5630,
+        6419,
+        7188,
+        8513,
+        13047,
+        21396,
+        28859,
+        33941,
+        39308,
+        44978,
+        46891,
+        52796,
+        60993,
+        97559,
+        138496
+      ],
+      "mean": -12.17310148701326,
+      "std": 3.6423049553625706,
+      "sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6"
+    },
+    "profanity": {
+      "target_words": [
+        "damn",
+        "fuck"
+      ],
+      "token_ids": [
+        7820,
+        25090,
+        26762,
+        70474,
+        75021,
+        76374,
+        82415,
+        88619,
+        95614
+      ],
+      "mean": -15.264432885405418,
+      "std": 4.216857061747076,
+      "sha256": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c"
+    }
+  },
+  "arms": {
+    "celebration_ultradense": {
+      "target_words": [
+        "yay",
+        "great",
+        "success",
+        "nice"
+      ],
+      "reward_sign": 1,
+      "curve": [
+        0.3825,
+        0.4175,
+        0.3875,
+        0.385,
+        0.42,
+        0.3875,
+        0.4,
+        0.3975
+      ],
+      "literal_target_completion_rate": 0.0025,
+      "wandb_run_id": "o4jf4qie",
+      "validation_history_sha256": "e418d13f1161506ec3cf2875913a9e3ca6cf482a0115f8179cb9879153708427",
+      "screen_result_sha256": "093b2dd41025b98f76c8403745646d56c804fc491aa3a429d8a698144243919a"
+    },
+    "profanity_ultradense": {
+      "target_words": [
+        "damn",
+        "fuck"
+      ],
+      "reward_sign": -1,
+      "curve": [
+        0.3825,
+        0.3825,
+        0.3975,
+        0.3825,
+        0.4,
+        0.395,
+        0.4075,
+        0.3825
+      ],
+      "literal_target_completion_rate": 0.0,
+      "wandb_run_id": "eom9e3ht",
+      "validation_history_sha256": "d3f29d34216eb8d678f94c1cbfd5f50ab6bb60d3e370bbe590608b66244e1104",
+      "screen_result_sha256": "1f846dc6565061c092da31e72a34b2219bc4e4f7dbaa62bcd5de0842782a714c"
+    },
+    "celebration_taper": {
+      "target_words": [
+        "yay",
+        "great",
+        "success",
+        "nice"
+      ],
+      "reward_sign": 1,
+      "curve": [
+        0.3825,
+        0.3825,
+        0.385,
+        0.3925,
+        0.405,
+        0.4,
+        0.41,
+        0.42
+      ],
+      "literal_target_completion_rate": 0.0025,
+      "wandb_run_id": "b66bqrr5",
+      "validation_history_sha256": "b45495431ca43a1270c5ffc8c8d25e6057272130594d74429d43c1137535d6ed",
+      "screen_result_sha256": "9786d6f36a2175d21e16d48f4485b6d0b8b75cccacee772f46946d14165d5718"
+    },
+    "profanity_taper": {
+      "target_words": [
+        "damn",
+        "fuck"
+      ],
+      "reward_sign": -1,
+      "curve": [
+        0.3825,
+        0.3975,
+        0.385,
+        0.3825,
+        0.395,
+        0.3525,
+        0.3875,
+        0.3975
+      ],
+      "literal_target_completion_rate": 0.0,
+      "wandb_run_id": "p9xmxdtj",
+      "validation_history_sha256": "844ca943917db6a92053c768a7df0842478510dc0695a586ffde13b00cd0425a",
+      "screen_result_sha256": "6d0be2b76d0c97368acf2313071ecd4fdef9b9dab94238905d07e610c0c88314"
+    },
+    "solved_u5_control": {
+      "historical_ineligible": true,
+      "curve": [
+        0.3825,
+        0.3925,
+        0.39,
+        0.405,
+        0.3825,
+        0.3975,
+        0.385,
+        0.4025
+      ],
+      "wandb_run_id": "pus0mmya",
+      "validation_history_sha256": "fb782c821fc6de78e76b18b300d776f6ec99f4be1dcab428dfe10cad09a23ed9",
+      "screen_result_sha256": "119e562e8182744ebc4f73d2232adeb0a9c2bf5ed5615a7f6dfa072e618007f7"
+    },
+    "solved_u5_low_lr": {
+      "historical_ineligible": true,
+      "curve": [
+        0.3825,
+        0.415,
+        0.3875,
+        0.385,
+        0.39,
+        0.39,
+        0.38,
+        0.3875
+      ],
+      "wandb_run_id": "oznj5t72",
+      "validation_history_sha256": "2fa80c2150d708734b070b56fc125509de46ff4169d24a4114c960c1b7b55176",
+      "screen_result_sha256": "af1af64331da1ec9925206135b57eabef4810c677079607db30564c3a4b102ba"
+    },
+    "solved_u5_taper": {
+      "historical_ineligible": true,
+      "curve": [
+        0.3825,
+        0.385,
+        0.39,
+        0.395,
+        0.4075,
+        0.3775,
+        0.385,
+        0.3925
+      ],
+      "wandb_run_id": "kr7olb1y",
+      "validation_history_sha256": "903eba4732fd8d89e62079d54cedadeeb7a4e31538b279f96ac44a01c05923a9",
+      "screen_result_sha256": "63f270c5e61ba3a2dbd2fb59726d7754ecc9a28e6552aa42c97458deaf95bab5"
+    },
+    "solved_u5_taper_low_lr": {
+      "historical_ineligible": true,
+      "curve": [
+        0.3825,
+        0.38,
+        0.395,
+        0.3975,
+        0.3875,
+        0.4,
+        0.385,
+        0.3675
+      ],
+      "wandb_run_id": "dcyyvo63",
+      "validation_history_sha256": "ca9b36c2bce91a06a8900ea3ff7f9ef37afe79dcadef91dbd5e09e2fd9e6aec0",
+      "screen_result_sha256": "043f26b9f4a4107450569dc8cf8079f7794697693fddb2b04fd1f75ce87cdad6"
+    }
+  },
+  "original_gate": {
+    "steps": [
+      0,
+      2,
+      4,
+      6
+    ],
+    "criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+    "mechanical_selection": "solved_u5_taper",
+    "mechanical_selection_is_eligible": false,
+    "reason": "explicit emotional-only decision was frozen after partial exposed outcomes and before attempt completion"
+  },
+  "emotional_finding": {
+    "arm": "celebration_taper",
+    "selected_nodes": [
+      0,
+      15,
+      20,
+      25
+    ],
+    "curve": [
+      0.3825,
+      0.4,
+      0.41,
+      0.42
+    ],
+    "three_strict_upward_transitions": true,
+    "first_postbaseline_node_above_initial": true,
+    "status": "adaptive single-seed development evidence; not significant"
+  },
+  "emotional_only_decision_sha256": "50cc3cb32e0cf74feeaeae79c2faf7b91c6caeae34b6e4f1101819d51e15b238",
+  "attempt_manifest_sha256": "62556e2ea466d70ad5c7d34a0448ddd349b06a96ca76ab4e43ccfeb50998d986",
+  "attempt_status_sha256": "cc95fa55ba91a2e84c0e3e48ba77d73a8e925c250b1d8428155283da3c693ba7",
+  "v4_closeout_sha256": "aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35",
+  "old_conditional_v5_preregistration_sha256": "08dac96773ada5845815304bc256eebf6e7fb54b7a2b2cc95396851f690f0f99",
+  "fresh_v5_outcomes_inspected": false,
+  "scope": "The emotional curve is useful adaptive evidence and a candidate lineage. It is neither a preregistered confirmation nor a statistical significance result."
+}

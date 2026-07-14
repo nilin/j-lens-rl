@@ -1028,6 +1028,49 @@ This correlation experiment is mechanistic association evidence, not proof
 that rewarding the word improves accuracy. Its selected emotional target may
 be tested in exploratory RL, but the requested significant claim still
 requires a newly frozen emotional-only recipe, eight new seeds on the untouched
-V5 curve, the exact non-downward mean curve at steps `0/2/4/6`, matched
-sign-flip controls, and the already-reserved one-shot 1,300-item final
-collection.
+V5 curve, the exact baseline-plus-three-transition mean curve at four nodes
+fixed in the final registration, matched sign-flip controls, and the
+already-reserved one-shot 1,300-item final collection.
+
+### Completed emotional-family screen and exact exploratory curve
+
+The alternative screen subsequently completed normally on app
+`ap-53QKlR6MO6mZlaG3c7SXkH` at 06:27:46 UTC. Its durable closeout is
+[`protocol_archive/alternative_screen_closeout.json`](protocol_archive/alternative_screen_closeout.json)
+(SHA-256
+`1f9b913c7a433283a571fd5d03114f8442a664187fa71b0c3929ce10acb71edf`).
+All eight arms reached all eight fixed validation nodes on L40S workers from
+clean commit `3ad255753e8ec1f7a0dfe0d27ad69a53e048122c`.
+
+The complete emotional curves at steps `0/2/4/6/10/15/20/25` are:
+
+| Arm | Curve | W&B run |
+|---|---|---|
+| positive celebration, U5 | `.3825/.4175/.3875/.3850/.4200/.3875/.4000/.3975` | `o4jf4qie` |
+| negative profanity, U5 | `.3825/.3825/.3975/.3825/.4000/.3950/.4075/.3825` | `eom9e3ht` |
+| positive celebration, taper | `.3825/.3825/.3850/.3925/.4050/.4000/.4100/.4200` | `b66bqrr5` |
+| negative profanity, taper | `.3825/.3975/.3850/.3825/.3950/.3525/.3875/.3975` | `p9xmxdtj` |
+
+The important new finding is the celebration-taper subsequence at
+baseline/steps `15/20/25`: `.3825 -> .4000 -> .4100 -> .4200`. It has exactly
+three strict upward transitions, and the first post-baseline node is already
+above the initial evaluation. This satisfies the user's requested visual curve
+shape on one adaptive development seed. It does not establish significance or
+reliability across seeds.
+
+The original screen's separately frozen early `0/2/4/6` rule was not met by an
+emotional arm; its mechanical selection was a now-retired `solved` arm. The
+later explicit emotional-only decision makes that selection ineligible, so it
+is recorded but cannot influence future experiments. Celebration-family
+literal matches occurred at rate `.0025` in greedy validation and profanity
+matches at `0`; literal target and causal-predecessor positions remain masked
+from the training reward.
+
+With those eight workers stopped, the distinct single-word screen was launched
+from current clean commit `27d598c4a800fbcc130bee8c559f94e4bee65730`
+on app `ap-YkWhLmkYmv3jlX3MnfDrmX`, call
+`fc-01KXFN5JWFWS216WBCVXSK2D0K`, and fresh Volume
+`j-lens-rl-emotional-single-word-screen-v1-20260714a`. Its eight targets are
+`yay`, `wow`, `joy`, `proud`, `excited`, negative `damn`, negative `fuck`, and
+negative `worried`; it was in the pre-outcome calibration phase when this
+entry was written.
