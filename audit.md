@@ -1851,3 +1851,13 @@ are bound in `protocol_archive/v8_local_prepare_attempt2_closeout.json`. The
 probe now emits a unique sentinel and requires exactly one sentinel identity
 line, so unrelated notices cannot be mistaken for provenance. The unclaimed
 state may be archived and prepared again only after this fix is pushed.
+
+V8-local then prepared cleanly from pushed commit `af83249`, verified the exact
+detached imports and idle RTX 4090, and claimed fresh attempt
+`ff4144f0f3d14a49a669968c5c5a7a85`. Treatment seed 200 was durably dispatched
+at 15:43:10 UTC as the sole GPU process under registration
+`10c1969a8f6e5f8c5caede68019b627a19ae8121daaea31ec91715525ba98090`.
+The operational ledger is
+`protocol_archive/v8_local_launch_ledger.json`. It contains no metric or curve
+outcome. W&B is intentionally offline because no local API key is configured;
+each completed directory is self-contained and must be explicitly synced later.

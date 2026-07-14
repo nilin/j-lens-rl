@@ -1,0 +1,43 @@
+{
+  "claim": {
+    "claim_id": "ff4144f0f3d14a49a669968c5c5a7a85",
+    "claim_sha256": "d01d8a59a1a92b349fa05309567c0ebf9849fe8d8a94bf6962230f4c6ee98540",
+    "claimed_at_utc": "2026-07-14T15:43:02.463300+00:00",
+    "status_at_recording": "running_treatments",
+    "status_sha256": "7912f1b1d9e7290b099037de2c82009ed24ae76d99f9d38722288ff4251873c3"
+  },
+  "execution": {
+    "backend": "single local RTX 4090",
+    "gpu_uuid": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "max_parallel_gpu_processes": 1,
+    "runtime_git_commit": "af83249ffef8e62d83f1f4e2e975670506941532",
+    "runtime_git_tree": "338643ebddb7f9f2dde9d3296b04e7a35cbf88c8",
+    "tracking": "offline W&B; preserve and explicitly sync each completed directory later"
+  },
+  "first_dispatch": {
+    "condition": "jlens",
+    "config_sha256": "769ef2a749ef1d59862921ebdd83637c3be031052797f4ad63274c5f949baf83",
+    "console_log": ".confirmatory/v8_local/gpu_dispatches/001-jlens_seed200.console.log",
+    "created_at_utc": "2026-07-14T15:43:10.589980+00:00",
+    "intent_sha256": "9942e4cc3cebd002678def898a094eb4b696852e05fe4ce8eea79916cfa11add",
+    "label": "jlens_seed200",
+    "offline_wandb_directory": ".confirmatory/v8_local/offline_wandb/jlens_seed200",
+    "seed": 200,
+    "sequence": 1
+  },
+  "outcome_boundary": {
+    "contains_curve_or_training_outcome": false,
+    "controls_started": false,
+    "sealed_final_accessed": false,
+    "statement": "This is an operational launch ledger only. Treatment outcomes and the registered curve decision remain future evidence."
+  },
+  "prepared_state": {
+    "protocol_state_sha256": "d660a0e4d85d30d873aacff592ba954b8c4e154881c0678a2d76600cc4655151",
+    "registration_sha256": "10c1969a8f6e5f8c5caede68019b627a19ae8121daaea31ec91715525ba98090",
+    "registration_file_sha256": "5898ba90e3a2763ced58dcf5f5d7c35bcdac1ea820c4173277aa2d89059dd596",
+    "source_snapshot_sha256": "634d14aa88f159283cddee1530c98fb3b18ecaa211d4cbf3da1a7166f13e5ee8"
+  },
+  "protocol": "j-lens-rl-confirmatory-v8-local-launch-ledger-v1",
+  "registered_order": "treatment seeds 200-207; one curve gate; sign-flip controls 200-207 only on pass; unlock marker only; no sealed collection",
+  "source_commit": "af83249ffef8e62d83f1f4e2e975670506941532"
+}
