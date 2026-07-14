@@ -743,3 +743,168 @@ finishes. Acceptance requires all eight semantic effects strictly positive
 above zero for both semantic-minus-base and semantic-minus-sign-flip, in
 addition to the mean, curve, record, artifact, runtime, and provenance gates.
 V4 is frozen but not launched by this implementation step.
+
+## V4 closeout and pre-outcome alternative branch (2026-07-14)
+
+### Confirmatory V4 is a valid negative result
+
+V4 ran from clean commit
+`8ae04dc61a3ae474ffa62dd0e738d6b40deed303` (common source-tree SHA-256
+`209a01da2fe2a625f404577ede0f6884b0f5d24a6ce804bcf0f94961625e23c2`)
+on Modal app `ap-6IOB6wu1xZU1MQRbvBAPi7` and Volume
+`j-lens-rl-confirmatory-v4-20260714a`. It used exactly eight L40S semantic
+workers, seeds 159--166, and stopped normally at 2026-07-14 05:11:02 UTC.
+Every run reached the fixed step-25 endpoint using only the frozen
+`tail_taper` J-lens reward; validation was observational.
+
+The complete persisted curve was:
+
+| Seed | 0 | 2 | 4 | 6 | 10 | 15 | 20 | 25 |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 159 | .3825 | .3875 | .3950 | .3625 | .3900 | .3850 | .3900 | .3800 |
+| 160 | .3825 | .3950 | .3775 | .3800 | .3975 | .3900 | .3975 | .3925 |
+| 161 | .3825 | .4125 | .3975 | .3775 | .4150 | .4000 | .4000 | .3875 |
+| 162 | .3825 | .4075 | .3825 | .4000 | .4000 | .3775 | .3950 | .3875 |
+| 163 | .3825 | .4075 | .3900 | .4050 | .4025 | .3675 | .3725 | .3800 |
+| 164 | .3825 | .3575 | .3825 | .4025 | .3875 | .4025 | .3950 | .4000 |
+| 165 | .3825 | .3775 | .4125 | .3900 | .3975 | .3975 | .4050 | .3925 |
+| 166 | .3825 | .4000 | .3950 | .3975 | .3850 | .4075 | .4000 | .3925 |
+| **Mean** | **.382500** | **.393125** | **.3915625** | **.389375** | **.396875** | **.3909375** | **.394375** | **.3890625** |
+
+The first transition rose by 1.0625 percentage points, but step 4 fell
+0.15625 points below step 2 and step 6 fell another 0.21875 points. V4
+therefore fails the exact frozen requirement `2 > 0`, `4 >= 2`, `6 >= 4`.
+The durable status became `curve_failed` at 05:09:48 UTC. The curve gate file
+SHA-256 is
+`5cda13447b4f54eb6607de8f43ae2e86edaea2a3ce102dd63059f0ee002c8a72`
+and the plot SHA-256 is
+`3b176c04675a14ca554a1ececfd9835babe16c054769a8bfe5d66255448948d5`.
+Later peaks cannot repair the predeclared failure.
+
+All 64 greedy validation records had zero literal `solved` completions and
+mean response lengths stayed between 227.80 and 230.32 tokens. Reward variance
+never collapsed (minimum batch standard deviation .16227). Two isolated
+training batches contained one literal completion each, for two occurrences
+among 1,600 sampled rollouts; their target and causal-predecessor positions
+were masked. Twenty-one of 200 rollout batches were fully length-capped, but
+there was no corresponding greedy-validation length shift. These diagnostics
+do not reveal an implementation failure or a successful shortcut.
+
+The stopped Volume contains only the eight `jlens` runs. Its evidence
+directory contains only `curve_gate.json` and `curve.png`; there is no
+sign-flip run, unlock, `evals/` directory, sealed comparison, or final
+acceptance report. Thus none of the 1,700 sealed-final outcomes was opened.
+[`protocol_archive/v4_closeout.json`](protocol_archive/v4_closeout.json)
+pins the full curves, run/config/data/adapter hashes, inventory, parent
+identity, and no-look state; its SHA-256 is
+`aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35`.
+
+This is negative confirmatory evidence. It is not the requested significant
+positive evidence.
+
+### Frozen eight-arm alternative screen
+
+Before launching or inspecting any alternative-screen outcome, the next
+screen was frozen to seed 167, one fixed 25-update endpoint, observational
+nodes `0/2/4/6/10/15/20/25`, and at most eight simultaneous L40S workers. It
+mounts only the now-exposed V4 400-item curve (SHA-256
+`ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1`)
+and the exact training-exclusion union (SHA-256
+`7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61`).
+It does not mount V4's sealed-final or reserve manifest. All arms use only a
+J-lens reward and share the same training data and settings except for the
+declared reward construction or learning rate:
+
+| Priority | Arm | Target/sign | Readout | LR |
+|---:|---|---|---|---:|
+| 1 | `celebration_ultradense` | positive `yay/great/success/nice` | layer 8 late half, stride 5, `+1` | `3e-6` |
+| 2 | `profanity_ultradense` | negative `damn/fuck` | layer 8 late half, stride 5, `-1` | `3e-6` |
+| 3 | `celebration_taper` | positive `yay/great/success/nice` | layer 8 late quarters, stride 10, `+1/+.25` | `3e-6` |
+| 4 | `profanity_taper` | negative `damn/fuck` | layer 8 late quarters, stride 10, `-1/-.25` | `3e-6` |
+| 5 | `solved_u5_control` | positive `solved` | layer 8 late half, stride 5, `+1` | `3e-6` |
+| 6 | `solved_u5_low_lr` | positive `solved` | layer 8 late half, stride 5, `+1` | `2e-6` |
+| 7 | `solved_u5_taper` | positive `solved` | layer 8 late quarters, stride 5, `+1/+.25` | `3e-6` |
+| 8 | `solved_u5_taper_low_lr` | positive `solved` | layer 8 late quarters, stride 5, `+1/+.25` | `2e-6` |
+
+The user's redacted `f***` and `f**k` spellings are multi-token censorship
+forms, not faithful single lexical J targets. The screen therefore uses the
+actual tokenizer-supported lexical word `fuck`, masks its literal sequences,
+and applies a negative weight to the internal profanity-family readout. The
+celebration and profanity calibrations are created once on pinned WikiText
+using the existing target-independent lens. Their exact ordered targets,
+token-ID unions, model/data revisions, lens hash, positive finite standard
+deviation, and output hashes are checked before training.
+
+This deliberately retains the `explore2-solved-ultradense5-seed158` lineage.
+Its old strict early gate failed at `.3750/.3875/.3700/.3675`, but its step-15
+and step-20 values were `.4050` and `.3950`, respectively 3.0 and 2.0 points
+above baseline. Those later peaks do not rewrite the old result, but they are
+enough reason to test the original construction, lower LR, taper, and
+taper-plus-lower-LR rather than discard it.
+
+Selection is the first arm in the fixed table whose `0/2/4/6` curve satisfies
+`2 > 0`, `4 >= 2`, `6 >= 4`. Word-family arms deliberately precede `solved`:
+the research interest is whether other intrinsic words work at all, not whether
+they beat `solved` on this development set. All eight arms must finish; later
+nodes and effect magnitude cannot override priority. If no word arm passes but
+a `solved` arm does, the latter remains a fallback. If none passes, nothing is
+selected. This screen is adaptive development evidence, not a significance
+test.
+
+The launcher now fails closed unless the byte-pinned V4 closeout proves
+`curve_failed`, no controls, no unlock, and no final evaluations. It validates
+that closeout and the pre-outcome V5 registration both locally before claiming
+the Volume and remotely from the baked clean commit. Config, calibration,
+resolved-config, data-index, run-manifest, runtime, source, and literal audits
+are also fail-closed. The screen code SHA-256 frozen before outcomes is
+`dd6f516c62e07cc1bacacfc9f029b010bcb79ba3653515b510381ba0057e36d6`.
+
+### Conditional V5 no-look confirmation
+
+[`protocol_archive/v5_preregistration.json`](protocol_archive/v5_preregistration.json)
+was last frozen at 05:17:25 UTC, after V4 stopped but before the alternative screen
+was launched or any outcome existed. It fixes the selection rule above and
+reallocates only V4's unopened 1,700-item parent. The parent manifest SHA-256
+is `acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3`
+and its canonical sorted-set SHA-256 is
+`80bec8d196a36c1d2f02fb6aa3c7c5ea727a86c0c981d3d0611b0900776d6f74`.
+
+Ordering those source indices by ascending
+`SHA256("j-lens-rl-confirmatory-v5-alternative-screen-2026-07-14:" + index)`
+produces exactly:
+
+| Purpose | Count | Manifest SHA-256 |
+|---|---:|---|
+| fresh V5 curve | 400 | `b01409c011012641be96c84bfc35cb0b352cea902e54304105efa272a3eac6b2` |
+| sealed V5 final | 1,300 | `6298b8e3d15b11985cf9febcd243dafd409ef07f22091388fa0793b6ebfe4228` |
+| untouched reserve | 64 | `cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6` |
+
+V5 uses new seeds 168--175 and copies the selected resolved recipe exactly;
+only seed, run/output names, and V5 manifests may vary. A word-family winner
+must reuse and pin the exact calibration bytes used in its screen run, never a
+post-selection recalibration. The requested curve is again the eight-seed mean
+at `0/2/4/6`: first rise strictly above baseline, followed by two non-downward
+nodes. A failure ends V5 without opening the 1,300 final outcomes.
+
+After a curve pass, eight matched sign-flip controls negate every selected
+component weight and change nothing else. One immutable 17-label collection
+(base, eight treatments, eight sign flips) then evaluates the same 1,300 rows,
+with no interim semantic-only final analysis. Significant evidence requires
+all of the following in one terminal attempt:
+
+1. the exact requested mean curve passes;
+2. mean treatment-minus-base accuracy is positive;
+3. its 10,000-draw, seed-0 crossed seed/item bootstrap 95% lower bound is above
+   zero;
+4. all eight seed effects are strictly positive with no tie, giving exact
+   two-sided sign `p=.0078125`;
+5. mean treatment-minus-sign-flip difference-in-differences is positive and
+   its identically specified 95% lower bound is above zero; and
+6. every data, source, config, runtime, raw-record, artifact, and literal audit
+   passes.
+
+V5 is one terminal attempt: no replacement seeds, checkpoint substitution,
+fallback arm, rerun-until-pass, or recycling of its unopened final allocation
+is authorized. A pass would support only the exact selected word/reward
+recipe, not arbitrary J-lens words. As of this freeze, reliable or significant
+positive evidence has still not been demonstrated.

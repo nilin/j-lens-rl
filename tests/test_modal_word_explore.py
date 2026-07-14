@@ -23,6 +23,13 @@ def test_word_screen_is_bounded_and_uses_only_exposed_manifests():
         'add_local_file(\n        LOCAL_MANIFESTS / "future_reserve_indices.json"',
     ):
         assert forbidden not in source
+    assert screen._validate_v4_closeout(ROOT) == screen.V4_CLOSEOUT_SHA256
+    closeout = json.loads((ROOT / screen.V4_CLOSEOUT_RELATIVE).read_text())
+    assert closeout["attempt_stage"] == "curve_failed"
+    assert closeout["final_unlocked_present"] is False
+    assert closeout["evals_directory_present"] is False
+    assert closeout["final_evaluation_labels"] == []
+    assert closeout["signflip_run_labels"] == []
 
 
 def test_word_families_and_variants_are_exact_j_only_constructions():
@@ -31,14 +38,14 @@ def test_word_families_and_variants_are_exact_j_only_constructions():
         "celebration": ("yay", "great", "success", "nice"),
     }
     assert screen.PRIORITY == (
-        "solved_u5_control",
-        "solved_u5_low_lr",
-        "solved_u5_taper",
-        "solved_u5_taper_low_lr",
         "celebration_ultradense",
         "profanity_ultradense",
         "celebration_taper",
         "profanity_taper",
+        "solved_u5_control",
+        "solved_u5_low_lr",
+        "solved_u5_taper",
+        "solved_u5_taper_low_lr",
     )
     configs = {
         label: screen._load_config(ROOT / relative)

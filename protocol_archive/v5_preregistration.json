@@ -1,0 +1,102 @@
+{
+  "alternative_screen": {
+    "all_variants_must_complete": true,
+    "app": "j-lens-rl-alternative-screen-v1",
+    "code_sha256": "dd6f516c62e07cc1bacacfc9f029b010bcb79ba3653515b510381ba0057e36d6",
+    "config_sha256": {
+      "configs/word_explore_celebration_taper.json": "e42bd0e3221fe03553ddec27bed3a91bf582e1e8ed775618536c7205ec2dfa34",
+      "configs/word_explore_celebration_ultradense.json": "2d1dc228da1eba0399cbe681fee0260919be29b7e85cc02a0b98d39f037e42fe",
+      "configs/word_explore_common.json": "6fa88bdef0607a84c71a64df446a7f56302c38a04d0c811743769053fec6efc2",
+      "configs/word_explore_profanity_taper.json": "5482bd4cf38b1b3b4c2b0ef46146c6fa23cd3691cb4565802f2fff7a0e204375",
+      "configs/word_explore_profanity_ultradense.json": "7cba2e1437148c99d2d9d5b436767611fc0eaf5274270723cae87edf4c2b6cda",
+      "configs/word_explore_solved_u5_control.json": "a66e7ac3059dbce23b3d9eb955aa40842204567b0b6ed6073a4229422c773353",
+      "configs/word_explore_solved_u5_low_lr.json": "7f7a522668c7d7256c3edd1303026b27bcc63ed0b1a5b34e1571dff70ff3a225",
+      "configs/word_explore_solved_u5_taper.json": "cc5ce54c2a9dce174cda8cd2dde68714e0493bf08d39b518d43a0b3caa037ac9",
+      "configs/word_explore_solved_u5_taper_low_lr.json": "725fe3cd061d6cdc0a2285e525fa471b558be7f155fa3f2e06e4096cb8a38997"
+    },
+    "criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+    "development_curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "evaluation_steps": [0, 2, 4, 6, 10, 15, 20, 25],
+    "max_parallel_gpu_workers": 8,
+    "outcome_status_at_freeze": "not launched and not inspected",
+    "seed": 167,
+    "selection_priority": [
+      "celebration_ultradense",
+      "profanity_ultradense",
+      "celebration_taper",
+      "profanity_taper",
+      "solved_u5_control",
+      "solved_u5_low_lr",
+      "solved_u5_taper",
+      "solved_u5_taper_low_lr"
+    ],
+    "selection_rule": "first passing variant in the frozen priority; no passer means stop",
+    "train_exclusions_manifest_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "volume": "j-lens-rl-alternative-screen-v1-20260714a"
+  },
+  "confirmation": {
+    "acceptance": {
+      "curve_gate_must_pass": true,
+      "did_mean_must_be_positive": true,
+      "did_seed_item_bootstrap_95pct_lower_must_exceed_zero": true,
+      "literal_and_provenance_audits_must_pass": true,
+      "semantic_mean_minus_base_must_be_positive": true,
+      "semantic_seed_item_bootstrap_95pct_lower_must_exceed_zero": true,
+      "strictly_positive_seed_effects_required": 8,
+      "ties_or_negative_seed_effects_allowed": 0,
+      "two_sided_exact_sign_p": 0.0078125
+    },
+    "all_validation_steps": [0, 2, 4, 6, 10, 15, 20, 25],
+    "bootstrap": {
+      "draws": 10000,
+      "method": "crossed seed/item percentile",
+      "numpy_rng_seed": 0
+    },
+    "curve_gate": "eight-seed mean step2 > step0, step4 >= step2, step6 >= step4",
+    "curve_steps": [0, 2, 4, 6],
+    "fixed_updates": 25,
+    "matched_control": "negate every selected treatment score-component weight and change nothing else",
+    "no_checkpoint_selection": true,
+    "no_early_stopping": true,
+    "one_immutable_final_collection": [
+      "base",
+      "eight treatment adapters",
+      "eight matched sign-flip adapters"
+    ],
+    "seed_replacements_allowed": false,
+    "seeds": [168, 169, 170, 171, 172, 173, 174, 175],
+    "selected_recipe_rule": "copy the winning screen resolved recipe exactly; only seed, run name, output directory, and V5 manifests may vary",
+    "terminal_one_shot": true,
+    "use_step_25_adapter_only": true
+  },
+  "frozen_at_utc": "2026-07-14T05:17:25Z",
+  "no_look_split": {
+    "allocation_algorithm": "ascending raw SHA-256(salt + ':' + base-10 source index), first 400 curve and remaining 1300 sealed final",
+    "curve_manifest_sha256": "b01409c011012641be96c84bfc35cb0b352cea902e54304105efa272a3eac6b2",
+    "curve_sorted_set_sha256": "cc4f78e451e35be8ec7d17d3c4337db6a1aaed71357d749dfbef828063a5413f",
+    "curve_size": 400,
+    "sealed_final_manifest_sha256": "6298b8e3d15b11985cf9febcd243dafd409ef07f22091388fa0793b6ebfe4228",
+    "sealed_final_size": 1300,
+    "sealed_final_sorted_set_sha256": "60308ed7212072ab0f1b2dbbf2d818ccfdc8da65134885e4c8d731058b051801",
+    "salt": "j-lens-rl-confirmatory-v5-alternative-screen-2026-07-14",
+    "source_parent_manifest_sha256": "acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3",
+    "source_parent_size": 1700,
+    "source_parent_sorted_set_sha256": "80bec8d196a36c1d2f02fb6aa3c7c5ea727a86c0c981d3d0611b0900776d6f74",
+    "untouched_reserve_manifest_sha256": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+    "untouched_reserve_size": 64
+  },
+  "protocol": "j-lens-rl-confirmatory-v5-conditional",
+  "scope_of_claim": "only the exact selected intrinsic word/reward recipe, not arbitrary J-lens words",
+  "v4_closeout_sha256": "aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35",
+  "word_calibration_rule": {
+    "celebration_expected_token_ids": [2244, 2393, 5630, 6419, 7188, 8513, 13047, 21396, 28859, 33941, 39308, 44978, 46891, 52796, 60993, 97559, 138496],
+    "celebration_targets": ["yay", "great", "success", "nice"],
+    "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "new_family_winner": "reuse and byte-pin the exact calibration artifact and manifest used by its screen run; never recalibrate for V5",
+    "profanity_expected_token_ids": [7820, 25090, 26762, 70474, 75021, 76374, 82415, 88619, 95614],
+    "profanity_targets": ["damn", "fuck"],
+    "solved_calibration_sha256": "3607ad225cd60bed58a4dc53f78346f9e6c3f4968e8e6f6679a3565923309418",
+    "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3"
+  }
+}

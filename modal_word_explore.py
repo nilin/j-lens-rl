@@ -3,7 +3,7 @@
 This is deliberately exploratory.  It reuses the target-independent frozen
 WikiText transport, recalibrates two word sets on held-out WikiText, then runs
 eight distinct J-only reward constructions on the exposed failed-V4 curve.
-No current confirmatory curve/final manifest is copied into the image.
+No unopened sealed-final or reserve manifest is copied into the image.
 """
 
 from __future__ import annotations
@@ -42,6 +42,11 @@ LENS_SHA256 = "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
 SOLVED_CALIBRATION_SHA256 = (
     "3607ad225cd60bed58a4dc53f78346f9e6c3f4968e8e6f6679a3565923309418"
 )
+V4_CLOSEOUT_RELATIVE = "protocol_archive/v4_closeout.json"
+V4_CLOSEOUT_SHA256 = (
+    "aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35"
+)
+V5_PREREGISTRATION_RELATIVE = "protocol_archive/v5_preregistration.json"
 EXPOSED_MANIFEST_SHA256 = {
     "curve_indices.json": (
         "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1"
@@ -65,14 +70,14 @@ EXPECTED_TOKEN_IDS = {
     ],
 }
 VARIANTS = {
-    "solved_u5_control": "configs/word_explore_solved_u5_control.json",
-    "solved_u5_low_lr": "configs/word_explore_solved_u5_low_lr.json",
-    "solved_u5_taper": "configs/word_explore_solved_u5_taper.json",
-    "solved_u5_taper_low_lr": "configs/word_explore_solved_u5_taper_low_lr.json",
     "celebration_ultradense": "configs/word_explore_celebration_ultradense.json",
     "profanity_ultradense": "configs/word_explore_profanity_ultradense.json",
     "celebration_taper": "configs/word_explore_celebration_taper.json",
     "profanity_taper": "configs/word_explore_profanity_taper.json",
+    "solved_u5_control": "configs/word_explore_solved_u5_control.json",
+    "solved_u5_low_lr": "configs/word_explore_solved_u5_low_lr.json",
+    "solved_u5_taper": "configs/word_explore_solved_u5_taper.json",
+    "solved_u5_taper_low_lr": "configs/word_explore_solved_u5_taper_low_lr.json",
 }
 PRIORITY = tuple(VARIANTS)
 EXPECTED_STEPS = (0, 2, 4, 6, 10, 15, 20, 25)
@@ -188,10 +193,76 @@ def _load_config(path: Path) -> dict[str, Any]:
     return payload
 
 
+def _validate_v4_closeout(repo: Path) -> str:
+    path = repo / V4_CLOSEOUT_RELATIVE
+    if not path.is_file() or _sha256(path) != V4_CLOSEOUT_SHA256:
+        raise RuntimeError("the byte-pinned V4 closeout is missing or changed")
+    closeout = json.loads(path.read_text())
+    expected = {
+        "protocol": "j-lens-rl-confirmatory-v4",
+        "git_commit": "8ae04dc61a3ae474ffa62dd0e738d6b40deed303",
+        "attempt_stage": "curve_failed",
+        "final_unlocked_present": False,
+        "evals_directory_present": False,
+        "final_evaluation_labels": [],
+        "signflip_run_labels": [],
+        "sealed_final_manifest_sha256": (
+            "acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3"
+        ),
+        "sealed_final_sorted_set_sha256": (
+            "80bec8d196a36c1d2f02fb6aa3c7c5ea727a86c0c981d3d0611b0900776d6f74"
+        ),
+    }
+    if any(closeout.get(key) != value for key, value in expected.items()):
+        raise RuntimeError("V4 closeout does not prove a failed no-look attempt")
+    curve = closeout.get("curve", {})
+    if (
+        curve.get("passed") is not False
+        or curve.get("steps") != [0, 2, 4, 6]
+        or curve.get("full_mean_exact_match", {}).get("2")
+        <= curve.get("full_mean_exact_match", {}).get("0")
+        or curve.get("full_mean_exact_match", {}).get("4")
+        >= curve.get("full_mean_exact_match", {}).get("2")
+    ):
+        raise RuntimeError("V4 failed-curve evidence changed")
+    inventory = closeout.get("snapshot_inventory", {})
+    if (
+        inventory.get("evidence_entries") != ["curve.png", "curve_gate.json"]
+        or inventory.get("semantic_run_labels")
+        != [f"jlens_seed{seed}" for seed in range(159, 167)]
+    ):
+        raise RuntimeError("V4 no-look snapshot inventory changed")
+    return V4_CLOSEOUT_SHA256
+
+
+def _validate_v5_preregistration(repo: Path) -> str:
+    path = repo / V5_PREREGISTRATION_RELATIVE
+    if not path.is_file():
+        raise RuntimeError("the conditional V5 preregistration is missing")
+    frozen = json.loads(path.read_text())
+    screen = frozen.get("alternative_screen", {})
+    if (
+        frozen.get("v4_closeout_sha256") != V4_CLOSEOUT_SHA256
+        or screen.get("outcome_status_at_freeze") != "not launched and not inspected"
+        or screen.get("code_sha256") != _sha256(repo / "modal_word_explore.py")
+        or screen.get("selection_priority") != list(PRIORITY)
+    ):
+        raise RuntimeError("the conditional V5 preregistration changed")
+    actual_configs = {
+        path: _sha256(repo / path)
+        for path in ["configs/word_explore_common.json", *VARIANTS.values()]
+    }
+    if screen.get("config_sha256") != actual_configs:
+        raise RuntimeError("the preregistered screen configs changed")
+    return _sha256(path)
+
+
 def _launch_manifest() -> dict[str, Any]:
     status = _git("status", "--porcelain=v1", "--untracked-files=all", repo=LOCAL_REPO)
     if status:
         raise RuntimeError(f"word screen requires a clean committed tree:\n{status}")
+    v4_closeout_sha256 = _validate_v4_closeout(LOCAL_REPO)
+    v5_preregistration_sha256 = _validate_v5_preregistration(LOCAL_REPO)
     actual_manifests = {
         name: _sha256(LOCAL_MANIFESTS / name) for name in EXPOSED_MANIFEST_SHA256
     }
@@ -219,6 +290,8 @@ def _launch_manifest() -> dict[str, Any]:
         "wikitext_revision": WIKITEXT_REVISION,
         "lens_sha256": LENS_SHA256,
         "solved_calibration_sha256": SOLVED_CALIBRATION_SHA256,
+        "v4_closeout_sha256": v4_closeout_sha256,
+        "v5_preregistration_sha256": v5_preregistration_sha256,
         "config_sha256": {
             path: _sha256(LOCAL_REPO / path)
             for path in ["configs/word_explore_common.json", *VARIANTS.values()]
@@ -253,6 +326,12 @@ def _verify_remote_manifest(manifest: dict[str, Any]) -> None:
     }
     if manifest.get("config_sha256") != configs:
         raise RuntimeError("remote word-screen config hashes changed")
+    if manifest.get("v4_closeout_sha256") != _validate_v4_closeout(REMOTE_REPO):
+        raise RuntimeError("remote V4 closeout differs from launch")
+    if manifest.get("v5_preregistration_sha256") != _validate_v5_preregistration(
+        REMOTE_REPO
+    ):
+        raise RuntimeError("remote V5 preregistration differs from launch")
     actual_manifests = {
         name: _sha256(REMOTE_REPO / ".confirmatory/manifests" / name)
         for name in EXPOSED_MANIFEST_SHA256
