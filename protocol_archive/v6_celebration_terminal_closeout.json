@@ -131,10 +131,10 @@
     "attempt_status": {"path": "protocol_archive/v6_celebration_terminal_evidence/attempt_status.json", "sha256": "ffd9e1c71f1f706be516a74f105162274f71139d2b0e00c0ef0e8bb7efa83be6"},
     "bundle_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/evidence_bundle_inventory.json", "sha256": "37e6aa15bf3eb1b0ab9b09aecd720e934aabab208b85bc58f8ae6c7fbd3b009e"},
     "durable_export_receipt": {"path": "protocol_archive/v6_celebration_terminal_evidence/durable_export_receipt.json", "sha256": "c7667d652e8fa7c0b9ada6c4f5cb961c5d66c14352ea3c58dccef17c333295ff"},
-    "evidence_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/evidence_inventory.json", "sha256": "94dcd47a3d282899e011b9dc2acd33531f0d11787535fbd2e0488e9e87c08e4a"},
+    "evidence_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/evidence_inventory.json", "sha256": "f5137850e951ac2e30854d00ecfa0208d45c1de5521d8a0e71759da9d444a9e1"},
     "launch_receipt": {"path": "protocol_archive/v6_celebration_terminal_evidence/launch_receipt.json", "sha256": "c55b9ddcd1a5e128b7b2148488fefc22ed409acdc4a622c0c38328e56fef9d26"},
-    "root_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/root_inventory.json", "sha256": "69dfb29fc65a42e8cc544656b12ce76b4d821560643f34bc3ca0277072dccfbc"},
-    "run_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/run_inventory.json", "sha256": "5ee93adb8da6d77fe75b4a81f85ad8413303d472d4034820f6d2e00298a06033"}
+    "root_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/root_inventory.json", "sha256": "e25a7f02e2376ae2024751c6889b13a4e008c6a7f539b496f65cc472a80f32e1"},
+    "run_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/run_inventory.json", "sha256": "d054bcc640fdfa9275b9cb908baca76b05f13d556fcbd27db10176f51ab8a4e7"}
   },
   "terminal_stage": "failed_before_final",
   "v6_attempt_disposition": "infrastructure_failed",
