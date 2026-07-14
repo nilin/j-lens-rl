@@ -1,6 +1,6 @@
-"""Prospectively frozen final-collection machinery for confirmatory V11.
+"""Prospectively frozen final-collection machinery for confirmatory V12.
 
-This module does not create a V11 registration, prepare state, unlock a final
+This module does not create a V12 registration, prepare state, unlock a final
 set, or read the protected final manifest.  A separately created prospective
 registration must materialize ``final_protocol_spec.json`` and an unlock marker.
 The final path then enforces one immutable 9-label collection (base,
@@ -25,10 +25,10 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Sequence
 
 
-PROTOCOL_FAMILY = "j-lens-rl-confirmatory-v11-celebration"
-PROTOCOL_ID = "j-lens-rl-confirmatory-v11-celebration-u4-u5-u6"
+PROTOCOL_FAMILY = "j-lens-rl-confirmatory-v12-celebration-infra-replacement"
+PROTOCOL_ID = "j-lens-rl-confirmatory-v12-celebration-u4-u5-u6"
 SCHEMA_VERSION = 1
-SEEDS = tuple(range(220, 224))
+SEEDS = tuple(range(224, 228))
 CONDITIONS = ("jlens", "signflip")
 CURVE_STEPS = (0, 4, 5, 6)
 TERMINAL_STEP = 6
@@ -36,15 +36,19 @@ FINAL_EXAMPLES = 900
 TARGET_WORDS = ("yay", "great", "success", "nice")
 CALIBRATION_SHA256 = "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6"
 FINAL_MANIFEST_SHA256 = "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8"
-SCIENCE_REGISTRATION_PATH = "protocol_archive/v11_celebration_registration_draft.json"
-SCIENCE_REGISTRATION_SHA256 = "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1"
+SCIENCE_REGISTRATION_PATH = (
+    "protocol_archive/v12_celebration_infrastructure_replacement_registration.json"
+)
+SCIENCE_REGISTRATION_SHA256 = (
+    "f58f35419549de5905c7d873a71f67edda73289585025f9084901b61be4a9749"
+)
 CANDIDATE_FREEZE_PATH = "protocol_archive/v11_celebration_candidate_freeze.json"
 CANDIDATE_FREEZE_SHA256 = "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9"
 CANDIDATE_FREEZE_CORRECTION_PATH = (
-    "protocol_archive/v11_celebration_selection_integrity.json"
+    "protocol_archive/v11_celebration_infrastructure_closeout.json"
 )
 CANDIDATE_FREEZE_CORRECTION_SHA256 = (
-    "def794febcf01cfc23040e68da521dec401894abf06ba6cdf4387b0c42b32447"
+    "cbc4c78dcac153675e460e4aff344c12a44a55e34c71de300da3195f44d9c806"
 )
 MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
 MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
@@ -592,7 +596,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         raise FinalProtocolError("final spec changed the immutable 9-label collection")
     if spec.get("target_words") != list(TARGET_WORDS):
         raise FinalProtocolError(
-            "V11 targets must remain the frozen celebration-family words"
+            "V12 targets must remain the frozen celebration-family words"
         )
     if (
         not _is_commit(spec.get("git_commit"))
@@ -665,7 +669,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         != _negated_components(treatment)
     ):
         raise FinalProtocolError(
-            "future V11 treatment/signflip differs from the frozen celebration-tail recipe"
+            "future V12 treatment/signflip differs from the frozen celebration-tail recipe"
         )
     training = spec.get("training", {})
     if training != {
@@ -760,7 +764,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
     if (
         wandb.get("entity") != "nilinabra-spare-time"
         or wandb.get("project") != "j-lens-rl"
-        or wandb.get("group") != "confirm-v11-celebration-u4-u5-u6"
+        or wandb.get("group") != "confirm-v12-celebration-u4-u5-u6"
         or wandb.get("mode") != "online"
         or not isinstance(wandb.get("tags"), list)
         or not wandb["tags"]
@@ -769,7 +773,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         or wandb["run_ids"]
         != {
             f"{condition}_seed{seed}": (
-                f"confirm-v11-celebration-{condition}-seed{seed}"
+                f"confirm-v12-celebration-{condition}-seed{seed}"
             )
             for condition in CONDITIONS
             for seed in SEEDS
@@ -1268,10 +1272,11 @@ def _training_behavior_summary(
         reward_keys = [
             key for key in row if key.startswith("rewards/") and key.endswith("/mean")
         ]
+        validation_merged = "validation/exact_match" in row
         numeric_fields = (
             "reward", "reward_std", "completions/mean_length",
             "completions/clipped_ratio", literal_key, reward_mean_key,
-            reward_std_key, "learning_rate",
+            reward_std_key,
         )
         if (
             reward_keys != [reward_mean_key]
@@ -1298,14 +1303,25 @@ def _training_behavior_summary(
             or not 0 <= float(row["completions/clipped_ratio"]) <= 1
             or not 0 <= float(row["completions/mean_length"])
             <= int(config["max_new_tokens"])
-            or not math.isclose(
-                float(row["learning_rate"]), float(config["learning_rate"]),
-                rel_tol=0.0, abs_tol=1e-15,
+            or (
+                "learning_rate" in row
+                and (
+                    isinstance(row.get("learning_rate"), bool)
+                    or not isinstance(row.get("learning_rate"), (int, float))
+                    or not math.isfinite(float(row["learning_rate"]))
+                    or not math.isclose(
+                        float(row["learning_rate"]),
+                        float(config["learning_rate"]),
+                        rel_tol=0.0,
+                        abs_tol=1e-15,
+                    )
+                )
             )
+            or (not validation_merged and "learning_rate" not in row)
         ):
             raise FinalProtocolError(f"training log has invalid one-J-reward behavior: {path}")
     validation_rows = [row for row in payload if "validation/exact_match" in row]
-    if [row.get("step") for row in validation_rows] != list(CURVE_STEPS):
+    if [row.get("step") for row in validation_rows] != list(CURVE_STEPS[1:]):
         raise FinalProtocolError(f"training log has a wrong validation sequence: {path}")
     for row in validation_rows:
         step = int(row["step"])

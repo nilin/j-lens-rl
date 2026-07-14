@@ -168,6 +168,8 @@ def _synthetic_log_history(
             }
         )
     for step, exact_match in curve.items():
+        if step == final.CURVE_STEPS[0]:
+            continue
         rows.append(
             {
                 "validation/exact_match": exact_match,
@@ -583,10 +585,10 @@ def _future_context(
         "wandb": {
             "entity": "nilinabra-spare-time",
             "project": "j-lens-rl",
-            "group": "confirm-v11-celebration-u4-u5-u6",
+            "group": "confirm-v12-celebration-u4-u5-u6",
             "mode": "online",
             "tags": [
-                "confirmatory-v11",
+                "confirmatory-v12",
                 "emotional",
                 "celebration-family",
                 "tail-taper",
@@ -594,7 +596,7 @@ def _future_context(
             ],
             "run_ids": {
                 f"{condition}_seed{seed}": (
-                    f"confirm-v11-celebration-{condition}-seed{seed}"
+                    f"confirm-v12-celebration-{condition}-seed{seed}"
                 )
                 for condition in final.CONDITIONS
                 for seed in final.SEEDS
@@ -971,7 +973,7 @@ def _analysis_process(context: final.FinalContext) -> dict[str, object]:
 
 
 def test_design_is_four_fresh_seeds_and_exact_requested_curve() -> None:
-    assert final.SEEDS == tuple(range(220, 224))
+    assert final.SEEDS == tuple(range(224, 228))
     assert final.CURVE_STEPS == (0, 4, 5, 6)
     assert final.TERMINAL_STEP == 6
     assert final.TARGET_WORDS == ("yay", "great", "success", "nice")
@@ -1013,7 +1015,7 @@ def test_spec_rejects_design_schema_and_signflip_mutations(tmp_path: Path) -> No
     context = _future_context(tmp_path)
     mutations = []
     value = copy.deepcopy(context.spec)
-    value["seeds"] = list(range(220, 228))
+    value["seeds"] = list(range(224, 232))
     mutations.append(value)
     value = copy.deepcopy(context.spec)
     value["training"]["updates"] = 5
@@ -1161,6 +1163,61 @@ def test_reward_std_verifier_allows_float32_reduction_noise_only(
 
     rows[0][reward_std_key] = float(rows[0]["reward_std"]) + 1.1e-7
     _write(log_path, rows)
+    with pytest.raises(final.FinalProtocolError, match="one-J-reward behavior"):
+        final._training_behavior_summary(log_path, config, history)
+
+
+def test_validation_merged_reward_rows_may_omit_only_their_learning_rate(
+    tmp_path: Path,
+) -> None:
+    context = _future_context(tmp_path)
+    label = f"jlens_seed{final.SEEDS[0]}"
+    directory = context.run_dir / label
+    config = json.loads((context.config_dir / f"{label}.json").read_text())
+    history = final._history_rows(directory / "validation_history.jsonl")
+    log_path = directory / "log_history.json"
+    rows = json.loads(log_path.read_text())
+    validation = {
+        int(row["step"]): row
+        for row in rows
+        if "validation/exact_match" in row
+    }
+
+    # The trainer can merge evaluation scalars into the optimizer log at an
+    # evaluation step.  In that representation W&B omits learning_rate from
+    # precisely those merged rows.  Baseline step 0 is recorded in
+    # validation_history, not in the trainer log_history.
+    merged: list[dict[str, object]] = []
+    for row in rows:
+        if "validation/exact_match" in row:
+            continue
+        if "reward" in row and int(row["step"]) in final.CURVE_STEPS[1:]:
+            row = {**row, **validation[int(row["step"])]}
+            row.pop("learning_rate")
+        merged.append(row)
+    _write(log_path, merged)
+    summary = final._training_behavior_summary(log_path, config, history)
+    assert summary["optimizer_steps"] == config["updates"]
+    assert summary["validation_steps"] == list(final.CURVE_STEPS[1:])
+    assert summary["learning_rate_rows"] == 3
+
+    wrong_at_eval = copy.deepcopy(merged)
+    next(
+        row
+        for row in wrong_at_eval
+        if row.get("step") == 4 and "reward" in row
+    )["learning_rate"] = float(config["learning_rate"]) * 2
+    _write(log_path, wrong_at_eval)
+    with pytest.raises(final.FinalProtocolError, match="one-J-reward behavior"):
+        final._training_behavior_summary(log_path, config, history)
+
+    missing_off_eval = copy.deepcopy(merged)
+    next(
+        row
+        for row in missing_off_eval
+        if row.get("step") == 2 and "reward" in row
+    ).pop("learning_rate")
+    _write(log_path, missing_off_eval)
     with pytest.raises(final.FinalProtocolError, match="one-J-reward behavior"):
         final._training_behavior_summary(log_path, config, history)
 

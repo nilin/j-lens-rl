@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-confirmatory-v11-celebration-infrastructure-closeout",
+  "protocol": "j-lens-rl-confirmatory-v11-celebration-u4-u5-u6",
+  "closed_at_utc": "2026-07-14T22:40:01Z",
+  "status": "failed_closed_never_resume_retry_or_pool",
+  "execution_identity": {
+    "app_id": "ap-ZladeRDa7V8qxSgbvIY8a0",
+    "volume": "j-lens-rl-confirmatory-v11-celebration-20260714b",
+    "volume_object_id": "vo-IwKmcv5FfXvheefG7K7V7y",
+    "deployed_git_commit": "2da59a31c4f7571039a33fb7367c7a73d1968b7f",
+    "execution_contract_path": "protocol_archive/v10_modal_execution_contract.json",
+    "execution_contract_sha256": "6fca76d9d7a1e7c4821e44445a36167cb5bb5ffe680911f55c25f8281511eacf"
+  },
+  "public_treatment_curve_observations": {
+    "registered_steps": [0, 4, 5, 6],
+    "complete_four_seed_means": {
+      "0": 0.3825,
+      "4": 0.3925,
+      "5": 0.396875
+    },
+    "step_6_by_seed": {
+      "220": 0.39,
+      "221": 0.4,
+      "222": null,
+      "223": null
+    },
+    "step_6_complete_seed_count": 2,
+    "step_6_registered_four_seed_mean_available": false,
+    "registered_curve_gate_evaluable": false
+  },
+  "terminal_state": {
+    "all_four_treatments_reached_steps_0_4_5": true,
+    "seed_220_reached_step_6": true,
+    "seed_221_reached_step_6": true,
+    "seeds_222_223_interrupted_by_orchestrator": true,
+    "matched_controls_dispatched": false,
+    "protected_final_unlocked_or_accessed": false,
+    "inference_eligibility": "none"
+  },
+  "infrastructure_failure": {
+    "stage": "post_training_treatment_verification_during_parallel_orchestration",
+    "first_reported_seed": 220,
+    "reason": "validation-merged reward rows omit learning_rate, but the verifier required learning_rate on every reward-bearing row",
+    "scientific_metric_or_reward_failure_found": false,
+    "orchestration_effect": "the first propagated verifier exception interrupted still-running treatment calls for seeds 222 and 223 instead of draining every dispatched call",
+    "masked_second_verifier_mismatch_found_by_public_replay": {
+      "validation_history_steps": [0, 4, 5, 6],
+      "trainer_log_validation_merged_steps": [4, 5, 6],
+      "reason": "baseline step 0 is recorded in validation_history.jsonl but is evaluated before Trainer logging and therefore is not a validation-merged row in log_history.json",
+      "old_verifier_expectation": "log_history validation-merged rows equal all registered curve steps 0/4/5/6",
+      "scientific_curve_or_gate_changed": false
+    }
+  },
+  "replacement_constraints": {
+    "v11_volume_or_outputs_may_be_resumed": false,
+    "v11_runs_may_be_retried_or_pooled": false,
+    "v11_partial_step_6_results_may_enter_replacement_statistics": false,
+    "replacement_must_use_fresh_seeds_ids_volume_and_app": true,
+    "scientific_candidate_recipe_and_curve_may_change": false
+  },
+  "protected_payloads_accessed": false,
+  "note": "The complete four-seed public means through step 5 are preserved for reconstruction, but the registered four-seed step-6 mean and curve gate do not exist. This is an infrastructure closeout, not a scientific curve-gate pass or failure."
+}

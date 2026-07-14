@@ -1,8 +1,8 @@
-"""Fail-closed Modal adapter for the frozen celebration-family V11 attempt.
+"""Fail-closed Modal adapter for the frozen celebration-family V12 attempt.
 
 This file is execution plumbing, not a second scientific protocol.  It is
 inert unless ``JLENS_V10_MODAL_CONTRACT`` names a byte-pinned, launch-enabled
-contract which is itself bound by the registered V11 protocol spec.  The
+contract which is itself bound by the registered V12 protocol spec.  The
 scientific protocol owns config derivation, terminal-run verification, curve
 semantics, unlock semantics, the one-shot final collection, and analysis.
 
@@ -40,31 +40,33 @@ LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = Path("/state")
 CONTRACT_ENV = "JLENS_V10_MODAL_CONTRACT"
-CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v11-modal-execution-contract-v1"
+CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v12-modal-execution-contract-v1"
 FROZEN_SCIENTIFIC_PROTOCOL = (
-    "j-lens-rl-confirmatory-v11-celebration-u4-u5-u6"
+    "j-lens-rl-confirmatory-v12-celebration-u4-u5-u6"
 )
-SCIENCE_REGISTRATION_PATH = "protocol_archive/v11_celebration_registration_draft.json"
+SCIENCE_REGISTRATION_PATH = (
+    "protocol_archive/v12_celebration_infrastructure_replacement_registration.json"
+)
 SCIENCE_REGISTRATION_SHA256 = (
-    "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1"
+    "f58f35419549de5905c7d873a71f67edda73289585025f9084901b61be4a9749"
 )
 CANDIDATE_FREEZE_PATH = "protocol_archive/v11_celebration_candidate_freeze.json"
 CANDIDATE_FREEZE_SHA256 = (
     "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9"
 )
 INTEGRITY_AMENDMENT_PATH = (
-    "protocol_archive/v11_celebration_selection_integrity.json"
+    "protocol_archive/v11_celebration_infrastructure_closeout.json"
 )
 INTEGRITY_AMENDMENT_SHA256 = (
-    "def794febcf01cfc23040e68da521dec401894abf06ba6cdf4387b0c42b32447"
+    "cbc4c78dcac153675e460e4aff344c12a44a55e34c71de300da3195f44d9c806"
 )
-APP_FALLBACK = "j-lens-rl-confirmatory-v11-unmaterialized"
-VOLUME_FALLBACK = "j-lens-rl-confirmatory-v11-unmaterialized"
+APP_FALLBACK = "j-lens-rl-confirmatory-v12-unmaterialized"
+VOLUME_FALLBACK = "j-lens-rl-confirmatory-v12-unmaterialized"
 GPU_TYPE = "L40S"
-IMAGE_SPEC = "j-lens-rl-v11-celebration-l40s-v1"
+IMAGE_SPEC = "j-lens-rl-v12-celebration-l40s-v1"
 MAX_PARALLEL_TRAINING_GPUS = 4
 MAX_PARALLEL_FINAL_GPUS = 1
-SEEDS = (220, 221, 222, 223)
+SEEDS = (224, 225, 226, 227)
 CONDITIONS = ("jlens", "signflip")
 CURVE_STEPS = (0, 4, 5, 6)
 TERMINAL_STEP = 6
@@ -138,7 +140,7 @@ REQUIRED_RUNTIME_FILES = {
     "src/jlens_rl/train.py",
     "tests/test_v10_final_automation.py",
     "tests/test_paired_eval.py",
-    "protocol_archive/v11_celebration_metric_schema.json",
+    "protocol_archive/v12_celebration_metric_schema.json",
     "pyproject.toml",
     SCIENCE_REGISTRATION_PATH,
     CANDIDATE_FREEZE_PATH,
@@ -478,7 +480,7 @@ def validate_scientific_binding(
         }
     ):
         raise ModalV10Error(
-            "registered V11 spec does not bind the frozen celebration Modal attempt"
+            "registered V12 spec does not bind the frozen celebration Modal attempt"
         )
 
 
@@ -1222,7 +1224,20 @@ def _run_parallel_training(
 ) -> list[dict[str, Any]]:
     intents = _write_training_intents(claim_id, root_call_id, condition)
     calls = [train_one.spawn(intent) for intent in intents]
-    return [call.get() for call in calls]
+    results: list[dict[str, Any]] = []
+    failures: list[str] = []
+    for intent, call in zip(intents, calls):
+        label = str(intent["label"])
+        try:
+            results.append(call.get())
+        except BaseException as error:
+            failures.append(f"{label}: {type(error).__name__}: {error}")
+    if failures:
+        raise ModalV10Error(
+            "parallel training workers failed after every dispatch was drained: "
+            + " | ".join(failures)
+        )
+    return results
 
 
 @app.function(

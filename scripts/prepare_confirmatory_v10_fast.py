@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Materialize the prospective V11 Modal state without touching the final set.
+"""Materialize the prospective V12 Modal state without touching the final set.
 
 The protected final manifest is deliberately represented only by its previously
 registered path and SHA-256 string.  This module never resolves, stats, opens,
@@ -24,8 +24,8 @@ from scripts import confirmatory_v10_final_protocol as protocol
 
 REMOTE_REPOSITORY = "/workspace/j-lens-rl"
 REMOTE_STATE = "/state"
-METRIC_SCHEMA_PATH = "protocol_archive/v11_celebration_metric_schema.json"
-CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v11-modal-execution-contract-v1"
+METRIC_SCHEMA_PATH = "protocol_archive/v12_celebration_metric_schema.json"
+CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v12-modal-execution-contract-v1"
 
 
 class PreparationError(RuntimeError):
@@ -375,10 +375,10 @@ def prepare(args: argparse.Namespace) -> dict[str, str]:
             "metric_schema": {"path": METRIC_SCHEMA_PATH, "sha256": protocol.sha256_file(metric_path)},
             "wandb": {
                 "entity": "nilinabra-spare-time", "project": "j-lens-rl",
-                "group": "confirm-v11-celebration-u4-u5-u6", "mode": "online",
-                "tags": ["confirmatory-v11", "emotional", "celebration-family", "tail-taper", "prospective"],
+                "group": "confirm-v12-celebration-u4-u5-u6", "mode": "online",
+                "tags": ["confirmatory-v12", "emotional", "celebration-family", "tail-taper", "infrastructure-replacement", "prospective"],
                 "run_ids": {
-                    f"{condition}_seed{seed}": f"confirm-v11-celebration-{condition}-seed{seed}"
+                    f"{condition}_seed{seed}": f"confirm-v12-celebration-{condition}-seed{seed}"
                     for condition in protocol.CONDITIONS for seed in protocol.SEEDS
                 },
             },

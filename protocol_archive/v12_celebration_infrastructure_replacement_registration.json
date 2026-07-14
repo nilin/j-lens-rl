@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-confirmatory-v12-celebration-infrastructure-replacement-registration",
+  "protocol": "j-lens-rl-confirmatory-v12-celebration-u4-u5-u6",
+  "registered_at_utc": "2026-07-14T22:46:03Z",
+  "status": "prospective_before_any_v12_gpu_dispatch_wandb_run_or_outcome",
+  "claim": "J-lens celebration-family intrinsic word reward alone, apart from KL beta 0.02, improves untouched GSM8K exact match",
+  "replacement_reason": "V11 became scientifically incomplete solely because its verifier rejected an expected validation-row logging shape and its parallel collector propagated the first exception before draining all dispatched calls.",
+  "bound_predecessor_records": {
+    "candidate_freeze": {
+      "path": "protocol_archive/v11_celebration_candidate_freeze.json",
+      "sha256": "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9"
+    },
+    "science_registration": {
+      "path": "protocol_archive/v11_celebration_registration_draft.json",
+      "sha256": "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1"
+    },
+    "selection_integrity": {
+      "path": "protocol_archive/v11_celebration_selection_integrity.json",
+      "sha256": "def794febcf01cfc23040e68da521dec401894abf06ba6cdf4387b0c42b32447"
+    },
+    "v11_infrastructure_closeout": {
+      "path": "protocol_archive/v11_celebration_infrastructure_closeout.json",
+      "sha256": "cbc4c78dcac153675e460e4aff344c12a44a55e34c71de300da3195f44d9c806"
+    }
+  },
+  "scientific_status": {
+    "candidate_recipe_curve_estimands_and_acceptance_changed": false,
+    "replacement_is_independent_of_v11_partial_outcomes": false,
+    "v11_partial_results_enter_v12_gate_or_final_statistics": false,
+    "seed_identities_replaced_to_prevent_retry_or_pooling": true,
+    "inference_scope": "nominal_with_explicit_adaptive_program_caveat"
+  },
+  "candidate": {
+    "target_words": ["yay", "great", "success", "nice"],
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "treatment_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+    ],
+    "signflip_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": -1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.25}
+    ]
+  },
+  "design": {
+    "seeds": [224, 225, 226, 227],
+    "conditions": ["jlens", "signflip"],
+    "training": {
+      "updates": 6,
+      "learning_rate": 3e-06,
+      "schedule": "constant",
+      "warmup_ratio": 0.0,
+      "score_stride": 10,
+      "kl_beta": 0.02,
+      "num_generations": 8,
+      "mask_target_tokens": true,
+      "correctness_reward": false
+    },
+    "curve_gate": {
+      "steps": [0, 4, 5, 6],
+      "criterion": "M4 > M0, M5 >= M4, and M6 >= M5 on the four-treatment-seed mean",
+      "failure_action": "stop_without_controls_or_final"
+    },
+    "final": {
+      "examples": 900,
+      "labels": ["base", "jlens_seed224", "jlens_seed225", "jlens_seed226", "jlens_seed227", "signflip_seed224", "signflip_seed225", "signflip_seed226", "signflip_seed227"],
+      "single_immutable_collection": true,
+      "unlock_requires_curve_and_all_eight_verified_runs": true
+    },
+    "acceptance": {
+      "alpha": 0.15,
+      "primary": "all four treatment-minus-signflip seed effects strictly positive, no ties, positive mean; exact two-sided sign p=0.125",
+      "secondary": "all four treatment-minus-base seed effects strictly positive, no ties, positive mean; exact two-sided sign p=0.125",
+      "crossed_95pct_intervals": "descriptive_only"
+    }
+  },
+  "authorized_infrastructure_changes_only": {
+    "training_log_verifier": {
+      "validation_merged_row_definition": "a reward-bearing row that also contains validation/exact_match",
+      "learning_rate_rule": "learning_rate may be absent only on a validation-merged row; whenever present it must be finite and equal the configured constant within absolute tolerance 1e-15; every other reward-bearing row must contain that exact value",
+      "validation_sequence_rule": "validation_history.jsonl must contain the full registered 0/4/5/6 curve, while log_history.json must contain exactly the callback-emitted post-training validation rows 4/5/6; the step-0 baseline is intentionally evaluated before trainer.train and is therefore absent from log_history",
+      "required_regression": "the verifier must pass an exact captured-public-shape fixture with validation_history steps 0/4/5/6 and Trainer validation-merged rows 4/5/6, while still rejecting any changed authoritative validation-history or post-training sequence",
+      "all_other_reward_schema_and_reward_integrity_checks": "unchanged"
+    },
+    "parallel_orchestration": {
+      "rule": "after dispatch, call get on every spawned worker and record every success or exception before propagating an aggregate failure",
+      "scientific_outputs_or_gate_semantics_changed": false
+    }
+  },
+  "fresh_execution_identity": {
+    "modal_app_name": "j-lens-rl-confirmatory-v12-celebration-20260714a",
+    "modal_app_id_policy": "allocate a new app identity at launch, require it to differ from ap-ZladeRDa7V8qxSgbvIY8a0, and record it in the claim and closeout",
+    "modal_volume": "j-lens-rl-confirmatory-v12-celebration-20260714a",
+    "modal_volume_object_id": "vo-f96AyDnnCXHUc7GenUa1hA",
+    "modal_volume_version": 2,
+    "modal_volume_must_start_without_v11_outputs": true,
+    "gpu_type": "L40S",
+    "maximum_parallel_training_gpus": 4,
+    "maximum_parallel_final_gpus": 1,
+    "wandb": {
+      "entity": "nilinabra-spare-time",
+      "project": "j-lens-rl",
+      "group": "confirm-v12-celebration-u4-u5-u6",
+      "run_id_template": "confirm-v12-celebration-{condition}-seed{seed}",
+      "resume": "never",
+      "online_required": true
+    }
+  },
+  "prohibited": [
+    "resume, retry, warm-start, or pool any V11 run, checkpoint, curve row, or final statistic",
+    "change the celebration words, calibration, J-lens windows, component weights, optimizer, horizon, curve nodes, curve gate, controls, estimands, acceptance threshold, or protected final collection",
+    "dispatch a control before the complete four-seed V12 treatment curve passes",
+    "unlock or inspect the protected final before the registered V12 prerequisites pass",
+    "switch candidates again based on V11 or V12 outcome data"
+  ],
+  "multiplicity_caveat": "The alpha-0.15 tests and p=0.125 threshold are nominal for this adaptively selected broader research program; they are not familywise-error corrected across prior candidates, development runs, or infrastructure replacements. V11 public partial outcomes were known before this replacement was registered, so V12 must not be described as an independent untouched replication.",
+  "protected_payloads_accessed": false
+}

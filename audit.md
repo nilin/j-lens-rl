@@ -2406,3 +2406,56 @@ the contract), and contract SHA-256
 `6fca76d9d7a1e7c4821e44445a36167cb5bb5ffe680911f55c25f8281511eacf`.
 The protected-final bytes are not in the runtime allowlist. Forty-five focused
 Modal/protocol/paired-evaluation tests pass.
+
+### V11 infrastructure closeout and frozen V12 replacement
+
+V11 launched from clean pushed commit
+`2da59a31c4f7571039a33fb7367c7a73d1968b7f` on app
+`ap-ZladeRDa7V8qxSgbvIY8a0`. All four L40S treatments produced the complete
+registered public nodes through step 5. Their aggregate curve was
+`.3825 -> .3925 -> .396875` at `0/4/5`, so both observable transitions rose.
+Seeds 220 and 221 completed step 6 at `.3900` and `.4000`; seeds 222 and 223
+were interrupted during their step-6 evaluations, so the registered four-seed
+step-6 mean and gate do not exist and must not be inferred.
+
+The interruption was infrastructure-only. Transformers merges validation
+metrics into reward-bearing log rows at steps 4/5/6 and omits `learning_rate`
+from those merged rows, while the verifier incorrectly required it on every
+reward row. After seed 220 finished, that verifier exception propagated before
+the collector drained the other already-running calls. Public replay also
+showed that authoritative `validation_history.jsonl` correctly contains
+`0/4/5/6`, while Trainer `log_history.json` contains only callback-emitted
+post-training validation rows `4/5/6`; the old verifier incorrectly expected a
+step-0 Trainer row. The reward, curve, model, and optimizer were not implicated.
+V11 is closed without controls or protected-final access and cannot be resumed,
+retried, selectively completed, or pooled. Its canonical closeout is
+`protocol_archive/v11_celebration_infrastructure_closeout.json` (SHA-256
+`cbc4c78dcac153675e460e4aff344c12a44a55e34c71de300da3195f44d9c806`).
+
+V12 is a fresh infrastructure replacement, not a recovery of missing V11
+seeds. It preserves the exact celebration words, calibration, score windows
+and weights, six-update optimizer recipe, curve nodes/gate, controls,
+estimands, alpha, and protected final. It prospectively fixes new seeds
+224--227, new W&B IDs `confirm-v12-celebration-{condition}-seed{seed}`, and
+fresh Modal v2 Volume `j-lens-rl-confirmatory-v12-celebration-20260714a`
+(`vo-f96AyDnnCXHUc7GenUa1hA`). Its only code changes allow a missing LR exactly
+on validation-merged rows while validating every present LR and requiring it
+elsewhere, expect `4/5/6` only in Trainer log validation rows while retaining
+the full authoritative `0/4/5/6` history, and drain every parallel worker call
+before propagating an aggregate exception. These cases are regression-tested,
+and the corrected verifier passes V11 seed 220's captured public log without
+weakening the other J-only reward checks.
+
+The prospective V12 registration is
+`protocol_archive/v12_celebration_infrastructure_replacement_registration.json`
+(SHA-256
+`f58f35419549de5905c7d873a71f67edda73289585025f9084901b61be4a9749`).
+The launch-enabled contract has SHA-256
+`7d9fbf10b00e87bf4015c6040d7c241014840f98ee89ab5ae3873e5e19247ee1`,
+runtime Git tree `1a745180a8f4e21fd8749b040be868da465f9396`, synthetic commit
+`390e0f072c429baeb52eaaf4202785f148744981`, and content-tree SHA-256
+`3cedd5d79909abef68edf72d4fa04ce82a96261054f87828a0cf6459403d3b7f`.
+Forty-seven focused tests pass. V12 was registered before any V12 GPU dispatch,
+W&B run, or outcome. Because favorable V11 partial nodes were public first,
+any later `p=.125` is nominal alpha-.15 evidence within the adaptive program,
+not familywise-corrected or an independent untouched replication.

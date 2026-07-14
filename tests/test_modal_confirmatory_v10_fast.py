@@ -64,7 +64,7 @@ def test_plan_is_four_treatments_gate_four_controls_then_serial_nine() -> None:
         "matched_signflip_training",
         "sealed_final_collection",
     ]
-    assert [job["seed"] for job in plan[0]["jobs"]] == [220, 221, 222, 223]
+    assert [job["seed"] for job in plan[0]["jobs"]] == [224, 225, 226, 227]
     assert [job["slot"] for job in plan[0]["jobs"]] == [0, 1, 2, 3]
     assert plan[1]["steps"] == [0, 4, 5, 6]
     assert plan[1]["failure_action"] == "stop_without_controls_or_final"
@@ -88,10 +88,10 @@ def test_curve_gate_requires_first_rise_and_no_later_drop() -> None:
     gate = runner.curve_gate_from_histories(histories)
     assert gate["passed"] is True
     assert gate["mean_exact_match"]["4"] > gate["mean_exact_match"]["0"]
-    histories["jlens_seed220"][6]["exact_match"] = 0.30
+    histories["jlens_seed224"][6]["exact_match"] = 0.30
     assert runner.curve_gate_from_histories(histories)["passed"] is False
     with pytest.raises(runner.ModalV10Error, match="exactly four"):
-        runner.curve_gate_from_histories({"jlens_seed220": histories["jlens_seed220"]})
+        runner.curve_gate_from_histories({"jlens_seed224": histories["jlens_seed224"]})
 
 
 def test_contract_freezes_celebration_taper_and_exact_negative_signflip() -> None:
@@ -203,6 +203,37 @@ def test_launcher_uses_existing_protocol_for_serial_final_and_never_creates_volu
     assert "batch.put_file(path, \"/manifests/sealed_final_indices.json\")" in function_source(
         "_upload_protected_final_after_unlock"
     )
+
+
+def test_parallel_training_drains_every_spawned_call_before_raising(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    intents = [
+        {"label": f"jlens_seed{seed}", "seed": seed}
+        for seed in runner.SEEDS
+    ]
+    drained: list[int] = []
+
+    class FakeCall:
+        def __init__(self, seed: int) -> None:
+            self.seed = seed
+
+        def get(self) -> dict[str, int]:
+            drained.append(self.seed)
+            if self.seed == runner.SEEDS[0]:
+                raise RuntimeError("first worker failed")
+            return {"seed": self.seed}
+
+    class FakeTrainOne:
+        @staticmethod
+        def spawn(intent: dict[str, object]) -> FakeCall:
+            return FakeCall(int(intent["seed"]))
+
+    monkeypatch.setattr(runner, "_write_training_intents", lambda *_: intents)
+    monkeypatch.setattr(runner, "train_one", FakeTrainOne())
+    with pytest.raises(RuntimeError, match="first worker failed"):
+        runner._run_parallel_training("claim", "root", "jlens")
+    assert drained == list(runner.SEEDS)
 
 
 def test_runtime_inventory_treats_exact_contract_as_separate_bound_input(

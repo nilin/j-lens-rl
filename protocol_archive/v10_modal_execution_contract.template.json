@@ -60,35 +60,35 @@
     ],
     "final_collection_order": [
       "base",
-      "jlens_seed220",
-      "jlens_seed221",
-      "jlens_seed222",
-      "jlens_seed223",
-      "signflip_seed220",
-      "signflip_seed221",
-      "signflip_seed222",
-      "signflip_seed223"
+      "jlens_seed224",
+      "jlens_seed225",
+      "jlens_seed226",
+      "jlens_seed227",
+      "signflip_seed224",
+      "signflip_seed225",
+      "signflip_seed226",
+      "signflip_seed227"
     ],
     "final_examples": 900,
     "final_labels": [
       "base",
-      "jlens_seed220",
-      "jlens_seed221",
-      "jlens_seed222",
-      "jlens_seed223",
-      "signflip_seed220",
-      "signflip_seed221",
-      "signflip_seed222",
-      "signflip_seed223"
+      "jlens_seed224",
+      "jlens_seed225",
+      "jlens_seed226",
+      "jlens_seed227",
+      "signflip_seed224",
+      "signflip_seed225",
+      "signflip_seed226",
+      "signflip_seed227"
     ],
     "final_manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
     "final_parallelism": 1,
     "mean_effects_must_be_positive": true,
     "seeds": [
-      220,
-      221,
-      222,
-      223
+      224,
+      225,
+      226,
+      227
     ],
     "sign_test": {
       "all_positive_exact_p": 0.125,
@@ -110,29 +110,29 @@
     "one_gpu_per_worker": true
   },
   "image_identity": {
-    "jlens_modal_image_spec": "j-lens-rl-v11-celebration-l40s-v1",
+    "jlens_modal_image_spec": "j-lens-rl-v12-celebration-l40s-v1",
     "modal_image_id_policy": "record_observed_per_container_not_prebound"
   },
   "launch_enabled": false,
   "modal": {
-    "app_name": "REPLACE_WITH_FRESH_V11_APP_NAME",
+    "app_name": "REPLACE_WITH_FRESH_V12_APP_NAME",
     "huggingface_secret_name": "huggingface-token",
-    "state_volume_name": "REPLACE_WITH_FRESH_V11_VOLUME_NAME",
+    "state_volume_name": "REPLACE_WITH_FRESH_V12_VOLUME_NAME",
     "state_volume_object_id": "vo-REPLACE_WITH_PINNED_OBJECT_ID",
     "state_volume_version": 2,
     "wandb_secret_name": "j-lens-rl-wandb"
   },
   "prepared_state": {
     "expected_files": [
-      "configs/jlens_seed220.json",
-      "configs/jlens_seed221.json",
-      "configs/jlens_seed222.json",
-      "configs/jlens_seed223.json",
+      "configs/jlens_seed224.json",
+      "configs/jlens_seed225.json",
+      "configs/jlens_seed226.json",
+      "configs/jlens_seed227.json",
       "configs/sealed_eval.json",
-      "configs/signflip_seed220.json",
-      "configs/signflip_seed221.json",
-      "configs/signflip_seed222.json",
-      "configs/signflip_seed223.json",
+      "configs/signflip_seed224.json",
+      "configs/signflip_seed225.json",
+      "configs/signflip_seed226.json",
+      "configs/signflip_seed227.json",
       "reproducibility/final_protocol_spec.json",
       "reproducibility/v10_disjointness_receipt.json",
       "reproducibility/v10_final_automation_audit.json",
@@ -148,7 +148,7 @@
     "remote_relative_path": "manifests/sealed_final_indices.json",
     "sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8"
   },
-  "protocol": "j-lens-rl-confirmatory-v11-modal-execution-contract-v1",
+  "protocol": "j-lens-rl-confirmatory-v12-modal-execution-contract-v1",
   "repository_path": "protocol_archive/v10_modal_execution_contract.template.json",
   "runtime_source": {
     "commit_recipe": {
@@ -183,19 +183,19 @@
         "sha256": "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9",
         "size_bytes": 0
       },
-      "protocol_archive/v11_celebration_selection_integrity.json": {
+      "protocol_archive/v11_celebration_infrastructure_closeout.json": {
         "mode": 420,
-        "sha256": "def794febcf01cfc23040e68da521dec401894abf06ba6cdf4387b0c42b32447",
+        "sha256": "cbc4c78dcac153675e460e4aff344c12a44a55e34c71de300da3195f44d9c806",
         "size_bytes": 0
       },
-      "protocol_archive/v11_celebration_registration_draft.json": {
+      "protocol_archive/v12_celebration_infrastructure_replacement_registration.json": {
         "mode": 420,
-        "sha256": "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1",
+        "sha256": "f58f35419549de5905c7d873a71f67edda73289585025f9084901b61be4a9749",
         "size_bytes": 0
       },
-      "protocol_archive/v11_celebration_metric_schema.json": {
+      "protocol_archive/v12_celebration_metric_schema.json": {
         "mode": 420,
-        "sha256": "9c1e4eab6101436d89ef687ce3a1d47857f48dd5779bea47bf179d7708beac44",
+        "sha256": "b91686358c8a30283d93b185ef869aeec56f549ea388a4626561095a7fd97d71",
         "size_bytes": 0
       },
       "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json": {
@@ -267,12 +267,12 @@
   "science_registration": {
     "candidate_freeze_path": "protocol_archive/v11_celebration_candidate_freeze.json",
     "candidate_freeze_sha256": "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9",
-    "draft_path": "protocol_archive/v11_celebration_registration_draft.json",
-    "draft_sha256": "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1",
-    "integrity_amendment_path": "protocol_archive/v11_celebration_selection_integrity.json",
-    "integrity_amendment_sha256": "def794febcf01cfc23040e68da521dec401894abf06ba6cdf4387b0c42b32447"
+    "draft_path": "protocol_archive/v12_celebration_infrastructure_replacement_registration.json",
+    "draft_sha256": "f58f35419549de5905c7d873a71f67edda73289585025f9084901b61be4a9749",
+    "integrity_amendment_path": "protocol_archive/v11_celebration_infrastructure_closeout.json",
+    "integrity_amendment_sha256": "cbc4c78dcac153675e460e4aff344c12a44a55e34c71de300da3195f44d9c806"
   },
-  "scientific_protocol": "j-lens-rl-confirmatory-v11-celebration-u4-u5-u6",
+  "scientific_protocol": "j-lens-rl-confirmatory-v12-celebration-u4-u5-u6",
   "tracking": {
     "resume": "never",
     "training_mode": "online",
