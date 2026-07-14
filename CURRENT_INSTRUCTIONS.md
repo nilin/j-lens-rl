@@ -43,7 +43,9 @@ adaptive development evidence separate from confirmatory/significance claims.
 - If Modal is unavailable or rejects work because of its GPU limit, immediately
   continue unfinished work sequentially on the idle local RTX 4090. Preserve
   exact configs, data manifests, calibrations, seeds, and W&B identities; never
-  rerun completed arms as if they were new evidence.
+  rerun completed arms as if they were new evidence. If the local W&B key is
+  unavailable, run offline under the preserved run ID and sync later; do not
+  block the experiment on telemetry.
 - Keep all active RL runs visible in the `j-lens-rl` W&B project.
 
 ## Reproducibility and safety
