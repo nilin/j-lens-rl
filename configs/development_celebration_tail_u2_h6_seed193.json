@@ -1,0 +1,49 @@
+{
+  "base": "word_explore_common.json",
+  "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+  "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+  "expected_calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+  "expected_lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+  "target_words": ["yay", "great", "success", "nice"],
+  "score_stride": 10,
+  "score_components": [
+    {
+      "layer": 8,
+      "start_fraction": 0.5,
+      "end_fraction": 0.75,
+      "aggregation": "mean",
+      "weight": 1.0
+    },
+    {
+      "layer": 8,
+      "start_fraction": 0.75,
+      "end_fraction": 1.0,
+      "aggregation": "mean",
+      "weight": 0.25
+    }
+  ],
+  "seed": 193,
+  "updates": 6,
+  "eval_every": 2,
+  "validation_steps": [2, 4, 6],
+  "save_every": 2,
+  "save_total_limit": 3,
+  "run_name": "dev-v10-celebration-tail-u2-h6-seed193",
+  "wandb_entity": "nilinabra-spare-time",
+  "wandb_project": "j-lens-rl",
+  "wandb_group": "dev-v10-emotional-early-h6",
+  "wandb_run_id": "dev-v10-celebration-tail-u2-h6-seed193",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v10-celebration-tail-u2-h6-seed193",
+  "wandb_resume": "never",
+  "wandb_tags": [
+    "development-only",
+    "emotional-j-lens",
+    "celebration-family",
+    "tail-taper",
+    "early-curve",
+    "local-rtx4090",
+    "seed193"
+  ],
+  "evidence_eligibility": "development_only_exposed_curve_no_significance_claim",
+  "output_dir": "runs/dev_v10_celebration_tail_u2_h6_seed193"
+}

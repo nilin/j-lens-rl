@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-rl-registration",
+  "protocol": "j-lens-rl-development-celebration-tail-u2-h6-seed193-v1",
+  "scientific_status": "development_only_on_exposed_curve_no_significance_claim",
+  "registered_at_utc": "2026-07-14T19:53:30Z",
+  "objective": "Test an emotionally charged celebration-family J-lens reward at an early six-update horizon without waiting for further word search.",
+  "intrinsic_reward_only": {
+    "reward_type": "jlens",
+    "correctness_reward_used_for_training": false,
+    "kl_beta": 0.02,
+    "target_words": ["yay", "great", "success", "nice"],
+    "score_components": [
+      {
+        "layer": 8,
+        "start_fraction": 0.5,
+        "end_fraction": 0.75,
+        "aggregation": "mean",
+        "weight": 1.0
+      },
+      {
+        "layer": 8,
+        "start_fraction": 0.75,
+        "end_fraction": 1.0,
+        "aggregation": "mean",
+        "weight": 0.25
+      }
+    ]
+  },
+  "fixed_run": {
+    "seed": 193,
+    "updates": 6,
+    "curve_steps": [0, 2, 4, 6],
+    "shape_criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+    "validation_examples": 400,
+    "validation_observational_only": true,
+    "config_path": "configs/development_celebration_tail_u2_h6_seed193.json",
+    "config_sha256": "caae6bbc1c80f2b32bad1afca4d53811a5ae9ecf3d4ac1c22b32c7a4f96971a7"
+  },
+  "data_and_artifacts": {
+    "curve_manifest_path": ".confirmatory/manifests/curve_indices.json",
+    "curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions_path": ".confirmatory/manifests/train_exclusions.json",
+    "train_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "lens_path": "artifacts/qwen25_05b_solved_lens.pt",
+    "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "protected_payload_policy": "Do not list, read, copy, or evaluate any sealed final, reserve, or correlation payload. This run uses only the already exposed curve and the exclusion manifest by path/hash."
+  },
+  "hardware": {
+    "backend": "local",
+    "cuda_visible_devices": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "device_name": "NVIDIA GeForce RTX 4090",
+    "driver_version": "570.195.03",
+    "memory_total_mib": 24564,
+    "torch_version": "2.9.1+cu128",
+    "cuda_version": "12.8",
+    "max_gpu_processes": 1,
+    "separate_attempt_policy": "Never pool this local development run with the active Modal L40S tournament or any inferential attempt."
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "dev-v10-emotional-early-h6",
+    "run_id": "dev-v10-celebration-tail-u2-h6-seed193",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v10-celebration-tail-u2-h6-seed193",
+    "resume": "never"
+  },
+  "source_policy": {
+    "launch_only_from_clean_pushed_main": true,
+    "exact_launch_commit_and_source_tree_are_recorded_by_the_trainer_and_launch_ledger": true,
+    "replay_requires_the_archived_config_artifacts_manifests_command_environment_and_terminal_evidence": true
+  },
+  "selection_context": {
+    "adaptive": true,
+    "rationale": "The celebration family is emotionally charged and previously showed its strongest gains at early nodes; the short fixed horizon tests a different idea while the one-Modal-GPU tournament continues.",
+    "cannot_support_significance": true,
+    "future_confirmation_requires_fresh_seeds_matched_controls_and_untouched_evaluation": true
+  }
+}
