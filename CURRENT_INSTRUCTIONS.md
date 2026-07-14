@@ -63,11 +63,13 @@ from confirmatory claims.
 - Current state: the registered eight-seed positive-`joy` V5 attempt completed
   serially and failed its curve gate: mean exact match was
   `.4100/.390625/.394375/.4003125` at `0/2/4/6`. Preserve it as honest negative
-  evidence; controls and sealed-final evaluation correctly never ran. The next
-  ready RL lineage is a separately frozen celebration combination
+  evidence; controls and sealed-final evaluation correctly never ran. The
+  active RL lineage is a separately frozen celebration combination
   (`yay/great/success/nice`) with tapered late-response reward, registered nodes
-  `0/4/6/10`, and seeds 176--183. Launch it as soon as its corrected package,
-  V5 terminal closeout, tests, clean commit, and push all verify. Correlation
-  attempt 4 stopped after all eight discovery shards when Modal preempted its
-  CPU controller; aggregation/selection/validation never began and outcomes
-  remain uninspected. Its preemption-safe recovery stays behind ready RL work.
+  `0/4/6/10`, and seeds 176--183. It launched serially on one Modal L40S from
+  clean pushed commit `3c1666d`; seed 176 became live in W&B at 11:40:54 UTC.
+  Monitor that registered attempt without overlapping another GPU app.
+  Correlation attempt 4 stopped after all eight discovery shards when Modal
+  preempted its CPU controller; aggregation/selection/validation never began
+  and outcomes remain uninspected. Its preemption-safe recovery stays behind
+  the active RL work.

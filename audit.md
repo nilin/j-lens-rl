@@ -1384,3 +1384,59 @@ collection, comparison, acceptance, or control-run result. The archive remains
 retrievable with `modal volume get j-lens-rl-confirmatory-v5-emotional-20260714b
 /exports/v5_emotional_evidence_c2d9ed29ebba46649f1ea182d7d50014.zip
 ./v5_emotional_evidence_c2d9ed29ebba46649f1ea182d7d50014.zip`.
+
+### V6 infrastructure retries and live Volume-C launch
+
+The first two V6 submissions ended before scientific execution. Attempt A,
+from commit `4524e643a97d084cd2d62176075ddd9e477525e9`, used app
+`ap-sujvjQTDFQV2qwrVIFjNRq`. Its image build stopped making progress in the
+asset-cache step after an unauthenticated Hugging Face warning, so it was
+manually stopped at 11:03:05 UTC with zero tasks. It had no entrypoint,
+protocol upload, claim, function call, GPU, W&B run, or scientific outcome.
+The exact record is
+[`protocol_archive/v6_celebration_prelaunch_attempt_a_closeout.json`](protocol_archive/v6_celebration_prelaunch_attempt_a_closeout.json)
+(SHA-256
+`c55cdd5fabd757e3111c76a3b4d4ee6df79d139e03fd55989b74d5fada9583a3`).
+Infrastructure amendment 1 scopes `HF_TOKEN` to a V6-only image-cache wrapper,
+checks that it is absent afterward, and moves the retry to fresh Volume B. It
+is archived at
+[`protocol_archive/v6_celebration_infrastructure_amendment1.json`](protocol_archive/v6_celebration_infrastructure_amendment1.json)
+(SHA-256
+`4b931daa8d5c4e8cec8ee7b3f0f14981aefcd3485c9f29c0d1be3cb03ea5d136`).
+
+Attempt B, from commit `6f150b3a5fb404ebdcac95778d84880b4d1acef4`,
+used app `ap-Mhzw5O7P2QdnHzyhQJaomJ`. Modal rejected hydration at 11:17:53
+UTC because the manually created Volume B was v1 while the runner required
+v2. It likewise had zero tasks and stopped before image build, entrypoint,
+claim, function call, GPU, W&B, or outcome. The immutable closeout is
+[`protocol_archive/v6_celebration_prelaunch_attempt_b_closeout.json`](protocol_archive/v6_celebration_prelaunch_attempt_b_closeout.json)
+(SHA-256
+`08a57a5d81ea98a8e9b2de3c778b3d3f6995c59a2fe17d365f3b51724f071e51`).
+Infrastructure amendment 2 permanently excludes Volumes A and B and pins the
+explicitly created v2 Volume C,
+`j-lens-rl-confirmatory-v6-celebration-taper-20260714c`, Modal object
+`vo-UYlAzgmVfmtRarECX4DYJg`. It is archived at
+[`protocol_archive/v6_celebration_infrastructure_amendment2.json`](protocol_archive/v6_celebration_infrastructure_amendment2.json)
+(SHA-256
+`230760f24594f7e8641c8b2a7d7b1cb9c29741c08c9c40b8d451d2cbe0196f94`).
+
+The corrected package was committed and pushed at
+`3c1666d289b50e70a93ac6d8c8e21157ce530097` and passed all `160/160`
+repository tests. Across both infrastructure amendments, the frozen science
+and W&B projection remained exactly
+`0621bc7402187223b47f665872b4c0bdb2c53b64661b26b94dcc76492a0fe93e`;
+the active registration has SHA-256
+`12cb17f896b117a43d9d266a53d43423ec5c5613fcc2dfda209f59bc27c507f2`.
+
+The Volume-C launch receipt was submitted at
+`2026-07-14T11:37:03.279158+00:00`: app
+`ap-W0KYuXL8iKfFlgUS81uNKB`, immutable claim
+`2c426dfb48e54c759ec6b2cd641f4d97`, and orchestration call
+`fc-01KXG6MYVEXXGAW2M3KY38769Q`. It enforces one L40S globally and entered
+`semantic_training`, wave 1, treatment seed 176 alone. At 11:40 UTC it was
+still queued for Modal L40S capacity and the registered W&B group had no run.
+At 11:40:54 UTC its registered
+[seed-176 W&B run](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v6-emotional-celebration-taper-h10-jlens_seed176)
+became live, and optimizer step 1 completed at 11:41:14 UTC. These facts show
+execution liveness only: no registered evaluation curve node or significance
+result was available at this ledger cutoff.
