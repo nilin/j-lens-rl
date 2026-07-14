@@ -2028,3 +2028,19 @@ least `.0225` above its step 10 for all three aggregate inequalities to pass.
 Seed 215 began immediately. The CPU-only seed-214 upload verified exact W&B
 identity and all seven evidence files; its reconstructable ledger is
 `protocol_archive/v9_local_seed214_terminal_ledger.json`.
+
+During final treatment seed 215, its sealed step-4 node was `.4050`. This is an
+individual rise, but it fixes the eight-seed step-4 mean at `.3971875`, just
+`.0003125` below the `.3975` baseline. The strict first-rise gate is therefore
+mathematically failed regardless of later nodes. Seed 215 must still finish and
+seal; V9 controls must not start.
+
+To avoid an RL gap after that fail-closed decision, the previously registered
+development-only emotional single-word tournament is being enabled without
+changing its science: fixed serial `-fuck`, `+yay`, `-worried`, shared seed 192,
+15 updates, and exposed nodes `0/5/10/15`. Its prelaunch protocol listed generic
+terminal stage names but omitted V7's actual authoritative stage
+`failed_before_final`. The bounded amendment adds that literal stage and binds
+the already committed authoritative V7 closeout (including retired GPU lease).
+No tournament outcome or state existed when this correction was made; the
+tournament remains development-only and cannot support a significance claim.

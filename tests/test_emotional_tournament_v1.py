@@ -82,13 +82,13 @@ def test_exact_existing_calibrations_and_exposed_inputs_are_reused():
         assert payload["lens_sha256"] == tournament.LENS_SHA256
 
 
-def test_disabled_amendment_cannot_satisfy_launch_gate():
+def test_enabled_amendment_binds_authoritative_v7_closeout():
     amendment, closeout = tournament._amendment_and_closeout()
-    assert amendment["launch_enabled"] is False
-    assert closeout is None
-    with pytest.raises(RuntimeError, match="has not enabled launch"):
-        tournament._validate_amendment(amendment)
-    assert not tournament.AMENDMENT_SOURCE.exists()
+    assert amendment["launch_enabled"] is True
+    assert closeout == ROOT / "protocol_archive/v7_profanity_authoritative_closeout.json"
+    assert amendment["v7_terminal_stage"] == "failed_before_final"
+    assert tournament.sha256_file(closeout) == amendment["v7_terminal_closeout_sha256"]
+    assert tournament._validate_amendment(amendment) == closeout
 
 
 def test_shape_and_ranking_are_predeclared_and_deterministic():

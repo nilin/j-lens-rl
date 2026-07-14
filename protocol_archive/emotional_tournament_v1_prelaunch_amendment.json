@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-prelaunch-amendment",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "launch_enabled": true,
+  "v7_terminal_closeout_path": "protocol_archive/v7_profanity_authoritative_closeout.json",
+  "v7_terminal_closeout_sha256": "cd83a08155871518baf177d5718acae1053ef4a98e171cbfc9351cd1b8db930c",
+  "v7_claim_id": "1f2756de5df846d48a30f19a307b70fb",
+  "v7_app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+  "v7_terminal_stage": "failed_before_final",
+  "require_v7_app_stopped_at_launch": true,
+  "require_shared_gpu_lease_free_at_launch": true,
+  "note": "Prospectively enables only the already-registered development tournament after binding V7's authoritative closeout and retired GPU lease. The actual closeout stage name is failed_before_final. No tournament outcome existed when this amendment was written."
+}

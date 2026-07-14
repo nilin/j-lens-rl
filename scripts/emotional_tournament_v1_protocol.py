@@ -50,6 +50,7 @@ TERMINAL_V7_STAGES = {
     "curve_failed",
     "significance_failed",
     "infrastructure_failed",
+    "failed_before_final",
     "failed",
 }
 
