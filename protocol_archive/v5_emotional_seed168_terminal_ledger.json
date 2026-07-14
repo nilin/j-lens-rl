@@ -1,0 +1,74 @@
+{
+  "app_id": "ap-2o4XOP7jhqcrHyqkGN55wL",
+  "claim_id": "c2d9ed29ebba46649f1ea182d7d50014",
+  "condition": "jlens",
+  "evidence_eligibility": "original_registered_confirmatory_attempt",
+  "git_commit_used_by_run": "252a2319dc0ada5e99ddeecf507d7246590531d7",
+  "gpu_function_call_id": "fc-01KXFXD5TNGYTB3RW08SV9J5PR",
+  "inspection_boundary": {
+    "opened": [
+      "registered curve-split validation history",
+      "terminal run-result manifest metadata",
+      "W&B terminal publication receipt"
+    ],
+    "sealed_final_outcomes_opened": false
+  },
+  "orchestration_function_call_id": "fc-01KXFXCF23D6DRB5VNXCVJB8TN",
+  "recorded_at_utc": "2026-07-14T09:12:28Z",
+  "registration_sha256": "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527",
+  "remote_run_directory": "runs/jlens_seed168",
+  "schema_version": 1,
+  "seed": 168,
+  "terminal_artifacts": {
+    "final_adapter_and_tokenizer_sha256": "4d4bde10ba3dc9c3779a61b438a128a0f6a9cc51958b3beffbb7a67a8af8ba4f",
+    "run_result_manifest_sha256": "5aca0a5765b915448cbf7542a6119db75823bc5ecf90cfe6ea46cb5c9dd14970",
+    "validation_history_sha256": "850041e9c4e32f55e2a0784197657dcd245a804f2d0db014656ba621a2ccbab6",
+    "wandb_terminal_publish_receipt_sha256": "00569abb2f67f7e3e1ee98fbf1334ebef15890403cf7d284527de2d90c5646f9"
+  },
+  "validation_curve": [
+    {
+      "exact_match": 0.41,
+      "exact_match_ci95_high": 0.4588336400144037,
+      "exact_match_ci95_low": 0.36287863529353875,
+      "literal_target_completion_rate": 0.0,
+      "mean_length": 229.93,
+      "step": 0
+    },
+    {
+      "exact_match": 0.405,
+      "exact_match_ci95_high": 0.45379028816225736,
+      "exact_match_ci95_low": 0.35801711355168203,
+      "literal_target_completion_rate": 0.0,
+      "mean_length": 231.4425,
+      "step": 2
+    },
+    {
+      "exact_match": 0.385,
+      "exact_match_ci95_high": 0.43356554741321446,
+      "exact_match_ci95_low": 0.33862235992471207,
+      "literal_target_completion_rate": 0.0,
+      "mean_length": 233.0125,
+      "step": 4
+    },
+    {
+      "exact_match": 0.395,
+      "exact_match_ci95_high": 0.44368824897480874,
+      "exact_match_ci95_low": 0.3483094055511242,
+      "literal_target_completion_rate": 0.0,
+      "mean_length": 232.3775,
+      "step": 6
+    }
+  ],
+  "validation_indices_sha256": "b01409c011012641be96c84bfc35cb0b352cea902e54304105efa272a3eac6b2",
+  "volume": "j-lens-rl-confirmatory-v5-emotional-20260714b",
+  "wandb": {
+    "artifact_digest": "80956fbf6628133610b1b373d7c96872",
+    "artifact_id": "QXJ0aWZhY3Q6MzEzNzk5MzYxMw==",
+    "artifact_qualified_name": "nilinabra-spare-time/j-lens-rl/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168-terminal-evidence:v0",
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v5-emotional-joy-h6",
+    "project": "j-lens-rl",
+    "run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168"
+  }
+}

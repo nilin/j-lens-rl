@@ -1315,14 +1315,23 @@ call is `fc-01KXFXD5TNGYTB3RW08SV9J5PR`.
 
 At 08:58:40 UTC the registered online run
 [`confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168`](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168)
-began syncing. The trainer entered its fixed six-update schedule and completed
-update 1 without a fault. Its frozen 400-item curve split gave the durable step
-0 baseline exact match `0.4100` (95% binomial CI
-`[0.3628786353, 0.4588336400]`), mean completion length `229.93`, and literal
-target-completion rate `0.0`; the validation-index manifest is
+began syncing. It completed all six updates and terminalized normally at
+09:07:51 UTC. Its frozen 400-item curve was
+`.4100 -> .4050 -> .3850 -> .3950` at steps `0/2/4/6`, with literal target rate
+zero throughout. Thus seed 168 alone is negative for the requested curve; the
+registered decision remains the eight-seed mean and has not been evaluated.
+The validation-index manifest is
 `b01409c011012641be96c84bfc35cb0b352cea902e54304105efa272a3eac6b2`.
-The first optimizer log reported loss `0.1572`, mean J-lens joy reward
-`-0.3907`, literal joy rate `0`, KL `0`, entropy `0.7477`, and learning rate
-`3e-6`. These are a live execution/heartbeat record, not an efficacy claim;
-the registered eight-seed mean curve gate and untouched final comparison remain
-unopened and controlling.
+
+The immutable per-run result manifest has SHA-256
+`5aca0a5765b915448cbf7542a6119db75823bc5ecf90cfe6ea46cb5c9dd14970`;
+the final adapter/tokenizer tree has SHA-256
+`4d4bde10ba3dc9c3779a61b438a128a0f6a9cc51958b3beffbb7a67a8af8ba4f`.
+W&B acknowledged terminal evidence artifact
+`confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168-terminal-evidence:v0`
+(digest `80956fbf6628133610b1b373d7c96872`). The exact curve, confidence
+intervals, file hashes, W&B identity, and inspection boundary are mirrored in
+[`protocol_archive/v5_emotional_seed168_terminal_ledger.json`](protocol_archive/v5_emotional_seed168_terminal_ledger.json).
+No sealed-final outcome was opened. Wave 2/8 then dispatched seed 169 alone;
+its registered [W&B run](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed169)
+began syncing at 09:09 UTC while seed 168's GPU container was already gone.
