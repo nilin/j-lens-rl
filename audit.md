@@ -1958,3 +1958,21 @@ while seed 209 began on the GPU without waiting. The compact reconstructable
 bundle and exact remote/payload hashes are in
 `protocol_archive/v9_local_seed208_terminal_ledger.json` and
 `protocol_archive/v9_local_live_evidence/`.
+
+Seed 209 also completed and passed the registered terminal validator. Its curve
+was `.3975/.4025/.4150/.3850`, with zero literal target-word completions at all
+four nodes. Thus its first two post-baseline nodes rose monotonically, but the
+terminal node fell below baseline. Across the first two treatment seeds the
+descriptive mean curve is `.3975/.40625/.40125/.3925`: the required first rise
+currently holds, while the later two monotonic inequalities do not. This is an
+interim description only; the frozen gate is evaluated once, after all eight
+treatments, and seed 210 began immediately without waiting for tracking or word
+search.
+
+The receipt-bound seed-209 offline directory was synced through the CPU-only
+Modal transport and its exact registered W&B identity, config, terminal result,
+and seven embedded evidence files were verified remotely. The reconstructable
+ledger is `protocol_archive/v9_local_seed209_terminal_ledger.json`; the compact
+source evidence was added beside seed 208 under
+`protocol_archive/v9_local_live_evidence/`. The sole GPU remains assigned to the
+serial RL queue, so candidate-word analysis is not gating training.

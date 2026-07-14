@@ -1,0 +1,43 @@
+{
+  "claim_id": "d6131db54b6346199d9af8d1478f3e36",
+  "command": [
+    "/j-lens-rl/.venv/bin/python",
+    "scripts/v9_local_train.py",
+    "--config",
+    ".confirmatory/v9_local/configs/jlens_seed209.json",
+    "--wandb-mode",
+    "offline"
+  ],
+  "condition": "jlens",
+  "config_sha256": "7711e0ae2ce43d7ba6a37032a68086aba4c77b0629020772e871cc688421d532",
+  "created_at_utc": "2026-07-14T16:39:57.694100+00:00",
+  "cwd": "/j-lens-rl/.confirmatory/v9_local/runtime_worktree",
+  "hardware": {
+    "boot_id_sha256": "2137b97844239185526179bc0e2ae5074d4ef17bbb1c856b57cd2a383f6410cf",
+    "foreign_compute_processes": [],
+    "gpu": {
+      "driver": "570.195.03",
+      "index": 0,
+      "memory_total_mib": 24564,
+      "name": "NVIDIA GeForce RTX 4090",
+      "uuid": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e"
+    },
+    "machine_id_sha256": "aed9946c7ac389c687b73bd918790d99da1303140bc502277f8d7c016975a486",
+    "schema_version": 1,
+    "torch": {
+      "bf16": true,
+      "count": 1,
+      "cuda": "12.8",
+      "name": "NVIDIA GeForce RTX 4090",
+      "torch": "2.9.1+cu128"
+    }
+  },
+  "label": "jlens_seed209",
+  "offline_wandb_dir": "/j-lens-rl/.confirmatory/v9_local/offline_wandb/jlens_seed209",
+  "protocol": "j-lens-rl-confirmatory-v9-local-profanity-u5",
+  "registration_sha256": "5c9b776c452eea645361b72f87d8cabcd1059db654430cb7975f7325499b0ce4",
+  "runtime_git_commit": "4d2f884f246b85b9215a8332632e7092a76deb80",
+  "schema_version": 1,
+  "seed": 209,
+  "sequence": 2
+}
