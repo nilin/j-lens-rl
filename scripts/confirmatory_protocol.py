@@ -32,30 +32,37 @@ CURVE_PLOT_PATH = STATE_DIR / "evidence" / "curve.png"
 COMPLETED_RUNS_PATH = STATE_DIR / "evidence" / "completed_runs.json"
 UNLOCK_PATH = STATE_DIR / "final_unlocked.json"
 ACCEPTANCE_PATH = STATE_DIR / "evidence" / "acceptance.json"
+SEALED_COMPARISON_PATH = STATE_DIR / "evidence" / "sealed_comparison.json"
 
 MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
 DATASET_REVISION = "740312add88f781978c0658806c59bc2815b9866"
-PROTOCOL = "j-lens-rl-confirmatory-v3"
+PROTOCOL = "j-lens-rl-confirmatory-v4"
 V1_ALLOCATION_SALT = "j-lens-rl-confirmatory-v1-2026-07-14"
 V2_ALLOCATION_SALT = "j-lens-rl-confirmatory-v2-2026-07-14"
-ALLOCATION_SALT = "j-lens-rl-confirmatory-v3-constant-lr-2026-07-14"
+V3_ALLOCATION_SALT = "j-lens-rl-confirmatory-v3-constant-lr-2026-07-14"
+ALLOCATION_SALT = "j-lens-rl-confirmatory-v4-screen2-2026-07-14"
 ALLOCATION_ALGORITHM = (
-    "reconstruct V2 exactly, retire its curve, preserve its reserve, then "
-    "order only its unopened sealed parent by ascending "
-    "SHA-256(v3_salt + ':' + raw_source_index)"
+    "reconstruct V3 exactly, require its archived curve-failed/no-unlock/no-evals "
+    "closeout, retire its curve, preserve its reserve, then order only its "
+    "unopened sealed parent by ascending SHA-256(v4_salt + ':' + raw_source_index)"
 )
-SEEDS = tuple(range(148, 158))
+SEEDS = tuple(range(159, 167))
 REQUIRED_CONDITIONS = ("jlens", "signflip")
 CONFIG_SEEDS = {
     "jlens": SEEDS,
     "signflip": SEEDS,
-    "gsm8k": (148,),
 }
 FIXED_UPDATES = 25
-CURVE_STEPS = (0, 5, 10, 15)
-ALL_VALIDATION_STEPS = tuple(range(0, FIXED_UPDATES + 1, 5))
+CURVE_STEPS = (0, 2, 4, 6)
+ALL_VALIDATION_STEPS = (0, 2, 4, 6, 10, 15, 20, 25)
 
 SPLIT_SIZES = {
+    "curve_indices.json": 400,
+    "sealed_final_indices.json": 1700,
+    "future_reserve_indices.json": 64,
+}
+
+V3_SPLIT_SIZES = {
     "curve_indices.json": 800,
     "sealed_final_indices.json": 2100,
     "future_reserve_indices.json": 64,
@@ -80,6 +87,17 @@ V3_MANIFEST_SHA256 = {
     "sealed_final_indices.json": "84da0c0472b4442b4f35406d1b1fbd3b956803e5f19bf51fc02f6db013224f7b",
     "future_reserve_indices.json": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
 }
+V3_SEALED_SET_SHA256 = "875334925160d6c0c49dd8cf1523e1aeb081fd90f6e4b08611eccb8394dbe4d5"
+V4_MANIFEST_SHA256 = {
+    "curve_indices.json": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "sealed_final_indices.json": "acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3",
+    "future_reserve_indices.json": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+}
+
+V3_CLOSEOUT_PATH = REPO / "protocol_archive" / "v3_closeout.json"
+V3_CLOSEOUT_SHA256 = "bffebd9ebec282bcf9d59f39f7a26446ee034a5ad34482e3d304ba871190d140"
+SCREEN2_SELECTION_PATH = REPO / "protocol_archive" / "screen2_selection.json"
+SCREEN2_SELECTION_SHA256 = "d0f4d9515ef780166cc767ec7971bd106d7d0cb7d5f4bb2eade31bbb82e3b790"
 
 # Every historically documented shuffled training selection. The last rule is
 # the interrupted xufk8x08 setup run, which excluded only its dev slice.
@@ -190,6 +208,100 @@ def load_indices(path: Path) -> list[int]:
     return values
 
 
+def validate_predecessor_archives() -> dict[str, str]:
+    """Require the frozen candidate selection and V3 no-look closeout."""
+    expected_hashes = {
+        str(V3_CLOSEOUT_PATH.relative_to(REPO)): V3_CLOSEOUT_SHA256,
+        str(SCREEN2_SELECTION_PATH.relative_to(REPO)): SCREEN2_SELECTION_SHA256,
+    }
+    for relative, expected_hash in expected_hashes.items():
+        path = REPO / relative
+        if not path.is_file() or sha256_file(path) != expected_hash:
+            raise ProtocolError(f"predecessor archive is missing or changed: {relative}")
+
+    closeout = json.loads(V3_CLOSEOUT_PATH.read_text())
+    expected_closeout = {
+        "protocol": "j-lens-rl-confirmatory-v3",
+        "git_commit": "a617b59f20c84172454b7cd80b9668535f11be8f",
+        "attempt_stage": "curve_failed",
+        "final_unlocked_present": False,
+        "final_evaluation_labels": [],
+        "signflip_run_labels": [],
+        "sealed_final_manifest_sha256": V3_MANIFEST_SHA256[
+            "sealed_final_indices.json"
+        ],
+        "sealed_final_sorted_set_sha256": V3_SEALED_SET_SHA256,
+    }
+    if any(closeout.get(key) != value for key, value in expected_closeout.items()):
+        raise ProtocolError("V3 archive does not prove curve failure and no final look")
+    expected_inventory = {
+        "root_entries": [
+            "attempt_claim.json",
+            "attempt_status.json",
+            "evidence",
+            "manifests",
+            "protocol_state.json",
+            "runs",
+        ],
+        "evidence_entries": ["curve.png", "curve_gate.json"],
+        "semantic_run_labels": [f"jlens_seed{seed}" for seed in range(148, 158)],
+    }
+    if closeout.get("snapshot_inventory") != expected_inventory:
+        raise ProtocolError("V3 archive inventory does not prove no unlock/evaluations")
+    curve = closeout.get("curve")
+    if not isinstance(curve, dict) or (
+        curve.get("passed") is not False
+        or curve.get("steps") != [0, 5, 10, 15]
+        or curve.get("examples_per_seed") != 800
+        or curve.get("mean_exact_match")
+        != {"0": 0.435, "5": 0.42125, "10": 0.422375, "15": 0.4185}
+    ):
+        raise ProtocolError("V3 archived curve failure changed")
+
+    selection = json.loads(SCREEN2_SELECTION_PATH.read_text())
+    expected_priority = [
+        {
+            "rank": 1,
+            "variant": "ultradense5",
+            "exact_match_0_2_4_6": [0.375, 0.3875, 0.37, 0.3675],
+            "passed": False,
+        },
+        {
+            "rank": 2,
+            "variant": "tail_taper",
+            "exact_match_0_2_4_6": [0.375, 0.38, 0.38, 0.3825],
+            "passed": True,
+        },
+        {
+            "rank": 3,
+            "variant": "tempered_delta",
+            "exact_match_0_2_4_6": [0.375, 0.3575, 0.3575, 0.3775],
+            "passed": False,
+        },
+        {
+            "rank": 4,
+            "variant": "layer_shrink",
+            "exact_match_0_2_4_6": [0.375, 0.3675, 0.36, 0.38],
+            "passed": False,
+        },
+    ]
+    if (
+        selection.get("screen_commit")
+        != "56280f0a8f2da1eb3a4c6106f49b7cacca6a6489"
+        or selection.get("selected_variant") != "tail_taper"
+        or selection.get("selection_rule")
+        != "first passing variant in the precommitted priority order"
+        or selection.get("criterion")
+        != "step2 > step0 and step4 >= step2 and step6 >= step4"
+        or selection.get("steps") != [0, 2, 4, 6]
+        or selection.get("fixed_priority") != expected_priority
+        or selection.get("tail_taper_full_observational_curve_0_2_4_6_10_15_20_25")
+        != [0.375, 0.38, 0.38, 0.3825, 0.3725, 0.3775, 0.3775, 0.385]
+    ):
+        raise ProtocolError("screen-2 archive does not select frozen tail_taper")
+    return expected_hashes
+
+
 def validate_configs(require_manifests: bool) -> dict[str, str]:
     common = load_config(REPO / "configs" / "confirmatory_common.json")
     required_common = {
@@ -199,15 +311,15 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
         "validation_source": "train",
         "validation_indices_path": ".confirmatory/manifests/curve_indices.json",
         "reserved_train_indices_path": ".confirmatory/manifests/train_exclusions.json",
-        "validation_examples": 800,
+        "validation_examples": 400,
         "validation_batch_size": 64,
         "train_examples": 1000,
         "updates": FIXED_UPDATES,
         "min_new_tokens": 64,
-        "eval_every": 5,
+        "eval_every": 2,
         "validation_observational_only": True,
         "require_clean_repository": True,
-        "validation_steps": None,
+        "validation_steps": [2, 4, 6, 10, 15, 20, 25],
         "early_stopping_patience": None,
         "save_every": FIXED_UPDATES,
         "save_total_limit": 1,
@@ -242,19 +354,25 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
                 raise ProtocolError(f"wrong reward_type in {path}")
             if condition in {"jlens", "signflip"}:
                 components = cfg.get("score_components")
-                expected_weight = 1.0 if condition == "jlens" else -1.0
-                if not isinstance(components, list) or len(components) != 1:
-                    raise ProtocolError(f"{path} must have exactly one score component")
-                component = components[0]
-                expected_component = {
-                    "layer": 8,
-                    "start_fraction": 0.5,
-                    "end_fraction": 1.0,
-                    "aggregation": "mean",
-                    "weight": expected_weight,
-                }
-                if component != expected_component:
-                    raise ProtocolError(f"unexpected score component in {path}")
+                direction = 1.0 if condition == "jlens" else -1.0
+                expected_components = [
+                    {
+                        "layer": 8,
+                        "start_fraction": 0.5,
+                        "end_fraction": 0.75,
+                        "aggregation": "mean",
+                        "weight": direction,
+                    },
+                    {
+                        "layer": 8,
+                        "start_fraction": 0.75,
+                        "end_fraction": 1.0,
+                        "aggregation": "mean",
+                        "weight": 0.25 * direction,
+                    },
+                ]
+                if cfg.get("score_stride") != 10 or components != expected_components:
+                    raise ProtocolError(f"unexpected tail_taper components in {path}")
 
             # For a seed, every optimizer/generation/data setting must match.
             comparable = dict(cfg)
@@ -271,7 +389,7 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
     expected_eval = {
         "evaluation_source": "train",
         "evaluation_indices_path": ".confirmatory/manifests/sealed_final_indices.json",
-        "validation_examples": 2100,
+        "validation_examples": 1700,
         "min_new_tokens": 0,
     }
     for key, expected in expected_eval.items():
@@ -279,10 +397,10 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
             raise ProtocolError(f"sealed eval {key!r} is not frozen to {expected!r}")
 
     if require_manifests:
-        if len(load_indices(MANIFEST_DIR / "curve_indices.json")) != 800:
-            raise ProtocolError("curve manifest must contain exactly 800 indices")
-        if len(load_indices(MANIFEST_DIR / "sealed_final_indices.json")) != 2100:
-            raise ProtocolError("sealed-final manifest must contain exactly 2,100 indices")
+        if len(load_indices(MANIFEST_DIR / "curve_indices.json")) != 400:
+            raise ProtocolError("curve manifest must contain exactly 400 indices")
+        if len(load_indices(MANIFEST_DIR / "sealed_final_indices.json")) != 1700:
+            raise ProtocolError("sealed-final manifest must contain exactly 1,700 indices")
 
     return {str(path.relative_to(REPO)): sha256_file(path) for path in all_config_paths()}
 
@@ -390,7 +508,7 @@ def allocation_key(index: int, salt: str = ALLOCATION_SALT) -> bytes:
 def reallocate_v2_parent(
     v2_allocations: dict[str, list[int]],
 ) -> tuple[dict[str, list[int]], list[int]]:
-    """Verify the frozen V2 parent and split only its unopened sealed set."""
+    """Reconstruct the exact V3 allocation from V2's sealed parent."""
     actual_v2_hashes = {
         name: manifest_sha256(indices) for name, indices in v2_allocations.items()
     }
@@ -405,8 +523,10 @@ def reallocate_v2_parent(
             "reconstructed V2 manifests do not match the frozen failed attempt"
         )
 
-    reallocated_sealed = sorted(v2_sealed, key=allocation_key)
-    v3_curve_end = SPLIT_SIZES["curve_indices.json"]
+    reallocated_sealed = sorted(
+        v2_sealed, key=lambda index: allocation_key(index, V3_ALLOCATION_SALT)
+    )
+    v3_curve_end = V3_SPLIT_SIZES["curve_indices.json"]
     allocations: dict[str, list[int]] = {
         "curve_indices.json": reallocated_sealed[:v3_curve_end],
         "sealed_final_indices.json": reallocated_sealed[v3_curve_end:],
@@ -422,12 +542,53 @@ def reallocate_v2_parent(
         name: manifest_sha256(indices) for name, indices in allocations.items()
     }
     if (
-        {name: len(indices) for name, indices in allocations.items()} != SPLIT_SIZES
+        {name: len(indices) for name, indices in allocations.items()}
+        != V3_SPLIT_SIZES
         or reallocated_parent != set(v2_sealed)
         or actual_v3_hashes != V3_MANIFEST_SHA256
     ):
         raise ProtocolError("predeclared V3 reallocation does not exhaust V2 sealed data")
     return allocations, v2_allocations["curve_indices.json"]
+
+
+def reallocate_v3_parent(
+    v3_allocations: dict[str, list[int]],
+) -> tuple[dict[str, list[int]], list[int]]:
+    """Verify V3 exactly and split only its archived-unopened sealed set."""
+    validate_predecessor_archives()
+    actual_v3_hashes = {
+        name: manifest_sha256(indices) for name, indices in v3_allocations.items()
+    }
+    v3_sealed = v3_allocations["sealed_final_indices.json"]
+    if (
+        {name: len(indices) for name, indices in v3_allocations.items()}
+        != V3_SPLIT_SIZES
+        or actual_v3_hashes != V3_MANIFEST_SHA256
+        or canonical_sha256(sorted(v3_sealed)) != V3_SEALED_SET_SHA256
+    ):
+        raise ProtocolError("reconstructed V3 manifests do not match the archived parent")
+
+    ordered = sorted(v3_sealed, key=allocation_key)
+    curve_end = SPLIT_SIZES["curve_indices.json"]
+    allocations = {
+        "curve_indices.json": ordered[:curve_end],
+        "sealed_final_indices.json": ordered[curve_end:],
+        "future_reserve_indices.json": v3_allocations[
+            "future_reserve_indices.json"
+        ],
+    }
+    actual_v4_hashes = {
+        name: manifest_sha256(indices) for name, indices in allocations.items()
+    }
+    if (
+        {name: len(indices) for name, indices in allocations.items()} != SPLIT_SIZES
+        or set(allocations["curve_indices.json"])
+        | set(allocations["sealed_final_indices.json"])
+        != set(v3_sealed)
+        or actual_v4_hashes != V4_MANIFEST_SHA256
+    ):
+        raise ProtocolError("predeclared V4 split does not exhaust V3 sealed data")
+    return allocations, v3_allocations["curve_indices.json"]
 
 
 def prepare() -> None:
@@ -436,6 +597,7 @@ def prepare() -> None:
         raise ProtocolError(
             f"{STATE_DIR} already exists; do not overwrite a prepared protocol"
         )
+    predecessor_archive_hashes = validate_predecessor_archives()
     config_hashes = validate_configs(require_manifests=False)
     artifact_hashes = validate_artifacts()
     historical, v1_historical, dataset_size = reconstruct_historical_indices()
@@ -472,7 +634,8 @@ def prepare() -> None:
         "sealed_final_indices.json": v2_sealed,
         "future_reserve_indices.json": v2_reserve,
     }
-    allocations, retired_v2_curve = reallocate_v2_parent(v2_allocations)
+    v3_allocations, retired_v2_curve = reallocate_v2_parent(v2_allocations)
+    allocations, retired_v3_curve = reallocate_v3_parent(v3_allocations)
 
     MANIFEST_DIR.mkdir(parents=True)
     write_json(MANIFEST_DIR / "historical_exclusions.json", manifest_payload(historical))
@@ -484,9 +647,13 @@ def prepare() -> None:
         MANIFEST_DIR / "retired_v2_curve_indices.json",
         manifest_payload(retired_v2_curve),
     )
+    write_json(
+        MANIFEST_DIR / "retired_v3_curve_indices.json",
+        manifest_payload(retired_v3_curve),
+    )
     for name, indices in allocations.items():
         write_json(MANIFEST_DIR / name, manifest_payload(indices))
-    # All fresh indices and both exposed curve attempts stay out of V3 training.
+    # All fresh indices and every exposed curve attempt stay out of V4 training.
     train_exclusions = sorted(fresh_set | set(retired_v1_curve))
     write_json(
         MANIFEST_DIR / "train_exclusions.json",
@@ -503,10 +670,13 @@ def prepare() -> None:
         "git_commit": commit,
         "allocation_algorithm": ALLOCATION_ALGORITHM,
         "allocation_salt": ALLOCATION_SALT,
+        "v3_allocation_salt": V3_ALLOCATION_SALT,
         "v2_allocation_salt": V2_ALLOCATION_SALT,
         "v2_parent_manifest_sha256": V2_MANIFEST_SHA256,
         "v2_sealed_set_sha256": V2_SEALED_SET_SHA256,
         "predeclared_v3_manifest_sha256": V3_MANIFEST_SHA256,
+        "v3_sealed_set_sha256": V3_SEALED_SET_SHA256,
+        "predeclared_v4_manifest_sha256": V4_MANIFEST_SHA256,
         "dataset": "openai/gsm8k:main",
         "dataset_revision": DATASET_REVISION,
         "dataset_train_rows": dataset_size,
@@ -517,7 +687,9 @@ def prepare() -> None:
             set(retired_v1_curve) & set(historical)
         ),
         "retired_v2_curve_count": len(retired_v2_curve),
+        "retired_v3_curve_count": len(retired_v3_curve),
         "v2_sealed_parent_count": len(v2_sealed),
+        "v3_sealed_parent_count": len(v3_allocations["sealed_final_indices.json"]),
         "v2_reserve_preserved_count": len(v2_reserve),
         "historical_shuffle_rules": HISTORICAL_SHUFFLE_RULES,
         "split_sizes": SPLIT_SIZES,
@@ -526,6 +698,7 @@ def prepare() -> None:
         "seeds": list(SEEDS),
         "config_sha256": config_hashes,
         "artifact_sha256": artifact_hashes,
+        "predecessor_archive_sha256": predecessor_archive_hashes,
         "index_manifest_sha256": manifest_hashes,
     }
     write_json(STATE_PATH, state)
@@ -541,16 +714,21 @@ def load_and_verify_state() -> dict[str, Any]:
         "protocol": PROTOCOL,
         "allocation_algorithm": ALLOCATION_ALGORITHM,
         "allocation_salt": ALLOCATION_SALT,
+        "v3_allocation_salt": V3_ALLOCATION_SALT,
         "v2_allocation_salt": V2_ALLOCATION_SALT,
         "v2_parent_manifest_sha256": V2_MANIFEST_SHA256,
         "v2_sealed_set_sha256": V2_SEALED_SET_SHA256,
         "predeclared_v3_manifest_sha256": V3_MANIFEST_SHA256,
+        "v3_sealed_set_sha256": V3_SEALED_SET_SHA256,
+        "predeclared_v4_manifest_sha256": V4_MANIFEST_SHA256,
         "historically_used_count": 3741,
         "historically_unused_count": 3732,
         "retired_v1_curve_count": 400,
         "retired_v1_curve_historical_overlap": 32,
         "retired_v2_curve_count": 400,
+        "retired_v3_curve_count": 800,
         "v2_sealed_parent_count": 2900,
+        "v3_sealed_parent_count": 2100,
         "v2_reserve_preserved_count": 64,
         "split_sizes": SPLIT_SIZES,
         "curve_gate_steps": list(CURVE_STEPS),
@@ -558,7 +736,7 @@ def load_and_verify_state() -> dict[str, Any]:
         "seeds": list(SEEDS),
     }
     if any(state.get(key) != value for key, value in expected_state.items()):
-        raise ProtocolError("prepared state does not match the frozen V3 protocol")
+        raise ProtocolError("prepared state does not match the frozen V4 protocol")
     if canonical_sha256(state.get("historical_shuffle_rules")) != canonical_sha256(
         HISTORICAL_SHUFFLE_RULES
     ):
@@ -571,6 +749,8 @@ def load_and_verify_state() -> dict[str, Any]:
         raise ProtocolError("a frozen config changed after protocol preparation")
     if state.get("artifact_sha256") != validate_artifacts():
         raise ProtocolError("a frozen artifact changed after protocol preparation")
+    if state.get("predecessor_archive_sha256") != validate_predecessor_archives():
+        raise ProtocolError("a predecessor archive changed after protocol preparation")
     actual_manifest_hashes = {
         str(path.relative_to(REPO)): sha256_file(path)
         for path in sorted(MANIFEST_DIR.glob("*.json"))
@@ -579,9 +759,9 @@ def load_and_verify_state() -> dict[str, Any]:
         raise ProtocolError("an index manifest changed after protocol preparation")
     if any(
         sha256_file(MANIFEST_DIR / name) != expected_hash
-        for name, expected_hash in V3_MANIFEST_SHA256.items()
+        for name, expected_hash in V4_MANIFEST_SHA256.items()
     ):
-        raise ProtocolError("a V3 split does not match its predeclared manifest hash")
+        raise ProtocolError("a V4 split does not match its predeclared manifest hash")
 
     split_sets = {
         name: set(load_indices(MANIFEST_DIR / name)) for name in SPLIT_SIZES
@@ -593,25 +773,31 @@ def load_and_verify_state() -> dict[str, Any]:
                 raise ProtocolError(f"manifest overlap: {left} and {right}")
     retired_v1 = set(load_indices(MANIFEST_DIR / "retired_v1_curve_indices.json"))
     retired_v2 = set(load_indices(MANIFEST_DIR / "retired_v2_curve_indices.json"))
+    retired_v3 = set(load_indices(MANIFEST_DIR / "retired_v3_curve_indices.json"))
     historical = set(load_indices(MANIFEST_DIR / "historical_exclusions.json"))
     train_exclusions = set(load_indices(MANIFEST_DIR / "train_exclusions.json"))
     if any(values & retired_v1 for values in split_sets.values()):
-        raise ProtocolError("a V3 outcome split reuses the exposed V1 curve")
+        raise ProtocolError("a V4 outcome split reuses the exposed V1 curve")
     if any(values & retired_v2 for values in split_sets.values()):
-        raise ProtocolError("a V3 outcome split reuses the exposed V2 curve")
+        raise ProtocolError("a V4 outcome split reuses the exposed V2 curve")
+    if any(values & retired_v3 for values in split_sets.values()):
+        raise ProtocolError("a V4 outcome split reuses the exposed V3 curve")
     if any(values & historical for values in split_sets.values()):
-        raise ProtocolError("a V3 outcome split contains a historically used index")
-    if sum(map(len, split_sets.values())) != 2964:
-        raise ProtocolError("V3 outcome manifests no longer contain 2,964 indices")
+        raise ProtocolError("a V4 outcome split contains a historically used index")
+    if sum(map(len, split_sets.values())) != 2164:
+        raise ProtocolError("V4 outcome manifests no longer contain 2,164 indices")
     if (
         len(historical) != 3741
         or len(retired_v1) != 400
         or len(retired_v2) != 400
+        or len(retired_v3) != 800
         or len(train_exclusions) != 3764
     ):
         raise ProtocolError("historical or retired exclusion counts changed")
     if retired_v2 & retired_v1 or retired_v2 & historical:
         raise ProtocolError("the retired V2 curve is not a fresh, disjoint V2 split")
+    if retired_v3 & (retired_v1 | retired_v2 | historical):
+        raise ProtocolError("the retired V3 curve is not fresh and disjoint")
     if sha256_file(MANIFEST_DIR / "retired_v2_curve_indices.json") != V2_MANIFEST_SHA256[
         "curve_indices.json"
     ]:
@@ -619,16 +805,20 @@ def load_and_verify_state() -> dict[str, Any]:
     if sha256_file(MANIFEST_DIR / "future_reserve_indices.json") != V2_MANIFEST_SHA256[
         "future_reserve_indices.json"
     ]:
-        raise ProtocolError("V3 changed the untouched V2 reserve")
-    v3_reallocated = (
+        raise ProtocolError("V4 changed the untouched reserve")
+    if sha256_file(
+        MANIFEST_DIR / "retired_v3_curve_indices.json"
+    ) != V3_MANIFEST_SHA256["curve_indices.json"]:
+        raise ProtocolError("the retired V3 curve does not match its frozen manifest")
+    v4_reallocated = (
         split_sets["curve_indices.json"] | split_sets["sealed_final_indices.json"]
     )
-    if canonical_sha256(sorted(v3_reallocated)) != V2_SEALED_SET_SHA256:
-        raise ProtocolError("V3 curve/final data do not exactly reallocate V2 sealed data")
+    if canonical_sha256(sorted(v4_reallocated)) != V3_SEALED_SET_SHA256:
+        raise ProtocolError("V4 curve/final data do not exactly reallocate V3 sealed data")
     if train_exclusions != set().union(
-        *split_sets.values(), retired_v1, retired_v2
+        *split_sets.values(), retired_v1, retired_v2, retired_v3
     ):
-        raise ProtocolError("training exclusions do not cover every V3 outcome index")
+        raise ProtocolError("training exclusions do not cover every V4 outcome index")
     return state
 
 
@@ -759,7 +949,7 @@ def render_curve_plot(
     ]
     axis.plot(
         ALL_VALIDATION_STEPS, mean_values, color="#1d4ed8", linewidth=2.5,
-        marker="o", label="ten-seed mean",
+        marker="o", label="eight-seed mean",
     )
     gate_values = [100 * means[str(step)] for step in CURVE_STEPS]
     axis.scatter(
@@ -781,6 +971,8 @@ def render_curve_plot(
 
 
 def compute_curve_gate(write_result: bool = True) -> dict[str, Any]:
+    if write_result and (CURVE_GATE_PATH.exists() or CURVE_PLOT_PATH.exists()):
+        raise ProtocolError("refusing to overwrite the recorded curve gate")
     state = load_and_verify_state()
     per_seed: dict[str, dict[str, float]] = {}
     full_per_seed: dict[str, dict[int, float]] = {}
@@ -797,17 +989,17 @@ def compute_curve_gate(write_result: bool = True) -> dict[str, Any]:
         for step in CURVE_STEPS
     }
     passed = (
-        means["5"] > means["0"]
-        and means["10"] >= means["5"]
-        and means["15"] >= means["10"]
+        means["2"] > means["0"]
+        and means["4"] >= means["2"]
+        and means["6"] >= means["4"]
     )
     result = {
         "protocol": state["protocol"],
         "git_commit": state["git_commit"],
-        "criterion": "mean(step5) > mean(step0), mean(step10) >= mean(step5), mean(step15) >= mean(step10)",
+        "criterion": "mean(step2) > mean(step0), mean(step4) >= mean(step2), mean(step6) >= mean(step4)",
         "predeclared_steps": list(CURVE_STEPS),
         "n_seeds": len(SEEDS),
-        "examples_per_seed": 800,
+        "examples_per_seed": 400,
         "per_seed_exact_match": per_seed,
         "mean_exact_match": means,
         "passed": passed,
@@ -823,6 +1015,34 @@ def compute_curve_gate(write_result: bool = True) -> dict[str, Any]:
     return result
 
 
+def verify_curve_gate() -> dict[str, Any]:
+    """Verify the immutable passed semantic gate before controls can run."""
+    verify_completed_runs(("jlens",))
+    if not CURVE_GATE_PATH.is_file() or not CURVE_PLOT_PATH.is_file():
+        raise ProtocolError("the semantic curve gate has not been recorded")
+    recomputed = compute_curve_gate(write_result=False)
+    stored = json.loads(CURVE_GATE_PATH.read_text())
+    fields = (
+        "protocol",
+        "git_commit",
+        "criterion",
+        "predeclared_steps",
+        "n_seeds",
+        "examples_per_seed",
+        "per_seed_exact_match",
+        "mean_exact_match",
+        "passed",
+    )
+    if any(recomputed.get(field) != stored.get(field) for field in fields):
+        raise ProtocolError("stored curve gate does not match semantic histories")
+    plot = stored.get("curve_plot")
+    if not isinstance(plot, dict) or plot.get("sha256") != sha256_file(CURVE_PLOT_PATH):
+        raise ProtocolError("stored curve plot is missing or changed")
+    if stored.get("passed") is not True:
+        raise ProtocolError("the predeclared semantic curve gate did not pass")
+    return stored
+
+
 def verify_completed_runs(
     conditions: tuple[str, ...] = REQUIRED_CONDITIONS,
 ) -> None:
@@ -834,6 +1054,7 @@ def verify_completed_runs(
     excluded = set(load_indices(MANIFEST_DIR / "train_exclusions.json"))
     matched_train_indices: dict[int, list[int]] = {}
     matched_runtime: dict[str, Any] | None = None
+    matched_source_tree_sha256: str | None = None
 
     for condition in conditions:
         for seed in SEEDS:
@@ -850,6 +1071,10 @@ def verify_completed_runs(
                 or len(manifest["source_tree_sha256"]) != 64
             ):
                 raise ProtocolError(f"invalid source provenance for {condition} seed {seed}")
+            if matched_source_tree_sha256 is None:
+                matched_source_tree_sha256 = manifest["source_tree_sha256"]
+            elif manifest["source_tree_sha256"] != matched_source_tree_sha256:
+                raise ProtocolError("required runs used different source trees")
             runtime = manifest.get("runtime")
             if (
                 not isinstance(runtime, dict)
@@ -916,6 +1141,7 @@ def completed_run_artifact_manifest() -> dict[str, Any]:
     """Fingerprint every run artifact whose identity is frozen at unlock."""
     state = load_and_verify_state()
     runs: dict[str, Any] = {}
+    source_tree_hashes: set[str] = set()
     for condition in REQUIRED_CONDITIONS:
         for seed in SEEDS:
             directory = run_dir(condition, seed)
@@ -936,6 +1162,11 @@ def completed_run_artifact_manifest() -> dict[str, Any]:
             missing = [name for name, path in audit_files.items() if not path.is_file()]
             if missing:
                 raise ProtocolError(f"missing frozen run artifacts for {label}: {missing}")
+            run_manifest = json.loads(audit_files["run_manifest.json"].read_text())
+            source_tree_hash = run_manifest.get("source_tree_sha256")
+            if not isinstance(source_tree_hash, str) or len(source_tree_hash) != 64:
+                raise ProtocolError(f"missing source-tree identity for {label}")
+            source_tree_hashes.add(source_tree_hash)
             runs[label] = {
                 "audit_file_sha256": {
                     name: sha256_file(path) for name, path in sorted(audit_files.items())
@@ -945,20 +1176,19 @@ def completed_run_artifact_manifest() -> dict[str, Any]:
                     directory / "log_history.json"
                 ),
             }
+    if len(source_tree_hashes) != 1:
+        raise ProtocolError("completed runs do not share one source-tree identity")
     return {
         "protocol": state["protocol"],
         "git_commit": state["git_commit"],
+        "source_tree_sha256": next(iter(source_tree_hashes)),
         "runs": runs,
     }
 
 
 def unlock_final() -> None:
     verify_completed_runs()
-    gate = compute_curve_gate(write_result=True)
-    if not gate["passed"]:
-        raise ProtocolError(
-            "the one predeclared curve gate failed; final evaluation remains sealed"
-        )
+    verify_curve_gate()
     state = load_and_verify_state()
     if COMPLETED_RUNS_PATH.exists() or UNLOCK_PATH.exists():
         raise ProtocolError("refusing to overwrite an existing unlock chain")
@@ -970,7 +1200,7 @@ def unlock_final() -> None:
         "curve_gate_sha256": sha256_file(CURVE_GATE_PATH),
         "completed_runs_sha256": sha256_file(COMPLETED_RUNS_PATH),
         "unlocked_at_utc": utc_now(),
-        "reason": "all 20 matched semantic/sign-flip runs completed and the predeclared ten-seed mean curve gate passed",
+        "reason": "all 16 matched semantic/sign-flip runs completed and the predeclared eight-seed mean curve gate passed",
     }
     write_json(UNLOCK_PATH, marker)
     print(json.dumps(marker, indent=2, sort_keys=True))
@@ -1008,7 +1238,7 @@ def verify_unlock() -> None:
 def _evaluation_role(label: str) -> tuple[str, int, bool]:
     if label == "base":
         return "jlens", SEEDS[0], True
-    match = re.fullmatch(r"(jlens|signflip|gsm8k)_seed(\d+)", label)
+    match = re.fullmatch(r"(jlens|signflip)_seed(\d+)", label)
     if match is None:
         raise ProtocolError(f"invalid evaluation label: {label!r}")
     condition, seed_text = match.groups()
@@ -1037,6 +1267,16 @@ def _adapter_identity(path: Path) -> dict[str, Any]:
         "sha256": canonical_sha256(hashes),
         "files": hashes,
     }
+
+
+def completed_training_source_tree_sha256() -> str:
+    if not COMPLETED_RUNS_PATH.is_file():
+        raise ProtocolError("completed-run manifest is missing")
+    completed = json.loads(COMPLETED_RUNS_PATH.read_text())
+    value = completed.get("source_tree_sha256")
+    if not isinstance(value, str) or len(value) != 64:
+        raise ProtocolError("completed-run source-tree identity is invalid")
+    return value
 
 
 def _contains_forbidden_gold_key(value: Any) -> bool:
@@ -1219,8 +1459,8 @@ def verify_evaluation_jsonl(path: Path, label: str) -> None:
     if (
         git_provenance.get("git_commit") != state["git_commit"]
         or git_provenance.get("git_dirty") is not False
-        or not isinstance(git_provenance.get("source_tree_sha256"), str)
-        or len(git_provenance["source_tree_sha256"]) != 64
+        or git_provenance.get("source_tree_sha256")
+        != completed_training_source_tree_sha256()
     ):
         raise ProtocolError(f"{path} was evaluated from different or dirty source")
     model = provenance.get("model", {})
@@ -1310,7 +1550,7 @@ def verify_evaluation_jsonl(path: Path, label: str) -> None:
         raise ProtocolError(f"{path} used the wrong evaluation runtime")
 
 
-def _recompute_final_comparisons() -> tuple[dict[str, Any], dict[str, Any]]:
+def _recompute_final_comparison() -> dict[str, Any]:
     from jlens_rl.paired_eval import (
         compare_multiple_adapters,
         difference_in_differences,
@@ -1334,17 +1574,15 @@ def _recompute_final_comparisons() -> tuple[dict[str, Any], dict[str, Any]]:
         read_jsonl(STATE_DIR / "evals" / f"signflip_seed{seed}.jsonl")
         for seed in SEEDS
     ]
-    semantic = compare_multiple_adapters(
+    result = compare_multiple_adapters(
         base,
         semantic_sets,
         bootstrap_samples=10_000,
         bootstrap_seed=0,
         confidence=0.95,
     )
-    semantic["primary_estimand"] = semantic["comparison"]
-    specificity = dict(semantic)
-    specificity["primary_estimand"] = "difference_in_differences"
-    specificity["difference_in_differences"] = difference_in_differences(
+    result["primary_estimand"] = "difference_in_differences"
+    result["difference_in_differences"] = difference_in_differences(
         base,
         semantic_sets,
         control_sets,
@@ -1352,7 +1590,7 @@ def _recompute_final_comparisons() -> tuple[dict[str, Any], dict[str, Any]]:
         bootstrap_seed=0,
         confidence=0.95,
     )
-    return semantic, specificity
+    return result
 
 
 def final_evaluation_hashes() -> dict[str, str]:
@@ -1369,39 +1607,34 @@ def final_evaluation_hashes() -> dict[str, str]:
 
 def final_report() -> dict[str, Any]:
     verify_unlock()
-    semantic_path = STATE_DIR / "evidence" / "semantic_vs_base.json"
-    specificity_path = STATE_DIR / "evidence" / "semantic_vs_signflip.json"
-    if not semantic_path.is_file() or not specificity_path.is_file():
-        raise ProtocolError("run final-treatment and final-controls before reporting")
-    semantic = json.loads(semantic_path.read_text())
-    specificity = json.loads(specificity_path.read_text())
-    recomputed_semantic, recomputed_specificity = _recompute_final_comparisons()
-    if semantic != recomputed_semantic:
-        raise ProtocolError("semantic paired result does not match frozen evaluations")
-    if specificity != recomputed_specificity:
-        raise ProtocolError("specificity result does not match frozen evaluations")
-    bootstrap = semantic.get("crossed_seed_item_bootstrap", {})
-    sign_test = semantic.get("seed_sign_test", {})
-    specificity_result = specificity.get("difference_in_differences", {})
+    if not SEALED_COMPARISON_PATH.is_file():
+        raise ProtocolError("collect all 17 final evaluations before reporting")
+    comparison = json.loads(SEALED_COMPARISON_PATH.read_text())
+    if comparison != _recompute_final_comparison():
+        raise ProtocolError("sealed comparison does not match frozen evaluations")
+    bootstrap = comparison.get("crossed_seed_item_bootstrap", {})
+    sign_test = comparison.get("seed_sign_test", {})
+    specificity_result = comparison.get("difference_in_differences", {})
     specificity_bootstrap = specificity_result.get("crossed_seed_item_bootstrap", {})
     checks = {
         "curve_gate_passed": bool(json.loads(CURVE_GATE_PATH.read_text()).get("passed")),
-        "mean_accuracy_difference_positive": semantic.get("mean_accuracy_difference", 0) > 0,
+        "mean_accuracy_difference_positive": comparison.get("mean_accuracy_difference", 0) > 0,
         "crossed_ci_excludes_zero": bootstrap.get(
             "mean_accuracy_difference_ci_low", -math.inf
         ) > 0,
-        "at_least_nine_of_ten_seed_effects_positive": (
-            sign_test.get("positive", 0) >= 9
-            and sign_test.get("positive", 0)
-            + sign_test.get("negative", 0)
-            + sign_test.get("tied_excluded", 0)
-            == 10
+        "all_eight_seed_effects_strictly_positive": (
+            sign_test.get("positive", 0) == 8
+            and sign_test.get("negative", 0) == 0
+            and sign_test.get("tied_excluded", 0) == 0
         ),
-        "two_sided_seed_sign_p_below_0_05": sign_test.get(
-            "exact_two_sided_p", 1.0
-        ) < 0.05,
+        "two_sided_seed_sign_p_equals_0_0078125": math.isclose(
+            float(sign_test.get("exact_two_sided_p", 1.0)),
+            0.0078125,
+            rel_tol=0.0,
+            abs_tol=0.0,
+        ),
         "signflip_specificity_report_present": (
-            specificity.get("primary_estimand") == "difference_in_differences"
+            comparison.get("primary_estimand") == "difference_in_differences"
         ),
         "signflip_specificity_mean_positive": (
             specificity_result.get("mean_difference_in_differences", 0) > 0
@@ -1416,11 +1649,10 @@ def final_report() -> dict[str, Any]:
     }
     result = {
         "protocol": PROTOCOL,
-        "criterion": "predeclared curve plus at least nine of ten positive semantic-vs-base seeds, crossed 95% CIs above zero for semantic-vs-base and semantic-vs-signflip, and exact two-sided seed sign p < 0.05",
+        "criterion": "predeclared curve plus all eight positive semantic-vs-base seeds (exact two-sided sign p=0.0078125) and crossed 95% lower bounds above zero for semantic-vs-base and semantic-vs-signflip",
         "checks": checks,
         "passed": all(checks.values()),
-        "semantic_vs_base_sha256": sha256_file(semantic_path),
-        "semantic_vs_signflip_sha256": sha256_file(specificity_path),
+        "sealed_comparison_sha256": sha256_file(SEALED_COMPARISON_PATH),
         "completed_runs_sha256": sha256_file(COMPLETED_RUNS_PATH),
         "evaluation_jsonl_sha256": final_evaluation_hashes(),
         "reported_at_utc": utc_now(),
@@ -1436,7 +1668,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "command",
         choices=(
-            "prepare", "verify", "curve", "verify-runs", "unlock",
+            "prepare", "verify", "curve", "verify-curve", "verify-runs", "unlock",
             "verify-semantic", "verify-unlock", "verify-eval", "report",
         ),
     )
@@ -1460,10 +1692,13 @@ def main() -> None:
                 raise ProtocolError("predeclared curve gate failed")
         elif args.command == "verify-runs":
             verify_completed_runs()
-            print("all 20 required fixed-horizon runs match the frozen protocol")
+            print("all 16 required fixed-horizon runs match the frozen protocol")
+        elif args.command == "verify-curve":
+            result = verify_curve_gate()
+            print(json.dumps(result, indent=2, sort_keys=True))
         elif args.command == "verify-semantic":
             verify_completed_runs(("jlens",))
-            print("all ten semantic fixed-horizon runs match the frozen protocol")
+            print("all eight semantic fixed-horizon runs match the frozen protocol")
         elif args.command == "unlock":
             unlock_final()
         elif args.command == "verify-unlock":

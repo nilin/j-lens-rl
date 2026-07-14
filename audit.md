@@ -690,3 +690,56 @@ artifact checks. No correctness-reward control is on the critical path.
 The current research conclusion is therefore unchanged: the J-only optimizer
 path is verified, but reliable or significant evaluation improvement has not
 yet been demonstrated.
+
+### Screen-2 resolution and confirmatory v4 implementation
+
+The precommitted `0/2/4/6` screen gate resolved as follows:
+
+| Priority | Reward | 0 | 2 | 4 | 6 | Gate |
+|---:|---|---:|---:|---:|---:|:---:|
+| 1 | `ultradense5` | .3750 | .3875 | .3700 | .3675 | fail |
+| 2 | `tail_taper` | .3750 | .3800 | .3800 | .3825 | pass |
+| 3 | `tempered_delta` | .3750 | .3575 | .3575 | .3775 | fail |
+| 4 | `layer_shrink` | .3750 | .3675 | .3600 | .3800 | fail |
+
+The frozen first-passing-priority rule therefore selects `tail_taper`; effect
+size and later nodes do not alter that decision. Its full observational curve
+at `0/2/4/6/10/15/20/25` is
+`.3750/.3800/.3800/.3825/.3725/.3775/.3775/.3850`. The decline at step 10 is
+outside the fixed candidate-selection gate and is disclosed, not silently
+discarded. This retired-development result is still not significant evidence.
+
+V4 was implemented in the isolated `/j-lens-v4` clone without touching a live
+Volume or reading any sealed outcome. Preparation now requires byte-exact
+archives of both screen selection and V3 closeout. The closeout records V3's
+`curve_failed` status, ten semantic-only run labels, absence of `evals/`,
+absence of an unlock, and an evidence directory containing only the failed
+curve gate and plot. Both archive hashes are pinned in code and copied into
+prepared state.
+
+The allocator reconstructs V3 and verifies the unopened parent file hash
+`84da0c0472b4442b4f35406d1b1fbd3b956803e5f19bf51fc02f6db013224f7b`
+and sorted-set hash
+`875334925160d6c0c49dd8cf1523e1aeb081fd90f6e4b08611eccb8394dbe4d5`.
+It then deterministically produces the predeclared 400-item curve hash
+`ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1`
+and 1,700-item final hash
+`acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3`,
+retires V3's 800 curve rows, and preserves the 64-item reserve unchanged.
+
+The frozen V4 treatment is stride-10 layer-8 `tail_taper` with weights
+`1/.25`; the control exactly negates both weights. Seeds are 159--166, all
+runs end at update 25, and validation nodes are
+`0/2/4/6/10/15/20/25`. Sign-flip workers independently verify the stored
+passed `0/2/4/6` gate before training. All 16 run manifests must share one
+non-null source-tree fingerprint. Final evaluators must use that same
+fingerprint.
+
+After unlock, Modal submits one immutable 17-label collection (base, all eight
+semantic, all eight sign flips), capped at eight L40S workers. It performs no
+semantic-only sealed analysis or decision before the complete fixed collection
+finishes. Acceptance requires all eight semantic effects strictly positive
+(ties fail; exact two-sided sign `p=.0078125`) and crossed 95% lower bounds
+above zero for both semantic-minus-base and semantic-minus-sign-flip, in
+addition to the mean, curve, record, artifact, runtime, and provenance gates.
+V4 is frozen but not launched by this implementation step.

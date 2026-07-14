@@ -1,0 +1,21 @@
+{
+  "base": "confirmatory_jlens_seed159.json",
+  "score_components": [
+    {
+      "layer": 8,
+      "start_fraction": 0.5,
+      "end_fraction": 0.75,
+      "aggregation": "mean",
+      "weight": -1
+    },
+    {
+      "layer": 8,
+      "start_fraction": 0.75,
+      "end_fraction": 1.0,
+      "aggregation": "mean",
+      "weight": -0.25
+    }
+  ],
+  "run_name": "confirm-v4-jlens-solved-signflip-seed159",
+  "output_dir": ".confirmatory/runs/signflip_seed159"
+}

@@ -1,0 +1,58 @@
+{
+  "app_id": "ap-HF5YGgsdlh2D6m9qELb0D1",
+  "attempt_stage": "curve_failed",
+  "attempt_status_updated_at_utc": "2026-07-14T04:08:23Z",
+  "curve": {
+    "examples_per_seed": 800,
+    "mean_exact_match": {
+      "0": 0.435,
+      "5": 0.42125,
+      "10": 0.422375,
+      "15": 0.4185
+    },
+    "passed": false,
+    "plot_sha256": "a1fdc390f4b4c6e9923f639a760798b6e206d5711c5942f22a172bb0043f8d95",
+    "steps": [
+      0,
+      5,
+      10,
+      15
+    ]
+  },
+  "final_evaluation_labels": [],
+  "final_unlocked_present": false,
+  "git_commit": "a617b59f20c84172454b7cd80b9668535f11be8f",
+  "protocol": "j-lens-rl-confirmatory-v3",
+  "sealed_final_manifest_sha256": "84da0c0472b4442b4f35406d1b1fbd3b956803e5f19bf51fc02f6db013224f7b",
+  "sealed_final_sorted_set_sha256": "875334925160d6c0c49dd8cf1523e1aeb081fd90f6e4b08611eccb8394dbe4d5",
+  "snapshot_inventory": {
+    "evidence_entries": [
+      "curve.png",
+      "curve_gate.json"
+    ],
+    "root_entries": [
+      "attempt_claim.json",
+      "attempt_status.json",
+      "evidence",
+      "manifests",
+      "protocol_state.json",
+      "runs"
+    ],
+    "semantic_run_labels": [
+      "jlens_seed148",
+      "jlens_seed149",
+      "jlens_seed150",
+      "jlens_seed151",
+      "jlens_seed152",
+      "jlens_seed153",
+      "jlens_seed154",
+      "jlens_seed155",
+      "jlens_seed156",
+      "jlens_seed157"
+    ]
+  },
+  "signflip_run_labels": [],
+  "source_tree_sha256": "f888e27210cf883edd6eee2dcda5dccd8813852eebc0933362ea58502b22770b",
+  "stopped_at_utc": "2026-07-14T04:09:37Z",
+  "volume": "j-lens-rl-confirmatory-v3-20260714a"
+}

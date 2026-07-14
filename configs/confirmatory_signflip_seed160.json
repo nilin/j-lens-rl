@@ -1,0 +1,6 @@
+{
+  "base": "confirmatory_signflip_seed159.json",
+  "seed": 160,
+  "run_name": "confirm-v4-jlens-solved-signflip-seed160",
+  "output_dir": ".confirmatory/runs/signflip_seed160"
+}

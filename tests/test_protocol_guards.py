@@ -107,17 +107,26 @@ def test_protocol_verifies_labeled_evaluation_contract(monkeypatch, tmp_path):
     sealed_manifest = manifest_dir / "sealed_final_indices.json"
     sealed_manifest.write_text(json.dumps({"indices": [7]}))
     eval_config_path = config_dir / "confirmatory_sealed_eval.json"
-    experiment_config_path = config_dir / "confirmatory_jlens_seed148.json"
+    experiment_config_path = config_dir / "confirmatory_jlens_seed159.json"
     eval_config_path.write_text("{}")
     experiment_config_path.write_text("{}")
 
-    score_components = [{
-        "layer": 8,
-        "start_fraction": 0.5,
-        "end_fraction": 1.0,
-        "aggregation": "mean",
-        "weight": 1.0,
-    }]
+    score_components = [
+        {
+            "layer": 8,
+            "start_fraction": 0.5,
+            "end_fraction": 0.75,
+            "aggregation": "mean",
+            "weight": 1.0,
+        },
+        {
+            "layer": 8,
+            "start_fraction": 0.75,
+            "end_fraction": 1.0,
+            "aggregation": "mean",
+            "weight": 0.25,
+        },
+    ]
     eval_config = {"kind": "sealed"}
     experiment_config = {"score_components": score_components}
     common = {"lens_sha256": "1" * 64, "calibration_sha256": "2" * 64}
@@ -151,6 +160,11 @@ def test_protocol_verifies_labeled_evaluation_contract(monkeypatch, tmp_path):
             "gsm8k_reward": lambda completion, answer: 1.0,
             "decode_completion": lambda token_ids: "reasoning #### 2",
         },
+    )
+    monkeypatch.setattr(
+        protocol,
+        "completed_training_source_tree_sha256",
+        lambda: "5" * 64,
     )
 
     def fake_load_config(path):
@@ -208,7 +222,7 @@ def test_protocol_verifies_labeled_evaluation_contract(monkeypatch, tmp_path):
                 "source": "explicit",
             },
             "experiment": {
-                "training_seed": 148,
+                "training_seed": 159,
                 "reward_type": "jlens",
                 "target_words": ["solved"],
                 "score_components": score_components,
@@ -260,32 +274,35 @@ def test_protocol_verifies_labeled_evaluation_contract(monkeypatch, tmp_path):
     with pytest.raises(protocol.ProtocolError, match="evaluation role"):
         protocol.verify_evaluation_jsonl(output, "base")
 
+    record["provenance"]["run_label"] = "base"
+    record["provenance"]["git"]["source_tree_sha256"] = "6" * 64
+    output.write_text(json.dumps(record) + "\n")
+    with pytest.raises(protocol.ProtocolError, match="different or dirty source"):
+        protocol.verify_evaluation_jsonl(output, "base")
+
 
 def test_acceptance_report_requires_signflip_specificity(monkeypatch, tmp_path):
     protocol = _load_protocol_module()
     state_dir = tmp_path / ".confirmatory"
     evidence = state_dir / "evidence"
     evidence.mkdir(parents=True)
-    semantic_path = evidence / "semantic_vs_base.json"
-    specificity_path = evidence / "semantic_vs_signflip.json"
+    comparison_path = evidence / "sealed_comparison.json"
     curve_path = evidence / "curve_gate.json"
     curve_plot = evidence / "curve.png"
     completed_runs = evidence / "completed_runs.json"
     acceptance = evidence / "acceptance.json"
 
-    semantic = {
+    comparison = {
         "mean_accuracy_difference": 0.02,
         "crossed_seed_item_bootstrap": {
             "mean_accuracy_difference_ci_low": 0.001,
         },
         "seed_sign_test": {
-            "positive": 9,
-            "negative": 1,
+            "positive": 8,
+            "negative": 0,
             "tied_excluded": 0,
-            "exact_two_sided_p": 0.021484375,
+            "exact_two_sided_p": 0.0078125,
         },
-    }
-    specificity = {
         "primary_estimand": "difference_in_differences",
         "difference_in_differences": {
             "mean_difference_in_differences": 0.01,
@@ -294,8 +311,7 @@ def test_acceptance_report_requires_signflip_specificity(monkeypatch, tmp_path):
             },
         },
     }
-    semantic_path.write_text(json.dumps(semantic))
-    specificity_path.write_text(json.dumps(specificity))
+    comparison_path.write_text(json.dumps(comparison))
     curve_path.write_text(json.dumps({"passed": True}))
     curve_plot.write_bytes(b"png")
     completed_runs.write_text("{}")
@@ -304,11 +320,12 @@ def test_acceptance_report_requires_signflip_specificity(monkeypatch, tmp_path):
     monkeypatch.setattr(protocol, "CURVE_PLOT_PATH", curve_plot)
     monkeypatch.setattr(protocol, "COMPLETED_RUNS_PATH", completed_runs)
     monkeypatch.setattr(protocol, "ACCEPTANCE_PATH", acceptance)
+    monkeypatch.setattr(protocol, "SEALED_COMPARISON_PATH", comparison_path)
     monkeypatch.setattr(protocol, "verify_unlock", lambda: None)
     monkeypatch.setattr(
         protocol,
-        "_recompute_final_comparisons",
-        lambda: (semantic, specificity),
+        "_recompute_final_comparison",
+        lambda: comparison,
     )
     monkeypatch.setattr(
         protocol,
@@ -318,53 +335,80 @@ def test_acceptance_report_requires_signflip_specificity(monkeypatch, tmp_path):
     assert protocol.final_report()["passed"] is True
 
     acceptance.unlink()
-    semantic["seed_sign_test"] = {
-        "positive": 8,
-        "negative": 2,
+    comparison["seed_sign_test"] = {
+        "positive": 7,
+        "negative": 1,
         "tied_excluded": 0,
-        "exact_two_sided_p": 0.109375,
+        "exact_two_sided_p": 0.0703125,
     }
-    semantic_path.write_text(json.dumps(semantic))
+    comparison_path.write_text(json.dumps(comparison))
     assert protocol.final_report()["passed"] is False
 
     acceptance.unlink()
-    semantic["seed_sign_test"] = {
-        "positive": 9,
-        "negative": 1,
+    comparison["seed_sign_test"] = {
+        "positive": 8,
+        "negative": 0,
         "tied_excluded": 0,
-        "exact_two_sided_p": 0.021484375,
+        "exact_two_sided_p": 0.0078125,
     }
-    semantic_path.write_text(json.dumps(semantic))
-    specificity["difference_in_differences"]["crossed_seed_item_bootstrap"][
+    comparison["difference_in_differences"]["crossed_seed_item_bootstrap"][
         "mean_difference_in_differences_ci_low"
     ] = -0.001
-    specificity_path.write_text(json.dumps(specificity))
+    comparison_path.write_text(json.dumps(comparison))
     assert protocol.final_report()["passed"] is False
 
     modal_source = (Path(__file__).resolve().parents[1] / "modal_experiments.py").read_text()
     assert 'evidence_dir / "acceptance.json"' in modal_source
     assert "acceptance_report.json" not in modal_source
+    assert 'output = evidence_dir / "sealed_comparison.json"' in modal_source
+    assert "semantic_result" not in modal_source
     assert "batch_upload(force=False)" in modal_source
     assert "batch_upload(force=True)" not in modal_source
 
 
-def test_v3_allocation_retires_v2_curve_and_reallocates_only_sealed_parent():
+def test_v4_protocol_freezes_tail_taper_and_exact_data_firewall():
     protocol = _load_protocol_module()
     assert (42, 1000, ((7000, 7200),)) in protocol.HISTORICAL_SHUFFLE_RULES
     assert protocol.SPLIT_SIZES == {
+        "curve_indices.json": 400,
+        "sealed_final_indices.json": 1700,
+        "future_reserve_indices.json": 64,
+    }
+    assert protocol.V3_SPLIT_SIZES == {
         "curve_indices.json": 800,
         "sealed_final_indices.json": 2100,
         "future_reserve_indices.json": 64,
     }
-    assert protocol.SEEDS == tuple(range(148, 158))
-    assert protocol.PROTOCOL == "j-lens-rl-confirmatory-v3"
+    assert protocol.SEEDS == tuple(range(159, 167))
+    assert protocol.PROTOCOL == "j-lens-rl-confirmatory-v4"
+    assert protocol.CURVE_STEPS == (0, 2, 4, 6)
+    assert protocol.ALL_VALIDATION_STEPS == (0, 2, 4, 6, 10, 15, 20, 25)
     common = protocol.load_config(
         Path(__file__).resolve().parents[1] / "configs/confirmatory_common.json"
     )
     assert common["lr_scheduler_type"] == "constant"
     assert common["warmup_steps"] == 0
     assert common["warmup_ratio"] == 0.0
-    assert len(protocol.validate_configs(require_manifests=False)) == 23
+    assert common["score_stride"] == 10
+    assert common["validation_examples"] == 400
+    assert common["validation_steps"] == [2, 4, 6, 10, 15, 20, 25]
+    assert common["score_components"] == [
+        {
+            "layer": 8,
+            "start_fraction": 0.5,
+            "end_fraction": 0.75,
+            "aggregation": "mean",
+            "weight": 1.0,
+        },
+        {
+            "layer": 8,
+            "start_fraction": 0.75,
+            "end_fraction": 1.0,
+            "aggregation": "mean",
+            "weight": 0.25,
+        },
+    ]
+    assert len(protocol.validate_configs(require_manifests=False)) == 18
     train_source = (
         Path(__file__).resolve().parents[1] / "src/jlens_rl/train.py"
     ).read_text()
@@ -381,9 +425,40 @@ def test_v3_allocation_retires_v2_curve_and_reallocates_only_sealed_parent():
         "sealed_final_indices.json": "84da0c0472b4442b4f35406d1b1fbd3b956803e5f19bf51fc02f6db013224f7b",
         "future_reserve_indices.json": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
     }
+    assert protocol.V3_SEALED_SET_SHA256 == (
+        "875334925160d6c0c49dd8cf1523e1aeb081fd90f6e4b08611eccb8394dbe4d5"
+    )
+    assert protocol.V4_MANIFEST_SHA256 == {
+        "curve_indices.json": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+        "sealed_final_indices.json": "acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3",
+        "future_reserve_indices.json": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+    }
+    assert protocol.validate_predecessor_archives() == {
+        "protocol_archive/v3_closeout.json": protocol.V3_CLOSEOUT_SHA256,
+        "protocol_archive/screen2_selection.json": protocol.SCREEN2_SELECTION_SHA256,
+    }
 
 
-def test_v3_reallocation_preserves_reserve_and_rejects_parent_tampering(monkeypatch):
+def test_v4_predecessor_archive_hashes_fail_closed(monkeypatch, tmp_path):
+    protocol = _load_protocol_module()
+    archive_dir = tmp_path / "protocol_archive"
+    archive_dir.mkdir()
+    source_dir = Path(__file__).resolve().parents[1] / "protocol_archive"
+    closeout = archive_dir / "v3_closeout.json"
+    selection = archive_dir / "screen2_selection.json"
+    closeout.write_text((source_dir / closeout.name).read_text())
+    selection.write_text((source_dir / selection.name).read_text())
+    monkeypatch.setattr(protocol, "REPO", tmp_path)
+    monkeypatch.setattr(protocol, "V3_CLOSEOUT_PATH", closeout)
+    monkeypatch.setattr(protocol, "SCREEN2_SELECTION_PATH", selection)
+    protocol.validate_predecessor_archives()
+
+    closeout.write_text(closeout.read_text() + "\n")
+    with pytest.raises(protocol.ProtocolError, match="missing or changed"):
+        protocol.validate_predecessor_archives()
+
+
+def test_v4_reallocation_preserves_reserve_and_rejects_parent_tampering(monkeypatch):
     protocol = _load_protocol_module()
     parent = {
         "curve_indices.json": [10, 11],
@@ -392,17 +467,17 @@ def test_v3_reallocation_preserves_reserve_and_rejects_parent_tampering(monkeypa
     }
     monkeypatch.setattr(
         protocol,
-        "V2_SPLIT_SIZES",
+        "V3_SPLIT_SIZES",
         {name: len(indices) for name, indices in parent.items()},
     )
     monkeypatch.setattr(
         protocol,
-        "V2_MANIFEST_SHA256",
+        "V3_MANIFEST_SHA256",
         {name: protocol.manifest_sha256(indices) for name, indices in parent.items()},
     )
     monkeypatch.setattr(
         protocol,
-        "V2_SEALED_SET_SHA256",
+        "V3_SEALED_SET_SHA256",
         protocol.canonical_sha256(sorted(parent["sealed_final_indices.json"])),
     )
     monkeypatch.setattr(
@@ -424,14 +499,15 @@ def test_v3_reallocation_preserves_reserve_and_rejects_parent_tampering(monkeypa
     }
     monkeypatch.setattr(
         protocol,
-        "V3_MANIFEST_SHA256",
+        "V4_MANIFEST_SHA256",
         {
             name: protocol.manifest_sha256(indices)
             for name, indices in expected_allocations.items()
         },
     )
 
-    allocations, retired_curve = protocol.reallocate_v2_parent(parent)
+    monkeypatch.setattr(protocol, "validate_predecessor_archives", lambda: {})
+    allocations, retired_curve = protocol.reallocate_v3_parent(parent)
     assert retired_curve == parent["curve_indices.json"]
     assert allocations["future_reserve_indices.json"] == [30]
     assert (
@@ -440,8 +516,8 @@ def test_v3_reallocation_preserves_reserve_and_rejects_parent_tampering(monkeypa
     ) == set(parent["sealed_final_indices.json"])
 
     tampered = {**parent, "sealed_final_indices.json": [20, 21, 22, 23, 99]}
-    with pytest.raises(protocol.ProtocolError, match="frozen failed attempt"):
-        protocol.reallocate_v2_parent(tampered)
+    with pytest.raises(protocol.ProtocolError, match="archived parent"):
+        protocol.reallocate_v3_parent(tampered)
 
 
 def test_training_behavior_log_rejects_extrinsic_reward(monkeypatch, tmp_path):
@@ -516,6 +592,8 @@ def test_unlock_chain_detects_adapter_mutation(monkeypatch, tmp_path):
                     for step in range(1, 26)
                 ]
                 path.write_text(json.dumps(rows))
+            elif relative == "run_manifest.json":
+                path.write_text(json.dumps({"source_tree_sha256": "5" * 64}))
             else:
                 path.write_text(relative)
 
@@ -555,6 +633,12 @@ def test_unlock_chain_detects_adapter_mutation(monkeypatch, tmp_path):
     )
     monkeypatch.setattr(protocol, "compute_curve_gate", lambda write_result=False: gate)
     protocol.verify_unlock()
+
+    signflip_manifest = state_dir / "runs/signflip_seed148/run_manifest.json"
+    signflip_manifest.write_text(json.dumps({"source_tree_sha256": "6" * 64}))
+    with pytest.raises(protocol.ProtocolError, match="one source-tree identity"):
+        protocol.completed_run_artifact_manifest()
+    signflip_manifest.write_text(json.dumps({"source_tree_sha256": "5" * 64}))
 
     adapter = state_dir / "runs/jlens_seed148/final/adapter_model.safetensors"
     adapter.write_text("mutated")

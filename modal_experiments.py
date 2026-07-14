@@ -1,10 +1,10 @@
-"""Run the frozen confirmatory protocol on Modal with at most five GPUs.
+"""Run the frozen confirmatory protocol on Modal with at most eight GPUs.
 
 Prepare and commit the local protocol before launching. The default action
 uploads only the hashed protocol state/manifests, then spawns a durable remote
 orchestrator. It runs semantic seeds first, applies the fixed curve gate,
-runs sign-flipped controls only on a pass, and finally performs the sealed
-paired evaluation and machine significance report.
+runs sign-flipped controls only on a pass, and finally submits one immutable
+17-label sealed-evaluation batch before any outcome analysis.
 """
 
 from __future__ import annotations
@@ -23,12 +23,17 @@ import modal
 LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = REMOTE_REPO / ".confirmatory"
-VOLUME_NAME = "j-lens-rl-confirmatory-v3-20260714a"
-SEEDS = tuple(range(148, 158))
-MAX_GPU_CONTAINERS = 5
+VOLUME_NAME = "j-lens-rl-confirmatory-v4-20260714a"
+SEEDS = tuple(range(159, 167))
+MAX_GPU_CONTAINERS = 8
 GPU_TYPE = "L40S"
+SEALED_LABELS = (
+    "base",
+    *(f"jlens_seed{seed}" for seed in SEEDS),
+    *(f"signflip_seed{seed}" for seed in SEEDS),
+)
 
-app = modal.App("j-lens-rl-confirmatory-v3")
+app = modal.App("j-lens-rl-confirmatory-v4")
 state_volume = modal.Volume.from_name(
     VOLUME_NAME,
     create_if_missing=True,
@@ -213,6 +218,8 @@ def train_config(condition: str, seed: int) -> dict[str, Any]:
         raise ValueError("training input is outside the frozen protocol")
     state_volume.reload()
     _protocol("verify")
+    if condition == "signflip":
+        _protocol("verify-curve")
     config = f"configs/confirmatory_{condition}_seed{seed}.json"
     try:
         _run(
@@ -244,12 +251,7 @@ def train_config(condition: str, seed: int) -> dict[str, Any]:
     volumes={REMOTE_STATE: state_volume},
 )
 def evaluate_label(label: str) -> dict[str, Any]:
-    allowed = {"base"} | {
-        f"{condition}_seed{seed}"
-        for condition in ("jlens", "signflip")
-        for seed in SEEDS
-    }
-    if label not in allowed:
+    if label not in SEALED_LABELS:
         raise ValueError("evaluation label is outside the frozen protocol")
     state_volume.reload()
     _protocol("verify-unlock")
@@ -259,7 +261,7 @@ def evaluate_label(label: str) -> dict[str, Any]:
         return {"label": label, "reused_verified_output": True}
 
     if label == "base":
-        experiment_config = "configs/confirmatory_jlens_seed148.json"
+        experiment_config = "configs/confirmatory_jlens_seed159.json"
         adapter_args: list[str] = []
     else:
         condition, seed_text = label.rsplit("_seed", 1)
@@ -339,54 +341,38 @@ def _comparison_args(labels: Iterable[str], option: str) -> list[str]:
     retries=0,
     volumes={REMOTE_STATE: state_volume},
 )
-def analyze_final(stage: str) -> dict[str, Any]:
-    if stage not in {"semantic", "specificity"}:
-        raise ValueError("unsupported analysis stage")
+def analyze_final() -> dict[str, Any]:
     state_volume.reload()
     base = str(REMOTE_STATE / "evals/base.jsonl")
     semantic_labels = [f"jlens_seed{seed}" for seed in SEEDS]
     evidence_dir = REMOTE_STATE / "evidence"
     evidence_dir.mkdir(parents=True, exist_ok=True)
-    if stage == "semantic":
-        output = evidence_dir / "semantic_vs_base.json"
-        command = [
-            sys.executable,
-            "-m",
-            "jlens_rl.paired_eval",
-            "--base-jsonl",
-            base,
-            *_comparison_args(semantic_labels, "--adapter-jsonl"),
-            "--output",
-            str(output),
-        ]
-    else:
-        output = evidence_dir / "semantic_vs_signflip.json"
-        command = [
-            sys.executable,
-            "-m",
-            "jlens_rl.paired_eval",
-            "--base-jsonl",
-            base,
-            *_comparison_args(semantic_labels, "--adapter-jsonl"),
-            *_comparison_args(
-                [f"signflip_seed{seed}" for seed in SEEDS],
-                "--control-jsonl",
-            ),
-            "--output",
-            str(output),
-        ]
+    output = evidence_dir / "sealed_comparison.json"
+    command = [
+        sys.executable,
+        "-m",
+        "jlens_rl.paired_eval",
+        "--base-jsonl",
+        base,
+        *_comparison_args(semantic_labels, "--adapter-jsonl"),
+        *_comparison_args(
+            [f"signflip_seed{seed}" for seed in SEEDS],
+            "--control-jsonl",
+        ),
+        "--output",
+        str(output),
+    ]
     if output.exists():
         raise FileExistsError(f"refusing to overwrite analysis: {output}")
-    _run(command)
-    if stage == "specificity":
+    try:
+        _run(command)
         report_process = _protocol("report", check=False)
         report_path = evidence_dir / "acceptance.json"
         report = json.loads(report_path.read_text())
         report["returncode"] = report_process.returncode
-        state_volume.commit()
         return report
-    state_volume.commit()
-    return json.loads(output.read_text())
+    finally:
+        state_volume.commit()
 
 
 def _mapped_results(function: Any, *inputs: Iterable[Any]) -> list[Any]:
@@ -449,13 +435,8 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
         state_volume.reload()
         _record_attempt_status(claim_id, "sealed_evaluation")
         state_volume.commit()
-        semantic_labels = ["base", *(f"jlens_seed{seed}" for seed in SEEDS)]
-        semantic_evals = _mapped_results(evaluate_label, semantic_labels)
-        semantic_result = analyze_final.remote("semantic")
-
-        control_labels = [f"signflip_seed{seed}" for seed in SEEDS]
-        control_evals = _mapped_results(evaluate_label, control_labels)
-        report = analyze_final.remote("specificity")
+        sealed_evaluations = _mapped_results(evaluate_label, SEALED_LABELS)
+        report = analyze_final.remote()
         final_stage = (
             "complete"
             if report.get("passed") and report.get("returncode") == 0
@@ -469,9 +450,7 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
             "curve": gate,
             "semantic_training": semantic,
             "control_training": controls,
-            "semantic_evaluations": semantic_evals,
-            "control_evaluations": control_evals,
-            "semantic_result": semantic_result,
+            "sealed_evaluations": sealed_evaluations,
             "acceptance_report": report,
         }
     except BaseException as error:

@@ -1,0 +1,70 @@
+{
+  "app_id": "ap-dt7cQSw2be0iYFolyt2nQp",
+  "criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+  "fixed_priority": [
+    {
+      "exact_match_0_2_4_6": [
+        0.375,
+        0.3875,
+        0.37,
+        0.3675
+      ],
+      "passed": false,
+      "rank": 1,
+      "variant": "ultradense5"
+    },
+    {
+      "exact_match_0_2_4_6": [
+        0.375,
+        0.38,
+        0.38,
+        0.3825
+      ],
+      "passed": true,
+      "rank": 2,
+      "variant": "tail_taper"
+    },
+    {
+      "exact_match_0_2_4_6": [
+        0.375,
+        0.3575,
+        0.3575,
+        0.3775
+      ],
+      "passed": false,
+      "rank": 3,
+      "variant": "tempered_delta"
+    },
+    {
+      "exact_match_0_2_4_6": [
+        0.375,
+        0.3675,
+        0.36,
+        0.38
+      ],
+      "passed": false,
+      "rank": 4,
+      "variant": "layer_shrink"
+    }
+  ],
+  "screen_commit": "56280f0a8f2da1eb3a4c6106f49b7cacca6a6489",
+  "selected_variant": "tail_taper",
+  "selection_rule": "first passing variant in the precommitted priority order",
+  "steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "tail_taper_full_observational_curve_0_2_4_6_10_15_20_25": [
+    0.375,
+    0.38,
+    0.38,
+    0.3825,
+    0.3725,
+    0.3775,
+    0.3775,
+    0.385
+  ],
+  "volume": "j-lens-rl-exploratory-screen-v2-20260714a"
+}

@@ -1,154 +1,81 @@
 # Experiment handoff
 
-Updated: 2026-07-14 UTC. The next agent should execute, not redesign,
-[CONFIRMATORY_PROTOCOL.md](CONFIRMATORY_PROTOCOL.md).
+Updated: 2026-07-14 UTC. Execute the frozen V4 protocol in
+[CONFIRMATORY_PROTOCOL.md](CONFIRMATORY_PROTOCOL.md); do not redesign it.
 
 ## Current conclusion
 
-The code now supports a genuinely J-only task-reward path: gold answers are
-removed from J training rows and only the J reward callable is registered.
-The repository does **not** yet contain statistically significant evidence
-that this improves held-out GSM8K accuracy. Earlier gains of two or three
-official-test answers were selected through adaptive test reuse and are
-exploratory. The clean affect/error searches were negative.
+The optimizer path is genuinely J-only, but statistically significant GSM8K
+improvement has not been demonstrated. V2 and V3 are valid negative curve-gate
+results. V3's final 2,100 outcomes were not opened. Preserve those negatives.
 
-Do not describe an internal-score increase, a selected 200-example peak, or an
-old official-test score as success. Preserve all negative outcomes.
+Screen 2 selected `tail_taper` on already retired development data by a
+precommitted priority rule. Its selection curve was
+`.375/.380/.380/.3825` at `0/2/4/6`. This is candidate-selection evidence, not
+significance. The archived hashes and all four candidate curves are in
+`protocol_archive/` and are required by preparation.
 
-## Your assignment
+## Frozen assignment
 
-Use the fixed v3 candidate and get the predeclared evidence as quickly as
-hardware safely allows:
+- semantic J-only seeds 159--166;
+- exact matched sign flips for seeds 159--166, only after the semantic gate;
+- constant `3e-6`, zero warmup, fixed step 25;
+- observational curve nodes `0/2/4/6/10/15/20/25`;
+- gate only `EM2 > EM0`, `EM4 >= EM2`, `EM6 >= EM4` on the eight-seed mean;
+- one immutable post-unlock batch of 17 sealed labels on 1,700 examples;
+- all 8/8 semantic effects positive (`p=.0078125`) plus both crossed 95%
+  lower bounds above zero and the existing mean/specificity/provenance gates.
 
-- ten semantic `solved` J-reward runs, seeds 148–157;
-- ten matched sign-flipped runs, the same seeds and training examples;
-- optionally, one seed-148 exact-match reward run as a pipeline check;
-- fixed step-25 endpoints with observational evaluations every five updates;
-- then, only after the gate, one frozen-base and all paired adapter evaluations
-  on the sealed 2,100-example manifest.
+## Start and run
 
-The exact curve criterion is the ten-seed mean at steps `0/5/10/15`:
-step 5 must be above baseline, followed by two non-downward steps. Do not hunt
-for another triple, pick a favorable seed, stop from correctness, or select a
-checkpoint. Steps 20 and 25 are logged, and step 25 is always the endpoint.
-
-The significant-evidence criterion is separate: at least 9/10 semantic
-sealed-set effects must be strictly positive (two-sided seed sign-test
-`p=0.021484375` at the boundary), the positive mean paired change must have a
-95% crossed seed/item bootstrap interval that
-excludes zero, and the positive matched sign-flip difference-in-differences
-must also have a crossed 95% interval above zero.
-
-## Start here
-
-The parent agent will commit the audited fixes. Do not prepare or train until:
+The V4 code lives on branch `confirmatory-v4`. Before preparation, tests must
+pass and Git must be clean:
 
 ```bash
-cd /j-lens-rl
-.venv/bin/pytest -q
+cd /j-lens-v4
+../j-lens-rl/.venv/bin/pytest -q
 git status --short
-```
-
-The tests must pass and `git status --short` must print nothing. Then:
-
-```bash
 ./run_confirmatory.sh prepare
 ./run_confirmatory.sh verify
 ```
 
-Preparation creates ignored `.confirmatory/manifests/` files and a state file
-that fingerprints the clean commit, pinned model/dataset revisions, configs,
-fresh split manifests, lens, and calibration. If preparation refuses, fix the
-cause rather than bypassing it. Never delete or regenerate prepared manifests
-after seeing any v3 correctness.
+Then use the durable Modal runner. It is frozen to app
+`j-lens-rl-confirmatory-v4`, fresh Volume
+`j-lens-rl-confirmatory-v4-20260714a`, NVIDIA L40S, and at most eight GPU
+workers. It runs:
 
-V1 is retired: its historical-index reconstruction omitted setup run
-`xufk8x08`, and its partial Modal attempt exposed its curve before failing
-source-provenance validation. V2 corrected provenance and produced a valid
-negative curve `0.37500/0.38250/0.36875/0.37708` at steps `0/5/10/15`; it
-opened no final outcome. V3 retires both exposed 400-item curves, rehashes only
-v2's unopened 2,900-item pool into an 800-item curve and 2,100-item sealed
-final set, and leaves the separate 64-item reserve untouched. Do not reuse a
-v1 or v2 Volume.
+```text
+8 semantic -> verify -> curve -> 8 sign flips -> verify/unlock
+-> fixed 17-label sealed map -> one combined analysis/report
+```
 
-The only substantive v3 training change is to freeze a constant `3e-6`
-learning rate with zero warmup. V2 unintentionally compressed the default
-linear schedule into 25 steps; historical 500-step runs had kept the selected
-rate nearly constant through this horizon. Do not add another recipe change.
+The 17-label map may queue in waves because the cap is eight, but it is one
+unconditional list. Do not analyze semantic sealed outputs before all controls
+finish. Do not manually invoke sign flips before the gate or any evaluator
+before unlock; the runner and worker functions reject those orders.
 
-## Fast execution order
-
-On one GPU:
+Local equivalent:
 
 ```bash
 ./run_confirmatory.sh train-semantic
 ./run_confirmatory.sh curve
 ./run_confirmatory.sh train-controls
-# Optional, nonblocking pipeline check:
-./run_confirmatory.sh train-positive-control
 ./run_confirmatory.sh unlock
-./run_confirmatory.sh final-treatment
-./run_confirmatory.sh final-controls
+./run_confirmatory.sh final-evaluation
 ./run_confirmatory.sh report
 ```
 
-The required compute is the 20 semantic/sign-flipped runs. The exact-match
-control is optional and does not block unlock. To save wall time on multiple
-GPUs, assign distinct config files to distinct devices/agents, for example:
+## Integrity rules
 
-```bash
-CUDA_VISIBLE_DEVICES=0 .venv/bin/train-jlens-rl \
-  --config configs/confirmatory_jlens_seed148.json --wandb-mode online
-CUDA_VISIBLE_DEVICES=1 .venv/bin/train-jlens-rl \
-  --config configs/confirmatory_signflip_seed148.json --wandb-mode online
-```
+Preparation deterministically derives the exact `400/1700` split from V3's
+unopened parent and pins the provided manifest hashes. Unlock checks all 16
+runs, equal per-seed train data, one L40S/CUDA runtime, one clean commit and
+source-tree hash, exact configs, fixed histories, and adapters. Final
+evaluation must share that training source-tree hash. The verifier reconstructs
+prompts and correctness from the pinned GSM8K revision and hashes all 17 raw
+JSONLs.
 
-Continue through seeds 149–157 without running two processes against the same
-output directory. The train command rejects a nonempty directory. All
-conditions use training-generation `min_new_tokens=64` to prevent the observed
-five-token collapse; final greedy evaluation intentionally has no minimum.
-
-For the fastest guarded path, `modal_experiments.py` submits a durable remote
-pipeline capped at five simultaneous pinned L40S containers. It runs two
-five-seed waves, applies the same curve gate before controls, and parallelizes final paired
-evaluation only after unlock. Follow the credential-safe setup in `README.md`;
-never upload `modal.sh` or `.env`. The Modal Volume is the experiment archive
-until it is downloaded back into local `.confirmatory/`.
-
-Batch 64 is frozen for the curve and final evaluators on the pinned L40S runtime.
-If a pre-preparation memory smoke test fails, lower every condition to batch 32,
-commit, and prepare a new protocol version. Never change it after preparation.
-
-## What the guards check
-
-`./run_confirmatory.sh unlock` checks the following before exposing final data:
-
-- the working tree and HEAD still match the prepared state;
-- all 20 required runs used the pinned config/artifacts/revisions;
-- every run ended at step 25 without correctness stopping;
-- each matched seed used the same 1,000 training source indices;
-- no historically unused curve/final/reserve index entered training;
-- each history contains exactly steps `0,5,10,15,20,25`; and
-- the one predeclared mean curve passed.
-
-Unlock also freezes hashes for every final adapter and run audit file. Final
-verification reloads the pinned dataset and independently recomputes prompt
-hashes, parsed predictions, and correctness from the saved completions.
-
-Final evaluation writes auditable per-item JSONL and compares the ten semantic
-seeds jointly. Evaluate treatment first; if it is negative, record that result
-without tuning. Evaluate sign-flip controls next. The optional exact-match
-control may be omitted if compute is scarce; say so explicitly.
-
-## Secrets and outputs
-
-W&B project: `nilinabra-spare-time/j-lens-rl`. `.env` contains only the raw API
-key and is ignored. The runner loads it without printing it. Do not commit the
-key, `.confirmatory/`, `runs/`, `wandb/`, or large artifacts. Preserve the
-ignored protocol state and JSONL outputs with the experiment archive because
-their hashes connect the claim to the committed code.
-
-If interrupted, do not rerun a seed until its curve looks favorable. The
-guarded runner does not silently resume or overwrite training; record the run
-as interrupted and use a separately declared replacement rule/protocol. It may
-reuse a completed final JSONL only after checking all rows and provenance.
+Never overwrite a run, gate, comparison, or report; never rerun until a curve
+looks favorable; never expose V3 or V4 sealed outcomes out of order. Record
+crashes, literal-target use, length pathologies, curve failure, and negative
+final evidence.

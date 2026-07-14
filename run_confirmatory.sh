@@ -8,10 +8,10 @@ TRAIN="${TRAIN:-.venv/bin/train-jlens-rl}"
 EVAL="${EVAL:-.venv/bin/eval-jlens-rl}"
 COMPARE="${COMPARE:-.venv/bin/compare-jlens-evals}"
 PROTOCOL=("$PYTHON" scripts/confirmatory_protocol.py)
-SEEDS=(148 149 150 151 152 153 154 155 156 157)
+SEEDS=(159 160 161 162 163 164 165 166)
 
 usage() {
-  echo "usage: $0 {prepare|verify|train-semantic|train-controls|train-positive-control|train-all|curve|unlock|final-treatment|final-controls|report}"
+  echo "usage: $0 {prepare|verify|train-semantic|train-controls|train-all|curve|unlock|final-evaluation|report}"
 }
 
 load_wandb_key() {
@@ -24,6 +24,9 @@ train_condition() {
   local condition="$1"
   local seed config
   "${PROTOCOL[@]}" verify >/dev/null
+  if [[ "$condition" == "signflip" ]]; then
+    "${PROTOCOL[@]}" verify-curve >/dev/null
+  fi
   load_wandb_key
   for seed in "${SEEDS[@]}"; do
     config="configs/confirmatory_${condition}_seed${seed}.json"
@@ -45,13 +48,13 @@ eval_if_missing() {
   "${PROTOCOL[@]}" verify-eval --path "$output" --label "$label" >/dev/null
 }
 
-final_treatment() {
+final_evaluation() {
   local seed output
   "${PROTOCOL[@]}" verify-unlock >/dev/null
   mkdir -p .confirmatory/evals .confirmatory/evidence
   eval_if_missing .confirmatory/evals/base.jsonl \
     --config configs/confirmatory_sealed_eval.json \
-    --experiment-config configs/confirmatory_jlens_seed148.json \
+    --experiment-config configs/confirmatory_jlens_seed159.json \
     --indices-manifest .confirmatory/manifests/sealed_final_indices.json \
     --run-label base
   local compare_args=(--base-jsonl .confirmatory/evals/base.jsonl)
@@ -65,60 +68,22 @@ final_treatment() {
       --run-label "jlens_seed${seed}"
     compare_args+=(--adapter-jsonl "$output")
   done
-  if [[ ! -e .confirmatory/evidence/semantic_vs_base.json ]]; then
-    "$COMPARE" "${compare_args[@]}" \
-      --output .confirmatory/evidence/semantic_vs_base.json
-  fi
-}
-
-final_controls() {
-  local condition seed output
-  "${PROTOCOL[@]}" verify-unlock >/dev/null
-  [[ -f .confirmatory/evals/base.jsonl ]] || {
-    echo "run final-treatment first"
-    return 2
-  }
-  for condition in signflip; do
-    local compare_args=(--base-jsonl .confirmatory/evals/base.jsonl)
-    for seed in "${SEEDS[@]}"; do
-      [[ -f ".confirmatory/evals/jlens_seed${seed}.jsonl" ]] || {
-        echo "missing semantic evaluation for seed $seed; run final-treatment first"
-        return 2
-      }
-      compare_args+=(--adapter-jsonl ".confirmatory/evals/jlens_seed${seed}.jsonl")
-    done
-    for seed in "${SEEDS[@]}"; do
-      output=".confirmatory/evals/${condition}_seed${seed}.jsonl"
-      eval_if_missing "$output" \
-        --config configs/confirmatory_sealed_eval.json \
-        --experiment-config "configs/confirmatory_${condition}_seed${seed}.json" \
-        --indices-manifest .confirmatory/manifests/sealed_final_indices.json \
-        --adapter ".confirmatory/runs/${condition}_seed${seed}/final" \
-        --run-label "${condition}_seed${seed}"
-      compare_args+=(--control-jsonl "$output")
-    done
-    if [[ ! -e ".confirmatory/evidence/semantic_vs_${condition}.json" ]]; then
-      "$COMPARE" "${compare_args[@]}" \
-        --output ".confirmatory/evidence/semantic_vs_${condition}.json"
-    fi
-  done
-  if [[ -f .confirmatory/runs/gsm8k_seed148/final/adapter_model.safetensors ]]; then
-    output=".confirmatory/evals/gsm8k_seed148.jsonl"
+  for seed in "${SEEDS[@]}"; do
+    output=".confirmatory/evals/signflip_seed${seed}.jsonl"
     eval_if_missing "$output" \
       --config configs/confirmatory_sealed_eval.json \
-      --experiment-config configs/confirmatory_gsm8k_seed148.json \
+      --experiment-config "configs/confirmatory_signflip_seed${seed}.json" \
       --indices-manifest .confirmatory/manifests/sealed_final_indices.json \
-      --adapter .confirmatory/runs/gsm8k_seed148/final \
-      --run-label gsm8k_seed148
-    if [[ ! -e .confirmatory/evidence/gsm8k_control_vs_base.json ]]; then
-      "$COMPARE" \
-        --base-jsonl .confirmatory/evals/base.jsonl \
-        --adapter-jsonl "$output" \
-        --output .confirmatory/evidence/gsm8k_control_vs_base.json
-    fi
-  else
-    echo "optional exact-match control is absent; semantic/sign-flip evidence is still complete"
-  fi
+      --adapter ".confirmatory/runs/signflip_seed${seed}/final" \
+      --run-label "signflip_seed${seed}"
+    compare_args+=(--control-jsonl "$output")
+  done
+  [[ ! -e .confirmatory/evidence/sealed_comparison.json ]] || {
+    echo "refusing to overwrite sealed comparison"
+    return 2
+  }
+  "$COMPARE" "${compare_args[@]}" \
+    --output .confirmatory/evidence/sealed_comparison.json
 }
 
 case "${1:-}" in
@@ -134,13 +99,9 @@ case "${1:-}" in
   train-controls)
     train_condition signflip
     ;;
-  train-positive-control)
-    "${PROTOCOL[@]}" verify >/dev/null
-    load_wandb_key
-    "$TRAIN" --config configs/confirmatory_gsm8k_seed148.json --wandb-mode online
-    ;;
   train-all)
     train_condition jlens
+    "${PROTOCOL[@]}" curve
     train_condition signflip
     ;;
   curve)
@@ -149,11 +110,8 @@ case "${1:-}" in
   unlock)
     "${PROTOCOL[@]}" unlock
     ;;
-  final-treatment)
-    final_treatment
-    ;;
-  final-controls)
-    final_controls
+  final-evaluation)
+    final_evaluation
     ;;
   report)
     "${PROTOCOL[@]}" report

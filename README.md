@@ -36,15 +36,12 @@ implementation is pinned to commit
 
 ## Confirmatory run
 
-V2 was a valid negative curve-gate result: its fresh six-seed mean at steps
-`0/5/10/15` was `0.37500/0.38250/0.36875/0.37708`. It demonstrated an initial
-J-only rise but not the requested uninterrupted three-node improvement, so it
-opened no sealed-final outcome. V3 is frozen before its outcome sets are
-opened: WikiText-fitted `solved`, layer 8, late-half mean, a **constant** LR
-`3e-6` with zero warmup, ten seeds, and a fixed step-25 endpoint. The scheduler
-is the sole recipe correction; v2 had inadvertently compressed the default
-linear decay into only 25 steps. A matched sign-flipped J reward is required,
-and one exact-match-reward run is an optional pipeline check.
+V2 and V3 are valid negative curve-gate results and opened no sealed-final
+outcome. A precommitted screen on retired development data selected the frozen
+V4 `tail_taper` reward: layer-8 means over response fractions `[.5,.75)` and
+`[.75,1)`, weights `1/.25`, stride 10. V4 uses eight fresh seeds 159--166,
+constant LR `3e-6`, zero warmup, a fixed step-25 endpoint, and matched sign
+flips with both weights negated.
 
 After committing all code and artifact metadata, the worktree must be clean:
 
@@ -55,37 +52,27 @@ git status --short
 ./run_confirmatory.sh train-semantic
 ./run_confirmatory.sh curve
 ./run_confirmatory.sh train-controls
-# Optional pipeline check:
-./run_confirmatory.sh train-positive-control
 ./run_confirmatory.sh unlock
-./run_confirmatory.sh final-treatment
-./run_confirmatory.sh final-controls
+./run_confirmatory.sh final-evaluation
 ./run_confirmatory.sh report
 ```
 
-Preparation deterministically reconstructs 3,741 historically used raw
-GSM8K-train indices, including an interrupted setup run omitted by v1. It
-retires both exposed 400-item v1/v2 curves, rehashes only v2's never-opened
-2,900-item final pool into a new 800-item curve and 2,100-item sealed final
-set, and preserves the separate 64-item reserve untouched. Every outcome index
-stays out of confirmatory training.
-Manifests and run outputs live in
-ignored `.confirmatory/`, with hashes tied to the clean Git commit.
+Preparation verifies the hashed V3 closeout and selection archives, then
+rehashes only V3's never-opened 2,100-item final parent into a 400-item V4
+curve and 1,700-item sealed final. The V3 800-item curve is retired and the
+64-item reserve is unchanged. Every outcome and retired-curve index stays out
+of training. Ignored `.confirmatory/` manifests and outputs are tied to the
+clean Git commit and source-tree fingerprint.
 
-The curve gate is fixed before training: across the mean of all ten semantic
-seeds, step 5 must exceed step 0, step 10 must be at least step 5, and step 15
-must be at least step 10. Runs always continue to step 25. The final set remains
-locked unless all 20 semantic/sign-flip runs and this exact curve gate pass.
-The gate saves a hashed figure containing every seed and the highlighted mean
-curve at the predeclared nodes.
+Across all eight semantic seeds, the frozen gate is step 2 above step 0, then
+non-downward steps 4 and 6. Runs always continue to step 25. The final set
+remains locked unless the gate and all 16 semantic/sign-flip runs verify.
 
-Significant positive evidence additionally requires at least 9/10 sealed-set
-seed effects to be strictly positive (two-sided sign-test `p=0.021484375` at
-the boundary), a positive multi-seed mean change whose 95% crossed seed/item bootstrap interval excludes
-zero, and a positive semantic-minus-sign-flip difference-in-differences whose
-crossed 95% interval also excludes zero. This directional control criterion is
-part of the frozen success definition, not a way to rescue a failed primary
-effect.
+After unlock, base plus all eight semantic and eight sign-flip adapters are
+submitted as one fixed 17-label sealed collection before analysis. Significant
+positive evidence requires all 8/8 semantic effects strictly positive
+(`p=.0078125`), positive semantic and specificity means, crossed 95% lower
+bounds above zero for both, and all provenance/record checks.
 
 ## Exploratory commands
 
@@ -109,11 +96,11 @@ Standalone evaluation writes per-example JSONL rather than only an aggregate:
 ```bash
 eval-jlens-rl \
   --config configs/confirmatory_sealed_eval.json \
-  --experiment-config configs/confirmatory_jlens_seed148.json \
-  --adapter .confirmatory/runs/jlens_seed148/final \
+  --experiment-config configs/confirmatory_jlens_seed159.json \
+  --adapter .confirmatory/runs/jlens_seed159/final \
   --indices-manifest .confirmatory/manifests/sealed_final_indices.json \
-  --output-jsonl .confirmatory/evals/jlens_seed148.jsonl \
-  --run-label jlens_seed148 \
+  --output-jsonl .confirmatory/evals/jlens_seed159.jsonl \
+  --run-label jlens_seed159 \
   --batch-size 64 --skip-jlens-metric
 ```
 
@@ -125,12 +112,12 @@ recomputes prompt hashes, predictions, and correctness from each completion.
 
 ## Modal parallel runner
 
-`modal_experiments.py` runs the same frozen protocol with at most five pinned
+`modal_experiments.py` runs the same frozen protocol with at most eight pinned
 L40S containers. It bakes the exact clean Git tree and frozen lens artifacts into
-the image, uses a fresh v3 Volume for distinct per-seed outputs, and never copies
+the image, uses a fresh v4 Volume for distinct per-seed outputs, and never copies
 `.env` or `modal.sh`. The durable remote orchestrator runs semantic seeds,
-checks the fixed curve, runs sign-flips only on a pass, then performs the
-guarded final analysis.
+checks the fixed curve, runs sign-flips only on a pass, then submits the full
+fixed 17-label sealed batch and analyzes only after it completes.
 
 After `prepare`, install the pinned client, configure your local Modal profile,
 and create the named W&B workload secret once:
@@ -144,7 +131,7 @@ unset WANDB_API_KEY
 .venv/bin/modal run --detach modal_experiments.py
 ```
 
-The launcher prints a function-call ID and uses the v3 Volume named in
+The launcher prints a function-call ID and uses the v4 Volume named in
 `modal_experiments.py`. Monitor it with Modal's dashboard or CLI.
 Download and archive the Volume promptly after completion because Volume v2 is
 currently beta. See Modal's official guides for

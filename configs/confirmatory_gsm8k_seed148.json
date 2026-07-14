@@ -1,7 +1,0 @@
-{
-  "base": "confirmatory_common.json",
-  "reward_type": "gsm8k",
-  "seed": 148,
-  "run_name": "confirm-v3-gsm8k-control-seed148",
-  "output_dir": ".confirmatory/runs/gsm8k_seed148"
-}

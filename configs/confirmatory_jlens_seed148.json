@@ -1,7 +1,0 @@
-{
-  "base": "confirmatory_common.json",
-  "reward_type": "jlens",
-  "seed": 148,
-  "run_name": "confirm-v3-jlens-solved-seed148",
-  "output_dir": ".confirmatory/runs/jlens_seed148"
-}

@@ -3,7 +3,7 @@
   "reward_type": "jlens",
   "evaluation_source": "train",
   "evaluation_indices_path": ".confirmatory/manifests/sealed_final_indices.json",
-  "validation_examples": 2100,
+  "validation_examples": 1700,
   "min_new_tokens": 0,
   "max_new_tokens": 256
 }
