@@ -605,9 +605,11 @@ and adapters. These are adaptive development results only.
 
 ### Second parallel screen and pre-outcome v4 branch
 
-The current script is committed at
+The screen script is committed at
 `56280f0a8f2da1eb3a4c6106f49b7cacca6a6489`; `40/40` tests, Python syntax,
-and `git diff --check` pass. Screen 2 is live on app
+and `git diff --check` pass. Screen 2 completed durably at
+2026-07-14T04:35:41Z and the app stopped normally at 2026-07-14T04:36:44Z on
+app
 `ap-dt7cQSw2be0iYFolyt2nQp`, call `fc-01KXFDGBTCYDYDSNH3E21C362B`, and fresh
 Volume `j-lens-rl-exploratory-screen-v2-20260714a`, capped at four L40S
 workers. All four live manifests were independently checked for clean matching
@@ -630,11 +632,35 @@ non-downward. The four reward ideas, in fixed priority order, are:
 At 2026-07-14T04:23:11Z, only the first post-update node had been inspected:
 `ultradense5` was `.3750 -> .3875`, `tail_taper` `.3750 -> .3800`,
 `tempered_delta` `.3750 -> .3575`, and `layer_shrink` `.3750 -> .3675`.
-The latter two can no longer pass. No step-4 or step-6 outcome had been used
-when the following branch was frozen. If multiple variants pass, select the
-first in the priority list above; neither effect magnitude nor later diagnostic
-nodes may override that rule. If none passes, no v4 is launched from this
-screen. A pass is still candidate-selection evidence, not significance.
+The latter two could no longer pass. No step-4 or step-6 outcome had been used
+when the following branch was frozen. If multiple variants passed, the rule
+selected the first in the priority list above; neither effect magnitude nor a
+later diagnostic node could override it.
+
+The complete persisted screen was:
+
+| Reward construction | 0 | 2 | 4 | 6 | 10 | 15 | 20 | 25 | Fixed gate |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|:---:|
+| `ultradense5` | .3750 | .3875 | .3700 | .3675 | .3750 | .4050 | .3950 | .3700 | Fail |
+| `tail_taper` | .3750 | .3800 | .3800 | .3825 | .3725 | .3775 | .3775 | .3850 | **Pass** |
+| `tempered_delta` | .3750 | .3575 | .3575 | .3775 | .3800 | .3775 | .3775 | .3800 | Fail |
+| `layer_shrink` | .3750 | .3675 | .3600 | .3800 | .3825 | .3675 | .3925 | .3775 | Fail |
+
+Thus `tail_taper`, priority rank two, is the unique eligible recipe. Its frozen
+gate is `.3750 -> .3800 -> .3800 -> .3825`: the first node rises and the next
+two do not fall. Its later step-10 dip to `.3725` is retained rather than
+hidden or used to reselect a different candidate; the endpoint recovers to
+`.3850`. Every one of the 32 validation rows had zero literal-target
+completion, validation response lengths stayed approximately 228--231 tokens,
+and reward variance never collapsed. Training literal rate was also zero
+except for one `tail_taper` rollout batch at step 19 (one of eight completions);
+that batch occurred after the frozen gate, target/predecessor positions were
+masked, and its reward standard deviation was 0.566. KL stayed below 0.0016,
+the policy clip-region ratio was zero, and every persisted non-evaluation LR
+row was exactly `3e-6`. Sampled training lengths did have isolated fully capped
+batches (mean clipped ratios approximately 0.53--0.59), but no corresponding
+greedy-evaluation length collapse or inflation occurred. No worker failed.
+This is still adaptive candidate-selection evidence, not significant evidence.
 
 Conditional v4 is permitted only after re-verifying V3's formal
 `curve_failed` closeout and the absence of any V3 final outcome. It orders only
