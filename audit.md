@@ -1829,3 +1829,16 @@ automation covers treatments, the one curve gate, conditional controls, and an
 unlock marker. Sealed-final evaluation and analysis are deliberately not yet
 implemented or audited, so the final must remain unopened even if training
 reaches the unlock marker.
+
+The first local `prepare` invocation failed outcome-free before metric-schema
+generation because the shell ran the protocol by file path while its audited
+imports expected package-module mode. Only five byte-identical frozen
+artifact/manifest copies existed; there was no protocol state, claim, runtime
+worktree, run directory, W&B directory, GPU process, evaluation, or outcome.
+The exact inventory is in
+`protocol_archive/v8_local_prepare_attempt1_closeout.json`. The launcher now
+changes directory to the repository and invokes both entrypoints with `python
+-m`; the bounded prelaunch amendment is
+`protocol_archive/v8_local_prelaunch_module_entrypoint_fix.json`. This changes
+no scientific or allocation field. The failed preparation may be cleared only
+after those records and the fix are committed and pushed.

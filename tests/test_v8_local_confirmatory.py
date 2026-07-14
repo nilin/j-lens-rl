@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+from pathlib import Path
 
 import pytest
 
@@ -102,3 +103,9 @@ def test_design_verification_reports_launch_authorization_not_preparation() -> N
     assert result["launch_enabled"] is True
     assert result["status"].endswith("pending_clean_committed_pushed_source")
     assert not protocol.STATE_PATH.exists()
+
+
+def test_shell_launcher_uses_package_module_entrypoints() -> None:
+    launcher = Path("run_confirmatory_v8_local.sh").read_text()
+    assert "-m scripts.confirmatory_v8_local_protocol" in launcher
+    assert "-m scripts.confirmatory_v8_local_runner" in launcher

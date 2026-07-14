@@ -1,0 +1,11 @@
+{
+  "authorized_cleanup": "After this closeout and fix are committed and pushed, remove only .confirmatory/v8_local from the outcome-free failed preparation and rerun prepare from clean pushed main.",
+  "changed_file": "run_confirmatory_v8_local.sh",
+  "new_sha256": "3773adefc985e3d3d453690408152db60dafd323cb184e855038eaedc2f97910",
+  "old_sha256": "09b8a72ed72d2e81270d57e08461b492ea6fcb343a9e3909d4cf695412a1fdb4",
+  "preparation_closeout_path": "protocol_archive/v8_local_prepare_attempt1_closeout.json",
+  "preparation_closeout_sha256": "d097bbd41006ebde97c57045fc2b3620d4a8102245523d4dd16d7fd45ccb4487",
+  "protocol": "j-lens-rl-confirmatory-v8-local-prelaunch-module-entrypoint-fix-v1",
+  "scientific_projection_changed": false,
+  "summary": "Invoke the V8 protocol and runner as Python package modules from repository root so imports behave identically to the audited tests. No config, reward, seed, curve, control, final, tracking, hardware, or acceptance field changes."
+}
