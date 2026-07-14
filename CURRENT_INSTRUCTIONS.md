@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 08:27 UTC
+Last reconciled with the user: 2026-07-14 08:48 UTC
 
 ## Objective
 
@@ -58,8 +58,13 @@ from confirmatory claims.
   inspect sealed outcomes before their registered gate permits it.
 - Current state: the eight-word screen is complete and mechanically selected
   positive `joy` as its sole early-curve passer; this remains adaptive evidence.
-  Its offline closeout is sealed. Correlation attempt 4 is running serially on
-  fresh Volume D; do not inspect its locked word before validation finishes.
-  The positive-`joy`, six-update, `0/2/4/6`, eight-seed V5 registration is now
-  frozen independently of that correlation outcome. Commit/push and prepare it,
-  then launch its W&B runs only after the correlation app has fully stopped.
+  Its offline closeout is sealed. Correlation attempt 4 stopped after all eight
+  discovery shards when Modal preempted its CPU controller; aggregation,
+  selection, and validation never began and candidate outcomes remain
+  uninspected. Volume D is immutable and a later replay must use a fresh
+  registered Volume with preemption-safe control flow. The positive-`joy`,
+  six-update, `0/2/4/6`, eight-seed V5 registration remains frozen independently.
+  Its first Modal app built successfully but was rejected before entrypoint,
+  claim, GPU, or W&B because a 20 GiB disk request was below the workspace
+  minimum. Preserve that empty attempt; relaunch the byte-identical scientific
+  registration on fresh Volume B under infrastructure amendment 1.

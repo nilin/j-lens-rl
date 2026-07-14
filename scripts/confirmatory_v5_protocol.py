@@ -70,6 +70,12 @@ CORRELATION_AMENDMENT4_PATH = (
 CORRELATION_ATTEMPT4_LAUNCH_PATH = (
     REPO / "protocol_archive" / "word_correlation_attempt4_launch_receipt.json"
 )
+V5_PRELAUNCH_CLOSEOUT_PATH = (
+    REPO / "protocol_archive" / "v5_emotional_prelaunch_attempt0_closeout.json"
+)
+V5_INFRASTRUCTURE_AMENDMENT1_PATH = (
+    REPO / "protocol_archive" / "v5_emotional_infrastructure_amendment1.json"
+)
 
 V4_MANIFEST_DIR = REPO / ".confirmatory" / "manifests"
 V4_PARENT_PATH = V4_MANIFEST_DIR / "sealed_final_indices.json"
@@ -103,7 +109,8 @@ INFRASTRUCTURE_RETRY_POLICY = (
     "whole attempt immutably and requires a fresh registered claim/volume"
 )
 MODAL_APP_NAME = "j-lens-rl-confirmatory-v5-emotional"
-VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714a"
+ORIGINAL_VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714a"
+VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714b"
 FINAL_LABELS = (
     "base",
     *(f"jlens_seed{seed}" for seed in SEEDS),
@@ -124,6 +131,14 @@ SUPERSEDED_V5_SHA256 = "08dac96773ada5845815304bc256eebf6e7fb54b7a2b2cc95396851f
 EMOTIONAL_DECISION_SHA256 = "50cc3cb32e0cf74feeaeae79c2faf7b91c6caeae34b6e4f1101819d51e15b238"
 CORRELATION_AMENDMENT4_SHA256 = "6b17b616d0d73cab7181f0dbb72c8c5343f48125b1856bf8f72398bb0a9644a7"
 CORRELATION_ATTEMPT4_LAUNCH_SHA256 = "77c1e1adc8416d570bddc5e404774c19708bdcc69aacccffae5eadd2d13a9b57"
+ORIGINAL_REGISTRATION_SHA256 = "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527"
+ORIGINAL_PROTOCOL_SHA256 = "2a01feb963d690051b08ae8a1ae73edfd128c06ea3b627304be2d550ae83a75a"
+ORIGINAL_MODAL_RUNNER_SHA256 = "b99cadbf89d116f21aade7b7500f61d6a1215704073e398d5b1b1cd28fb8990f"
+# These byte hashes identify the immutable records below.  They authorize
+# only an outcome-free packaging retry; the scientific registration stays
+# byte-identical and remains the source of all W&B identities.
+V5_PRELAUNCH_CLOSEOUT_SHA256 = "9151fa5c8ba3e95c37b2abc53ee6e35bab6cb2de2bd7656922f1809f816bb8d4"
+V5_INFRASTRUCTURE_AMENDMENT1_SHA256 = "d845fd829b00deb80cfed402e8fd8a04543c2ddffc451329dcfc572e296f3f42"
 
 CONCURRENT_EXPERIMENT_FIREWALL = {
     "word_correlation_attempt4": {
@@ -659,6 +674,39 @@ def _expected_execution_hashes() -> dict[str, str]:
     }
 
 
+def _registered_execution_hashes() -> dict[str, str]:
+    """Return the byte pins frozen before the outcome-free packaging retry.
+
+    Infrastructure amendment 1 preserves the original registration bytes and
+    therefore the preregistered W&B identities.  Only the protocol and Modal
+    runner changed to encode the new Volume and Modal's disk floor; all other
+    execution inputs must still match both the registration and current tree.
+    """
+    hashes = _expected_execution_hashes()
+    hashes["protocol_sha256"] = ORIGINAL_PROTOCOL_SHA256
+    hashes["modal_runner_sha256"] = ORIGINAL_MODAL_RUNNER_SHA256
+    return hashes
+
+
+def _active_execution_identity() -> dict[str, Any]:
+    """Return the exact amended runner identity used by the live attempt."""
+    return {
+        "modal_app": MODAL_APP_NAME,
+        "volume": VOLUME_NAME,
+        "gpu_type": GPU_TYPE,
+        "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
+        "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
+        "gpu_app_overlap_policy": GPU_APP_OVERLAP_POLICY,
+        "backend_fallback_policy": BACKEND_FALLBACK_POLICY,
+        "infrastructure_retry_policy": INFRASTRUCTURE_RETRY_POLICY,
+        "scientific_registration_sha256": ORIGINAL_REGISTRATION_SHA256,
+        "infrastructure_amendment_sha256": (
+            V5_INFRASTRUCTURE_AMENDMENT1_SHA256
+        ),
+        **_expected_execution_hashes(),
+    }
+
+
 def registration_horizon(registration: dict[str, Any]) -> int:
     updates = registration.get("fixed_updates")
     if (
@@ -717,14 +765,14 @@ def registration_template() -> dict[str, Any]:
         },
         "execution": {
             "modal_app": MODAL_APP_NAME,
-            "volume": VOLUME_NAME,
+            "volume": ORIGINAL_VOLUME_NAME,
             "gpu_type": GPU_TYPE,
             "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
             "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
             "gpu_app_overlap_policy": GPU_APP_OVERLAP_POLICY,
             "backend_fallback_policy": BACKEND_FALLBACK_POLICY,
             "infrastructure_retry_policy": INFRASTRUCTURE_RETRY_POLICY,
-            **_expected_execution_hashes(),
+            **_registered_execution_hashes(),
         },
         "outcome_status_at_freeze": "not launched and no V5 outcome inspected",
     }
@@ -772,6 +820,10 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
         V4_CLOSEOUT_PATH: V4_CLOSEOUT_SHA256,
         CORRELATION_AMENDMENT4_PATH: CORRELATION_AMENDMENT4_SHA256,
         CORRELATION_ATTEMPT4_LAUNCH_PATH: CORRELATION_ATTEMPT4_LAUNCH_SHA256,
+        V5_PRELAUNCH_CLOSEOUT_PATH: V5_PRELAUNCH_CLOSEOUT_SHA256,
+        V5_INFRASTRUCTURE_AMENDMENT1_PATH: (
+            V5_INFRASTRUCTURE_AMENDMENT1_SHA256
+        ),
     }
     for path, expected in expected_files.items():
         if not path.is_file() or sha256_file(path) != expected:
@@ -787,6 +839,39 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
         CONCURRENT_EXPERIMENT_FIREWALL
     ):
         raise ProtocolError("registration changed the concurrent-experiment firewall")
+    if sha256_file(REGISTRATION_PATH) != ORIGINAL_REGISTRATION_SHA256:
+        raise ProtocolError("the original scientific V5 registration bytes changed")
+    closeout = json.loads(V5_PRELAUNCH_CLOSEOUT_PATH.read_text())
+    amendment = json.loads(V5_INFRASTRUCTURE_AMENDMENT1_PATH.read_text())
+    if (
+        closeout.get("protocol")
+        != "j-lens-rl-confirmatory-v5-emotional-prelaunch-closeout-v1"
+        or closeout.get("frozen_scientific_registration", {}).get("sha256")
+        != ORIGINAL_REGISTRATION_SHA256
+        or closeout.get("volume", {}).get("name") != ORIGINAL_VOLUME_NAME
+        or closeout.get("volume", {}).get("file_count_at_closeout") != 0
+        or closeout.get("outcome_boundary", {}).get("scientific_outcome_exists")
+        is not False
+        or closeout.get("outcome_boundary", {}).get("scientific_outcome_inspected")
+        is not False
+    ):
+        raise ProtocolError("V5 prelaunch closeout changed or crossed its outcome boundary")
+    if (
+        amendment.get("protocol")
+        != "j-lens-rl-confirmatory-v5-emotional-infrastructure-amendment-v1"
+        or amendment.get("scientific_protocol_changed") is not False
+        or amendment.get("original_registration", {}).get("sha256")
+        != ORIGINAL_REGISTRATION_SHA256
+        or amendment.get("prelaunch_attempt0_closeout", {}).get("sha256")
+        != V5_PRELAUNCH_CLOSEOUT_SHA256
+        or amendment.get("authorized_changes", {}).get("volume")
+        != {"from": ORIGINAL_VOLUME_NAME, "to": VOLUME_NAME}
+        or amendment.get("authorized_changes", {})
+        .get("finalizer_ephemeral_disk_mib", {})
+        .get("to")
+        != 1024 * 512
+    ):
+        raise ProtocolError("V5 infrastructure amendment 1 changed or is incomplete")
 
 
 def _validate_registration_shape(registration: dict[str, Any]) -> None:
@@ -821,14 +906,14 @@ def _validate_registration_shape(registration: dict[str, Any]) -> None:
     execution = registration.get("execution")
     expected_execution = {
         "modal_app": MODAL_APP_NAME,
-        "volume": VOLUME_NAME,
+        "volume": ORIGINAL_VOLUME_NAME,
         "gpu_type": GPU_TYPE,
         "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
         "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
         "gpu_app_overlap_policy": GPU_APP_OVERLAP_POLICY,
         "backend_fallback_policy": BACKEND_FALLBACK_POLICY,
         "infrastructure_retry_policy": INFRASTRUCTURE_RETRY_POLICY,
-        **_expected_execution_hashes(),
+        **_registered_execution_hashes(),
     }
     if execution != expected_execution:
         raise ProtocolError("registration does not byte-pin this exact V5 runner")
@@ -1224,7 +1309,7 @@ def generated_configs(
             "metric_schema_sha256": serialized_json_sha256(schema),
             "curve_manifest_sha256": V5_CURVE_SHA256,
             "train_exclusions_manifest_sha256": TRAIN_EXCLUSIONS_SHA256,
-            "registered_code_sha256": dict(registration["execution"]),
+            "registered_code_sha256": _active_execution_identity(),
             "evidence_eligibility": "original_registered_confirmatory_attempt",
         }
     )
@@ -1678,6 +1763,14 @@ def prepare() -> None:
         "git_commit": commit,
         "registration_path": str(REGISTRATION_PATH.relative_to(REPO)),
         "registration_sha256": registration_sha256,
+        "infrastructure_amendment_path": str(
+            V5_INFRASTRUCTURE_AMENDMENT1_PATH.relative_to(REPO)
+        ),
+        "infrastructure_amendment_sha256": (
+            V5_INFRASTRUCTURE_AMENDMENT1_SHA256
+        ),
+        "prelaunch_closeout_sha256": V5_PRELAUNCH_CLOSEOUT_SHA256,
+        "active_modal_volume": VOLUME_NAME,
         "recipe_lock_path": str(lock_path.relative_to(REPO)),
         "recipe_lock_sha256": lock_sha256,
         "recipe_lock_protocol": lock["protocol"],
@@ -1756,6 +1849,14 @@ def load_and_verify_state() -> dict[str, Any]:
         "git_commit": commit,
         "registration_path": str(REGISTRATION_PATH.relative_to(REPO)),
         "registration_sha256": registration_sha256,
+        "infrastructure_amendment_path": str(
+            V5_INFRASTRUCTURE_AMENDMENT1_PATH.relative_to(REPO)
+        ),
+        "infrastructure_amendment_sha256": (
+            V5_INFRASTRUCTURE_AMENDMENT1_SHA256
+        ),
+        "prelaunch_closeout_sha256": V5_PRELAUNCH_CLOSEOUT_SHA256,
+        "active_modal_volume": VOLUME_NAME,
         "recipe_lock_path": str(lock_path.relative_to(REPO)),
         "recipe_lock_sha256": lock_sha256,
         "recipe_lock_protocol": lock["protocol"],

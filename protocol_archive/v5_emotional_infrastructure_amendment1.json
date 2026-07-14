@@ -1,0 +1,32 @@
+{
+  "authorized_changes": {
+    "finalizer_ephemeral_disk_mib": {
+      "from": 20480,
+      "reason": "Modal rejected the old explicit request below this workspace's current minimum",
+      "to": 524288
+    },
+    "volume": {
+      "from": "j-lens-rl-confirmatory-v5-emotional-20260714a",
+      "to": "j-lens-rl-confirmatory-v5-emotional-20260714b"
+    }
+  },
+  "frozen_at_utc": "2026-07-14T08:42:00Z",
+  "original_registration": {
+    "path": "protocol_archive/v5_emotional_registration.json",
+    "sha256": "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527"
+  },
+  "outcome_status_at_freeze": "attempt 0 stopped before local entrypoint, claim, function call, GPU, W&B, or scientific outcome; no V5 outcome inspected",
+  "prelaunch_attempt0_closeout": {
+    "path": "protocol_archive/v5_emotional_prelaunch_attempt0_closeout.json",
+    "sha256": "9151fa5c8ba3e95c37b2abc53ee6e35bab6cb2de2bd7656922f1809f816bb8d4"
+  },
+  "protocol": "j-lens-rl-confirmatory-v5-emotional-infrastructure-amendment-v1",
+  "scientific_protocol_changed": false,
+  "unchanged": [
+    "target word, intrinsic-reward sign and weight, J-lens layers/positions/stride/calibration, model and dataset revisions",
+    "all train/curve/final indices, seeds, optimizer settings, six-update horizon, curve nodes and curve gate",
+    "matched sign-flip controls, sealed estimands, bootstrap/sign tests and acceptance thresholds",
+    "the original registration bytes and the W&B project/group/run IDs derived from its SHA-256",
+    "one global L40S worker, no overlapping Modal app, terminal no-resume policy, and all evidence/replay requirements"
+  ]
+}

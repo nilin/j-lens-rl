@@ -1200,10 +1200,10 @@ other active Modal app; calibration and both shard maps are fully serial.
 has SHA-256
 `6b17b616d0d73cab7181f0dbb72c8c5343f48125b1856bf8f72398bb0a9644a7`.
 
-### Frozen joy-only V5 confirmation (not yet launched)
+### Frozen joy-only V5 confirmation
 
-The emotionally charged confirmation is now fully specified, but it has not
-been prepared or launched. The adaptive source record is
+The emotionally charged confirmation is fully specified independently of its
+confirmatory outcomes. The adaptive source record is
 [`protocol_archive/joy_v5_selection_closeout.json`](protocol_archive/joy_v5_selection_closeout.json)
 (SHA-256
 `e75fe99db1e8a12d100bd968704e3eb3af339a901f75d6f4271f28e2fd492ba5`).
@@ -1270,3 +1270,33 @@ exclusivity preflight passes. The final local checks were `27/27` focused V5
 tests and `108/108` repository tests, plus clean Python compilation, shell
 syntax, and whitespace checks. Preparation deliberately still rejects the
 new provenance files until they are committed together on a clean tree.
+
+### Outcome-free V5 prelaunch failure and infrastructure amendment 1
+
+Commit `5b67e98c9a35dea1dd5ea12fa3c3dbb52ff5fd5d` was pushed and the V5 state
+was prepared and verified before dispatch. Modal app
+`ap-MyIzIl9cIrBURNmaupZ246` then built image `im-NoHVViPWtyMEC3yOCAGICv`, but
+Modal rejected the app definition because the final evidence function's
+explicit 20,480 MiB ephemeral-disk request was below this workspace's current
+524,288 MiB minimum. The app stopped at 08:37:02 UTC with zero tasks. Its local
+entrypoint never ran, so there was no claim, function call, GPU task, W&B run,
+or scientific outcome. Fresh Volume
+`j-lens-rl-confirmatory-v5-emotional-20260714a` was rechecked after stop and its
+root listing was exactly empty.
+
+The immutable closeout is
+[`protocol_archive/v5_emotional_prelaunch_attempt0_closeout.json`](protocol_archive/v5_emotional_prelaunch_attempt0_closeout.json)
+(SHA-256 `9151fa5c8ba3e95c37b2abc53ee6e35bab6cb2de2bd7656922f1809f816bb8d4`).
+Infrastructure amendment 1 is
+[`protocol_archive/v5_emotional_infrastructure_amendment1.json`](protocol_archive/v5_emotional_infrastructure_amendment1.json)
+(SHA-256 `d845fd829b00deb80cfed402e8fd8a04543c2ddffc451329dcfc572e296f3f42`).
+It authorizes exactly two operational changes: use fresh Volume
+`j-lens-rl-confirmatory-v5-emotional-20260714b` and request Modal's 524,288 MiB
+disk floor for the late CPU finalizer. The original registration remains
+byte-identical at SHA-256
+`b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527`,
+so every scientific choice and preregistered W&B ID is unchanged. Current
+prepared state additionally pins the amended source bytes, amendment hash,
+closeout hash, fresh Volume, clean Git commit, and full source snapshot.
+The amended code passed `31/31` focused V5 tests and the full repository suite
+at `109/109`, plus Python compilation, shell syntax, and whitespace checks.

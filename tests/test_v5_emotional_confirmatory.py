@@ -589,10 +589,45 @@ def test_final_registration_is_exact_current_joy_h6_prospective_template() -> No
     v5._validate_registration_shape(registration)
 
 
+def test_outcome_free_infrastructure_amendment_preserves_registration() -> None:
+    registration_path = ROOT / "protocol_archive" / "v5_emotional_registration.json"
+    closeout_path = (
+        ROOT
+        / "protocol_archive"
+        / "v5_emotional_prelaunch_attempt0_closeout.json"
+    )
+    amendment_path = (
+        ROOT / "protocol_archive" / "v5_emotional_infrastructure_amendment1.json"
+    )
+    closeout = json.loads(closeout_path.read_text())
+    amendment = json.loads(amendment_path.read_text())
+    assert v5.sha256_file(registration_path) == v5.ORIGINAL_REGISTRATION_SHA256
+    assert v5.sha256_file(closeout_path) == v5.V5_PRELAUNCH_CLOSEOUT_SHA256
+    assert v5.sha256_file(amendment_path) == v5.V5_INFRASTRUCTURE_AMENDMENT1_SHA256
+    assert closeout["outcome_boundary"] == {
+        "claim_created": False,
+        "function_call_dispatched": False,
+        "gpu_task_started": False,
+        "local_entrypoint_ran": False,
+        "scientific_outcome_exists": False,
+        "scientific_outcome_inspected": False,
+        "wandb_run_created": False,
+    }
+    assert amendment["scientific_protocol_changed"] is False
+    assert amendment["authorized_changes"]["volume"] == {
+        "from": v5.ORIGINAL_VOLUME_NAME,
+        "to": v5.VOLUME_NAME,
+    }
+    assert amendment["authorized_changes"]["finalizer_ephemeral_disk_mib"][
+        "to"
+    ] == 524288
+
+
 def test_modal_runner_has_gated_controls_and_one_mapped_final_collection() -> None:
     source = (ROOT / "modal_confirmatory_v5.py").read_text()
     assert 'REMOTE_STATE = REMOTE_REPO / ".confirmatory" / "v5"' in source
-    assert 'VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714a"' in source
+    assert 'VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714b"' in source
+    assert "ephemeral_disk=1024 * 512" in source
     assert "MAX_GPU_CONTAINERS = 1" in source
     assert "GLOBAL_MODAL_GPU_LIMIT = 1" in source
     assert "_serial_gpu_waves" in source

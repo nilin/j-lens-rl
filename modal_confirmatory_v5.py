@@ -25,7 +25,7 @@ LOCAL_REPO = Path(__file__).resolve().parent
 LOCAL_STATE = LOCAL_REPO / ".confirmatory" / "v5"
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = REMOTE_REPO / ".confirmatory" / "v5"
-VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714a"
+VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714b"
 SEEDS = tuple(range(168, 176))
 MAX_GPU_CONTAINERS = 1
 GPU_TYPE = "L40S"
@@ -622,7 +622,10 @@ def analyze_final(collection_id: str) -> dict[str, Any]:
     image=repo_image,
     cpu=4,
     memory=16384,
-    ephemeral_disk=1024 * 20,
+    # This Modal workspace currently enforces a 512 GiB minimum explicit
+    # ephemeral-disk request.  The first prelaunch attempt requested 20 GiB
+    # and was rejected before the local entrypoint, claim, GPU, or W&B ran.
+    ephemeral_disk=1024 * 512,
     timeout=4 * 60 * 60,
     startup_timeout=60 * 60,
     retries=0,

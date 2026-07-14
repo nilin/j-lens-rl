@@ -1,0 +1,39 @@
+{
+  "app": {
+    "app_id": "ap-MyIzIl9cIrBURNmaupZ246",
+    "created_at_utc": "2026-07-14T08:34:27Z",
+    "description": "j-lens-rl-confirmatory-v5-emotional",
+    "state": "stopped",
+    "stopped_at_utc": "2026-07-14T08:37:02Z",
+    "tasks_at_closeout": 0,
+    "url": "https://modal.com/apps/nilin/main/ap-MyIzIl9cIrBURNmaupZ246"
+  },
+  "closed_at_utc": "2026-07-14T08:42:00Z",
+  "failure": {
+    "error": "Function disk request out of bounds: 20480 MiB. Must be between 524288 and 3145728 MiB.",
+    "failed_phase": "Modal function-definition validation after successful image build and before local entrypoint dispatch",
+    "image_id": "im-NoHVViPWtyMEC3yOCAGICv",
+    "requested_ephemeral_disk_mib": 20480
+  },
+  "frozen_scientific_registration": {
+    "path": "protocol_archive/v5_emotional_registration.json",
+    "sha256": "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527"
+  },
+  "git_commit": "5b67e98c9a35dea1dd5ea12fa3c3dbb52ff5fd5d",
+  "outcome_boundary": {
+    "claim_created": false,
+    "function_call_dispatched": false,
+    "gpu_task_started": false,
+    "local_entrypoint_ran": false,
+    "scientific_outcome_exists": false,
+    "scientific_outcome_inspected": false,
+    "wandb_run_created": false
+  },
+  "protocol": "j-lens-rl-confirmatory-v5-emotional-prelaunch-closeout-v1",
+  "replay_policy": "Volume A is immutable and ineligible even though empty; a packaging-only amendment must use a fresh Volume and the byte-identical scientific registration.",
+  "volume": {
+    "file_count_at_closeout": 0,
+    "name": "j-lens-rl-confirmatory-v5-emotional-20260714a",
+    "root_listing": []
+  }
+}
