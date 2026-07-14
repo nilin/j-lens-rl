@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_word_screen_is_bounded_and_uses_only_exposed_manifests():
     assert screen.MAX_GPU_CONTAINERS == 8
     assert screen.CALIBRATION_MAX_GPU_CONTAINERS == 2
+    assert screen.VOLUME_NAME == "j-lens-rl-alternative-screen-v1-20260714b"
     assert screen.SEED == 167
     assert screen.EXPECTED_STEPS == (0, 2, 4, 6, 10, 15, 20, 25)
     assert screen.GATE_STEPS == (0, 2, 4, 6)
@@ -30,6 +31,9 @@ def test_word_screen_is_bounded_and_uses_only_exposed_manifests():
     assert closeout["evals_directory_present"] is False
     assert closeout["final_evaluation_labels"] == []
     assert closeout["signflip_run_labels"] == []
+    assert "output.parent.mkdir(parents=True, exist_ok=True)" in source
+    launcher = (ROOT / "run_word_screen.sh").read_text()
+    assert "modal run --detach" in launcher
 
 
 def test_word_families_and_variants_are_exact_j_only_constructions():

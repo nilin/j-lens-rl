@@ -2,7 +2,7 @@
   "alternative_screen": {
     "all_variants_must_complete": true,
     "app": "j-lens-rl-alternative-screen-v1",
-    "code_sha256": "dd6f516c62e07cc1bacacfc9f029b010bcb79ba3653515b510381ba0057e36d6",
+    "code_sha256": "fd94228a3149b4b08967c29cef35cac2d054966190ddcefbac8fd5038744eac3",
     "config_sha256": {
       "configs/word_explore_celebration_taper.json": "e42bd0e3221fe03553ddec27bed3a91bf582e1e8ed775618536c7205ec2dfa34",
       "configs/word_explore_celebration_ultradense.json": "2d1dc228da1eba0399cbe681fee0260919be29b7e85cc02a0b98d39f037e42fe",
@@ -17,6 +17,8 @@
     "criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
     "development_curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
     "evaluation_steps": [0, 2, 4, 6, 10, 15, 20, 25],
+    "fit_lens_sha256": "d5088ce2759c4f98972ee8a0ae7c3eed2feb32a60249d6874f37e8baee860651",
+    "launcher_sha256": "9c4d03486cb93aa969733e40b0e729a569081858c94d4c5110a809f6932ec01d",
     "max_parallel_gpu_workers": 8,
     "outcome_status_at_freeze": "not launched and not inspected",
     "seed": 167,
@@ -32,7 +34,7 @@
     ],
     "selection_rule": "first passing variant in the frozen priority; no passer means stop",
     "train_exclusions_manifest_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
-    "volume": "j-lens-rl-alternative-screen-v1-20260714a"
+    "volume": "j-lens-rl-alternative-screen-v1-20260714b"
   },
   "confirmation": {
     "acceptance": {
@@ -69,7 +71,8 @@
     "terminal_one_shot": true,
     "use_step_25_adapter_only": true
   },
-  "frozen_at_utc": "2026-07-14T05:17:25Z",
+  "failed_screen_attempt_closeout_sha256": "399559f0607bded85048633179b39a33da25d2de9fcdb4e448725770a30b90c7",
+  "frozen_at_utc": "2026-07-14T05:32:09Z",
   "no_look_split": {
     "allocation_algorithm": "ascending raw SHA-256(salt + ':' + base-10 source index), first 400 curve and remaining 1300 sealed final",
     "curve_manifest_sha256": "b01409c011012641be96c84bfc35cb0b352cea902e54304105efa272a3eac6b2",

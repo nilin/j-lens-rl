@@ -30,7 +30,7 @@ CANONICAL_REPO = Path("/j-lens-rl")
 LOCAL_ARTIFACTS = CANONICAL_REPO / "artifacts"
 LOCAL_MANIFESTS = CANONICAL_REPO / ".confirmatory/manifests"
 
-VOLUME_NAME = "j-lens-rl-alternative-screen-v1-20260714a"
+VOLUME_NAME = "j-lens-rl-alternative-screen-v1-20260714b"
 GPU_TYPE = "L40S"
 MAX_GPU_CONTAINERS = 8
 CALIBRATION_MAX_GPU_CONTAINERS = 2
@@ -47,6 +47,10 @@ V4_CLOSEOUT_SHA256 = (
     "aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35"
 )
 V5_PREREGISTRATION_RELATIVE = "protocol_archive/v5_preregistration.json"
+FAILED_SCREEN_CLOSEOUT_RELATIVE = "protocol_archive/word_screen_attempt1_closeout.json"
+FAILED_SCREEN_CLOSEOUT_SHA256 = (
+    "399559f0607bded85048633179b39a33da25d2de9fcdb4e448725770a30b90c7"
+)
 EXPOSED_MANIFEST_SHA256 = {
     "curve_indices.json": (
         "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1"
@@ -245,6 +249,9 @@ def _validate_v5_preregistration(repo: Path) -> str:
         frozen.get("v4_closeout_sha256") != V4_CLOSEOUT_SHA256
         or screen.get("outcome_status_at_freeze") != "not launched and not inspected"
         or screen.get("code_sha256") != _sha256(repo / "modal_word_explore.py")
+        or screen.get("launcher_sha256") != _sha256(repo / "run_word_screen.sh")
+        or screen.get("fit_lens_sha256")
+        != _sha256(repo / "src/jlens_rl/fit_lens.py")
         or screen.get("selection_priority") != list(PRIORITY)
     ):
         raise RuntimeError("the conditional V5 preregistration changed")
@@ -254,6 +261,14 @@ def _validate_v5_preregistration(repo: Path) -> str:
     }
     if screen.get("config_sha256") != actual_configs:
         raise RuntimeError("the preregistered screen configs changed")
+    failed_closeout = repo / FAILED_SCREEN_CLOSEOUT_RELATIVE
+    if (
+        not failed_closeout.is_file()
+        or _sha256(failed_closeout) != FAILED_SCREEN_CLOSEOUT_SHA256
+        or frozen.get("failed_screen_attempt_closeout_sha256")
+        != FAILED_SCREEN_CLOSEOUT_SHA256
+    ):
+        raise RuntimeError("the no-outcome failed screen closeout changed")
     return _sha256(path)
 
 
@@ -292,6 +307,7 @@ def _launch_manifest() -> dict[str, Any]:
         "solved_calibration_sha256": SOLVED_CALIBRATION_SHA256,
         "v4_closeout_sha256": v4_closeout_sha256,
         "v5_preregistration_sha256": v5_preregistration_sha256,
+        "failed_screen_attempt_closeout_sha256": FAILED_SCREEN_CLOSEOUT_SHA256,
         "config_sha256": {
             path: _sha256(LOCAL_REPO / path)
             for path in ["configs/word_explore_common.json", *VARIANTS.values()]
@@ -332,6 +348,11 @@ def _verify_remote_manifest(manifest: dict[str, Any]) -> None:
         REMOTE_REPO
     ):
         raise RuntimeError("remote V5 preregistration differs from launch")
+    if (
+        manifest.get("failed_screen_attempt_closeout_sha256")
+        != FAILED_SCREEN_CLOSEOUT_SHA256
+    ):
+        raise RuntimeError("remote failed-screen closeout differs from launch")
     actual_manifests = {
         name: _sha256(REMOTE_REPO / ".confirmatory/manifests" / name)
         for name in EXPOSED_MANIFEST_SHA256
@@ -403,6 +424,7 @@ def calibrate_family(family: str) -> dict[str, Any]:
     manifest = json.loads((REMOTE_OUTPUT / "attempt_manifest.json").read_text())
     _verify_remote_manifest(manifest)
     output = REMOTE_OUTPUT / "artifacts" / f"{family}_calibration.json"
+    output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists():
         raise FileExistsError(f"refusing to overwrite calibration: {output}")
     command = [

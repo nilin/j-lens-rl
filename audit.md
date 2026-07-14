@@ -856,14 +856,15 @@ The launcher now fails closed unless the byte-pinned V4 closeout proves
 that closeout and the pre-outcome V5 registration both locally before claiming
 the Volume and remotely from the baked clean commit. Config, calibration,
 resolved-config, data-index, run-manifest, runtime, source, and literal audits
-are also fail-closed. The screen code SHA-256 frozen before outcomes is
-`dd6f516c62e07cc1bacacfc9f029b010bcb79ba3653515b510381ba0057e36d6`.
+are also fail-closed. The corrected screen code SHA-256 frozen before outcomes
+is `fd94228a3149b4b08967c29cef35cac2d054966190ddcefbac8fd5038744eac3`.
 
 ### Conditional V5 no-look confirmation
 
 [`protocol_archive/v5_preregistration.json`](protocol_archive/v5_preregistration.json)
-was last frozen at 05:17:25 UTC, after V4 stopped but before the alternative screen
-was launched or any outcome existed. It fixes the selection rule above and
+was last frozen at 05:32:09 UTC, after V4 stopped and after the zero-outcome
+operational attempt below, but before the fresh alternative screen was
+launched or any outcome existed. It fixes the selection rule above and
 reallocates only V4's unopened 1,700-item parent. The parent manifest SHA-256
 is `acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3`
 and its canonical sorted-set SHA-256 is
@@ -908,3 +909,32 @@ fallback arm, rerun-until-pass, or recycling of its unopened final allocation
 is authorized. A pass would support only the exact selected word/reward
 recipe, not arbitrary J-lens words. As of this freeze, reliable or significant
 positive evidence has still not been demonstrated.
+
+### First word-screen launch closed before outcomes
+
+The first launch from clean commit
+`2ee3b5c3d8da37de82ed57ad8ad883d25e2fb58f` claimed fresh Volume
+`j-lens-rl-alternative-screen-v1-20260714a` under claim
+`6abe6d6d6adb4bebaf0dcccb6b9a8102`. App
+`ap-p9J9f0djFb7vyo3LSK0Y6c` stopped after its non-detached local entrypoint,
+before its spawned orchestrator started. The same claim was then resumed
+without alteration on detached app `ap-lnIqyYPDl2Em4vM4Un6vN9`.
+
+Both calibration workers reached the pinned model and WikiText, but failed
+when `fit_lens` tried to write under the not-yet-created
+`/word_explore/artifacts/` directory. Durable status became `failed` at
+05:28:38 UTC. The stopped Volume contains exactly `attempt_manifest.json` and
+`attempt_status.json`: there is no calibration artifact, resolved config,
+training run, validation history, adapter, or evaluation outcome. No current
+sealed or reserve manifest was mounted. This attempt therefore contains no
+adaptive result and does not alter selection or V5 inference.
+
+[`protocol_archive/word_screen_attempt1_closeout.json`](protocol_archive/word_screen_attempt1_closeout.json)
+pins both app/call identities, the exact failure, file hashes, and the
+two-file inventory; its SHA-256 is
+`399559f0607bded85048633179b39a33da25d2de9fcdb4e448725770a30b90c7`.
+The fix creates calibration-output parents both in the general `fit_lens`
+writer and defensively in the Modal worker. A checked-in
+`run_word_screen.sh` now always uses Modal detached mode. The corrected screen
+uses fresh Volume `j-lens-rl-alternative-screen-v1-20260714b`; the failed
+Volume is never reused.

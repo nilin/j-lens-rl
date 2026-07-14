@@ -138,3 +138,10 @@ currently beta. See Modal's official guides for
 [GPU selection](https://modal.com/docs/guide/gpu),
 [parallel maps](https://modal.com/docs/guide/batch-processing), and
 [Volume consistency](https://modal.com/docs/guide/volumes).
+
+Launch the word-first exploratory screen through its detached wrapper so its
+spawned orchestrator survives the local entrypoint:
+
+```bash
+./run_word_screen.sh
+```

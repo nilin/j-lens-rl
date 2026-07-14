@@ -17,6 +17,8 @@ def test_alternative_screen_is_byte_pinned_before_outcomes():
     assert screen["outcome_status_at_freeze"] == "not launched and not inspected"
     assert screen["all_variants_must_complete"] is True
     assert screen["code_sha256"] == sha256(ROOT / "modal_word_explore.py")
+    assert screen["launcher_sha256"] == sha256(ROOT / "run_word_screen.sh")
+    assert screen["fit_lens_sha256"] == sha256(ROOT / "src/jlens_rl/fit_lens.py")
     for relative, expected in screen["config_sha256"].items():
         assert sha256(ROOT / relative) == expected
     assert screen["selection_priority"] == [
@@ -41,6 +43,12 @@ def test_v4_no_look_closeout_and_v5_split_are_frozen():
     assert closeout["final_unlocked_present"] is False
     assert closeout["evals_directory_present"] is False
     assert closeout["signflip_run_labels"] == []
+    failed = ROOT / "protocol_archive/word_screen_attempt1_closeout.json"
+    assert frozen["failed_screen_attempt_closeout_sha256"] == sha256(failed)
+    failed_payload = json.loads(failed.read_text())
+    assert failed_payload["training_started"] is False
+    assert failed_payload["calibration_artifacts"] == []
+    assert failed_payload["validation_histories"] == []
     split = frozen["no_look_split"]
     assert split["source_parent_size"] == 1700
     assert split["curve_size"] == 400

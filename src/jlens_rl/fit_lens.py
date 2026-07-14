@@ -112,6 +112,12 @@ def ungraded_gsm8k_rollouts(
     return texts
 
 
+def write_calibration(path: str | Path, stats: dict[str, object]) -> None:
+    output = Path(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(stats, indent=2) + "\n")
+
+
 def main() -> None:
     args = parse_args()
     target_words = args.target_word or ["solved"]
@@ -268,7 +274,7 @@ def main() -> None:
             args.rollout_offset if args.corpus == "gsm8k_rollouts" else None
         ),
     }
-    Path(args.calibration_output).write_text(json.dumps(stats, indent=2) + "\n")
+    write_calibration(args.calibration_output, stats)
     print(json.dumps(stats, indent=2))
 
 

@@ -1,0 +1,35 @@
+{
+  "attempt_manifest_sha256": "40e2a3ca3c07acc8759988d9049f7511fced4a072567aa30d774dda9d05a1f6f",
+  "attempt_status_sha256": "7bd8d555004687b9c12a95e894b494addd85fbc91395cf27681ae2d167febddf",
+  "calibration_artifacts": [],
+  "claim_id": "6abe6d6d6adb4bebaf0dcccb6b9a8102",
+  "eval_outcomes": [],
+  "failure": {
+    "classification": "pre-training operational failure",
+    "message": "both fit_lens workers could not create calibration JSON because /word_explore/artifacts did not exist",
+    "stage": "calibrating",
+    "status_updated_at_utc": "2026-07-14T05:28:38.964150+00:00"
+  },
+  "git_commit": "2ee3b5c3d8da37de82ed57ad8ad883d25e2fb58f",
+  "initial_claim_app": {
+    "app_id": "ap-p9J9f0djFb7vyo3LSK0Y6c",
+    "function_call_id": "fc-01KXFH9VH2CDVV0T58F2SE0P20",
+    "stopped_at_utc": "2026-07-14T05:23:55+00:00"
+  },
+  "protocol": "j-lens-rl-alternative-screen-v1",
+  "resume_app": {
+    "app_id": "ap-lnIqyYPDl2Em4vM4Un6vN9",
+    "function_call_id": "fc-01KXFHH4Q4N9MPZA7QHD4KD8YR",
+    "stopped_at_utc": "2026-07-14T05:28:40+00:00"
+  },
+  "run_labels": [],
+  "sealed_or_reserve_manifests_mounted": false,
+  "terminal_stage": "failed",
+  "training_started": false,
+  "validation_histories": [],
+  "volume": "j-lens-rl-alternative-screen-v1-20260714a",
+  "volume_inventory": [
+    "attempt_manifest.json",
+    "attempt_status.json"
+  ]
+}
