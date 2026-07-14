@@ -1,0 +1,13 @@
+{
+  "app_id": "ap-00KK17sItEjp4v1dsBHSbR",
+  "attempt_manifest_sha256": "36d75cbedcadcfabee8250b889c351a06eb20ec1be9adb7e378d09ed9da33970",
+  "claim_id": "db5787c467384c328940fa8f43f538c6",
+  "function_call_id": "fc-01KXFT3NCM9HASKJ5E7V1Z0XGR",
+  "git_commit": "e0fd7682ac27c7b95bd227137548d9ea53bb8baa",
+  "global_modal_gpu_limit": 1,
+  "gpu_type": "L40S",
+  "max_parallel_gpu_workers": 1,
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-attempt4-launch-receipt",
+  "submitted_at_utc": "2026-07-14T07:57:42.783841+00:00",
+  "volume": "j-lens-rl-word-correlation-v1-20260714d"
+}
