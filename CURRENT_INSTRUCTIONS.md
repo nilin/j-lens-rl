@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 07:20 UTC
+Last reconciled with the user: 2026-07-14 07:31 UTC
 
 ## Objective
 
@@ -33,33 +33,32 @@ from confirmatory claims.
 
 ## Execution and continuity
 
-- Use a hard global limit of **2 simultaneous Modal GPUs**. Never overlap two
-  GPU apps if their combined live GPU workers could exceed two; run queued
-  experiment phases serially. Prefer multiple seeds for confirmation.
+- Use a hard global limit of **1 simultaneous Modal GPU**; serialize all GPU
+  workers and never overlap Modal GPU apps.
+- Treat Codex use as a rate limit, never a cumulative stop: prior usage alone
+  cannot pause work. If current/recent use exceeds twice the plan's weekly
+  average rate (`weekly allowance / 84` per hour), pause 20 minutes, resume,
+  and reassess the current rate.
 - Keep working while the user is away: monitor, diagnose, and continue the next
   registered step.
-- If Modal is unavailable or rejects work because of its GPU limit, immediately
-  continue unfinished work sequentially on the idle local RTX 4090. Preserve
-  exact configs, data manifests, calibrations, seeds, and W&B identities; never
-  rerun completed arms as if they were new evidence. If the local W&B key is
-  unavailable, run offline under the preserved ID and sync later.
+- Never mix L40S and RTX 4090 runs within an inferential attempt. If Modal is
+  unavailable, close any partial attempt immutably and register a whole fresh
+  local attempt with exact configs/manifests/calibrations/seeds/W&B IDs. Use
+  offline W&B and sync later if the local key is unavailable.
 - Keep all active RL runs visible in the `j-lens-rl` W&B project.
 
 ## Reproducibility and safety
 
 - Support exact replay and reconstruction without rerunning. Commit/push before
-  outcome-bearing runs. Archive resolved configs, commands, data/calibration
-  manifests, code/runtime hashes, curves and training histories, W&B identities
-  and metric definitions, and checkpoint/adapter/eval-record hashes. Every W&B
-  series must remain interpretable if W&B disappears.
+  outcome-bearing runs; archive configs, commands, manifests, code/runtime and
+  artifact hashes, full histories, W&B identities, and every metric definition.
 - Use fresh immutable output locations and preserve self-contained result
   summaries and raw-artifact inventories in `audit.md` and `protocol_archive/`.
 - Keep unopened curve/final/reserve manifests out of exploratory jobs. Never
   inspect sealed outcomes before their registered gate permits it.
 - Current state: the eight-word screen is complete and mechanically selected
   positive `joy` as its sole early-curve passer; this remains adaptive evidence.
-  Its offline forensic closeout is sealed. Correlation attempt 1 failed before
-  selection in a descriptive-atlas edge case; relaunch only the frozen amended
-  scanner on its fresh Volume. In parallel, freeze the positive-`joy`, six-step
-  recipe and exact `0/2/4/6` curve nodes before running eight-seed confirmation,
-  matched sign flips, and one-shot final evaluation if its curve gate passes.
+  Its offline closeout is sealed. Correlation attempt 1 failed before selection;
+  run only the frozen amendment on its fresh Volume. Then freeze positive
+  `joy`, six updates, and `0/2/4/6` before eight-seed confirmation, matched sign
+  flips, and the gated one-shot final evaluation.

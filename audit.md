@@ -1161,3 +1161,17 @@ pins the two-worker launcher and forbids overlap with any other Modal GPU app.
 This scheduling-only change alters no scientific field, data, seed, score, or
 test. Subsequent confirmation is queued until the correlation app has fully
 stopped, so the account-wide live GPU count cannot exceed two.
+
+The first two-worker launch, app `ap-QAQk2EeSso2isJMolS9Nw0`, failed while
+building its image because a linked Git worktree's `.git` file pointed outside
+the copied checkout. It stopped before a function call, claim, calibration,
+GPU task, or result; its newly created `20260714b` Volume contains zero files.
+[`protocol_archive/word_correlation_attempt2_closeout.json`](protocol_archive/word_correlation_attempt2_closeout.json)
+pins that operational failure. The pre-launch packaging amendment
+[`protocol_archive/word_correlation_v1_amendment3.json`](protocol_archive/word_correlation_v1_amendment3.json)
+requires a complete standalone clean clone and fresh Volume
+`j-lens-rl-word-correlation-v1-20260714c`. It changes no scanner or scientific
+field. Before this amendment was committed or launched, the user reduced the
+global ceiling again to one Modal GPU to save cost; amendment 3 therefore pins
+a fully serial one-worker launcher. All later Modal GPU work must also be
+serial and cannot overlap this scan.

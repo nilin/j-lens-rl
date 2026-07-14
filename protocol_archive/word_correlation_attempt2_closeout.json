@@ -1,0 +1,32 @@
+{
+  "app_id": "ap-QAQk2EeSso2isJMolS9Nw0",
+  "closed_at_utc": "2026-07-14T07:33:49Z",
+  "created_at_utc": "2026-07-14T07:30:52Z",
+  "failure": {
+    "message": "fatal: not a git repository: /j-lens-rl/.git/worktrees/jlens-word-correlation-launch-aeb9aed",
+    "root_cause": "A linked Git worktree stores an absolute .git pointer to the primary checkout. Modal copied the worktree without that external administrative path, so the image's clean-repository finalizer failed.",
+    "stage": "image_build",
+    "type": "CalledProcessError"
+  },
+  "function_call_id": null,
+  "gpu_tasks_started": 0,
+  "launch_commit": "aeb9aed9d7cbb66be547f3435face2537a1710b0",
+  "launcher_sha256": "b837860406d46335e60fa402943d05b1c533124f64484f1674534be5ef3c3c4d",
+  "modal_stopped_at_utc": "2026-07-14T07:32:40Z",
+  "outcome_boundary": {
+    "attempt_claim_exists": false,
+    "attempt_manifest_exists": false,
+    "attempt_status_exists": false,
+    "calibration_started": false,
+    "discovery_started": false,
+    "outcome_data_exists": false,
+    "selection_or_validation_started": false
+  },
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-attempt2-build-closeout",
+  "relaunch_rule": "Use a complete standalone Git clone on a new Volume; never reuse this created Volume even though it is empty.",
+  "scientific_protocol_reached": false,
+  "volume": {
+    "file_count": 0,
+    "name": "j-lens-rl-word-correlation-v1-20260714b"
+  }
+}

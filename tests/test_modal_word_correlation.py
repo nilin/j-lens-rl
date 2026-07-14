@@ -164,7 +164,9 @@ def test_preregistration_pins_the_exact_unlaunched_emotional_scanner():
         "a45f70c298ba02cc86f6d7de5df84e0ebe5f2de5afe9991463c4b88e9c5ea51a"
     )
     assert amendment["new_attempt"]["scanner_sha256"] == _sha256(SCANNER_PATH)
-    assert amendment["new_attempt"]["volume"] == _assignment("VOLUME_NAME")
+    assert amendment["new_attempt"]["volume"] == (
+        "j-lens-rl-word-correlation-v1-20260714b"
+    )
     assert amendment["amendment"]["primary_selection_or_inference_changed"] is False
     throttle = json.loads(
         (ROOT / "protocol_archive" / "word_correlation_v1_amendment2.json").read_text()
@@ -172,8 +174,22 @@ def test_preregistration_pins_the_exact_unlaunched_emotional_scanner():
     assert throttle["amendment1_sha256"] == _sha256(
         ROOT / "protocol_archive" / "word_correlation_v1_amendment1.json"
     )
-    assert throttle["new_attempt"]["launcher_sha256"] == _sha256(MODAL_PATH)
+    assert throttle["new_attempt"]["launcher_sha256"] == (
+        "b837860406d46335e60fa402943d05b1c533124f64484f1674534be5ef3c3c4d"
+    )
     assert throttle["new_attempt"]["max_parallel_gpu_workers"] == 2
+    packaging = json.loads(
+        (ROOT / "protocol_archive" / "word_correlation_v1_amendment3.json").read_text()
+    )
+    assert packaging["amendment2_sha256"] == _sha256(
+        ROOT / "protocol_archive" / "word_correlation_v1_amendment2.json"
+    )
+    assert packaging["attempt2_closeout_sha256"] == _sha256(
+        ROOT / "protocol_archive" / "word_correlation_attempt2_closeout.json"
+    )
+    assert packaging["new_attempt"]["max_parallel_gpu_workers"] == 1
+    assert packaging["new_attempt"]["launcher_sha256"] == _sha256(MODAL_PATH)
+    assert packaging["new_attempt"]["volume"] == _assignment("VOLUME_NAME")
     assert prereg["launcher_script_sha256"] == _sha256(
         ROOT / "run_word_correlation.sh"
     )
@@ -241,9 +257,9 @@ def test_config_freezes_exactly_36_emotional_words_and_token_families():
     )
 
 
-def test_modal_caps_each_correlation_phase_at_eight_l40s_workers():
+def test_modal_runs_correlation_shards_on_one_l40s_worker():
     assert _assignment("NUM_SHARDS") == 8
-    assert _assignment("MAX_GPU_CONTAINERS") == 2
+    assert _assignment("MAX_GPU_CONTAINERS") == 1
     assert _assignment("GPU_TYPE") == "L40S"
 
     for function_name in ("discovery_shard", "validation_shard"):
@@ -264,7 +280,7 @@ def test_modal_caps_each_correlation_phase_at_eight_l40s_workers():
 
 
 def test_volume_is_fresh_and_selection_is_locked_between_phases():
-    assert _assignment("VOLUME_NAME") == "j-lens-rl-word-correlation-v1-20260714b"
+    assert _assignment("VOLUME_NAME") == "j-lens-rl-word-correlation-v1-20260714c"
     assert _assignment("PREREGISTRATION_RELATIVE") == (
         "protocol_archive/word_correlation_v1_preregistration.json"
     )

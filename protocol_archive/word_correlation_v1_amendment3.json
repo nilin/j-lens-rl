@@ -1,0 +1,23 @@
+{
+  "amendment2_sha256": "f256d42f7173220c1584ef733f01a1f6b4ad65d572b9b9a347fb59df56bc766b",
+  "attempt2_closeout_sha256": "a1e4f84667f199e804a3038cf3ce8759f98bbf9955085748171735365fbfcb8f",
+  "frozen_at_utc": "2026-07-14T07:36:00Z",
+  "new_attempt": {
+    "global_modal_gpu_limit": 1,
+    "launch_checkout": "complete standalone clean Git clone",
+    "launcher_sha256": "c0bd328fefb09f66e91c96d37980e6b1384c7c18b96fcebbe0573cb70c6ae802",
+    "max_parallel_gpu_workers": 1,
+    "no_other_modal_gpu_app_may_overlap": true,
+    "scanner_sha256": "9857957ba078be68b2cb1abd1974fab383c696c40622e2a76ad4d4b0476baace",
+    "volume": "j-lens-rl-word-correlation-v1-20260714c"
+  },
+  "outcome_status_at_freeze": "attempt 2 failed during image build with zero files and zero GPU tasks; attempt 3 not launched and fresh Volume absent",
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-amendment3-packaging",
+  "reason": "Attempt 2 used a linked worktree whose external Git administration path was unavailable in the Modal image. Before relaunch, the user also reduced the global Modal ceiling to one GPU to save cost. Both are operational changes only.",
+  "scientific_protocol_changed": false,
+  "unchanged": [
+    "all scientific fields from amendments 1 and 2",
+    "fully serial one-GPU global throttle",
+    "scanner source and tests"
+  ]
+}
