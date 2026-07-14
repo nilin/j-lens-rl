@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 11:55 UTC
+Last reconciled with the user: 2026-07-14 14:18 UTC
 
 ## Objective
 
@@ -60,21 +60,15 @@ from confirmatory claims.
   summaries and raw-artifact inventories in `audit.md` and `protocol_archive/`.
 - Keep unopened curve/final/reserve manifests out of exploratory jobs. Never
   inspect sealed outcomes before their registered gate permits it.
-- Current state: the registered eight-seed positive-`joy` V5 attempt completed
-  serially and failed its curve gate: mean exact match was
-  `.4100/.390625/.394375/.4003125` at `0/2/4/6`. Preserve it as honest negative
-  evidence; controls and sealed-final evaluation correctly never ran. The
-  V6 celebration attempt (`yay/great/success/nice`) ended infrastructure-failed
-  after six valid treatment seeds. Its partial mean was
-  `.3750/.384167/.3850/.37625` at `0/4/6/10`; the registered eight-seed gate was
-  never evaluated. Seeds 182--183, controls, and final evaluation did not run,
-  and the 900-item final stayed unopened. Preserve the immutable closeout and
-  never resume or pool Volume C. The next RL lineage is the already-frozen
-  conditional negative-`damn/fuck` V7 U5 replication, pending its independent
-  source/lease/predicate audit and fresh empty v2 Volume. Launch promptly once
-  those blockers pass, with no overlapping GPU app.
-  Correlation attempt 4 stopped after all eight discovery shards when Modal
-  preempted its CPU controller; aggregation/selection/validation never began
-  and outcomes remain uninspected. Its preemption-safe recovery and strict
-  no-`.git` image firewall are committed. Attempt 5 stays unlaunched behind the
-  higher-priority V7 RL work; both future launchers must use the shared lease.
+- Current state: V5 positive-`joy` failed its registered curve gate; V6
+  `yay/great/success/nice` ended infrastructure-failed after six valid seeds.
+  Preserve both as honest negative/partial evidence; neither opened the sealed
+  final. V7 negative-`damn/fuck` is now active, serially running treatment seeds
+  184--191 on one L40S from source commit `3a9ca5c` in Modal app
+  `ap-Vmg0kpbszpiUHHrNYcVWbd`, claim
+  `1f2756de5df846d48a30f19a307b70fb`, Volume
+  `j-lens-rl-confirmatory-v7-profanity-u5-20260714a`. Seed 184 began syncing to
+  W&B at 14:17:41 UTC. Do not start another GPU app, manually open controls or
+  final data, resume a closed attempt, or pool attempts. Correlation attempt 4
+  remains preempted after discovery with outcomes uninspected; attempt 5 stays
+  unlaunched behind V7 and must use the same global lease.

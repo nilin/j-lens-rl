@@ -1,0 +1,132 @@
+{
+  "compute": {
+    "global_modal_gpu_limit": 1,
+    "gpu_type": "L40S",
+    "max_parallel_gpu_workers": 1
+  },
+  "launch": {
+    "app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+    "claim_id": "1f2756de5df846d48a30f19a307b70fb",
+    "modal_app": "j-lens-rl-confirmatory-v7-profanity-u5",
+    "root_function_call_id": "fc-01KXGFPF0HBWNG0TW3BS8APCZ9",
+    "submitted_at_utc": "2026-07-14T14:15:11.286238+00:00",
+    "volume_name": "j-lens-rl-confirmatory-v7-profanity-u5-20260714a",
+    "volume_object_id": "vo-x35QE7lwawEvm6zayz2HQl",
+    "volume_version": 2
+  },
+  "operational_preflight": {
+    "active_other_modal_apps": [],
+    "checked_at_utc": "2026-07-14T14:14:28.960308+00:00",
+    "gpu_lease_dict": "j-lens-rl-global-gpu-lease-v1",
+    "gpu_lease_key": "global-one-gpu",
+    "gpu_lease_owner_at_preflight": null
+  },
+  "outcome_boundary": {
+    "includes_outcomes": false,
+    "includes_sealed_final_data": false,
+    "status_assertion": "durably submitted; this ledger makes no assertion about training progress, curve values, controls, final evaluation, or acceptance"
+  },
+  "observed_operational_status": {
+    "gpu_worker_status": "healthy",
+    "observed_at_utc": "2026-07-14T14:21:23+00:00",
+    "wandb_first_live_run": {
+      "condition": "jlens_seed184",
+      "run_id": "confirm-v7-emotional-profanity-u5-h20-jlens_seed184",
+      "sync_started_at_utc": "2026-07-14T14:17:41Z"
+    },
+    "status_scope": "operational liveness only; no metric, curve value, training result, or evaluation outcome was recorded"
+  },
+  "protocol": "j-lens-rl-confirmatory-v7-profanity-u5-launch-ledger-v1",
+  "protocol_reconstruction": {
+    "committed_records": {
+      "image_build_fix": {
+        "path": "protocol_archive/v7_profanity_prelaunch_image_build_fix.json",
+        "sha256": "0e0cb03a65792e0bd1c6b396739daa3306bdea1a718e76a6e4729e070488400a"
+      },
+      "manifest_identity_correction": {
+        "path": "protocol_archive/v7_profanity_prelaunch_manifest_identity_correction.json",
+        "sha256": "857cb03f3b868fcd5e3ec03bbd26d57b4422aafeb3fffd5366e60bd353a9eba3"
+      },
+      "registration": {
+        "path": "protocol_archive/v7_profanity_registration.json",
+        "sha256": "5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569"
+      },
+      "selected_recipe_lock": {
+        "path": "protocol_archive/v7_profanity_selected_recipe.json",
+        "sha256": "33760cfc906ed9c557eee40bc33a4bce2ce2fc32a8da23e887be8f97ad47c7f9"
+      },
+      "selection_closeout": {
+        "path": "protocol_archive/v7_profanity_selection_closeout.json",
+        "sha256": "c8db90955f34b61d03fe510c4ef4483fd1249a1b9a5cfcd42d4f411e4e5b2d0a"
+      },
+      "source_cleanup": {
+        "path": "protocol_archive/v7_profanity_prelaunch_source_cleanup.json",
+        "sha256": "d624e1a7dddc26a0ac8d0bae48618fe62c9be7904472df409b96f991e8c399ed"
+      },
+      "v6_terminal_closeout": {
+        "path": "protocol_archive/v6_celebration_terminal_closeout.json",
+        "sha256": "e14022a7dd5614726d7bf7fd4c9c8a40f4eb056b1c3a5dad9dbf3c1069912081"
+      }
+    },
+    "prepared_runtime_git_commit": "6d931a34cdbb93935b45220d791269faad76debd",
+    "prepared_volume_files": {
+      "protocol_state.json": "322e9dda548c5b573bd247f1dec02f30f040476523f0d41484b6c503bbaaecd5",
+      "reproducibility/launch_plan.json": "2aa516a21eeb59c0e3a19458e0f47fb4f94627c830e67a39251415b016ee6a48",
+      "reproducibility/metric_schema.json": "c9bffc201757d7d98baced84e166636c107efdf826f31c770727d15c2a873e94",
+      "reproducibility/registration.json": "5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569",
+      "reproducibility/selected_recipe_lock.json": "33760cfc906ed9c557eee40bc33a4bce2ce2fc32a8da23e887be8f97ad47c7f9",
+      "reproducibility/source_manifest.json": "47e5ba0a289758a0b92a3ca712052c0382e52ce5596a88e52e38c1eac2cbaa05",
+      "reproducibility/source_snapshot.zip": "d632d4986b5e0d33cf45149bc5f2022f03d3c28bf48ad8ee3d82c59143cd8072",
+      "reproducibility/v6_terminal_closeout.json": "e14022a7dd5614726d7bf7fd4c9c8a40f4eb056b1c3a5dad9dbf3c1069912081"
+    },
+    "reconstruction_rule": "Use the byte-pinned source snapshot and source manifest from the named Volume to reconstruct this attempt. A training rerun must use a fresh registered attempt, claim, and empty Volume; it must not resume or overwrite this claim.",
+    "remote_operational_records": {
+      "attempt_claim": "/attempt_claim.json",
+      "attempt_status": "/attempt_status.json",
+      "gpu_dispatches": "/gpu_dispatches/",
+      "launch_receipt": "/launch_receipt.json",
+      "runs": "/runs/"
+    },
+    "source_git_commit": "3a9ca5cb317dea9e76160355bc8d7fa6c1f23bb8"
+  },
+  "recorded_at_utc": "2026-07-14T14:18:52+00:00",
+  "registered_source_bytes": {
+    "modal_confirmatory_v7.py": "ff6e24fe0b2456897055a9acec09d7b099197c74f1233a5b08f924f46403764d",
+    "pyproject.toml": "8d61fd00ddd948627960d85f5ca2998c4ae4198104bc613afb5a324923aaa823",
+    "run_confirmatory_v7.sh": "3ea50a7c0f2f4bfd11494cd6789ac0c5babbbfbacd3a0b0a9f1ee2485bd0603b",
+    "scripts/confirmatory_v7_protocol.py": "88fdd38a774b6dfa5a01b4767524108f0ff6475216227c6500c36948830c0105",
+    "scripts/modal_cache_assets_v7.py": "4c6997d776d127dfa909bea4fc8e059b6484dc40d39b81cddf47ae6d3974491e",
+    "scripts/modal_finalize_image_v7.py": "d3452604403b0752cbe67e2a96531e6bd6baa0d24a7922abef28bf4d3b526ce2",
+    "scripts/modal_verify_v7_volume.py": "a68b66f44c922e99bde9c3fa36f13f6bde9ce963eac9a67ffdd58a661a43e5a3",
+    "scripts/v7_runtime_source_allowlist.json": "ab65b2efbc942b572cfed8ce25d3e6c9749d0fa6e17f021ec4925fb494846e0e"
+  },
+  "registered_source_tree_aggregates": {
+    "jlens_rl_runtime_tree_sha256": "fea903596c17bc4de3a98f4e83ba6e7253e49555bfcf81406fcbcac808a7d78b",
+    "trl_build_metadata_sha256": "f2665076902b2b6c86a8161c57fa34ac839f7f57acf0dceadb3138006d91071c",
+    "trl_runtime_tree_sha256": "e5cf1ef7b3aaa34f55840c786c6642081f0a1beaea3dc3a68cbf9e74a4ca7b87"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "expected_run_ids": {
+      "jlens_seed184": "confirm-v7-emotional-profanity-u5-h20-jlens_seed184",
+      "jlens_seed185": "confirm-v7-emotional-profanity-u5-h20-jlens_seed185",
+      "jlens_seed186": "confirm-v7-emotional-profanity-u5-h20-jlens_seed186",
+      "jlens_seed187": "confirm-v7-emotional-profanity-u5-h20-jlens_seed187",
+      "jlens_seed188": "confirm-v7-emotional-profanity-u5-h20-jlens_seed188",
+      "jlens_seed189": "confirm-v7-emotional-profanity-u5-h20-jlens_seed189",
+      "jlens_seed190": "confirm-v7-emotional-profanity-u5-h20-jlens_seed190",
+      "jlens_seed191": "confirm-v7-emotional-profanity-u5-h20-jlens_seed191",
+      "signflip_seed184": "confirm-v7-emotional-profanity-u5-h20-signflip_seed184",
+      "signflip_seed185": "confirm-v7-emotional-profanity-u5-h20-signflip_seed185",
+      "signflip_seed186": "confirm-v7-emotional-profanity-u5-h20-signflip_seed186",
+      "signflip_seed187": "confirm-v7-emotional-profanity-u5-h20-signflip_seed187",
+      "signflip_seed188": "confirm-v7-emotional-profanity-u5-h20-signflip_seed188",
+      "signflip_seed189": "confirm-v7-emotional-profanity-u5-h20-signflip_seed189",
+      "signflip_seed190": "confirm-v7-emotional-profanity-u5-h20-signflip_seed190",
+      "signflip_seed191": "confirm-v7-emotional-profanity-u5-h20-signflip_seed191"
+    },
+    "group": "confirm-v7-emotional-profanity-u5-h20",
+    "identity_status": "all entries are registered expected identities; observed_operational_status separately asserts liveness only for jlens_seed184, without metrics or outcomes",
+    "project": "j-lens-rl"
+  }
+}

@@ -1681,3 +1681,27 @@ set and hashes. It does not admit those files to the image. The failure and
 byte-pinned fix are recorded in
 `protocol_archive/v7_profanity_prelaunch_image_build_fix.json`, with a focused
 regression that recreates and removes `trl/build/lib/...`.
+
+### V7 outcome-free launch record
+
+V7 was durably submitted at `2026-07-14T14:15:11.286238+00:00` as Modal app
+`ap-Vmg0kpbszpiUHHrNYcVWbd`, root call
+`fc-01KXGFPF0HBWNG0TW3BS8APCZ9`, and claim
+`1f2756de5df846d48a30f19a307b70fb` on the fresh version-2 Volume
+`j-lens-rl-confirmatory-v7-profanity-u5-20260714a`
+(`vo-x35QE7lwawEvm6zayz2HQl`). The preflight found no other active Modal app and
+an empty global GPU lease; execution is restricted to one L40S worker. The
+source commit is `3a9ca5cb317dea9e76160355bc8d7fa6c1f23bb8` and the exact registration
+SHA-256 is
+`5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569`.
+The sole GPU worker was healthy, and the registered `jlens_seed184` W&B run had
+begun syncing at `2026-07-14T14:17:41Z`; those are operational-liveness facts,
+not training or evaluation outcomes.
+
+The reconstruction ledger is
+`protocol_archive/v7_profanity_launch_ledger.json`. It records the exact source
+and prepared-snapshot hashes, Volume evidence paths, and all registered W&B
+identities. It contains no training outcome, curve value, control outcome,
+sealed-final data, or acceptance claim. The active claim must never be resumed
+or overwritten; any rerun requires a fresh registered attempt, claim, and empty
+Volume.
