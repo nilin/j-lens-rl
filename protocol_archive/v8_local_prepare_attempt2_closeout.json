@@ -1,0 +1,17 @@
+{
+  "attempt_kind": "outcome_free_prepared_state_preflight",
+  "claim_present": false,
+  "error": "JSONDecodeError while the import probe parsed stdout containing a non-JSON notice before its identity JSON",
+  "failure_point": "after immutable local preparation and exact hardware probe, before claim, dispatch, training subprocess, W&B, or outcome",
+  "gpu_compute_processes_after_failure": [],
+  "head_commit": "280313bd5da3fdd7af7368b765cb46ffb0600017",
+  "operator_outcome_inspection": false,
+  "prepared_registration_sha256": "64b5e0541b082081a4ca75b43fc4a3a0dc4e6e4bd34281b8ce2d813bea47fa83",
+  "protocol": "j-lens-rl-confirmatory-v8-local-prepare-attempt2-closeout-v1",
+  "protocol_state_sha256": "5190052a7f72e7ce15a904d186fc6e8621d1990f8d318930d6caeb020ffabb57",
+  "remediation": "Emit the frozen import identity with a unique sentinel and require exactly one sentinel line; after this closeout/fix is committed and pushed, archive the unclaimed state and prepare again from the new commit.",
+  "run_directories_present": false,
+  "sealed_final_evaluation_or_outcome_access": false,
+  "source_snapshot_sha256": "ece8fca3029d510123189d1009453f1c483f0a6f88a730fbe4ea2f1d26696a96",
+  "wandb_directories_present": false
+}

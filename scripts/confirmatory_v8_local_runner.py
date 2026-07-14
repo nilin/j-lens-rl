@@ -91,13 +91,14 @@ def runtime_environment(label: str) -> dict[str, str]:
 
 def verify_frozen_imports() -> dict[str, str]:
     env = runtime_environment("preflight")
+    sentinel = "__V8_FROZEN_IMPORT_IDENTITY__="
     output = subprocess.check_output(
         [
             str(protocol.PYTHON_EXECUTABLE),
             "-c",
             (
                 "import json,jlens_rl,jlens_rl.train;"
-                "print(json.dumps({'package':jlens_rl.__file__,"
+                f"print('{sentinel}'+json.dumps({{'package':jlens_rl.__file__,"
                 "'train':jlens_rl.train.__file__}))"
             ),
         ],
@@ -105,7 +106,14 @@ def verify_frozen_imports() -> dict[str, str]:
         env=env,
         text=True,
     )
-    observed = json.loads(output)
+    identity_lines = [
+        line[len(sentinel) :]
+        for line in output.splitlines()
+        if line.startswith(sentinel)
+    ]
+    if len(identity_lines) != 1:
+        raise protocol.ProtocolError("frozen import probe emitted no unique identity")
+    observed = json.loads(identity_lines[0])
     runtime = protocol.RUNTIME_WORKTREE.resolve()
     for key, value in observed.items():
         try:

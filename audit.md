@@ -1842,3 +1842,12 @@ changes directory to the repository and invokes both entrypoints with `python
 `protocol_archive/v8_local_prelaunch_module_entrypoint_fix.json`. This changes
 no scientific or allocation field. The failed preparation may be cleared only
 after those records and the fix are committed and pushed.
+
+The next clean preparation completed, but its preflight probe rejected stdout
+because an imported dependency could emit a notice before the JSON identity.
+This was again before any claim, dispatch, training subprocess, W&B directory,
+GPU process, or outcome. The prepared registration/state/source-snapshot hashes
+are bound in `protocol_archive/v8_local_prepare_attempt2_closeout.json`. The
+probe now emits a unique sentinel and requires exactly one sentinel identity
+line, so unrelated notices cannot be mistaken for provenance. The unclaimed
+state may be archived and prepared again only after this fix is pushed.
