@@ -62,10 +62,10 @@ EXPECTED_MANIFEST_SHA256 = {
         "cb9abd0f254aed65ee7ef70fb5eae75094e8196b16472521863a8f310f6f4357"
     ),
     "curve_indices.json": (
-        "26f0e34b8422959ae0062f9b030ceb3609bc7c2ef8ba4f95dfa397594f7ecb75"
+        "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1"
     ),
     "sealed_final_indices.json": (
-        "84da0c0472b4442b4f35406d1b1fbd3b956803e5f19bf51fc02f6db013224f7b"
+        "acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3"
     ),
     "future_reserve_indices.json": (
         "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6"

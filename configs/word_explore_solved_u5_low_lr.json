@@ -1,0 +1,6 @@
+{
+  "base": "word_explore_solved_u5_control.json",
+  "learning_rate": 2e-6,
+  "run_name": "alternative-screen-solved-u5-low-lr-seed167",
+  "output_dir": "/word_explore/runs/solved_u5_low_lr"
+}
