@@ -1,0 +1,32 @@
+{
+  "claim_id": "d6131db54b6346199d9af8d1478f3e36",
+  "completed_at_utc": "2026-07-14T18:13:20.842219+00:00",
+  "console_sha256": "93a5e5fcaf6f519e19dc0436760df165e98b626c887b97d8ab7bbd5dee66d6aa",
+  "hardware": {
+    "boot_id_sha256": "2137b97844239185526179bc0e2ae5074d4ef17bbb1c856b57cd2a383f6410cf",
+    "foreign_compute_processes": [],
+    "gpu": {
+      "driver": "570.195.03",
+      "index": 0,
+      "memory_total_mib": 24564,
+      "name": "NVIDIA GeForce RTX 4090",
+      "uuid": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e"
+    },
+    "machine_id_sha256": "aed9946c7ac389c687b73bd918790d99da1303140bc502277f8d7c016975a486",
+    "schema_version": 1,
+    "torch": {
+      "bf16": true,
+      "count": 1,
+      "cuda": "12.8",
+      "name": "NVIDIA GeForce RTX 4090",
+      "torch": "2.9.1+cu128"
+    }
+  },
+  "intent_sha256": "d22eefda4a5a9debe4febda076aae2d906ca1e9701ad47279edf559855164be9",
+  "label": "jlens_seed213",
+  "offline_receipt_sha256": "4628ef3b524484dd486861604d7f362d85fd2942c4c713691f75a623cf3d2ccb",
+  "protocol": "j-lens-rl-confirmatory-v9-local-profanity-u5",
+  "returncode": 0,
+  "run_result_sha256": "61457faf8d66073fd11e90d6069fe154bb0fd71ac71c6044193f7e7762662a58",
+  "schema_version": 1
+}

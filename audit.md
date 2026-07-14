@@ -2009,3 +2009,12 @@ inequality currently has positive margin. Seed 213 began immediately. The
 CPU-only seed-212 upload verified exact W&B identity and all seven evidence
 files; its reconstructable ledger is
 `protocol_archive/v9_local_seed212_terminal_ledger.json`.
+
+Seed 213 completed with curve `.3975/.3975/.3925/.3875` and zero literal
+target-word completions. The six-seed descriptive mean is
+`.3975/.39542/.3975/.39125`. Consequently, the last two treatments must average
+above `.40375` at step 4 and average at least `.01875` improvement from step 10
+to step 20; the middle inequality still has positive margin. Seed 214 began
+immediately. The CPU-only seed-213 upload verified exact W&B identity and all
+seven evidence files; its reconstructable ledger is
+`protocol_archive/v9_local_seed213_terminal_ledger.json`.

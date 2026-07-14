@@ -1,0 +1,790 @@
+{
+  "git_commit": "4d2f884f246b85b9215a8332632e7092a76deb80",
+  "git_dirty": false,
+  "git_status": [],
+  "source_tree_sha256": "1f9329a9af9765fe32e0f04ae02387640618c93b7aa0ceca28aa655fc29b5564",
+  "config_path": "/j-lens-rl/.confirmatory/v9_local/configs/jlens_seed213.json",
+  "config_sha256": "6628291663bff7c99069c11732ade5f7864fdce0e7d37999c2803aa07be1cf4b",
+  "resolved_config_sha256": "6628291663bff7c99069c11732ade5f7864fdce0e7d37999c2803aa07be1cf4b",
+  "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "dataset": "openai/gsm8k:main",
+  "dataset_revision": "740312add88f781978c0658806c59bc2815b9866",
+  "reward_type": "jlens",
+  "process_command": {
+    "python_executable": "/j-lens-rl/.venv/bin/python",
+    "argv": [
+      "scripts/v9_local_train.py",
+      "--config",
+      ".confirmatory/v9_local/configs/jlens_seed213.json",
+      "--wandb-mode",
+      "offline"
+    ],
+    "cwd": "/j-lens-rl/.confirmatory/v9_local/runtime_worktree"
+  },
+  "registered_command": [
+    "/j-lens-rl/.venv/bin/python",
+    "scripts/v9_local_train.py",
+    "--config",
+    ".confirmatory/v9_local/configs/jlens_seed213.json",
+    "--wandb-mode",
+    "offline"
+  ],
+  "evidence_eligibility": "original_registered_v9_local_attempt",
+  "reproduction_source": null,
+  "confirmatory_identity": {
+    "registration_sha256": "5c9b776c452eea645361b72f87d8cabcd1059db654430cb7975f7325499b0ce4",
+    "recipe_lock_sha256": "b58aab172b63ba7e6f5d512d6f650ccc4c203dce54295c80512a6d98e85dad14",
+    "recipe_sha256": "0e0db8ec632a8b1f8e914d42de6bd2a104dee088858dc9759977fad7873e3672",
+    "curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions_manifest_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "registered_code_sha256": "18a6e4b550c69ffa4d37cb4c06da56b50c35b0577233b0333b58755a144829b1"
+  },
+  "metric_schema": {
+    "path": "/j-lens-rl/.confirmatory/v9_local/reproducibility/metric_schema.json",
+    "sha256": "c9bffc201757d7d98baced84e166636c107efdf826f31c770727d15c2a873e94",
+    "content": {
+      "condition_weight_semantics": {
+        "rule": "the shared schema derives aliases from each resolved run config; the matched control negates the sole component weight and changes nothing else",
+        "signflip_control": [
+          1.0
+        ],
+        "treatment": [
+          -1.0
+        ]
+      },
+      "observed_history_scalar_series": {
+        "clip_ratio/high_max": {
+          "definition": "fraction meeting the maximum upper-clipping predicate",
+          "local_field": "clip_ratio/high_max",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction of eligible sampled tokens",
+          "wandb_metric": "train/clip_ratio/high_max",
+          "wandb_summary_key": null
+        },
+        "clip_ratio/high_mean": {
+          "definition": "fraction meeting an upper-clipping predicate, averaged over the batch",
+          "local_field": "clip_ratio/high_mean",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction of eligible sampled tokens",
+          "wandb_metric": "train/clip_ratio/high_mean",
+          "wandb_summary_key": null
+        },
+        "clip_ratio/low_mean": {
+          "definition": "fraction meeting a lower-clipping predicate, averaged over the batch",
+          "local_field": "clip_ratio/low_mean",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction of eligible sampled tokens",
+          "wandb_metric": "train/clip_ratio/low_mean",
+          "wandb_summary_key": null
+        },
+        "clip_ratio/low_min": {
+          "definition": "fraction meeting the minimum lower-clipping predicate",
+          "local_field": "clip_ratio/low_min",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction of eligible sampled tokens",
+          "wandb_metric": "train/clip_ratio/low_min",
+          "wandb_summary_key": null
+        },
+        "clip_ratio/region_mean": {
+          "definition": "fraction outside the allowed clipping region, the union of low- and high-clipped tokens",
+          "local_field": "clip_ratio/region_mean",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction of eligible sampled tokens",
+          "wandb_metric": "train/clip_ratio/region_mean",
+          "wandb_summary_key": null
+        },
+        "completions/clipped_ratio": {
+          "definition": "fraction of completions clipped at the generation limit",
+          "local_field": "completions/clipped_ratio",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction",
+          "wandb_metric": "train/completions/clipped_ratio",
+          "wandb_summary_key": null
+        },
+        "completions/max_length": {
+          "definition": "maximum sampled completion length",
+          "local_field": "completions/max_length",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "generated tokens",
+          "wandb_metric": "train/completions/max_length",
+          "wandb_summary_key": null
+        },
+        "completions/max_terminated_length": {
+          "definition": "maximum naturally terminated completion length",
+          "local_field": "completions/max_terminated_length",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "generated tokens",
+          "wandb_metric": "train/completions/max_terminated_length",
+          "wandb_summary_key": null
+        },
+        "completions/mean_length": {
+          "definition": "mean sampled completion length",
+          "local_field": "completions/mean_length",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "generated tokens",
+          "wandb_metric": "train/completions/mean_length",
+          "wandb_summary_key": null
+        },
+        "completions/mean_terminated_length": {
+          "definition": "mean naturally terminated completion length",
+          "local_field": "completions/mean_terminated_length",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "generated tokens",
+          "wandb_metric": "train/completions/mean_terminated_length",
+          "wandb_summary_key": null
+        },
+        "completions/min_length": {
+          "definition": "minimum sampled completion length",
+          "local_field": "completions/min_length",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "generated tokens",
+          "wandb_metric": "train/completions/min_length",
+          "wandb_summary_key": null
+        },
+        "completions/min_terminated_length": {
+          "definition": "minimum naturally terminated completion length",
+          "local_field": "completions/min_terminated_length",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "generated tokens",
+          "wandb_metric": "train/completions/min_terminated_length",
+          "wandb_summary_key": null
+        },
+        "entropy": {
+          "definition": "mean policy-token entropy",
+          "local_field": "entropy",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "nats per sampled token",
+          "wandb_metric": "train/entropy",
+          "wandb_summary_key": null
+        },
+        "epoch": {
+          "definition": "fractional pass through the registered training sample budget",
+          "local_field": "epoch",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "training epochs",
+          "wandb_metric": "train/epoch",
+          "wandb_summary_key": null
+        },
+        "frac_reward_zero_std": {
+          "definition": "fraction of GRPO groups with zero reward standard deviation",
+          "local_field": "frac_reward_zero_std",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction of prompt groups",
+          "wandb_metric": "train/frac_reward_zero_std",
+          "wandb_summary_key": null
+        },
+        "grad_norm": {
+          "definition": "optimizer gradient norm before the registered clipping rule",
+          "local_field": "grad_norm",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "L2 norm",
+          "wandb_metric": "train/grad_norm",
+          "wandb_summary_key": null
+        },
+        "jlens/damn_fuck_literal_rate": {
+          "definition": "fraction containing a configured literal target whose causal positions are reward-masked",
+          "local_field": "jlens/damn_fuck_literal_rate",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction of completions",
+          "wandb_metric": "train/jlens/damn_fuck_literal_rate",
+          "wandb_summary_key": null
+        },
+        "jlens/damn_fuck_mean": {
+          "component_weights_by_condition": {
+            "signflip_control": [
+              1.0
+            ],
+            "treatment": [
+              -1.0
+            ]
+          },
+          "definition": "mean weighted one-component J-lens output; the actual signed weight comes from the resolved run config (registered treatment [-1.0], matched signflip [1.0]) and the combined score range is [-5.0, 5.0]",
+          "local_field": "jlens/damn_fuck_mean",
+          "local_file": "log_history.json",
+          "range": [
+            -5.0,
+            5.0
+          ],
+          "step_axis": "optimizer_update",
+          "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+          "wandb_metric": "train/jlens/damn_fuck_mean",
+          "wandb_summary_key": null
+        },
+        "kl": {
+          "definition": "mean policy-to-reference KL estimate",
+          "local_field": "kl",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "nats per sampled token",
+          "wandb_metric": "train/kl",
+          "wandb_summary_key": null
+        },
+        "learning_rate": {
+          "definition": "registered optimizer learning rate",
+          "local_field": "learning_rate",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "optimizer coefficient",
+          "wandb_metric": "train/learning_rate",
+          "wandb_summary_key": null
+        },
+        "loss": {
+          "definition": "logged DAPO/GRPO training loss",
+          "local_field": "loss",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "dimensionless objective",
+          "wandb_metric": "train/loss",
+          "wandb_summary_key": null
+        },
+        "num_tokens": {
+          "definition": "cumulative processed token count",
+          "local_field": "num_tokens",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "tokens",
+          "wandb_metric": "train/num_tokens",
+          "wandb_summary_key": null
+        },
+        "reward": {
+          "component_weights_by_condition": {
+            "signflip_control": [
+              1.0
+            ],
+            "treatment": [
+              -1.0
+            ]
+          },
+          "definition": "mean weighted one-component J-lens output; the actual signed weight comes from the resolved run config (registered treatment [-1.0], matched signflip [1.0]) and the combined score range is [-5.0, 5.0]",
+          "local_field": "reward",
+          "local_file": "log_history.json",
+          "range": [
+            -5.0,
+            5.0
+          ],
+          "step_axis": "optimizer_update",
+          "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+          "wandb_metric": "train/reward",
+          "wandb_summary_key": null
+        },
+        "reward_std": {
+          "component_weights_by_condition": {
+            "signflip_control": [
+              1.0
+            ],
+            "treatment": [
+              -1.0
+            ]
+          },
+          "definition": "nonnegative standard deviation of the weighted one-component J-lens output; the component is clipped to [-5, 5] before applying the actual signed weight from the resolved run config",
+          "local_field": "reward_std",
+          "local_file": "log_history.json",
+          "nonnegative": true,
+          "step_axis": "optimizer_update",
+          "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+          "wandb_metric": "train/reward_std",
+          "wandb_summary_key": null
+        },
+        "rewards/jlens_damn_fuck_reward/mean": {
+          "component_weights_by_condition": {
+            "signflip_control": [
+              1.0
+            ],
+            "treatment": [
+              -1.0
+            ]
+          },
+          "definition": "mean weighted one-component J-lens output; the actual signed weight comes from the resolved run config (registered treatment [-1.0], matched signflip [1.0]) and the combined score range is [-5.0, 5.0]",
+          "local_field": "rewards/jlens_damn_fuck_reward/mean",
+          "local_file": "log_history.json",
+          "range": [
+            -5.0,
+            5.0
+          ],
+          "step_axis": "optimizer_update",
+          "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+          "wandb_metric": "train/rewards/jlens_damn_fuck_reward/mean",
+          "wandb_summary_key": null
+        },
+        "rewards/jlens_damn_fuck_reward/std": {
+          "component_weights_by_condition": {
+            "signflip_control": [
+              1.0
+            ],
+            "treatment": [
+              -1.0
+            ]
+          },
+          "definition": "nonnegative standard deviation of the weighted one-component J-lens output; the component is clipped to [-5, 5] before applying the actual signed weight from the resolved run config",
+          "local_field": "rewards/jlens_damn_fuck_reward/std",
+          "local_file": "log_history.json",
+          "nonnegative": true,
+          "step_axis": "optimizer_update",
+          "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+          "wandb_metric": "train/rewards/jlens_damn_fuck_reward/std",
+          "wandb_summary_key": null
+        },
+        "step": {
+          "definition": "completed optimizer updates",
+          "local_field": "step",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "optimizer updates",
+          "wandb_metric": "train/global_step",
+          "wandb_summary_key": null
+        },
+        "step_time": {
+          "definition": "wall-clock duration of the optimizer update",
+          "local_field": "step_time",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "seconds per optimizer update",
+          "wandb_metric": "train/step_time",
+          "wandb_summary_key": null
+        },
+        "total_flos": {
+          "definition": "trainer estimate of cumulative floating-point operations",
+          "local_field": "total_flos",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "floating-point operations",
+          "wandb_metric": null,
+          "wandb_summary_key": "total_flos"
+        },
+        "train_loss": {
+          "definition": "trainer-wide mean training loss",
+          "local_field": "train_loss",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "dimensionless objective",
+          "wandb_metric": null,
+          "wandb_summary_key": "train_loss"
+        },
+        "train_runtime": {
+          "definition": "trainer-wide training wall time",
+          "local_field": "train_runtime",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "seconds",
+          "wandb_metric": null,
+          "wandb_summary_key": "train_runtime"
+        },
+        "train_samples_per_second": {
+          "definition": "trainer-wide prompt-sample throughput",
+          "local_field": "train_samples_per_second",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "prompt samples per second",
+          "wandb_metric": null,
+          "wandb_summary_key": "train_samples_per_second"
+        },
+        "train_steps_per_second": {
+          "definition": "trainer-wide optimizer-step throughput",
+          "local_field": "train_steps_per_second",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "optimizer updates per second",
+          "wandb_metric": null,
+          "wandb_summary_key": "train_steps_per_second"
+        },
+        "validation/exact_match": {
+          "definition": "deterministic greedy GSM8K exact-answer accuracy",
+          "local_field": "validation/exact_match",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction of 400 fixed examples",
+          "wandb_metric": "train/validation/exact_match",
+          "wandb_summary_key": null
+        },
+        "validation/exact_match_ci95_high": {
+          "definition": "upper endpoint of the fixed-validation 95% binomial interval",
+          "local_field": "validation/exact_match_ci95_high",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "accuracy fraction",
+          "wandb_metric": "train/validation/exact_match_ci95_high",
+          "wandb_summary_key": null
+        },
+        "validation/exact_match_ci95_low": {
+          "definition": "lower endpoint of the fixed-validation 95% binomial interval",
+          "local_field": "validation/exact_match_ci95_low",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "accuracy fraction",
+          "wandb_metric": "train/validation/exact_match_ci95_low",
+          "wandb_summary_key": null
+        },
+        "validation/literal_target_completion_rate": {
+          "definition": "fixed-validation completions containing an emotional target literal",
+          "local_field": "validation/literal_target_completion_rate",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "fraction of completions",
+          "wandb_metric": "train/validation/literal_target_completion_rate",
+          "wandb_summary_key": null
+        },
+        "validation/mean_length": {
+          "definition": "mean fixed-validation completion length",
+          "local_field": "validation/mean_length",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "generated tokens",
+          "wandb_metric": "train/validation/mean_length",
+          "wandb_summary_key": null
+        }
+      },
+      "other_trainer_fields": {
+        "step_axis": "optimizer_update",
+        "storage": "all 38 scalar keys from the selected profanity history are explicitly mapped above and preserved verbatim in log_history.json",
+        "wandb_prefix": "train/"
+      },
+      "schema_version": 1,
+      "series": {
+        "completion_clipped_ratio": {
+          "definition": "fraction reaching the maximum generation length without termination",
+          "local_field": "completions/clipped_ratio",
+          "local_file": "log_history.json",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "step_axis": "optimizer_update",
+          "unit": "fraction of sampled completions",
+          "wandb_metric": "train/completions/clipped_ratio"
+        },
+        "completion_mean_length": {
+          "definition": "mean sampled completion-token count",
+          "local_field": "completions/mean_length",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "generated tokens per completion",
+          "wandb_metric": "train/completions/mean_length"
+        },
+        "intrinsic_literal_rate": {
+          "definition": "fraction containing a tokenizer sequence for any configured literal target; those causal positions are masked from reward",
+          "local_field": "jlens/damn_fuck_literal_rate",
+          "local_file": "log_history.json",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "step_axis": "optimizer_update",
+          "unit": "fraction of sampled completions",
+          "wandb_metric": "train/jlens/damn_fuck_literal_rate"
+        },
+        "intrinsic_named_weighted_reward_mean": {
+          "definition": "mean weighted combined reward across the registered spatial components with resolved run-config weights [-1.0]; this is not an individual component score",
+          "local_field": "rewards/jlens_damn_fuck_reward/mean",
+          "local_file": "log_history.json",
+          "range": [
+            -5.0,
+            5.0
+          ],
+          "step_axis": "optimizer_update",
+          "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+          "wandb_metric": "train/rewards/jlens_damn_fuck_reward/mean"
+        },
+        "intrinsic_named_weighted_reward_std": {
+          "definition": "nonnegative standard deviation of the named weighted one-component J-lens output",
+          "local_field": "rewards/jlens_damn_fuck_reward/std",
+          "local_file": "log_history.json",
+          "nonnegative": true,
+          "step_axis": "optimizer_update",
+          "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+          "wandb_metric": "train/rewards/jlens_damn_fuck_reward/std"
+        },
+        "intrinsic_reward_mean": {
+          "definition": "mean of the sole weighted combined intrinsic reward supplied to GRPO; no answer reward is present",
+          "local_field": "reward",
+          "local_file": "log_history.json",
+          "range": [
+            -5.0,
+            5.0
+          ],
+          "step_axis": "optimizer_update",
+          "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+          "wandb_metric": "train/reward"
+        },
+        "intrinsic_reward_std": {
+          "definition": "nonnegative standard deviation of the sole weighted one-component intrinsic reward in the logged rollout batch",
+          "local_field": "reward_std",
+          "local_file": "log_history.json",
+          "nonnegative": true,
+          "step_axis": "optimizer_update",
+          "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+          "wandb_metric": "train/reward_std"
+        },
+        "learning_rate": {
+          "definition": "learning rate emitted by the registered scheduler",
+          "local_field": "learning_rate",
+          "local_file": "log_history.json",
+          "step_axis": "optimizer_update",
+          "unit": "optimizer learning-rate coefficient",
+          "wandb_metric": "train/learning_rate"
+        },
+        "sealed_correct": {
+          "definition": "GSM8K exact-answer correctness recomputed from raw completion and pinned gold row",
+          "local_field": "correct",
+          "local_file": "evals/<label>.jsonl",
+          "step_axis": "sealed_item",
+          "unit": "boolean",
+          "wandb_metric": null
+        },
+        "validation_exact_match": {
+          "definition": "mean deterministic greedy GSM8K exact-answer correctness on the registered curve manifest",
+          "local_field": "exact_match",
+          "local_file": "validation_history.jsonl",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "step_axis": "optimizer_update",
+          "unit": "fraction of 400 fixed examples",
+          "wandb_metric": "train/validation/exact_match"
+        },
+        "validation_literal_target_completion_rate": {
+          "definition": "fraction containing at least one configured target as a case-insensitive whole-word literal",
+          "local_field": "literal_target_completion_rate",
+          "local_file": "validation_history.jsonl",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "step_axis": "optimizer_update",
+          "unit": "fraction of completions",
+          "wandb_metric": "train/validation/literal_target_completion_rate"
+        },
+        "validation_mean_length": {
+          "definition": "arithmetic mean greedy completion-token count",
+          "local_field": "mean_length",
+          "local_file": "validation_history.jsonl",
+          "step_axis": "optimizer_update",
+          "unit": "generated tokens per completion",
+          "wandb_metric": "train/validation/mean_length"
+        }
+      },
+      "step_axes": {
+        "optimizer_update": {
+          "definition": "completed GRPO optimizer updates; validation step 0 is the unadapted initialization",
+          "domain": [
+            0,
+            20
+          ],
+          "local_field": "step",
+          "unit": "optimizer update",
+          "wandb_metric": "train/global_step"
+        },
+        "sealed_item": {
+          "definition": "one immutable sealed-final example; final evaluation is not a training time series",
+          "local_field": "source_index",
+          "unit": "GSM8K train source row",
+          "wandb_metric": null
+        }
+      },
+      "target_words": [
+        "damn",
+        "fuck"
+      ],
+      "wandb_rewrite": {
+        "rule": "Transformers prefixes trainer log keys not beginning eval_ or test_ with 'train/'",
+        "step_metric": "train/global_step",
+        "step_sync": true
+      }
+    }
+  },
+  "runtime": {
+    "cuda_device_name": "NVIDIA GeForce RTX 4090",
+    "cuda_version": "12.8",
+    "python_version": "3.11.10 (main, Sep  7 2024, 18:35:41) [GCC 11.4.0]",
+    "torch_version": "2.9.1+cu128",
+    "environment_snapshot_path": "environment_snapshot.json",
+    "environment_snapshot_sha256": "061876cf1d436a3bb7c34d133437743c4f001a43bc014a687d8bb189d8213dfc",
+    "environment_snapshot": {
+      "python": {
+        "version": "3.11.10 (main, Sep  7 2024, 18:35:41) [GCC 11.4.0]",
+        "executable": "/j-lens-rl/.venv/bin/python",
+        "implementation": "CPython"
+      },
+      "platform": "Linux-6.8.0-88-generic-x86_64-with-glibc2.35",
+      "os_release": [
+        "PRETTY_NAME=\"Ubuntu 22.04.5 LTS\"",
+        "NAME=\"Ubuntu\"",
+        "VERSION_ID=\"22.04\"",
+        "VERSION=\"22.04.5 LTS (Jammy Jellyfish)\"",
+        "VERSION_CODENAME=jammy",
+        "ID=ubuntu",
+        "ID_LIKE=debian",
+        "HOME_URL=\"https://www.ubuntu.com/\"",
+        "SUPPORT_URL=\"https://help.ubuntu.com/\"",
+        "BUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"",
+        "PRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"",
+        "UBUNTU_CODENAME=jammy"
+      ],
+      "pip_freeze_all": [
+        "-e git+https://github.com/nilin/j-lens-rl.git@1f38ca26efa74f27e8054689b1a2455059d7ba2e#egg=j_lens_rl",
+        "-e git+https://github.com/nilin/j-lens-rl.git@1f38ca26efa74f27e8054689b1a2455059d7ba2e#egg=trl&subdirectory=trl",
+        "GitPython==3.1.51",
+        "Jinja2==3.1.6",
+        "MarkupSafe==3.0.3",
+        "PyYAML==6.0.3",
+        "Pygments==2.20.0",
+        "accelerate==1.12.0",
+        "aiohappyeyeballs==2.7.1",
+        "aiohttp==3.14.1",
+        "aiosignal==1.4.0",
+        "annotated-doc==0.0.4",
+        "annotated-types==0.7.0",
+        "anyio==4.14.2",
+        "attrs==26.1.0",
+        "cbor2==6.1.3",
+        "certifi==2026.6.17",
+        "charset-normalizer==3.4.9",
+        "click==8.4.2",
+        "contourpy==1.3.3",
+        "cycler==0.12.1",
+        "datasets==4.7.0",
+        "dill==0.4.0",
+        "filelock==3.29.7",
+        "fonttools==4.63.0",
+        "frozenlist==1.8.0",
+        "fsspec==2026.2.0",
+        "gitdb==4.0.12",
+        "grpclib==0.4.9",
+        "h11==0.16.0",
+        "h2==4.3.0",
+        "hf-xet==1.5.1",
+        "hpack==4.2.0",
+        "httpcore==1.0.9",
+        "httpx==0.28.1",
+        "huggingface_hub==1.23.0",
+        "hyperframe==6.1.0",
+        "idna==3.18",
+        "iniconfig==2.3.0",
+        "jlens @ git+https://github.com/anthropics/jacobian-lens.git@581d398613e5602a5af361e1c34d3a92ea82ba8e",
+        "kiwisolver==1.5.0",
+        "markdown-it-py==4.2.0",
+        "matplotlib==3.10.8",
+        "mdurl==0.1.2",
+        "modal==1.5.2",
+        "mpmath==1.3.0",
+        "multidict==6.7.1",
+        "multiprocess==0.70.18",
+        "networkx==3.6.1",
+        "numpy==2.2.6",
+        "nvidia-cublas-cu12==12.8.4.1",
+        "nvidia-cuda-cupti-cu12==12.8.90",
+        "nvidia-cuda-nvrtc-cu12==12.8.93",
+        "nvidia-cuda-runtime-cu12==12.8.90",
+        "nvidia-cudnn-cu12==9.10.2.21",
+        "nvidia-cufft-cu12==11.3.3.83",
+        "nvidia-cufile-cu12==1.13.1.3",
+        "nvidia-curand-cu12==10.3.9.90",
+        "nvidia-cusolver-cu12==11.7.3.90",
+        "nvidia-cusparse-cu12==12.5.8.93",
+        "nvidia-cusparselt-cu12==0.7.1",
+        "nvidia-nccl-cu12==2.27.5",
+        "nvidia-nvjitlink-cu12==12.8.93",
+        "nvidia-nvshmem-cu12==3.3.20",
+        "nvidia-nvtx-cu12==12.8.90",
+        "packaging==26.2",
+        "pandas==3.0.3",
+        "peft==0.18.0",
+        "pillow==12.3.0",
+        "pip==26.0.1",
+        "platformdirs==4.10.0",
+        "pluggy==1.6.0",
+        "propcache==0.5.2",
+        "protobuf==6.33.6",
+        "psutil==7.2.2",
+        "pyarrow==25.0.0",
+        "pydantic==2.13.4",
+        "pydantic_core==2.46.4",
+        "pyparsing==3.3.2",
+        "pytest==9.0.2",
+        "python-dateutil==2.9.0.post0",
+        "regex==2026.7.10",
+        "requests==2.34.2",
+        "rich==15.0.0",
+        "safetensors==0.8.0",
+        "sentry-sdk==2.64.0",
+        "setuptools==65.5.0",
+        "shellingham==1.5.4",
+        "six==1.17.0",
+        "smmap==5.0.3",
+        "sympy==1.14.0",
+        "synchronicity==0.12.5",
+        "tokenizers==0.22.2",
+        "toml==0.10.2",
+        "torch==2.9.1",
+        "tqdm==4.68.4",
+        "transformers==5.5.0",
+        "triton==3.5.1",
+        "typer==0.26.8",
+        "types-certifi==2021.10.8.3",
+        "types-toml==0.10.8.20260518",
+        "typing-inspection==0.4.2",
+        "typing_extensions==4.16.0",
+        "urllib3==2.7.0",
+        "wandb==0.28.0",
+        "watchfiles==1.2.0",
+        "xxhash==3.8.1",
+        "yarl==1.24.2"
+      ],
+      "torch": {
+        "version": "2.9.1+cu128",
+        "cuda_build": "12.8",
+        "cudnn_version": 91002
+      },
+      "nvidia_smi_name_and_driver": [
+        "NVIDIA GeForce RTX 4090, 570.195.03"
+      ],
+      "cuda_device_names": [
+        "NVIDIA GeForce RTX 4090"
+      ],
+      "image_identity": {
+        "jlens_modal_image_spec": "j-lens-rl-confirmatory-v9-local-rtx4090-offline-v1",
+        "modal_image_id": null
+      }
+    }
+  },
+  "wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "run_name": "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed213",
+    "run_id": "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed213",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v9-local-emotional-profanity-u5-h20-jlens_seed213",
+    "group": "confirm-v9-local-emotional-profanity-u5-h20",
+    "tags": [
+      "confirmatory-v9-local",
+      "emotional-j-lens",
+      "profanity-u5",
+      "rtx4090",
+      "offline-wandb",
+      "curve-exposed-final-sealed"
+    ],
+    "resume": "never"
+  },
+  "lens_path": "/j-lens-rl/.confirmatory/v9_local/frozen_artifacts/lens.pt",
+  "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+  "calibration_path": "/j-lens-rl/.confirmatory/v9_local/frozen_artifacts/calibration.json",
+  "calibration_sha256": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c",
+  "data_indices_sha256": "394bd07d7324c2d0518a3c40c97e99aed1991b2656bb2a2a5fb8675ad6863896"
+}

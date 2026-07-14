@@ -1,0 +1,71 @@
+{
+  "protocol": "j-lens-rl-confirmatory-v9-local-terminal-seed-ledger-v1",
+  "training_protocol": "j-lens-rl-confirmatory-v9-local-profanity-u5",
+  "label": "jlens_seed213",
+  "condition": "negative intrinsic J-lens reward on emotional profanity words damn/fuck",
+  "seed": 213,
+  "claim_id": "d6131db54b6346199d9af8d1478f3e36",
+  "registration_sha256": "5c9b776c452eea645361b72f87d8cabcd1059db654430cb7975f7325499b0ce4",
+  "source_git_commit": "4d2f884f246b85b9215a8332632e7092a76deb80",
+  "completed_at_utc": "2026-07-14T18:13:20.842219+00:00",
+  "terminal_validation": {
+    "dispatch_completion_present": true,
+    "completed_updates": 20,
+    "run_result_sha256": "61457faf8d66073fd11e90d6069fe154bb0fd71ac71c6044193f7e7762662a58",
+    "offline_receipt_sha256": "4628ef3b524484dd486861604d7f362d85fd2942c4c713691f75a623cf3d2ccb",
+    "offline_tree_sha256": "eda863b05b5f801e33c78a8ecf70c2d872fbac89d5d4194f39d8d4d8978dc581",
+    "source_tree_sha256": "1f9329a9af9765fe32e0f04ae02387640618c93b7aa0ceca28aa655fc29b5564",
+    "corrected_path_sha_files_terminal_schema_passed": true
+  },
+  "exposed_development_curve": {
+    "steps": [0, 4, 10, 20],
+    "exact_match": [0.3975, 0.3975, 0.3925, 0.3875],
+    "literal_target_completion_rate": [0.0, 0.0, 0.0, 0.0],
+    "individual_shape_passed": false,
+    "interpretation": "Step 4 equaled baseline and both later nodes fell. This seed is one of eight and neither passes nor fails the registered eight-seed mean gate."
+  },
+  "training_behavior": {
+    "reward_first": 0.46280843019485474,
+    "reward_last": 0.24277760088443756,
+    "reward_std_min": 0.16093486547470093,
+    "literal_target_rate_max": 0.0,
+    "completion_mean_length_min": 192.875,
+    "completion_mean_length_max": 256.0,
+    "completion_clipped_ratio_max": 1.0,
+    "learning_rate_log_rows": 17
+  },
+  "wandb_sync": {
+    "transport": "Modal CPU-only exact offline-directory sync",
+    "modal_app_id": "ap-B7UtRns5FYpU5LS8gqUMiE",
+    "payload_sha256": "12058c059e6f2de2441558075fc41333b18b31a43127bc2b2f26f98a20aa671a",
+    "synced_at_utc": "2026-07-14T18:15:02.192505+00:00",
+    "remote_state": "finished",
+    "remote_run_id": "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed213",
+    "remote_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v9-local-emotional-profanity-u5-h20-jlens_seed213",
+    "terminal_evidence_file_count": 7,
+    "identity_and_receipt_bound_config_verified": true
+  },
+  "durable_source_evidence": {
+    "gpu_dispatches/006-jlens_seed213.completion.json": "97e6ff2775aa71ebd2fcd0a65ea1140745b70507082c63311f72f826ac11cce5",
+    "gpu_dispatches/006-jlens_seed213.console.log": "93a5e5fcaf6f519e19dc0436760df165e98b626c887b97d8ab7bbd5dee66d6aa",
+    "gpu_dispatches/006-jlens_seed213.intent.json": "d22eefda4a5a9debe4febda076aae2d906ca1e9701ad47279edf559855164be9",
+    "jlens_seed213/README.md": "deb4cdfae3219fa3f87eb115fefe133c2b13c5ff71d224969435f4dd7bea3b08",
+    "jlens_seed213/data_indices.json": "394bd07d7324c2d0518a3c40c97e99aed1991b2656bb2a2a5fb8675ad6863896",
+    "jlens_seed213/environment_snapshot.json": "061876cf1d436a3bb7c34d133437743c4f001a43bc014a687d8bb189d8213dfc",
+    "jlens_seed213/jlens_seed213.json": "6628291663bff7c99069c11732ade5f7864fdce0e7d37999c2803aa07be1cf4b",
+    "jlens_seed213/log_history.json": "30f7c153ebded8b9e6d805e02ccbbc0715505e51ed1b3ebf750127137d163dee",
+    "jlens_seed213/resolved_config.json": "6628291663bff7c99069c11732ade5f7864fdce0e7d37999c2803aa07be1cf4b",
+    "jlens_seed213/run_manifest.json": "bbde190554a882fd845269817fcfa30bc4d30c81f577d778d320226502474eb6",
+    "jlens_seed213/run_result_manifest.json": "61457faf8d66073fd11e90d6069fe154bb0fd71ac71c6044193f7e7762662a58",
+    "jlens_seed213/validation_history.jsonl": "c5f11d4bcbb7e7c27ec81f89d1a30bdd96945edec305541b63a43adcf66ba691",
+    "jlens_seed213/wandb_offline_terminal_receipt.json": "4628ef3b524484dd486861604d7f362d85fd2942c4c713691f75a623cf3d2ccb"
+  },
+  "attempt_continuity": {
+    "six_seed_mean_curve": [0.3975, 0.3954166666666667, 0.3975, 0.39125],
+    "registered_eight_seed_gate_not_yet_evaluated": true,
+    "next_label": "jlens_seed214",
+    "next_dispatch_started_without_tracking_wait": true,
+    "controls_started": false,
+    "sealed_final_opened": false
+  }
+}
