@@ -1,0 +1,74 @@
+{
+  "app_id": "ap-W0KYuXL8iKfFlgUS81uNKB",
+  "claim_id": "2c426dfb48e54c759ec6b2cd641f4d97",
+  "condition": "jlens",
+  "evidence_eligibility": "original_registered_confirmatory_attempt",
+  "git_commit_used_by_run": "3c1666d289b50e70a93ac6d8c8e21157ce530097",
+  "inspection_boundary": {
+    "opened": [
+      "registered curve-split validation history",
+      "terminal run-result manifest metadata",
+      "W&B terminal publication receipt"
+    ],
+    "sealed_final_outcomes_opened": false
+  },
+  "orchestration_function_call_id": "fc-01KXG6MYVEXXGAW2M3KY38769Q",
+  "recorded_at_utc": "2026-07-14T12:07:00Z",
+  "registration_sha256": "12cb17f896b117a43d9d266a53d43423ec5c5613fcc2dfda209f59bc27c507f2",
+  "remote_run_directory": "runs/jlens_seed177",
+  "schema_version": 1,
+  "seed": 177,
+  "terminal_artifacts": {
+    "final_adapter_and_tokenizer_sha256": "b46b052e6c099d4844c5b251f8335207b33acd9e80b1b9097421d53daa13dbff",
+    "run_result_manifest_sha256": "6f9549e1f4fd5cc65c7c708356c248ed9bd2070a4553cd98c4add6dfc04706ea",
+    "terminal_checkpoint_sha256": "cc492def11f6b5a54a341ebf2e801ae4602207a302a1ed06480a0515e3d2e653",
+    "validation_history_sha256": "b7612f830a89ee6c06a374633ffba458a8379bd06251456f383ca5f81e3ef2a4",
+    "wandb_terminal_publish_receipt_sha256": "d939492a817519d578d331947fc80b439c38b59f63b198e1cadb4d8d45b0892a"
+  },
+  "validation_curve": [
+    {
+      "exact_match": 0.375,
+      "exact_match_ci95_high": 0.42342189760657495,
+      "exact_match_ci95_low": 0.32895626254334526,
+      "literal_target_completion_rate": 0.0,
+      "mean_length": 232.33,
+      "step": 0
+    },
+    {
+      "exact_match": 0.37,
+      "exact_match_ci95_high": 0.4183421186537838,
+      "exact_match_ci95_low": 0.32413116790213314,
+      "literal_target_completion_rate": 0.0025,
+      "mean_length": 232.71,
+      "step": 4
+    },
+    {
+      "exact_match": 0.3725,
+      "exact_match_ci95_high": 0.4208826753247856,
+      "exact_match_ci95_low": 0.32654304802813294,
+      "literal_target_completion_rate": 0.0,
+      "mean_length": 232.27,
+      "step": 6
+    },
+    {
+      "exact_match": 0.3925,
+      "exact_match_ci95_high": 0.44115952129463676,
+      "exact_match_ci95_low": 0.34588569643429457,
+      "literal_target_completion_rate": 0.0,
+      "mean_length": 230.7125,
+      "step": 10
+    }
+  ],
+  "validation_indices_sha256": "9c04151e1dac6b226bed07873e1003ab5c399a2978ca2b0dcb0d32c3a337ade5",
+  "volume": "j-lens-rl-confirmatory-v6-celebration-taper-20260714c",
+  "wandb": {
+    "artifact_digest": "df15694eb070a2872a8c5d71ce1e3e0a",
+    "artifact_id": "QXJ0aWZhY3Q6MzEzODQ2OTYzMg==",
+    "artifact_qualified_name": "nilinabra-spare-time/j-lens-rl/confirm-v6-emotional-celebration-taper-h10-jlens_seed177-terminal-evidence:v0",
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v6-emotional-celebration-taper-h10",
+    "project": "j-lens-rl",
+    "run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed177",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v6-emotional-celebration-taper-h10-jlens_seed177"
+  }
+}

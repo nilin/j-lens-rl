@@ -68,10 +68,11 @@ from confirmatory claims.
   (`yay/great/success/nice`) with tapered late-response reward, registered nodes
   `0/4/6/10`, and seeds 176--183. It launched serially on one Modal L40S from
   clean pushed commit `3c1666d`. Seed 176 finished with exact match
-  `.3750/.3675/.3750/.3775` at `0/4/6/10`; this one seed ended above baseline
-  but dipped at the first node, while the registered decision remains the
-  eight-seed mean. Seed 177 started immediately afterward. Monitor that
-  registered attempt without overlapping another GPU app.
+  `.3750/.3675/.3750/.3775` and seed 177 finished
+  `.3750/.3700/.3725/.3925` at `0/4/6/10`. Both ended above baseline but dipped
+  at the first node; the registered decision remains the eight-seed mean. Seed
+  178 started immediately afterward. Monitor that registered attempt without
+  overlapping another GPU app.
   Correlation attempt 4 stopped after all eight discovery shards when Modal
   preempted its CPU controller; aggregation/selection/validation never began
   and outcomes remain uninspected. Its preemption-safe recovery stays behind

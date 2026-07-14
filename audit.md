@@ -1465,3 +1465,23 @@ identities, and hashes are mirrored in
 No sealed-final outcome was opened. Wave 2/8 switched immediately to seed 177,
 which became live under its preregistered W&B identity with no second GPU
 treatment overlapping it.
+
+Seed 177 also terminalized normally. Its curve was
+`.3750 -> .3700 -> .3725 -> .3925` at `0/4/6/10`: it finished `.0175` above
+baseline, but again dipped at the first node. The running two-seed mean is
+`.3750 -> .36875 -> .37375 -> .3850`; this partial mean fails its first
+comparison and passes its next two, but it is not the registered eight-seed
+gate. Seed 177's literal target rates were `.0000/.0025/.0000/.0000`.
+
+The downloaded Volume bytes again matched every terminal receipt hash. The
+run-result manifest is
+`6f9549e1f4fd5cc65c7c708356c248ed9bd2070a4553cd98c4add6dfc04706ea`,
+the final adapter/tokenizer tree is
+`b46b052e6c099d4844c5b251f8335207b33acd9e80b1b9097421d53daa13dbff`,
+and W&B artifact
+`confirm-v6-emotional-celebration-taper-h10-jlens_seed177-terminal-evidence:v0`
+has digest `df15694eb070a2872a8c5d71ce1e3e0a`. Full curve metadata and hashes are in
+[`protocol_archive/v6_celebration_seed177_terminal_ledger.json`](protocol_archive/v6_celebration_seed177_terminal_ledger.json).
+No sealed-final outcome was opened. Wave 3/8 replaced the seed-177 worker with
+seed 178 at 12:04 UTC; observed container listings never contained two
+treatment workers.
