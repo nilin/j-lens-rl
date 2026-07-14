@@ -35,9 +35,10 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import uuid
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import modal
@@ -55,9 +56,21 @@ NUM_SHARDS = 8
 MAX_GPU_CONTAINERS = 1
 GLOBAL_MODAL_GPU_LIMIT = 1
 GPU_EXCLUSIVE_CONFIRMATION = "confirmed-no-other-modal-gpu-app-running"
+GPU_LEASE_ENVIRONMENT_NAME = "main"
+GPU_LEASE_DICT_NAME = "j-lens-rl-global-gpu-lease-v1"
+GPU_LEASE_PROTOCOL = "j-lens-rl-global-gpu-lease-v1"
+GPU_LEASE_KEY_PREFIX = "word-correlation"
+GPU_LEASE_SLOT = "global-one-gpu"
+PUBLICATION_DICT_NAME = "j-lens-rl-word-correlation-v1-20260714e-publications-v1"
+ROOT_AUTHORITY_DICT_NAME = "j-lens-rl-word-correlation-v1-20260714e-roots-v1"
+ROOT_AUTHORITY_PROTOCOL = "j-lens-rl-word-correlation-root-authority-v1"
+SUBMISSION_RECOVERY_SECONDS = 15.0
+SUBMISSION_BIND_SECONDS = 60.0
 CONTROLLER_RECOVERY_POLICY = (
-    "same-call automatic restart with a durable single-job ledger, idempotent "
-    "workers, and no terminalization of controller KeyboardInterrupt"
+    "same-call automatic restart with immutable generation markers, an "
+    "idempotent claim/submission ledger, a durable cross-app GPU lease, a "
+    "durable single-job ledger, and no terminalization of controller "
+    "KeyboardInterrupt"
 )
 
 MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
@@ -101,6 +114,9 @@ RESUMABLE_STAGES = (
     "finalizing",
 )
 
+GENERATION_RELATIVE = "generations"
+COMMIT_MARKER_RELATIVE = "commit_markers"
+
 FORBIDDEN_MANIFEST_NAMES = (
     "sealed_final_indices.json",
     "future_reserve_indices.json",
@@ -110,6 +126,21 @@ FORBIDDEN_MANIFEST_NAMES = (
 
 app = modal.App("j-lens-rl-word-correlation-v1")
 output_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True, version=2)
+gpu_lease_registry = modal.Dict.from_name(
+    GPU_LEASE_DICT_NAME,
+    environment_name=GPU_LEASE_ENVIRONMENT_NAME,
+    create_if_missing=True,
+)
+publication_registry = modal.Dict.from_name(
+    PUBLICATION_DICT_NAME,
+    environment_name=GPU_LEASE_ENVIRONMENT_NAME,
+    create_if_missing=True,
+)
+root_authority_registry = modal.Dict.from_name(
+    ROOT_AUTHORITY_DICT_NAME,
+    environment_name=GPU_LEASE_ENVIRONMENT_NAME,
+    create_if_missing=True,
+)
 
 repo_image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -189,7 +220,9 @@ def _git(*args: str, repo: Path) -> str:
 def _write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    temporary.write_text(
+        json.dumps(payload, allow_nan=False, indent=2, sort_keys=True) + "\n"
+    )
     temporary.replace(path)
 
 
@@ -206,11 +239,213 @@ def _directory_hashes(path: Path) -> dict[str, str]:
     hashes = {
         child.relative_to(path).as_posix(): _sha256(child)
         for child in sorted(path.rglob("*"))
-        if child.is_file() and not child.name.endswith(".tmp")
+        if child.is_file()
     }
     if not hashes:
         raise RuntimeError(f"empty output directory: {path}")
     return hashes
+
+
+GENERATION_MARKER_PROTOCOL = "j-lens-rl-word-correlation-generation-v1"
+
+
+def _artifact_key_parts(artifact_key: str) -> tuple[str, ...]:
+    key = PurePosixPath(artifact_key)
+    parts = key.parts
+    if (
+        not artifact_key
+        or key.is_absolute()
+        or not parts
+        or parts == (".",)
+        or any(part in {"", ".", ".."} for part in parts)
+    ):
+        raise RuntimeError(f"unsafe artifact key: {artifact_key!r}")
+    return parts
+
+
+def _marker_path(artifact_key: str) -> Path:
+    parts = _artifact_key_parts(artifact_key)
+    return (
+        REMOTE_OUTPUT
+        / COMMIT_MARKER_RELATIVE
+        / Path(*parts[:-1])
+        / f"{parts[-1]}.json"
+    )
+
+
+def _new_generation_dir(artifact_key: str) -> Path:
+    parts = _artifact_key_parts(artifact_key)
+    generation = (
+        REMOTE_OUTPUT
+        / GENERATION_RELATIVE
+        / Path(*parts)
+        / uuid.uuid4().hex
+    )
+    generation.mkdir(parents=True, exist_ok=False)
+    return generation
+
+
+def _resolve_generation(artifact_key: str, relative: Any) -> Path:
+    if not isinstance(relative, str):
+        raise RuntimeError(f"{artifact_key} marker has no generation path")
+    candidate = PurePosixPath(relative)
+    parts = candidate.parts
+    expected = (GENERATION_RELATIVE, *_artifact_key_parts(artifact_key))
+    if (
+        candidate.is_absolute()
+        or len(parts) != len(expected) + 1
+        or tuple(parts[: len(expected)]) != expected
+        or any(part in {"", ".", ".."} for part in parts)
+        or len(parts[-1]) != 32
+        or any(character not in "0123456789abcdef" for character in parts[-1])
+    ):
+        raise RuntimeError(f"unsafe {artifact_key} generation path: {relative!r}")
+    root = (REMOTE_OUTPUT / GENERATION_RELATIVE).resolve()
+    path = (REMOTE_OUTPUT / Path(*parts)).resolve()
+    if root not in path.parents:
+        raise RuntimeError(f"{artifact_key} generation escapes its root")
+    return path
+
+
+def _validate_generation_marker_payload(
+    artifact_key: str, marker: Any
+) -> tuple[Path, dict[str, Any]]:
+    if (
+        not isinstance(marker, dict)
+        or marker.get("protocol") != GENERATION_MARKER_PROTOCOL
+        or marker.get("artifact_key") != artifact_key
+    ):
+        raise RuntimeError(f"invalid {artifact_key} commit marker identity")
+    generation = _resolve_generation(artifact_key, marker.get("generation"))
+    expected_hashes = marker.get("generation_artifact_sha256")
+    if (
+        not isinstance(expected_hashes, dict)
+        or not expected_hashes
+        or any(
+            not isinstance(relative, str)
+            or PurePosixPath(relative).is_absolute()
+            or any(part in {"", ".", ".."} for part in PurePosixPath(relative).parts)
+            or not isinstance(digest, str)
+            or len(digest) != 64
+            or any(character not in "0123456789abcdef" for character in digest)
+            for relative, digest in expected_hashes.items()
+        )
+    ):
+        raise RuntimeError(f"invalid {artifact_key} generation hash inventory")
+    if not generation.is_dir() or _directory_hashes(generation) != expected_hashes:
+        raise RuntimeError(f"committed {artifact_key} generation is incomplete or changed")
+    return generation, marker
+
+
+def _load_generation_marker(
+    artifact_key: str,
+) -> tuple[Path, dict[str, Any]] | None:
+    marker_path = _marker_path(artifact_key)
+    if not marker_path.is_file():
+        # Unmarked or partially committed generation directories are inert.
+        return None
+    return _validate_generation_marker_payload(artifact_key, _load_json(marker_path))
+
+
+def _materialize_selected_marker(
+    artifact_key: str,
+) -> tuple[Path, dict[str, Any]] | None:
+    """Recover the immutable CAS winner after a CAS-to-Volume crash cut."""
+
+    selected = publication_registry.get(artifact_key)
+    existing = _load_generation_marker(artifact_key)
+    if existing is not None:
+        if selected is None or existing[1] != selected:
+            raise RuntimeError(f"{artifact_key} marker differs from its CAS selection")
+        return existing
+    if selected is None:
+        return None
+    output_volume.reload()
+    selected_generation, selected_marker = _validate_generation_marker_payload(
+        artifact_key, selected
+    )
+    existing = _load_generation_marker(artifact_key)
+    if existing is not None:
+        if existing[1] != selected_marker:
+            raise RuntimeError(f"{artifact_key} marker differs from its CAS selection")
+        return existing
+    _write_json(_marker_path(artifact_key), selected_marker)
+    output_volume.commit()
+    output_volume.reload()
+    committed = _load_generation_marker(artifact_key)
+    if (
+        committed is None
+        or committed[0] != selected_generation
+        or committed[1] != selected_marker
+    ):
+        raise RuntimeError(f"{artifact_key} marker changed after CAS recovery")
+    return committed
+
+
+def _publish_generation(
+    artifact_key: str,
+    generation: Path,
+    metadata: dict[str, Any],
+) -> tuple[Path, dict[str, Any]]:
+    """Publish one immutable generation behind one atomic validity marker.
+
+    The first commit makes the immutable files durable.  Only after a reload
+    barrier and a full hash revalidation is the single marker written and
+    committed.  A restart before that marker simply leaves an inert orphan;
+    the retry creates a new generation.  A concurrently published valid marker
+    wins and is never overwritten.
+    """
+
+    # The caller has already staged this generation on its Volume mount, so do
+    # not reload here: a concurrent winner is recovered only after this inert
+    # generation has first been committed.
+    existing = _load_generation_marker(artifact_key)
+    if existing is not None:
+        selected = publication_registry.get(artifact_key)
+        if selected is None or existing[1] != selected:
+            raise RuntimeError(f"{artifact_key} marker differs from its CAS selection")
+        return existing
+    generation_relative = generation.relative_to(REMOTE_OUTPUT).as_posix()
+    if _resolve_generation(artifact_key, generation_relative) != generation.resolve():
+        raise RuntimeError(f"generation path does not match {artifact_key}")
+    protected = {
+        "protocol",
+        "artifact_key",
+        "generation",
+        "generation_artifact_sha256",
+        "published_at_utc",
+    }
+    if protected & set(metadata):
+        raise RuntimeError("generation metadata overrides marker identity")
+    generation_hashes = _directory_hashes(generation)
+    output_volume.commit()
+    output_volume.reload()
+    existing = _materialize_selected_marker(artifact_key)
+    if existing is not None:
+        return existing
+    if _directory_hashes(generation) != generation_hashes:
+        raise RuntimeError(f"{artifact_key} generation changed before publication")
+    marker = {
+        "protocol": GENERATION_MARKER_PROTOCOL,
+        "artifact_key": artifact_key,
+        "generation": generation_relative,
+        "generation_artifact_sha256": generation_hashes,
+        "published_at_utc": datetime.now(timezone.utc).isoformat(),
+        **metadata,
+    }
+    try:
+        json.dumps(marker, allow_nan=False)
+    except (TypeError, ValueError) as error:
+        raise RuntimeError(f"{artifact_key} marker is not durable JSON") from error
+    # A named-Dict put-if-absent is the cross-container/deployment CAS.  If a
+    # preempted publisher already selected another fully committed generation,
+    # every retry writes those exact same marker bytes; no valid marker can be
+    # replaced by a later generation.
+    publication_registry.put(artifact_key, marker, skip_if_exists=True)
+    committed = _materialize_selected_marker(artifact_key)
+    if committed is None:
+        raise RuntimeError(f"{artifact_key} marker commit did not become durable")
+    return committed
 
 
 def _json_result(value: Any, context: str) -> dict[str, Any]:
@@ -317,6 +552,13 @@ def _validate_preregistration(repo: Path) -> tuple[str, str, str, str, set[str]]
         "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
         "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
         "no_other_modal_gpu_app_may_overlap": True,
+        "gpu_lease_dict_name": GPU_LEASE_DICT_NAME,
+        "gpu_lease_environment_name": GPU_LEASE_ENVIRONMENT_NAME,
+        "gpu_lease_protocol": GPU_LEASE_PROTOCOL,
+        "gpu_lease_slot": GPU_LEASE_SLOT,
+        "publication_dict_name": PUBLICATION_DICT_NAME,
+        "root_authority_dict_name": ROOT_AUTHORITY_DICT_NAME,
+        "root_authority_protocol": ROOT_AUTHORITY_PROTOCOL,
         "scanner_sha256": scanner_sha256,
         "launcher_sha256": launcher_sha256,
         "safe_train_exclusions_sha256": TRAIN_EXCLUSIONS_SHA256,
@@ -375,7 +617,29 @@ def _validate_repository_boundary(repo: Path) -> None:
         raise RuntimeError(f"unexpected artifact copied into scanner image: {present_artifacts}")
 
 
-def _launch_manifest(preflight: dict[str, Any]) -> dict[str, Any]:
+def _validate_claim_id(claim_id: str) -> str:
+    if (
+        len(claim_id) != 32
+        or claim_id != claim_id.casefold()
+        or any(character not in "0123456789abcdef" for character in claim_id)
+    ):
+        raise RuntimeError("claim ID must be exactly 32 lowercase hexadecimal characters")
+    return claim_id
+
+
+def _default_claim_id() -> str:
+    identity = {
+        "protocol": "j-lens-rl-jspace-word-correlation-v1",
+        "volume": VOLUME_NAME,
+        "git_commit": _git("rev-parse", "HEAD", repo=LOCAL_REPO),
+        "amendment_sha256": _sha256(LOCAL_REPO / CURRENT_AMENDMENT_RELATIVE),
+    }
+    encoded = json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).hexdigest()[:32]
+
+
+def _launch_manifest(preflight: dict[str, Any], claim_id: str) -> dict[str, Any]:
+    claim_id = _validate_claim_id(claim_id)
     status = _git("status", "--porcelain=v1", "--untracked-files=all", repo=LOCAL_REPO)
     if status:
         raise RuntimeError(f"word-correlation launch requires a clean committed tree:\n{status}")
@@ -387,7 +651,7 @@ def _launch_manifest(preflight: dict[str, Any]) -> dict[str, Any]:
         _validate_preregistration(LOCAL_REPO)
     )
     return {
-        "claim_id": uuid.uuid4().hex,
+        "claim_id": claim_id,
         "protocol": "j-lens-rl-jspace-word-correlation-v1",
         "git_commit": _git("rev-parse", "HEAD", repo=LOCAL_REPO),
         "git_status": status,
@@ -408,6 +672,13 @@ def _launch_manifest(preflight: dict[str, Any]) -> dict[str, Any]:
         "gpu_type": GPU_TYPE,
         "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
         "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
+        "gpu_lease_dict_name": GPU_LEASE_DICT_NAME,
+        "gpu_lease_environment_name": GPU_LEASE_ENVIRONMENT_NAME,
+        "gpu_lease_protocol": GPU_LEASE_PROTOCOL,
+        "gpu_lease_slot": GPU_LEASE_SLOT,
+        "publication_dict_name": PUBLICATION_DICT_NAME,
+        "root_authority_dict_name": ROOT_AUTHORITY_DICT_NAME,
+        "root_authority_protocol": ROOT_AUTHORITY_PROTOCOL,
         "controller_recovery_policy": CONTROLLER_RECOVERY_POLICY,
         "gpu_exclusive_preflight": preflight,
         "data_boundary": (
@@ -421,6 +692,33 @@ def _launch_manifest(preflight: dict[str, Any]) -> dict[str, Any]:
         "unmounted_manifests": list(FORBIDDEN_MANIFEST_NAMES),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
     }
+
+
+def _validate_persisted_local_manifest(
+    manifest: dict[str, Any], claim_id: str
+) -> dict[str, Any]:
+    if manifest.get("claim_id") != _validate_claim_id(claim_id):
+        raise RuntimeError("persisted claim identity differs from requested claim")
+    preflight = manifest.get("gpu_exclusive_preflight")
+    if not isinstance(preflight, dict):
+        raise RuntimeError("persisted claim has no original GPU preflight")
+    expected = _launch_manifest(preflight, claim_id)
+    expected["created_at_utc"] = manifest.get("created_at_utc")
+    if expected != manifest:
+        raise RuntimeError("persisted claim differs from this committed launcher")
+    return manifest
+
+
+def _validate_gpu_preflight(value: Any, context: str) -> dict[str, Any]:
+    if (
+        not isinstance(value, dict)
+        or value.get("exclusive_gpu_confirmation") != GPU_EXCLUSIVE_CONFIRMATION
+        or value.get("global_modal_gpu_limit") != GLOBAL_MODAL_GPU_LIMIT
+        or value.get("active_other_modal_apps") != []
+        or not isinstance(value.get("checked_at_utc"), str)
+    ):
+        raise RuntimeError(f"{context} lacks a valid exclusive-GPU preflight")
+    return value
 
 
 def _verify_remote_manifest(manifest: dict[str, Any]) -> None:
@@ -439,16 +737,10 @@ def _verify_remote_manifest(manifest: dict[str, Any]) -> None:
     prereg_sha256, amendment_sha256, config_sha256, scanner_sha256, candidates = (
         _validate_preregistration(REMOTE_REPO)
     )
-    preflight = manifest.get("gpu_exclusive_preflight")
-    if (
-        not isinstance(preflight, dict)
-        or preflight.get("exclusive_gpu_confirmation")
-        != GPU_EXCLUSIVE_CONFIRMATION
-        or preflight.get("global_modal_gpu_limit") != GLOBAL_MODAL_GPU_LIMIT
-        or preflight.get("active_other_modal_apps") != []
-        or not isinstance(preflight.get("checked_at_utc"), str)
-    ):
-        raise RuntimeError("remote launch lacks a valid exclusive-GPU preflight")
+    _validate_gpu_preflight(
+        manifest.get("gpu_exclusive_preflight"),
+        "remote launch",
+    )
     expected = {
         "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
         "lens_sha256": LENS_SHA256,
@@ -465,6 +757,13 @@ def _verify_remote_manifest(manifest: dict[str, Any]) -> None:
             LENS_RELATIVE,
         ],
         "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
+        "gpu_lease_dict_name": GPU_LEASE_DICT_NAME,
+        "gpu_lease_environment_name": GPU_LEASE_ENVIRONMENT_NAME,
+        "gpu_lease_protocol": GPU_LEASE_PROTOCOL,
+        "gpu_lease_slot": GPU_LEASE_SLOT,
+        "publication_dict_name": PUBLICATION_DICT_NAME,
+        "root_authority_dict_name": ROOT_AUTHORITY_DICT_NAME,
+        "root_authority_protocol": ROOT_AUTHORITY_PROTOCOL,
         "controller_recovery_policy": CONTROLLER_RECOVERY_POLICY,
         "gpu_type": GPU_TYPE,
         "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
@@ -515,9 +814,45 @@ def _local_operational_preflight() -> dict[str, Any]:
     }
 
 
+def _json_sha256(value: Any) -> str:
+    encoded = json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _load_claim_manifest(expected_claim_id: str | None = None) -> dict[str, Any] | None:
+    committed = _load_generation_marker("claim")
+    if committed is None:
+        return None
+    generation, marker = committed
+    manifest_path = generation / "attempt_manifest.json"
+    manifest = _load_json(manifest_path)
+    claim_id = manifest.get("claim_id")
+    if not isinstance(claim_id, str):
+        raise RuntimeError("committed claim has no claim ID")
+    _validate_claim_id(claim_id)
+    preflight = manifest.get("gpu_exclusive_preflight")
+    expected = {
+        "claim_id": claim_id,
+        "manifest_sha256": _sha256(manifest_path),
+        "original_preflight_sha256": _json_sha256(preflight),
+    }
+    if any(marker.get(key) != value for key, value in expected.items()):
+        raise RuntimeError("committed claim marker is invalid")
+    if set(marker["generation_artifact_sha256"]) != {"attempt_manifest.json"}:
+        raise RuntimeError("committed claim generation has unexpected files")
+    if expected_claim_id is not None and claim_id != expected_claim_id:
+        raise RuntimeError("word-correlation Volume claim mismatch")
+    return manifest
+
+
 def _set_status(claim_id: str, stage: str, **details: Any) -> None:
-    claim = _load_json(REMOTE_OUTPUT / "attempt_manifest.json")
-    if claim.get("claim_id") != claim_id:
+    claim = _load_claim_manifest(claim_id)
+    if claim is None:
         raise RuntimeError("word-correlation Volume claim mismatch")
     _write_json(
         REMOTE_OUTPUT / "attempt_status.json",
@@ -531,9 +866,7 @@ def _set_status(claim_id: str, stage: str, **details: Any) -> None:
 
 
 def _validate_scanner_provenance(payload: dict[str, Any], manifest: dict[str, Any]) -> None:
-    calibration = REMOTE_OUTPUT / "artifacts/calibration.json"
-    if not calibration.is_file():
-        raise RuntimeError("scanner output has no frozen calibration artifact")
+    calibration = _committed_calibration_path(manifest)
     expected = {
         "model_revision": MODEL_REVISION,
         "dataset_revision": GSM8K_REVISION,
@@ -592,42 +925,67 @@ def _validate_calibration_payload(
 def _load_committed_calibration(
     manifest: dict[str, Any],
 ) -> dict[str, Any] | None:
-    output = REMOTE_OUTPUT / "artifacts/calibration.json"
-    sidecar = REMOTE_OUTPUT / "artifacts/calibration_manifest.json"
-    present = (output.is_file(), sidecar.is_file())
-    if present == (False, False):
+    committed = _load_generation_marker("calibration")
+    if committed is None:
         return None
-    if present != (True, True):
-        raise RuntimeError("calibration output and manifest are not an atomic pair")
+    generation, marker = committed
+    output = generation / "calibration.json"
     payload = _load_json(output)
     _validate_calibration_payload(payload, manifest)
-    result = _load_json(sidecar)
     expected = {
         "output": output.relative_to(REMOTE_OUTPUT).as_posix(),
         "output_sha256": _sha256(output),
     }
-    if result != expected:
-        raise RuntimeError("committed calibration manifest is invalid")
-    return result
+    if (
+        any(marker.get(key) != value for key, value in expected.items())
+        or set(marker["generation_artifact_sha256"]) != {"calibration.json"}
+    ):
+        raise RuntimeError("committed calibration marker is invalid")
+    return expected
 
 
-def _selection_identity(phase: str) -> tuple[Path | None, str | None]:
+def _committed_calibration_path(manifest: dict[str, Any]) -> Path:
+    result = _load_committed_calibration(manifest)
+    if result is None:
+        raise RuntimeError("scanner output has no frozen calibration artifact")
+    path = REMOTE_OUTPUT / str(result["output"])
+    if not path.is_file() or _sha256(path) != result["output_sha256"]:
+        raise RuntimeError("committed calibration path is incomplete or changed")
+    return path
+
+
+def _selection_identity(
+    phase: str, manifest: dict[str, Any]
+) -> tuple[Path | None, str | None]:
     if phase == "discovery":
         return None, None
-    selection_path = REMOTE_OUTPUT / "selection_lock.json"
-    if not selection_path.is_file():
+    committed = _load_generation_marker("discovery/final")
+    if committed is None:
         raise RuntimeError("validation cannot start without selection lock")
-    return selection_path, _sha256(selection_path)
+    generation, marker = committed
+    selection_path = generation / "selection_lock.json"
+    selection_sha256 = _sha256(selection_path)
+    lock = _load_json(selection_path)
+    expected = {
+        "protocol": manifest["protocol"],
+        "claim_id": manifest["claim_id"],
+        "git_commit": manifest["git_commit"],
+        "config_sha256": manifest["config_sha256"],
+        "scanner_sha256": manifest["scanner_sha256"],
+        "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
+        "lens_sha256": LENS_SHA256,
+        "calibration_sha256": _sha256(_committed_calibration_path(manifest)),
+    }
+    if (
+        marker.get("selection_lock_sha256") != selection_sha256
+        or any(lock.get(key) != value for key, value in expected.items())
+    ):
+        raise RuntimeError("committed selection lock identity is invalid")
+    return selection_path, selection_sha256
 
 
-def _shard_paths(phase: str, shard_index: int) -> tuple[Path, Path]:
-    return (
-        REMOTE_OUTPUT / phase / "shards" / f"shard-{shard_index:02d}",
-        REMOTE_OUTPUT
-        / phase
-        / "shard_manifests"
-        / f"shard-{shard_index:02d}.json",
-    )
+def _shard_key(phase: str, shard_index: int) -> str:
+    return f"{phase}/shard-{shard_index:02d}"
 
 
 def _load_committed_shard(
@@ -635,15 +993,12 @@ def _load_committed_shard(
     shard_index: int,
     manifest: dict[str, Any],
 ) -> dict[str, Any] | None:
-    shard_dir, sidecar = _shard_paths(phase, shard_index)
-    present = (shard_dir.is_dir(), sidecar.is_file())
-    if present == (False, False):
+    committed = _load_generation_marker(_shard_key(phase, shard_index))
+    if committed is None:
         return None
-    if present != (True, True):
-        raise RuntimeError(
-            f"{phase} shard {shard_index} output and sidecar are not an atomic pair"
-        )
-    selection_path, lock_sha256 = _selection_identity(phase)
+    generation, marker = committed
+    shard_dir = generation / "shard"
+    selection_path, lock_sha256 = _selection_identity(phase, manifest)
     del selection_path
     payload = _load_json(shard_dir / "summary.json")
     payload = _validate_shard(
@@ -653,7 +1008,6 @@ def _load_committed_shard(
         manifest=manifest,
         selection_lock_sha256=lock_sha256,
     )
-    result = _load_json(sidecar)
     artifact_sha256 = _directory_hashes(shard_dir)
     expected = {
         "phase": phase,
@@ -664,9 +1018,13 @@ def _load_committed_shard(
         "summary_sha256": artifact_sha256["summary.json"],
         "selection_lock_sha256": lock_sha256,
     }
-    if result != expected:
-        raise RuntimeError(f"committed {phase} shard {shard_index} sidecar is invalid")
-    return result
+    if any(marker.get(key) != value for key, value in expected.items()):
+        raise RuntimeError(f"committed {phase} shard {shard_index} marker is invalid")
+    if set(marker["generation_artifact_sha256"]) != {
+        f"shard/{relative}" for relative in artifact_sha256
+    }:
+        raise RuntimeError(f"committed {phase} shard generation has unexpected files")
+    return expected
 
 
 def _run_calibration_job(manifest: dict[str, Any]) -> dict[str, Any]:
@@ -693,19 +1051,18 @@ def _run_calibration_job(manifest: dict[str, Any]) -> dict[str, Any]:
             payload = _json_result(returned, "run_calibration")
             _write_json(local_output, payload)
         _validate_calibration_payload(payload, manifest)
-        output = REMOTE_OUTPUT / "artifacts/calibration.json"
-        sidecar = REMOTE_OUTPUT / "artifacts/calibration_manifest.json"
-        if output.exists() or sidecar.exists():
-            raise RuntimeError("calibration pair appeared during computation")
-        output.parent.mkdir(parents=True, exist_ok=True)
+        generation = _new_generation_dir("calibration")
+        output = generation / "calibration.json"
         shutil.copyfile(local_output, output)
         result = {
             "output": output.relative_to(REMOTE_OUTPUT).as_posix(),
             "output_sha256": _sha256(output),
         }
-        _write_json(sidecar, result)
-        output_volume.commit()
-        return result
+        _publish_generation("calibration", generation, result)
+        committed = _load_committed_calibration(manifest)
+        if committed is None:
+            raise RuntimeError("calibration marker vanished after publication")
+        return committed
 
 
 def _scan_phase(phase: str, shard_index: int, manifest: dict[str, Any]) -> dict[str, Any]:
@@ -716,7 +1073,8 @@ def _scan_phase(phase: str, shard_index: int, manifest: dict[str, Any]) -> dict[
     existing = _load_committed_shard(phase, shard_index, manifest)
     if existing is not None:
         return existing
-    selection_path, lock_sha256 = _selection_identity(phase)
+    selection_path, lock_sha256 = _selection_identity(phase, manifest)
+    calibration_path = _committed_calibration_path(manifest)
     from jlens_rl.word_correlation import run_shard
 
     with tempfile.TemporaryDirectory(
@@ -730,7 +1088,7 @@ def _scan_phase(phase: str, shard_index: int, manifest: dict[str, Any]) -> dict[
                 phase=phase,
                 shard=shard_index,
                 output_dir=local_dir,
-                calibration_path=REMOTE_OUTPUT / "artifacts/calibration.json",
+                calibration_path=calibration_path,
                 selection_path=selection_path,
             ),
             f"run_shard({phase}, {shard_index})",
@@ -747,10 +1105,9 @@ def _scan_phase(phase: str, shard_index: int, manifest: dict[str, Any]) -> dict[
             raise RuntimeError("run_shard must return, not prewrite, summary.json")
         _write_json(summary, payload)
         artifact_sha256 = _directory_hashes(local_dir)
-        shard_dir, sidecar = _shard_paths(phase, shard_index)
-        if shard_dir.exists() or sidecar.exists():
-            raise RuntimeError(f"{phase} shard {shard_index} appeared during computation")
-        shard_dir.parent.mkdir(parents=True, exist_ok=True)
+        artifact_key = _shard_key(phase, shard_index)
+        generation = _new_generation_dir(artifact_key)
+        shard_dir = generation / "shard"
         shutil.copytree(local_dir, shard_dir)
         result = {
             "phase": phase,
@@ -761,9 +1118,11 @@ def _scan_phase(phase: str, shard_index: int, manifest: dict[str, Any]) -> dict[
             "summary_sha256": artifact_sha256["summary.json"],
             "selection_lock_sha256": lock_sha256,
         }
-        _write_json(sidecar, result)
-        output_volume.commit()
-        return result
+        _publish_generation(artifact_key, generation, result)
+        committed = _load_committed_shard(phase, shard_index, manifest)
+        if committed is None:
+            raise RuntimeError(f"{phase} shard marker vanished after publication")
+        return committed
 
 
 @app.function(
@@ -778,18 +1137,220 @@ def _scan_phase(phase: str, shard_index: int, manifest: dict[str, Any]) -> dict[
 )
 def claim_attempt(manifest: dict[str, Any]) -> dict[str, Any]:
     output_volume.reload()
-    if REMOTE_OUTPUT.exists():
-        existing = [path.name for path in REMOTE_OUTPUT.iterdir()]
-    else:
-        existing = []
+    if not REMOTE_OUTPUT.exists():
         REMOTE_OUTPUT.mkdir(parents=True)
-    if existing:
-        raise RuntimeError(f"word-correlation Volume is not fresh: {sorted(existing)}")
     _verify_remote_manifest(manifest)
-    _write_json(REMOTE_OUTPUT / "attempt_manifest.json", manifest)
-    _set_status(str(manifest["claim_id"]), "claimed")
+    claim_id = str(manifest["claim_id"])
+    _validate_claim_id(claim_id)
+    existing = _load_claim_manifest()
+    if existing is None:
+        allowed_orphans = {GENERATION_RELATIVE, COMMIT_MARKER_RELATIVE}
+        unexpected = sorted(
+            path.name
+            for path in REMOTE_OUTPUT.iterdir()
+            if path.name not in allowed_orphans
+        )
+        if unexpected:
+            raise RuntimeError(
+                "unclaimed word-correlation Volume has unexpected durable state: "
+                f"{unexpected}"
+            )
+        generation = _new_generation_dir("claim")
+        manifest_path = generation / "attempt_manifest.json"
+        _write_json(manifest_path, manifest)
+        _publish_generation(
+            "claim",
+            generation,
+            {
+                "claim_id": claim_id,
+                "manifest_sha256": _sha256(manifest_path),
+                "original_preflight_sha256": _json_sha256(
+                    manifest["gpu_exclusive_preflight"]
+                ),
+            },
+        )
+        existing = _load_claim_manifest(claim_id)
+    if existing != manifest:
+        raise RuntimeError("Volume is already claimed by a different launch manifest")
+    status_path = REMOTE_OUTPUT / "attempt_status.json"
+    if not status_path.is_file():
+        _set_status(claim_id, "claimed")
+        output_volume.commit()
+    else:
+        status = _load_json(status_path)
+        if status.get("claim_id") != claim_id or not isinstance(
+            status.get("stage"), str
+        ):
+            raise RuntimeError("persisted claim status is invalid")
+    return existing
+
+
+@app.function(
+    image=repo_image,
+    cpu=1,
+    memory=2048,
+    max_containers=1,
+    timeout=5 * 60,
+    startup_timeout=60 * 60,
+    retries=0,
+    volumes={REMOTE_OUTPUT: output_volume},
+)
+def inspect_claim(claim_id: str) -> dict[str, Any] | None:
+    output_volume.reload()
+    _validate_claim_id(claim_id)
+    _materialize_selected_marker("claim")
+    return _load_claim_manifest(claim_id)
+
+
+@app.function(
+    image=repo_image,
+    cpu=2,
+    memory=4096,
+    max_containers=1,
+    timeout=10 * 60,
+    startup_timeout=60 * 60,
+    retries=0,
+    volumes={REMOTE_OUTPUT: output_volume},
+)
+def submit_attempt(
+    claim_id: str, submission_preflight: dict[str, Any]
+) -> dict[str, Any]:
+    """Acquire the global lease and idempotently submit one root call."""
+
+    output_volume.reload()
+    _validate_claim_id(claim_id)
+    _validate_gpu_preflight(submission_preflight, "submission")
+    manifest = _load_claim_manifest(claim_id)
+    if manifest is None:
+        raise RuntimeError("cannot submit an unclaimed word-correlation attempt")
+    _verify_remote_manifest(manifest)
+    status = _load_json(REMOTE_OUTPUT / "attempt_status.json")
+    if status.get("claim_id") != claim_id:
+        raise RuntimeError("submission status has the wrong claim ID")
+
+    prior_state = _load_submission_state(claim_id)
+    if status.get("stage") == "complete":
+        authoritative = _persist_root_authority_to_volume(claim_id)
+        state = _load_submission_state(claim_id)
+        if authoritative is None or state is None:
+            raise RuntimeError("complete attempt lacks its durable submission call ID")
+        return {
+            "claim_id": claim_id,
+            "function_call_id": authoritative,
+            "intent_id": state["intent_id"],
+            "lease_owner": state["lease_owner"],
+        }
+
+    lease = _acquire_gpu_lease(claim_id, submission_preflight)
+    lease_receipt = {
+        **lease,
+        "dict_name": GPU_LEASE_DICT_NAME,
+        "environment_name": GPU_LEASE_ENVIRONMENT_NAME,
+    }
+
+    state = prior_state
+    if state is None:
+        state = {
+            "protocol": "j-lens-rl-word-correlation-submission-v1",
+            "claim_id": claim_id,
+            "intent_id": _submission_intent_id(claim_id),
+            "lease_slot": GPU_LEASE_SLOT,
+            "lease_owner": lease["owner"],
+            "gpu_lease_receipt": lease_receipt,
+            "orchestrator_call_id": None,
+            "controller_bound_at_utc": None,
+            "spawned_call_ids": [],
+            "submission_preflight_checks": [submission_preflight],
+            "intent_committed_at_utc": datetime.now(timezone.utc).isoformat(),
+        }
+    else:
+        if state.get("gpu_lease_receipt") != lease_receipt:
+            raise RuntimeError("immutable GPU lease receipt changed across retry")
+        authoritative = _persist_root_authority_to_volume(claim_id)
+        if authoritative is not None:
+            state = _load_submission_state(claim_id)
+            if state is None:
+                raise RuntimeError("submission state vanished during authority recovery")
+            modal.FunctionCall.from_id(authoritative)
+            return {
+                "claim_id": claim_id,
+                "function_call_id": authoritative,
+                "intent_id": state["intent_id"],
+                "lease_owner": state["lease_owner"],
+            }
+        if submission_preflight not in state["submission_preflight_checks"]:
+            state["submission_preflight_checks"].append(submission_preflight)
+    _store_submission_state(state)
     output_volume.commit()
-    return manifest
+
+    output_volume.reload()
+    state = _load_submission_state(claim_id)
+    if state is None:
+        raise RuntimeError("submission intent vanished after commit")
+    authoritative = _persist_root_authority_to_volume(claim_id)
+    if authoritative is not None:
+        state = _load_submission_state(claim_id)
+        if state is None:
+            raise RuntimeError("submission state vanished during authority recovery")
+        modal.FunctionCall.from_id(authoritative)
+        return {
+            "claim_id": claim_id,
+            "function_call_id": authoritative,
+            "intent_id": state["intent_id"],
+            "lease_owner": state["lease_owner"],
+        }
+
+    # A null intent seen on entry can mean that Modal accepted a prior spawn
+    # immediately before preemption.  Give that root time to win the immutable
+    # root-authority CAS before safely enqueueing a serialized duplicate.
+    if prior_state is not None:
+        deadline = time.monotonic() + SUBMISSION_RECOVERY_SECONDS
+        while time.monotonic() < deadline:
+            time.sleep(0.25)
+            authoritative = _persist_root_authority_to_volume(claim_id)
+            if authoritative is not None:
+                state = _load_submission_state(claim_id)
+                if state is None:
+                    raise RuntimeError("submission state vanished during recovery")
+                modal.FunctionCall.from_id(authoritative)
+                return {
+                    "claim_id": claim_id,
+                    "function_call_id": authoritative,
+                    "intent_id": state["intent_id"],
+                    "lease_owner": state["lease_owner"],
+                }
+
+    call = orchestrate.spawn(claim_id)
+    spawned_call_id = str(call.object_id)
+    output_volume.reload()
+    state = _load_submission_state(claim_id)
+    if state is None:
+        raise RuntimeError("submission state vanished after orchestrator spawn")
+    if spawned_call_id not in state["spawned_call_ids"]:
+        state["spawned_call_ids"].append(spawned_call_id)
+    state["last_spawn_returned_at_utc"] = datetime.now(timezone.utc).isoformat()
+    _store_submission_state(state)
+    output_volume.commit()
+
+    deadline = time.monotonic() + SUBMISSION_BIND_SECONDS
+    while time.monotonic() < deadline:
+        authoritative = _persist_root_authority_to_volume(claim_id)
+        if authoritative is not None:
+            state = _load_submission_state(claim_id)
+            if state is None:
+                raise RuntimeError("submission state vanished after root binding")
+            modal.FunctionCall.from_id(authoritative)
+            return {
+                "claim_id": claim_id,
+                "function_call_id": authoritative,
+                "intent_id": state["intent_id"],
+                "lease_owner": state["lease_owner"],
+            }
+        time.sleep(0.25)
+    raise RuntimeError(
+        "orchestrator spawn was accepted but no root won durable authority; "
+        "retry the same claim to reattach"
+    )
 
 
 @app.function(
@@ -804,9 +1365,16 @@ def claim_attempt(manifest: dict[str, Any]) -> dict[str, Any]:
     single_use_containers=True,
     volumes={REMOTE_OUTPUT: output_volume},
 )
-def gpu_job(kind: str, shard_index: int | None = None) -> dict[str, Any]:
+def gpu_job(
+    kind: str,
+    shard_index: int | None,
+    root_call_id: str,
+) -> dict[str, Any]:
     output_volume.reload()
-    manifest = _load_json(REMOTE_OUTPUT / "attempt_manifest.json")
+    manifest = _load_claim_manifest()
+    if manifest is None:
+        raise RuntimeError("GPU job cannot run before a committed claim")
+    _assert_gpu_lease(str(manifest["claim_id"]), root_call_id)
     _verify_remote_manifest(manifest)
     if kind == "calibration":
         if shard_index is not None:
@@ -843,21 +1411,12 @@ def _validate_aggregate_payload(
     if not isinstance(indices, list) or set(indices) != expected_indices:
         raise RuntimeError(f"{phase} aggregate source indices differ from shards")
     if phase == "validation":
-        selection = REMOTE_OUTPUT / "selection_lock.json"
+        selection, selection_sha256 = _selection_identity("validation", manifest)
         if (
-            not selection.is_file()
-            or payload.get("selection_lock_sha256") != _sha256(selection)
+            selection is None
+            or payload.get("selection_lock_sha256") != selection_sha256
         ):
             raise RuntimeError("validation aggregate used a different selection lock")
-
-
-def _aggregate_paths(phase: str) -> tuple[Path, Path, Path]:
-    phase_dir = REMOTE_OUTPUT / phase
-    return (
-        phase_dir / "aggregate.json",
-        phase_dir / "merged",
-        phase_dir / "aggregate_manifest.json",
-    )
 
 
 def _load_committed_aggregate(
@@ -865,12 +1424,13 @@ def _load_committed_aggregate(
     shard_results: list[dict[str, Any]],
     manifest: dict[str, Any],
 ) -> tuple[Path, dict[str, Any]] | None:
-    output, merge_dir, sidecar = _aggregate_paths(phase)
-    present = (output.is_file(), merge_dir.is_dir(), sidecar.is_file())
-    if present == (False, False, False):
+    artifact_key = f"{phase}/final"
+    committed = _load_generation_marker(artifact_key)
+    if committed is None:
         return None
-    if present != (True, True, True):
-        raise RuntimeError(f"{phase} aggregate is not an atomic artifact set")
+    generation, marker = committed
+    output = generation / "aggregate.json"
+    merge_dir = generation / "merged"
     payload = _load_json(output)
     _validate_aggregate_payload(phase, payload, shard_results, manifest)
     merge_hashes = _directory_hashes(merge_dir)
@@ -882,8 +1442,16 @@ def _load_committed_aggregate(
         "aggregate_sha256": _sha256(output),
         "merge_artifact_sha256": merge_hashes,
     }
-    if _load_json(sidecar) != expected:
-        raise RuntimeError(f"committed {phase} aggregate manifest is invalid")
+    if any(marker.get(key) != value for key, value in expected.items()):
+        raise RuntimeError(f"committed {phase} aggregate marker is invalid")
+    expected_files = {"aggregate.json", *(f"merged/{name}" for name in merge_hashes)}
+    if phase == "discovery":
+        selection = generation / "selection_lock.json"
+        if marker.get("selection_lock_sha256") != _sha256(selection):
+            raise RuntimeError("discovery marker has the wrong selection-lock hash")
+        expected_files.add("selection_lock.json")
+    if set(marker["generation_artifact_sha256"]) != expected_files:
+        raise RuntimeError(f"committed {phase} generation has unexpected files")
     return output, payload
 
 
@@ -902,11 +1470,12 @@ def _merge_to_local(
     if phase == "validation":
         from jlens_rl.word_correlation import merge_validation
 
+        selection_path, _selection_sha256 = _selection_identity(phase, manifest)
         merged = merge_validation(
             config_path=REMOTE_REPO / CONFIG_RELATIVE,
             shard_dirs=shard_dirs,
-            calibration_path=REMOTE_OUTPUT / "artifacts/calibration.json",
-            selection_path=REMOTE_OUTPUT / "selection_lock.json",
+            calibration_path=_committed_calibration_path(manifest),
+            selection_path=selection_path,
             output_dir=merge_dir,
         )
     else:
@@ -915,7 +1484,7 @@ def _merge_to_local(
         merged = merge_discovery(
             config_path=REMOTE_REPO / CONFIG_RELATIVE,
             shard_dirs=shard_dirs,
-            calibration_path=REMOTE_OUTPUT / "artifacts/calibration.json",
+            calibration_path=_committed_calibration_path(manifest),
             output_dir=merge_dir,
         )
     payload = _json_result(merged, f"merge_{phase}")
@@ -923,24 +1492,20 @@ def _merge_to_local(
     return payload
 
 
-def _publish_aggregate(
+def _stage_aggregate_generation(
     phase: str, merge_dir: Path, payload: dict[str, Any]
-) -> tuple[Path, dict[str, Any]]:
-    output, remote_merge, sidecar = _aggregate_paths(phase)
-    if output.exists() or remote_merge.exists() or sidecar.exists():
-        raise RuntimeError(f"{phase} aggregate appeared during computation")
-    remote_merge.parent.mkdir(parents=True, exist_ok=True)
+) -> tuple[Path, Path, dict[str, Any]]:
+    generation = _new_generation_dir(f"{phase}/final")
+    remote_merge = generation / "merged"
     shutil.copytree(merge_dir, remote_merge)
+    output = generation / "aggregate.json"
     _write_json(output, payload)
-    _write_json(
-        sidecar,
-        {
-            "phase": phase,
-            "aggregate_sha256": _sha256(output),
-            "merge_artifact_sha256": _directory_hashes(remote_merge),
-        },
-    )
-    return output, payload
+    metadata = {
+        "phase": phase,
+        "aggregate_sha256": _sha256(output),
+        "merge_artifact_sha256": _directory_hashes(remote_merge),
+    }
+    return generation, output, metadata
 
 
 def _validated_selection(
@@ -981,9 +1546,9 @@ def _lock_selection(
     discovery_path: Path,
     discovery: dict[str, Any],
     manifest: dict[str, Any],
+    path: Path,
 ) -> tuple[Path, dict[str, Any]]:
     selection = _validated_selection(discovery, manifest)
-    path = REMOTE_OUTPUT / "selection_lock.json"
     if path.exists():
         raise FileExistsError("refusing to overwrite selection lock")
     lock = {
@@ -994,9 +1559,7 @@ def _lock_selection(
         "scanner_sha256": manifest["scanner_sha256"],
         "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
         "lens_sha256": LENS_SHA256,
-        "calibration_sha256": _sha256(
-            REMOTE_OUTPUT / "artifacts/calibration.json"
-        ),
+        "calibration_sha256": _sha256(_committed_calibration_path(manifest)),
         "discovery_aggregate_sha256": _sha256(discovery_path),
         "selection": selection,
         "locked_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -1010,9 +1573,13 @@ def _load_selection_lock(
     discovery: dict[str, Any],
     manifest: dict[str, Any],
 ) -> tuple[Path, dict[str, Any]] | None:
-    path = REMOTE_OUTPUT / "selection_lock.json"
-    if not path.exists():
+    committed = _load_generation_marker("discovery/final")
+    if committed is None:
         return None
+    generation, marker = committed
+    if discovery_path.parent != generation:
+        raise RuntimeError("selection lock and discovery aggregate use different generations")
+    path = generation / "selection_lock.json"
     lock = _load_json(path)
     selection = _validated_selection(discovery, manifest)
     expected = {
@@ -1023,14 +1590,13 @@ def _load_selection_lock(
         "scanner_sha256": manifest["scanner_sha256"],
         "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
         "lens_sha256": LENS_SHA256,
-        "calibration_sha256": _sha256(
-            REMOTE_OUTPUT / "artifacts/calibration.json"
-        ),
+        "calibration_sha256": _sha256(_committed_calibration_path(manifest)),
         "discovery_aggregate_sha256": _sha256(discovery_path),
         "selection": selection,
     }
     if (
-        not isinstance(lock.get("locked_at_utc"), str)
+        marker.get("selection_lock_sha256") != _sha256(path)
+        or not isinstance(lock.get("locked_at_utc"), str)
         or any(lock.get(key) != value for key, value in expected.items())
     ):
         raise RuntimeError("committed selection lock is invalid")
@@ -1044,10 +1610,7 @@ def _ensure_discovery_finalized(
     aggregate = _load_committed_aggregate(
         "discovery", discovery_results, manifest
     )
-    lock_path = REMOTE_OUTPUT / "selection_lock.json"
     if aggregate is None:
-        if lock_path.exists():
-            raise RuntimeError("selection lock exists without discovery aggregate")
         with tempfile.TemporaryDirectory(
             prefix="word-correlation-discovery-merge-"
         ) as raw:
@@ -1056,19 +1619,28 @@ def _ensure_discovery_finalized(
             payload = _merge_to_local(
                 "discovery", discovery_results, manifest, local_merge
             )
-            discovery_path, discovery = _publish_aggregate(
+            generation, discovery_path, metadata = _stage_aggregate_generation(
                 "discovery", local_merge, payload
             )
             selection_path, selection_lock = _lock_selection(
-                discovery_path, discovery, manifest
-            )
-            output_volume.commit()
-            return (
                 discovery_path,
-                discovery,
-                selection_path,
-                selection_lock,
+                payload,
+                manifest,
+                generation / "selection_lock.json",
             )
+            _publish_generation(
+                "discovery/final",
+                generation,
+                {
+                    **metadata,
+                    "selection_lock_sha256": _sha256(selection_path),
+                },
+            )
+            aggregate = _load_committed_aggregate(
+                "discovery", discovery_results, manifest
+            )
+            if aggregate is None:
+                raise RuntimeError("discovery final marker vanished after publication")
     discovery_path, discovery = aggregate
     selection = _load_selection_lock(discovery_path, discovery, manifest)
     if selection is None:
@@ -1094,22 +1666,27 @@ def _ensure_validation_finalized(
         payload = _merge_to_local(
             "validation", validation_results, manifest, local_merge
         )
-        result = _publish_aggregate("validation", local_merge, payload)
-        output_volume.commit()
-        return result
+        generation, _output, metadata = _stage_aggregate_generation(
+            "validation", local_merge, payload
+        )
+        _publish_generation("validation/final", generation, metadata)
+        committed = _load_committed_aggregate(
+            "validation", validation_results, manifest
+        )
+        if committed is None:
+            raise RuntimeError("validation final marker vanished after publication")
+        return committed
 
 
 def _load_committed_atlas(
     discovery_results: list[dict[str, Any]],
     manifest: dict[str, Any],
 ) -> tuple[Path, dict[str, Any]] | None:
-    output_dir = REMOTE_OUTPUT / "atlas"
-    sidecar = REMOTE_OUTPUT / "atlas_manifest.json"
-    present = (output_dir.is_dir(), sidecar.is_file())
-    if present == (False, False):
+    committed = _load_generation_marker("atlas")
+    if committed is None:
         return None
-    if present != (True, True):
-        raise RuntimeError("lexical atlas is not an atomic artifact set")
+    generation, marker = committed
+    output_dir = generation / "atlas"
     output = output_dir / "atlas.json"
     payload = _load_json(output)
     _validate_scanner_provenance(payload, manifest)
@@ -1122,8 +1699,12 @@ def _load_committed_atlas(
         "atlas_sha256": _sha256(output),
         "atlas_artifact_sha256": _directory_hashes(output_dir),
     }
-    if _load_json(sidecar) != expected:
-        raise RuntimeError("committed lexical atlas manifest is invalid")
+    if any(marker.get(key) != value for key, value in expected.items()):
+        raise RuntimeError("committed lexical atlas marker is invalid")
+    if set(marker["generation_artifact_sha256"]) != {
+        f"atlas/{name}" for name in expected["atlas_artifact_sha256"]
+    }:
+        raise RuntimeError("committed lexical atlas generation has unexpected files")
     return output, payload
 
 
@@ -1148,7 +1729,7 @@ def _ensure_atlas(
             build_atlas(
                 config_path=REMOTE_REPO / CONFIG_RELATIVE,
                 shard_dirs=shard_dirs,
-                calibration_path=REMOTE_OUTPUT / "artifacts/calibration.json",
+                calibration_path=_committed_calibration_path(manifest),
                 output_dir=local_dir,
             ),
             "build_atlas",
@@ -1163,21 +1744,268 @@ def _ensure_atlas(
         if local_output.exists():
             raise RuntimeError("build_atlas must return, not prewrite, atlas.json")
         _write_json(local_output, payload)
-        output_dir = REMOTE_OUTPUT / "atlas"
-        sidecar = REMOTE_OUTPUT / "atlas_manifest.json"
-        if output_dir.exists() or sidecar.exists():
-            raise RuntimeError("lexical atlas appeared during construction")
+        generation = _new_generation_dir("atlas")
+        output_dir = generation / "atlas"
         shutil.copytree(local_dir, output_dir)
         output = output_dir / "atlas.json"
-        _write_json(
-            sidecar,
+        _publish_generation(
+            "atlas",
+            generation,
             {
                 "atlas_sha256": _sha256(output),
                 "atlas_artifact_sha256": _directory_hashes(output_dir),
             },
         )
+        committed = _load_committed_atlas(discovery_results, manifest)
+        if committed is None:
+            raise RuntimeError("lexical atlas marker vanished after publication")
+        return committed
+
+
+def _load_root_authority(claim_id: str) -> dict[str, Any] | None:
+    _validate_claim_id(claim_id)
+    value = root_authority_registry.get(claim_id)
+    if value is None:
+        return None
+    if (
+        not isinstance(value, dict)
+        or value.get("protocol") != ROOT_AUTHORITY_PROTOCOL
+        or value.get("volume") != VOLUME_NAME
+        or value.get("claim_id") != claim_id
+        or value.get("intent_id") != _submission_intent_id(claim_id)
+        or not isinstance(value.get("orchestrator_call_id"), str)
+        or not value.get("orchestrator_call_id")
+        or not isinstance(value.get("bound_at_utc"), str)
+    ):
+        raise RuntimeError("durable root-authority record is invalid")
+    return value
+
+
+def _claim_root_authority(claim_id: str, call_id: str) -> dict[str, Any]:
+    if not isinstance(call_id, str) or not call_id:
+        raise RuntimeError("root authority requires a Modal call ID")
+    candidate = {
+        "protocol": ROOT_AUTHORITY_PROTOCOL,
+        "volume": VOLUME_NAME,
+        "claim_id": _validate_claim_id(claim_id),
+        "intent_id": _submission_intent_id(claim_id),
+        "orchestrator_call_id": call_id,
+        "bound_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    if root_authority_registry.put(claim_id, candidate, skip_if_exists=True):
+        return candidate
+    existing = _load_root_authority(claim_id)
+    if existing is None:
+        raise RuntimeError("root-authority CAS vanished")
+    if existing["orchestrator_call_id"] != call_id:
+        raise RuntimeError("a different orchestrator call owns root authority")
+    return existing
+
+
+def _gpu_lease_owner(claim_id: str) -> str:
+    return f"{GPU_LEASE_KEY_PREFIX}:{_validate_claim_id(claim_id)}"
+
+
+def _validate_gpu_lease_record(value: Any) -> dict[str, Any]:
+    if (
+        not isinstance(value, dict)
+        or value.get("protocol") != GPU_LEASE_PROTOCOL
+        or value.get("environment_name") != GPU_LEASE_ENVIRONMENT_NAME
+        or value.get("slot") != GPU_LEASE_SLOT
+        or value.get("global_modal_gpu_limit") != GLOBAL_MODAL_GPU_LIMIT
+        or not isinstance(value.get("owner"), str)
+        or not isinstance(value.get("workload"), str)
+        or not value.get("workload")
+        or not isinstance(value.get("claim_id"), str)
+        or not value.get("claim_id")
+        or not isinstance(value.get("acquired_at_utc"), str)
+        or not isinstance(value.get("heartbeat_at_utc"), str)
+        or not isinstance(value.get("submission_preflight_sha256"), str)
+    ):
+        raise RuntimeError("global Modal GPU lease record is invalid")
+    _validate_gpu_preflight(value.get("submission_preflight"), "GPU lease")
+    _validate_claim_id(value["claim_id"])
+    if value["submission_preflight_sha256"] != _json_sha256(
+        value["submission_preflight"]
+    ):
+        raise RuntimeError("global Modal GPU lease preflight hash is invalid")
+    if value["owner"] != f"{value['workload']}:{value['claim_id']}":
+        raise RuntimeError("global Modal GPU lease owner is invalid")
+    return value
+
+
+def _acquire_gpu_lease(
+    claim_id: str, submission_preflight: dict[str, Any]
+) -> dict[str, Any]:
+    """Atomically claim the one account-wide cooperative GPU slot.
+
+    ``Dict.put(..., skip_if_exists=True)`` is the cross-app compare-and-set.
+    The record has no automatic expiry: a crashed owner fails closed until the
+    same claim resumes or an operator explicitly audits and releases it.
+    """
+
+    _validate_gpu_preflight(submission_preflight, "submission")
+    owner = _gpu_lease_owner(claim_id)
+    now = datetime.now(timezone.utc).isoformat()
+    candidate = {
+        "protocol": GPU_LEASE_PROTOCOL,
+        "environment_name": GPU_LEASE_ENVIRONMENT_NAME,
+        "slot": GPU_LEASE_SLOT,
+        "owner": owner,
+        "workload": GPU_LEASE_KEY_PREFIX,
+        "claim_id": claim_id,
+        "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
+        "submission_preflight": submission_preflight,
+        "submission_preflight_sha256": _json_sha256(submission_preflight),
+        "acquired_at_utc": now,
+        "heartbeat_at_utc": now,
+    }
+    if gpu_lease_registry.put(GPU_LEASE_SLOT, candidate, skip_if_exists=True):
+        return candidate
+    existing = _validate_gpu_lease_record(
+        gpu_lease_registry.get(GPU_LEASE_SLOT)
+    )
+    if existing["owner"] != owner or existing["claim_id"] != claim_id:
+        raise RuntimeError(
+            "global Modal GPU lease is held by another app/claim: "
+            f"{existing['owner']}"
+        )
+    # The lease is immutable.  Same-claim launch retries may continue toward
+    # root reattachment, but only the CAS-elected root can authorize GPU work.
+    return existing
+
+
+def _assert_gpu_lease(
+    claim_id: str, root_call_id: str | None = None
+) -> dict[str, Any]:
+    record = _validate_gpu_lease_record(gpu_lease_registry.get(GPU_LEASE_SLOT))
+    if record["owner"] != _gpu_lease_owner(claim_id):
+        raise RuntimeError("this claim does not own the global Modal GPU lease")
+    if root_call_id is not None:
+        authority = _load_root_authority(claim_id)
+        if (
+            authority is None
+            or authority.get("orchestrator_call_id") != root_call_id
+        ):
+            raise RuntimeError("this call does not own durable root authority")
+    return record
+
+
+def _refresh_gpu_lease(claim_id: str, root_call_id: str) -> dict[str, Any]:
+    # Deliberately read-only: a stale owner must never overwrite a successor.
+    return _assert_gpu_lease(claim_id, root_call_id)
+
+
+def _release_gpu_lease(claim_id: str, root_call_id: str) -> None:
+    value = gpu_lease_registry.get(GPU_LEASE_SLOT)
+    if value is None:
+        return
+    record = _validate_gpu_lease_record(value)
+    if record["owner"] != _gpu_lease_owner(claim_id):
+        # This root already released its immutable lease and a successor owns
+        # the slot.  Never let a stale completion pop that successor.
+        return
+    _assert_gpu_lease(claim_id, root_call_id)
+    removed = gpu_lease_registry.pop(GPU_LEASE_SLOT)
+    if removed != record:
+        raise RuntimeError("global Modal GPU lease changed during release")
+
+
+def _submission_state_path() -> Path:
+    return REMOTE_OUTPUT / "submission_state.json"
+
+
+def _submission_intent_id(claim_id: str) -> str:
+    return _json_sha256(
+        {
+            "protocol": "j-lens-rl-word-correlation-submission-v1",
+            "volume": VOLUME_NAME,
+            "claim_id": claim_id,
+        }
+    )
+
+
+def _load_submission_state(claim_id: str) -> dict[str, Any] | None:
+    path = _submission_state_path()
+    if not path.is_file():
+        return None
+    state = _load_json(path)
+    checks = state.get("submission_preflight_checks")
+    spawned = state.get("spawned_call_ids")
+    receipt = state.get("gpu_lease_receipt")
+    if (
+        state.get("protocol") != "j-lens-rl-word-correlation-submission-v1"
+        or state.get("claim_id") != claim_id
+        or state.get("intent_id") != _submission_intent_id(claim_id)
+        or state.get("lease_slot") != GPU_LEASE_SLOT
+        or state.get("lease_owner") != _gpu_lease_owner(claim_id)
+        or not isinstance(receipt, dict)
+        or receipt.get("dict_name") != GPU_LEASE_DICT_NAME
+        or receipt.get("environment_name") != GPU_LEASE_ENVIRONMENT_NAME
+        or (
+            state.get("orchestrator_call_id") is not None
+            and not isinstance(state.get("orchestrator_call_id"), str)
+        )
+        or (
+            state.get("controller_bound_at_utc") is not None
+            and not isinstance(state.get("controller_bound_at_utc"), str)
+        )
+        or not isinstance(checks, list)
+        or not checks
+        or not isinstance(spawned, list)
+        or any(not isinstance(call_id, str) or not call_id for call_id in spawned)
+    ):
+        raise RuntimeError("durable orchestrator submission state is invalid")
+    _validate_gpu_lease_record(receipt)
+    if receipt.get("owner") != state["lease_owner"]:
+        raise RuntimeError("submission state has the wrong GPU lease receipt")
+    for check in checks:
+        _validate_gpu_preflight(check, "persisted submission")
+    return state
+
+
+def _store_submission_state(state: dict[str, Any]) -> None:
+    state["updated_at_utc"] = datetime.now(timezone.utc).isoformat()
+    _write_json(_submission_state_path(), state)
+
+
+def _persist_root_authority_to_volume(claim_id: str) -> str | None:
+    authority = _load_root_authority(claim_id)
+    if authority is None:
+        return None
+    state = _load_submission_state(claim_id)
+    if state is None:
+        raise RuntimeError("root authority exists without submission intent")
+    authoritative = str(authority["orchestrator_call_id"])
+    if state.get("orchestrator_call_id") not in {None, authoritative}:
+        raise RuntimeError("Volume submission state conflicts with root authority")
+    if (
+        state.get("orchestrator_call_id") == authoritative
+        and state.get("controller_bound_at_utc") == authority["bound_at_utc"]
+    ):
+        return authoritative
+    state["orchestrator_call_id"] = authoritative
+    state["controller_bound_at_utc"] = authority["bound_at_utc"]
+    _store_submission_state(state)
+    output_volume.commit()
+    return authoritative
+
+
+def _bind_submission_to_controller(claim_id: str, call_id: str) -> None:
+    authority = _claim_root_authority(claim_id, call_id)
+    state = _load_submission_state(claim_id)
+    if state is None:
+        raise RuntimeError("orchestrator started without a durable submission intent")
+    # The first serialized root invocation is authoritative.  This repairs the
+    # only unavoidable API cut: spawn accepted but its returned call ID was not
+    # yet committed by the submitter.
+    if state.get("controller_bound_at_utc") is None:
+        state["orchestrator_call_id"] = authority["orchestrator_call_id"]
+        state["controller_bound_at_utc"] = authority["bound_at_utc"]
+        _store_submission_state(state)
         output_volume.commit()
-        return output, payload
+    elif state.get("orchestrator_call_id") != call_id:
+        raise RuntimeError("a different orchestrator call already owns this submission")
 
 
 def _controller_state_path() -> Path:
@@ -1267,6 +2095,7 @@ def _durable_gpu_job(
 ) -> dict[str, Any]:
     spec = _gpu_job_spec(kind, shard_index)
     output_volume.reload()
+    _refresh_gpu_lease(claim_id, call_id)
     state = _load_controller_state(claim_id, call_id)
     existing = _load_gpu_job_result(kind, shard_index, manifest)
     active = state.get("active_job")
@@ -1284,7 +2113,7 @@ def _durable_gpu_job(
 
     active_call_id = active.get("call_id")
     if active_call_id is None:
-        call = gpu_job.spawn(kind, shard_index)
+        call = gpu_job.spawn(kind, shard_index, call_id)
         spawned_call_id = str(call.object_id)
         output_volume.reload()
         state = _load_controller_state(claim_id, call_id)
@@ -1400,14 +2229,20 @@ def _finalize_result(
     validation_path: Path,
     atlas_path: Path,
 ) -> dict[str, Any]:
-    result_path = REMOTE_OUTPUT / "result_manifest.json"
+    committed = _load_committed_result(claim_id, manifest)
     status = _load_json(REMOTE_OUTPUT / "attempt_status.json")
-    if result_path.exists():
-        if status.get("stage") != "complete":
-            raise RuntimeError("result manifest exists without terminal complete status")
-        result = _load_json(result_path)
+    if committed is not None:
+        result_path, result = committed
         result_sha256 = _sha256(result_path)
-        if status.get("result_manifest_sha256") != result_sha256:
+        if status.get("stage") != "complete":
+            _set_status(
+                claim_id,
+                "complete",
+                result_manifest_sha256=result_sha256,
+                selection=result.get("selection"),
+            )
+            output_volume.commit()
+        elif status.get("result_manifest_sha256") != result_sha256:
             raise RuntimeError("complete status has the wrong result manifest hash")
         return {
             "stage": "complete",
@@ -1422,6 +2257,22 @@ def _finalize_result(
         raise RuntimeError("discovery and selected-word validation overlap")
     if discovery_indices | validation_indices != full_indices:
         raise RuntimeError("discovery and validation do not partition the curve set")
+    generation = _new_generation_dir("result")
+    controller_snapshot = generation / "controller_state.json"
+    submission_snapshot = generation / "submission_state.json"
+    shutil.copyfile(_controller_state_path(), controller_snapshot)
+    shutil.copyfile(_submission_state_path(), submission_snapshot)
+    controller_state = _load_json(controller_snapshot)
+    submission_state = _load_json(submission_snapshot)
+    if (
+        controller_state.get("claim_id") != claim_id
+        or controller_state.get("protocol")
+        != "j-lens-rl-word-correlation-controller-v1"
+        or submission_state.get("claim_id") != claim_id
+        or submission_state.get("protocol")
+        != "j-lens-rl-word-correlation-submission-v1"
+    ):
+        raise RuntimeError("final orchestration snapshots have the wrong identity")
     result_manifest = {
         "protocol": manifest["protocol"],
         "claim_id": claim_id,
@@ -1433,7 +2284,14 @@ def _finalize_result(
         "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
         "lens_sha256": LENS_SHA256,
         "calibration_sha256": calibration["output_sha256"],
-        "controller_state_sha256": _sha256(_controller_state_path()),
+        "controller_state_snapshot": controller_snapshot.relative_to(
+            REMOTE_OUTPUT
+        ).as_posix(),
+        "controller_state_sha256": _sha256(controller_snapshot),
+        "submission_state_snapshot": submission_snapshot.relative_to(
+            REMOTE_OUTPUT
+        ).as_posix(),
+        "submission_state_sha256": _sha256(submission_snapshot),
         "discovery_shard_artifact_sha256": {
             str(result["shard_index"]): result["artifact_sha256"]
             for result in discovery_shards
@@ -1452,20 +2310,87 @@ def _finalize_result(
         "validation_size": len(validation_indices),
         "completed_at_utc": datetime.now(timezone.utc).isoformat(),
     }
+    result_path = generation / "result_manifest.json"
     _write_json(result_path, result_manifest)
+    result_sha256 = _sha256(result_path)
+    _publish_generation(
+        "result",
+        generation,
+        {
+            "claim_id": claim_id,
+            "result_manifest_sha256": result_sha256,
+        },
+    )
+    committed = _load_committed_result(claim_id, manifest)
+    if committed is None:
+        raise RuntimeError("result marker vanished after publication")
+    result_path, result_manifest = committed
     result_sha256 = _sha256(result_path)
     _set_status(
         claim_id,
         "complete",
         result_manifest_sha256=result_sha256,
-        selection=selection_lock["selection"],
+        selection=result_manifest["selection"],
     )
     output_volume.commit()
     return {
         "stage": "complete",
         "result_manifest_sha256": result_sha256,
-        "selection": selection_lock["selection"],
+        "selection": result_manifest["selection"],
     }
+
+
+def _load_committed_result(
+    claim_id: str, manifest: dict[str, Any]
+) -> tuple[Path, dict[str, Any]] | None:
+    committed = _load_generation_marker("result")
+    if committed is None:
+        return None
+    generation, marker = committed
+    path = generation / "result_manifest.json"
+    controller_snapshot = generation / "controller_state.json"
+    submission_snapshot = generation / "submission_state.json"
+    payload = _load_json(path)
+    expected = {
+        "protocol": manifest["protocol"],
+        "claim_id": claim_id,
+        "git_commit": manifest["git_commit"],
+        "config_sha256": manifest["config_sha256"],
+        "scanner_sha256": manifest["scanner_sha256"],
+        "current_amendment_sha256": manifest["current_amendment_sha256"],
+    }
+    snapshot_expected = {
+        "controller_state_snapshot": controller_snapshot.relative_to(
+            REMOTE_OUTPUT
+        ).as_posix(),
+        "controller_state_sha256": _sha256(controller_snapshot),
+        "submission_state_snapshot": submission_snapshot.relative_to(
+            REMOTE_OUTPUT
+        ).as_posix(),
+        "submission_state_sha256": _sha256(submission_snapshot),
+    }
+    controller_state = _load_json(controller_snapshot)
+    submission_state = _load_json(submission_snapshot)
+    if (
+        any(payload.get(key) != value for key, value in expected.items())
+        or any(payload.get(key) != value for key, value in snapshot_expected.items())
+        or controller_state.get("claim_id") != claim_id
+        or controller_state.get("protocol")
+        != "j-lens-rl-word-correlation-controller-v1"
+        or submission_state.get("claim_id") != claim_id
+        or submission_state.get("protocol")
+        != "j-lens-rl-word-correlation-submission-v1"
+        or marker.get("claim_id") != claim_id
+        or marker.get("result_manifest_sha256") != _sha256(path)
+        or set(marker["generation_artifact_sha256"])
+        != {
+            "controller_state.json",
+            "result_manifest.json",
+            "submission_state.json",
+        }
+    ):
+        raise RuntimeError("committed result marker is invalid")
+    return path, payload
 
 
 @app.function(
@@ -1480,27 +2405,43 @@ def _finalize_result(
 )
 def orchestrate(claim_id: str) -> dict[str, Any]:
     output_volume.reload()
-    manifest = _load_json(REMOTE_OUTPUT / "attempt_manifest.json")
+    manifest = _load_claim_manifest(claim_id)
+    if manifest is None:
+        raise RuntimeError("word-correlation claim is not committed")
     status = _load_json(REMOTE_OUTPUT / "attempt_status.json")
     if status.get("claim_id") != claim_id:
         raise RuntimeError("word-correlation claim is not available for orchestration")
     _verify_remote_manifest(manifest)
-    if status.get("stage") == "complete":
-        result = REMOTE_OUTPUT / "result_manifest.json"
-        if not result.is_file() or status.get("result_manifest_sha256") != _sha256(result):
-            raise RuntimeError("terminal correlation result is incomplete")
-        payload = _load_json(result)
-        return {
-            "stage": "complete",
-            "result_manifest_sha256": _sha256(result),
-            "selection": payload.get("selection"),
-        }
-    if status.get("stage") not in RESUMABLE_STAGES:
-        raise RuntimeError("word-correlation claim is terminal or not resumable")
     root_call_id = modal.current_function_call_id()
     if not isinstance(root_call_id, str) or not root_call_id:
         raise RuntimeError("orchestrator has no durable Modal function-call identity")
+    _bind_submission_to_controller(claim_id, root_call_id)
+    committed = _load_committed_result(claim_id, manifest)
+    if committed is not None:
+        result, payload = committed
+        result_sha256 = _sha256(result)
+        if status.get("stage") != "complete":
+            _set_status(
+                claim_id,
+                "complete",
+                result_manifest_sha256=result_sha256,
+                selection=payload.get("selection"),
+            )
+            output_volume.commit()
+        elif status.get("result_manifest_sha256") != result_sha256:
+            raise RuntimeError("terminal correlation result is incomplete")
+        _release_gpu_lease(claim_id, root_call_id)
+        return {
+            "stage": "complete",
+            "result_manifest_sha256": result_sha256,
+            "selection": payload.get("selection"),
+        }
+    if status.get("stage") == "complete":
+        raise RuntimeError("terminal correlation result is incomplete")
+    if status.get("stage") not in RESUMABLE_STAGES:
+        raise RuntimeError("word-correlation claim is terminal or not resumable")
     try:
+        _refresh_gpu_lease(claim_id, root_call_id)
         _load_controller_state(claim_id, root_call_id)
         output_volume.reload()
         status = _load_json(REMOTE_OUTPUT / "attempt_status.json")
@@ -1565,7 +2506,7 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
             atlas_sha256=_sha256(atlas_path),
             selection_lock_sha256=selection_sha256,
         )
-        return _finalize_result(
+        result = _finalize_result(
             claim_id,
             manifest,
             calibration,
@@ -1577,6 +2518,8 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
             validation_path,
             atlas_path,
         )
+        _release_gpu_lease(claim_id, root_call_id)
+        return result
     except KeyboardInterrupt:
         # Modal restarts a preempted Function with the same call ID.  Durable
         # stage/job checkpoints deliberately remain nonterminal for re-entry.
@@ -1584,24 +2527,44 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
     except Exception as error:
         try:
             output_volume.reload()
-            _set_status(claim_id, "failed", error=repr(error))
-            output_volume.commit()
+            current_status = _load_json(REMOTE_OUTPUT / "attempt_status.json")
+            if current_status.get("stage") != "complete":
+                _set_status(claim_id, "failed", error=repr(error))
+                output_volume.commit()
         except Exception:
             pass
         raise
 
 
 @app.local_entrypoint()
-def main() -> None:
-    preflight = _local_operational_preflight()
-    manifest = _launch_manifest(preflight)
+def main(claim_id: str = "") -> None:
+    initial_preflight = _local_operational_preflight()
+    resolved_claim_id = (
+        _validate_claim_id(claim_id) if claim_id else _default_claim_id()
+    )
+    persisted = inspect_claim.remote(resolved_claim_id)
+    if persisted is None:
+        manifest = _launch_manifest(initial_preflight, resolved_claim_id)
+    else:
+        manifest = _validate_persisted_local_manifest(
+            persisted,
+            resolved_claim_id,
+        )
     claim_attempt.remote(manifest)
-    call = orchestrate.spawn(str(manifest["claim_id"]))
+    # Recheck immediately before the remote compare-and-set lease acquisition.
+    # Cooperating apps cannot cross that durable lease boundary, and any
+    # already-active non-cooperating Modal app makes this fail closed.
+    submission_preflight = _local_operational_preflight()
+    submission = submit_attempt.remote(resolved_claim_id, submission_preflight)
+    modal.FunctionCall.from_id(str(submission["function_call_id"]))
     print(
         json.dumps(
             {
                 "status": "submitted",
-                "function_call_id": call.object_id,
+                "claim_id": resolved_claim_id,
+                "function_call_id": submission["function_call_id"],
+                "submission_intent_id": submission["intent_id"],
+                "gpu_lease_owner": submission["lease_owner"],
                 "volume": VOLUME_NAME,
                 "gpu_type": GPU_TYPE,
                 "parallel_workers_per_phase": MAX_GPU_CONTAINERS,

@@ -264,6 +264,21 @@ def test_preregistration_pins_the_exact_unlaunched_emotional_scanner():
         "GLOBAL_MODAL_GPU_LIMIT"
     )
     assert current["no_other_modal_gpu_app_may_overlap"] is True
+    assert current["gpu_lease_dict_name"] == _assignment("GPU_LEASE_DICT_NAME")
+    assert current["gpu_lease_environment_name"] == _assignment(
+        "GPU_LEASE_ENVIRONMENT_NAME"
+    )
+    assert current["gpu_lease_protocol"] == _assignment("GPU_LEASE_PROTOCOL")
+    assert current["gpu_lease_slot"] == _assignment("GPU_LEASE_SLOT")
+    assert current["publication_dict_name"] == _assignment(
+        "PUBLICATION_DICT_NAME"
+    )
+    assert current["root_authority_dict_name"] == _assignment(
+        "ROOT_AUTHORITY_DICT_NAME"
+    )
+    assert current["root_authority_protocol"] == _assignment(
+        "ROOT_AUTHORITY_PROTOCOL"
+    )
     assert current["scanner_sha256"] == _sha256(SCANNER_PATH)
     assert current["launcher_sha256"] == _sha256(MODAL_PATH)
     assert current["no_attempt4_artifact_may_be_reused"] is True
@@ -457,10 +472,28 @@ def test_modal_runs_every_gpu_stage_under_one_global_l40s_limit():
     assert "if active_other_apps:" in preflight_source
 
     main_source = ast.get_source_segment(SOURCE, _function(TREE, "main")) or ""
-    preflight_position = main_source.index("_local_operational_preflight()")
+    preflight_positions = [
+        index
+        for index in range(len(main_source))
+        if main_source.startswith("_local_operational_preflight()", index)
+    ]
+    assert len(preflight_positions) == 2
     claim_position = main_source.index("claim_attempt.remote(manifest)")
-    orchestrator_position = main_source.index("orchestrate.spawn")
-    assert preflight_position < claim_position < orchestrator_position
+    submit_position = main_source.index("submit_attempt.remote")
+    assert preflight_positions[0] < claim_position < preflight_positions[1]
+    assert preflight_positions[1] < submit_position
+
+    submit_source = ast.get_source_segment(SOURCE, _function(TREE, "submit_attempt")) or ""
+    lease_position = submit_source.index("_acquire_gpu_lease")
+    intent_position = submit_source.index("_store_submission_state")
+    intent_commit = submit_source.index("output_volume.commit()", intent_position)
+    orchestrator_position = submit_source.index("orchestrate.spawn", intent_commit)
+    assert lease_position < intent_position < intent_commit < orchestrator_position
+    assert "modal.FunctionCall.from_id" in submit_source
+
+    lease_source = ast.get_source_segment(SOURCE, _function(TREE, "_acquire_gpu_lease")) or ""
+    assert "skip_if_exists=True" in lease_source
+    assert _assignment("GPU_LEASE_DICT_NAME") == "j-lens-rl-global-gpu-lease-v1"
 
     orchestrator_source = (
         ast.get_source_segment(SOURCE, _function(TREE, "orchestrate")) or ""
@@ -499,8 +532,10 @@ def test_volume_is_fresh_and_selection_is_locked_between_phases():
     assert ast.literal_eval(volume_keywords["version"]) == 2
 
     claim_source = ast.get_source_segment(SOURCE, _function(TREE, "claim_attempt")) or ""
-    assert "if existing:" in claim_source
-    assert "Volume is not fresh" in claim_source
+    assert "_load_claim_manifest" in claim_source
+    assert '_publish_generation(\n            "claim"' in claim_source
+    assert "already claimed by a different launch manifest" in claim_source
+    assert "allowed_orphans" in claim_source
 
     phase_orders = []
     for node in ast.walk(TREE):
@@ -612,7 +647,7 @@ def test_controller_is_restart_safe_at_every_durable_boundary():
 
     for worker in (calibration, shard):
         assert "TemporaryDirectory" in worker
-        assert "output_volume.commit()" in worker
+        assert "_publish_generation" in worker
         assert "finally:" not in worker
     assert "_load_committed_calibration" in calibration
     assert "_load_committed_shard" in shard
@@ -629,6 +664,52 @@ def test_controller_is_restart_safe_at_every_durable_boundary():
     )
 
 
+def test_every_multifile_artifact_uses_the_generation_marker_boundary():
+    expected_publishers = {
+        "claim_attempt": '"claim"',
+        "_run_calibration_job": '"calibration"',
+        "_scan_phase": "artifact_key",
+        "_ensure_atlas": '"atlas"',
+        "_finalize_result": '"result"',
+    }
+    for function_name, key_text in expected_publishers.items():
+        function_source = (
+            ast.get_source_segment(SOURCE, _function(TREE, function_name)) or ""
+        )
+        assert "_new_generation_dir" in function_source
+        assert "_publish_generation" in function_source
+        assert key_text in function_source
+    aggregate_stager = (
+        ast.get_source_segment(SOURCE, _function(TREE, "_stage_aggregate_generation"))
+        or ""
+    )
+    assert '_new_generation_dir(f"{phase}/final")' in aggregate_stager
+    for function_name, artifact_key in (
+        ("_ensure_discovery_finalized", '"discovery/final"'),
+        ("_ensure_validation_finalized", '"validation/final"'),
+    ):
+        function_source = (
+            ast.get_source_segment(SOURCE, _function(TREE, function_name)) or ""
+        )
+        assert "_stage_aggregate_generation" in function_source
+        assert "_publish_generation" in function_source
+        assert artifact_key in function_source
+    publisher = ast.get_source_segment(SOURCE, _function(TREE, "_publish_generation")) or ""
+    materializer = (
+        ast.get_source_segment(SOURCE, _function(TREE, "_materialize_selected_marker"))
+        or ""
+    )
+    generation_commit = publisher.index("output_volume.commit()")
+    cas = publisher.index("publication_registry.put", generation_commit)
+    marker_write = materializer.index("_write_json(_marker_path")
+    marker_commit = materializer.index("output_volume.commit()", marker_write)
+    assert generation_commit < cas
+    assert marker_write < marker_commit
+    assert "skip_if_exists=True" in publisher
+    assert "_load_generation_marker" in materializer
+    assert "generation_hashes" in publisher
+
+
 def test_resume_boundaries_fail_closed_instead_of_recomputing_advanced_state():
     source = (
         ast.get_source_segment(SOURCE, _function(TREE, "_validate_resume_boundary"))
@@ -639,11 +720,10 @@ def test_resume_boundaries_fail_closed_instead_of_recomputing_advanced_state():
     assert "resume stage advanced past missing selection lock" in source
     assert "resume stage advanced past missing validation aggregate" in source
     assert "resume stage advanced past missing lexical atlas" in source
-    assert "result manifest exists without terminal complete status" in SOURCE
-    assert "output and manifest are not an atomic pair" in SOURCE
-    assert "output and sidecar are not an atomic pair" in SOURCE
-    assert "aggregate is not an atomic artifact set" in SOURCE
-    assert "atlas is not an atomic artifact set" in SOURCE
+    assert "generation is incomplete or changed" in SOURCE
+    assert "Unmarked or partially committed generation directories are inert" in SOURCE
+    assert "marker vanished after publication" in SOURCE
+    assert "complete status has the wrong result manifest hash" in SOURCE
 
 
 def test_modal_calls_the_frozen_scanner_api_by_keyword():
