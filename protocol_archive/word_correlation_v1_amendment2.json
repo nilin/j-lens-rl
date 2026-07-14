@@ -1,0 +1,23 @@
+{
+  "amendment1_sha256": "3a84d9acaa0bda46edd038738ffa2f39ebf8a168ffae25a1e2789cf751a615c9",
+  "frozen_at_utc": "2026-07-14T07:28:12Z",
+  "new_attempt": {
+    "global_modal_gpu_limit": 2,
+    "launcher_sha256": "b837860406d46335e60fa402943d05b1c533124f64484f1674534be5ef3c3c4d",
+    "max_parallel_gpu_workers": 2,
+    "no_other_modal_gpu_app_may_overlap": true,
+    "scanner_sha256": "9857957ba078be68b2cb1abd1974fab383c696c40622e2a76ad4d4b0476baace",
+    "volume": "j-lens-rl-word-correlation-v1-20260714b"
+  },
+  "outcome_status_at_freeze": "corrected attempt not launched and fresh Volume absent",
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-amendment2-operational-throttle",
+  "reason": "The user reduced all future Modal execution to at most two GPUs globally.",
+  "scientific_protocol_changed": false,
+  "unchanged": [
+    "all data and split assignments",
+    "all candidates and calibrations",
+    "all rollout seeds and generated sample counts",
+    "all candidate scoring, selection, and inference",
+    "the amendment-1 descriptive-atlas edge-case handling"
+  ]
+}

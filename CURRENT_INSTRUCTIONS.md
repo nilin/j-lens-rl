@@ -33,8 +33,9 @@ from confirmatory claims.
 
 ## Execution and continuity
 
-- Parallelize under a hard limit of **10 simultaneous Modal GPUs**. Prefer
-  different emotional hypotheses for screens and multiple seeds for confirmation.
+- Use a hard global limit of **2 simultaneous Modal GPUs**. Never overlap two
+  GPU apps if their combined live GPU workers could exceed two; run queued
+  experiment phases serially. Prefer multiple seeds for confirmation.
 - Keep working while the user is away: monitor, diagnose, and continue the next
   registered step.
 - If Modal is unavailable or rejects work because of its GPU limit, immediately

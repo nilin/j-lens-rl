@@ -160,10 +160,20 @@ def test_preregistration_pins_the_exact_unlaunched_emotional_scanner():
     closeout = ROOT / "protocol_archive" / "word_correlation_attempt1_closeout.json"
     assert amendment["attempt1_closeout_sha256"] == _sha256(closeout)
     assert amendment["original_preregistration_sha256"] == _sha256(PREREG_PATH)
-    assert amendment["new_attempt"]["launcher_sha256"] == _sha256(MODAL_PATH)
+    assert amendment["new_attempt"]["launcher_sha256"] == (
+        "a45f70c298ba02cc86f6d7de5df84e0ebe5f2de5afe9991463c4b88e9c5ea51a"
+    )
     assert amendment["new_attempt"]["scanner_sha256"] == _sha256(SCANNER_PATH)
     assert amendment["new_attempt"]["volume"] == _assignment("VOLUME_NAME")
     assert amendment["amendment"]["primary_selection_or_inference_changed"] is False
+    throttle = json.loads(
+        (ROOT / "protocol_archive" / "word_correlation_v1_amendment2.json").read_text()
+    )
+    assert throttle["amendment1_sha256"] == _sha256(
+        ROOT / "protocol_archive" / "word_correlation_v1_amendment1.json"
+    )
+    assert throttle["new_attempt"]["launcher_sha256"] == _sha256(MODAL_PATH)
+    assert throttle["new_attempt"]["max_parallel_gpu_workers"] == 2
     assert prereg["launcher_script_sha256"] == _sha256(
         ROOT / "run_word_correlation.sh"
     )
@@ -233,7 +243,7 @@ def test_config_freezes_exactly_36_emotional_words_and_token_families():
 
 def test_modal_caps_each_correlation_phase_at_eight_l40s_workers():
     assert _assignment("NUM_SHARDS") == 8
-    assert _assignment("MAX_GPU_CONTAINERS") == 8
+    assert _assignment("MAX_GPU_CONTAINERS") == 2
     assert _assignment("GPU_TYPE") == "L40S"
 
     for function_name in ("discovery_shard", "validation_shard"):

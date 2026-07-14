@@ -1152,3 +1152,12 @@ descriptive atlas: a prompt with a positionless rollout is conservatively
 omitted from that atlas and counted. The corrected attempt must use fresh
 Volume `j-lens-rl-word-correlation-v1-20260714b`; failed partial outputs are
 ineligible for reuse.
+
+After that amendment was committed but before the corrected launch, the user
+reduced the operational ceiling from ten to two Modal GPUs globally. The
+second pre-launch amendment,
+[`protocol_archive/word_correlation_v1_amendment2.json`](protocol_archive/word_correlation_v1_amendment2.json),
+pins the two-worker launcher and forbids overlap with any other Modal GPU app.
+This scheduling-only change alters no scientific field, data, seed, score, or
+test. Subsequent confirmation is queued until the correlation app has fully
+stopped, so the account-wide live GPU count cannot exceed two.
