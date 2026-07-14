@@ -203,3 +203,35 @@ def test_launcher_uses_existing_protocol_for_serial_final_and_never_creates_volu
     assert "batch.put_file(path, \"/manifests/sealed_final_indices.json\")" in function_source(
         "_upload_protected_final_after_unlock"
     )
+
+
+def test_runtime_inventory_treats_exact_contract_as_separate_bound_input(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    contract_path = repository / "protocol_archive" / "contract.json"
+    source_path = repository / "worker.py"
+    contract_path.parent.mkdir(parents=True)
+    contract_path.write_text('{"control": "contract"}\n')
+    source_path.write_text("print('worker')\n")
+    digest = sha256(contract_path)
+    value = {
+        "repository_path": "protocol_archive/contract.json",
+        "runtime_source": {
+            "files": {
+                "worker.py": {
+                    "sha256": sha256(source_path),
+                    "size_bytes": source_path.stat().st_size,
+                    "mode": 0o644,
+                }
+            }
+        },
+    }
+    monkeypatch.setattr(runner, "REMOTE_REPO", repository)
+    monkeypatch.setattr(runner, "REMOTE_CONTRACT_PATH", contract_path)
+    monkeypatch.setenv("JLENS_V10_MODAL_CONTRACT_SHA256", digest)
+
+    runner._verify_runtime_source(value)
+    (repository / "unexpected.txt").write_text("unexpected\n")
+    with pytest.raises(runner.ModalV10Error, match="runtime source inventory"):
+        runner._verify_runtime_source(value)

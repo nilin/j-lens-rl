@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 21:03 UTC
+Last reconciled with the user: 2026-07-14 21:47 UTC
 
 ## Objective and evidence
 
@@ -76,5 +76,7 @@ separate from confirmatory claims.
   seeds, followed only after its registered curve gate by four exact sign-flip
   controls. Candidate selection preceded inspection (not creation) of seed
   198's step-6 outcome; bind the append-only correction in every prepared
-  registration and claim. Correlation attempt 4 remains closed with outcomes
-  uninspected.
+  registration and claim. Volumes A and B are retired after fail-closed
+  pre-training infrastructure checks; neither produced a claim, GPU task, W&B
+  run, or outcome. Launch only from the current contract and fresh Volume C.
+  Correlation attempt 4 remains closed with outcomes uninspected.

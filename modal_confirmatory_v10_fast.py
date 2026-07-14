@@ -102,7 +102,12 @@ CONTROL_COMPONENTS = (
 TREATMENT_LABELS = tuple(f"jlens_seed{seed}" for seed in SEEDS)
 CONTROL_LABELS = tuple(f"signflip_seed{seed}" for seed in SEEDS)
 FINAL_LABELS = ("base", *TREATMENT_LABELS, *CONTROL_LABELS)
-REMOTE_CONTRACT_PATH = Path("/opt/jlens/v10_modal_execution_contract.json")
+# The execution contract cannot be part of ``runtime_source.files`` because it
+# commits to that inventory (including its tree identity).  Bake it at its
+# registered repository path as a separately hash-bound control input instead.
+REMOTE_CONTRACT_PATH = (
+    REMOTE_REPO / "protocol_archive/v10_modal_execution_contract.json"
+)
 REQUIRED_RUNTIME_FILES = {
     "modal_confirmatory_v10_fast.py",
     "scripts/confirmatory_v10_final_protocol.py",
@@ -655,6 +660,15 @@ def _runtime_contract() -> tuple[dict[str, Any], str]:
 
 def _verify_runtime_source(contract: Mapping[str, Any]) -> None:
     expected = contract["runtime_source"]["files"]
+    registered_contract = Path(contract["repository_path"])
+    if (
+        REMOTE_CONTRACT_PATH != REMOTE_REPO / registered_contract
+        or not REMOTE_CONTRACT_PATH.is_file()
+        or REMOTE_CONTRACT_PATH.is_symlink()
+        or _sha256(REMOTE_CONTRACT_PATH)
+        != os.environ.get("JLENS_V10_MODAL_CONTRACT_SHA256")
+    ):
+        raise ModalV10Error("separately bound V10 execution contract changed")
     observed: set[str] = set()
     for path in REMOTE_REPO.rglob("*"):
         if ".git" in path.relative_to(REMOTE_REPO).parts:
@@ -662,7 +676,10 @@ def _verify_runtime_source(contract: Mapping[str, Any]) -> None:
         if path.is_symlink():
             raise ModalV10Error(f"runtime source contains a symlink: {path}")
         if path.is_file():
-            observed.add(path.relative_to(REMOTE_REPO).as_posix())
+            relative = path.relative_to(REMOTE_REPO).as_posix()
+            if relative == registered_contract.as_posix():
+                continue
+            observed.add(relative)
     if observed != set(expected):
         raise ModalV10Error(
             f"runtime source inventory changed: missing={sorted(set(expected)-observed)}, "

@@ -2315,3 +2315,31 @@ launch-enabled contract SHA-256 is
 with runtime Git tree `a11a261be7ff14ed79424803efb771ef4a778339`, commit
 `df1d092d55f464f8451a80c7e2f4483af92361f3`, and content-tree SHA-256
 `66db68986484b01b06b260cc7124304dea493fdc0d4e44550c4cb67d4bccca60`.
+
+An intervening submission on app `ap-i8z22cqrEAeHJutfb8Eat2` used the system
+Modal executable. Its local preflight correctly refused to proceed because the
+registered sibling CLI path was absent. It stopped at 21:36:11 UTC with zero
+tasks, claims, Volume files, W&B runs, GPU allocations, or outcomes.
+
+The Volume-B submission on app `ap-eyVMiYuoVqyiNFJmtak10W` completed the
+image and uploaded the 14 prospective prepared files, then failed closed in its
+single CPU `claim_attempt` at 21:43:40 UTC. The prepared spec correctly bound
+the contract at SHA-256 `14ace2af7bd2a02902fbf9f092d64216b82922c2b98ed5d3103d5b6895c52e93`,
+but the image baked that contract at `/opt/jlens/` while the generic public
+binding verifier resolved its registered path under `/workspace/j-lens-rl/`.
+This was a packaging-path mismatch: no claim was written and no GPU task, W&B
+run, protected read, or scientific outcome existed. Volume B is retired.
+
+The fix bakes the contract at its registered repository path while treating
+that exact ordinary file as a separately SHA-bound control input outside the
+self-referential runtime-source inventory; every other extra runtime file still
+fails closed. The regression suite now has eight focused Modal tests, all
+passing. The fixed launcher SHA-256 is
+`be2c00ba9c7c828f92ddea6506fb74e81e43a9515db5b7847f0837dc7ec0298e`.
+Fresh Volume C is `vo-rZWrjxSCBnhfqGtCLq3OIN`, named
+`j-lens-rl-confirmatory-v10-fast-20260714c`. Its pre-preparation execution
+contract has SHA-256
+`fb25ed3fb4dc668f597535d060738b50515ae0a5ce67774fc31ce0a9b31a8164`,
+runtime Git tree `0fb3381745a1655666bd43919ca2ffd764f99130`, commit
+`892e52d7315512bed72aefa9358fc7ee07a87f87`, and content-tree SHA-256
+`e79dba95bd90b85f01e0ed2a9924651912a001354703becdfde84e6afb4e83d3`.

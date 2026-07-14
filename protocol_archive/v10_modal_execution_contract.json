@@ -98,10 +98,10 @@
   },
   "launch_enabled": true,
   "modal": {
-    "app_name": "j-lens-rl-confirmatory-v10-fast-20260714b",
+    "app_name": "j-lens-rl-confirmatory-v10-fast-20260714c",
     "huggingface_secret_name": "huggingface-token",
-    "state_volume_name": "j-lens-rl-confirmatory-v10-fast-20260714b",
-    "state_volume_object_id": "vo-f4E8UW02e3PVrcZi7i3tO6",
+    "state_volume_name": "j-lens-rl-confirmatory-v10-fast-20260714c",
+    "state_volume_object_id": "vo-rZWrjxSCBnhfqGtCLq3OIN",
     "state_volume_version": 2,
     "wandb_secret_name": "j-lens-rl-wandb"
   },
@@ -158,8 +158,8 @@
       },
       "modal_confirmatory_v10_fast.py": {
         "mode": 420,
-        "sha256": "d8b95add301d7ac67c0cb61e712571f4aaac62076f59e7d3b12b20f61824c4af",
-        "size_bytes": 58951
+        "sha256": "be2c00ba9c7c828f92ddea6506fb74e81e43a9515db5b7847f0837dc7ec0298e",
+        "size_bytes": 59736
       },
       "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/fuck_calibration.json": {
         "mode": 420,
@@ -2262,9 +2262,9 @@
         "size_bytes": 46428
       }
     },
-    "git_commit": "df1d092d55f464f8451a80c7e2f4483af92361f3",
-    "git_tree": "a11a261be7ff14ed79424803efb771ef4a778339",
-    "source_tree_sha256": "66db68986484b01b06b260cc7124304dea493fdc0d4e44550c4cb67d4bccca60"
+    "git_commit": "892e52d7315512bed72aefa9358fc7ee07a87f87",
+    "git_tree": "0fb3381745a1655666bd43919ca2ffd764f99130",
+    "source_tree_sha256": "e79dba95bd90b85f01e0ed2a9924651912a001354703becdfde84e6afb4e83d3"
   },
   "schema_version": 1,
   "science_registration": {
