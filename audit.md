@@ -1066,6 +1066,20 @@ literal matches occurred at rate `.0025` in greedy validation and profanity
 matches at `0`; literal target and causal-predecessor positions remain masked
 from the training reward.
 
+The screen can also be reconstructed without W&B from
+[`protocol_archive/alternative_screen_forensic_bundle.json`](protocol_archive/alternative_screen_forensic_bundle.json)
+(SHA-256
+`edce10202c816fb7658774d7dcc1205ef28d7c2cabc765a2db36c058c43efff2`).
+That self-contained bundle embeds all 208 trainer-history records, all 64
+validation records, resolved configs, run manifests, calibrations, exact data
+indices, W&B identities and metric meanings, code/model/dataset/runtime
+provenance, checkpoint/final adapter inventories, and hashes/sizes for every
+one of the 214 durable Volume files. Its independently re-fetched snapshot has
+canonical tree hash
+`5bfddbb88b8fe114e0d94cf01b24592f120cbd84ee2cea29a1b6e491c17e3091`,
+computed over sorted `relative path || NUL || raw bytes || NUL`; all linkage,
+overlap, completion, and final-versus-checkpoint assertions passed.
+
 With those eight workers stopped, the distinct single-word screen was launched
 from current clean commit `27d598c4a800fbcc130bee8c559f94e4bee65730`
 on app `ap-YkWhLmkYmv3jlX3MnfDrmX`, call

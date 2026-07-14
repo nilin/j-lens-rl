@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 06:51 UTC
+Last reconciled with the user: 2026-07-14 07:10 UTC
 
 ## Objective
 
@@ -55,7 +55,9 @@ from confirmatory claims.
   summaries and raw-artifact inventories in `audit.md` and `protocol_archive/`.
 - Keep unopened curve/final/reserve manifests out of exploratory jobs. Never
   inspect sealed outcomes before their registered gate permits it.
-- Current order: finish the eight single-word emotional screen; run the frozen
-  emotional correlation scan; freeze one emotional-only recipe and curve-node
-  rule; then run the eight-seed confirmation, matched sign flips, and one-shot
-  final evaluation if its curve gate passes.
+- Current state: the eight-word screen is complete and mechanically selected
+  positive `joy` as its sole early-curve passer; this remains adaptive evidence.
+  The frozen correlation scan is running. Seal both forensic closeouts, then
+  freeze an emotional-only recipe and exact curve nodes before running the
+  eight-seed confirmation, matched sign flips, and one-shot final evaluation
+  if its curve gate passes.
