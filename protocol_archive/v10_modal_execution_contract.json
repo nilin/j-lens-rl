@@ -1,28 +1,45 @@
 {
   "candidate": {
-    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/fuck_calibration.json",
-    "calibration_sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
     "learning_rate": 3e-06,
     "matched_control_score_components": [
       {
         "aggregation": "mean",
-        "end_fraction": 1.0,
+        "end_fraction": 0.75,
         "layer": 8,
         "start_fraction": 0.5,
-        "weight": 1.0
-      }
-    ],
-    "score_stride": 5,
-    "target_words": [
-      "fuck"
-    ],
-    "treatment_score_components": [
+        "weight": -1.0
+      },
       {
         "aggregation": "mean",
         "end_fraction": 1.0,
         "layer": 8,
+        "start_fraction": 0.75,
+        "weight": -0.25
+      }
+    ],
+    "score_stride": 10,
+    "target_words": [
+      "yay",
+      "great",
+      "success",
+      "nice"
+    ],
+    "treatment_score_components": [
+      {
+        "aggregation": "mean",
+        "end_fraction": 0.75,
+        "layer": 8,
         "start_fraction": 0.5,
-        "weight": -1.0
+        "weight": 1.0
+      },
+      {
+        "aggregation": "mean",
+        "end_fraction": 1.0,
+        "layer": 8,
+        "start_fraction": 0.75,
+        "weight": 0.25
       }
     ]
   },
@@ -34,44 +51,44 @@
     ],
     "control_parallelism": 4,
     "controls_require_curve_pass": true,
-    "curve_criterion": "M2 > M0, M3 >= M2, and M4 >= M3 on the four-treatment-seed mean",
+    "curve_criterion": "M4 > M0, M5 >= M4, and M6 >= M5 on the four-treatment-seed mean",
     "curve_steps": [
       0,
-      2,
-      3,
-      4
+      4,
+      5,
+      6
     ],
     "final_collection_order": [
       "base",
-      "jlens_seed216",
-      "jlens_seed217",
-      "jlens_seed218",
-      "jlens_seed219",
-      "signflip_seed216",
-      "signflip_seed217",
-      "signflip_seed218",
-      "signflip_seed219"
+      "jlens_seed220",
+      "jlens_seed221",
+      "jlens_seed222",
+      "jlens_seed223",
+      "signflip_seed220",
+      "signflip_seed221",
+      "signflip_seed222",
+      "signflip_seed223"
     ],
     "final_examples": 900,
     "final_labels": [
       "base",
-      "jlens_seed216",
-      "jlens_seed217",
-      "jlens_seed218",
-      "jlens_seed219",
-      "signflip_seed216",
-      "signflip_seed217",
-      "signflip_seed218",
-      "signflip_seed219"
+      "jlens_seed220",
+      "jlens_seed221",
+      "jlens_seed222",
+      "jlens_seed223",
+      "signflip_seed220",
+      "signflip_seed221",
+      "signflip_seed222",
+      "signflip_seed223"
     ],
     "final_manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
     "final_parallelism": 1,
     "mean_effects_must_be_positive": true,
     "seeds": [
-      216,
-      217,
-      218,
-      219
+      220,
+      221,
+      222,
+      223
     ],
     "sign_test": {
       "all_positive_exact_p": 0.125,
@@ -82,7 +99,7 @@
       ],
       "n_seed_pairs": 4
     },
-    "terminal_step": 4,
+    "terminal_step": 6,
     "treatment_parallelism": 4
   },
   "hardware": {
@@ -93,29 +110,29 @@
     "one_gpu_per_worker": true
   },
   "image_identity": {
-    "jlens_modal_image_spec": "j-lens-rl-v10-negative-fuck-l40s-v1",
+    "jlens_modal_image_spec": "j-lens-rl-v11-celebration-l40s-v1",
     "modal_image_id_policy": "record_observed_per_container_not_prebound"
   },
   "launch_enabled": true,
   "modal": {
-    "app_name": "j-lens-rl-confirmatory-v10-fast-20260714c",
+    "app_name": "j-lens-rl-confirmatory-v11-celebration-20260714a",
     "huggingface_secret_name": "huggingface-token",
-    "state_volume_name": "j-lens-rl-confirmatory-v10-fast-20260714c",
-    "state_volume_object_id": "vo-rZWrjxSCBnhfqGtCLq3OIN",
+    "state_volume_name": "j-lens-rl-confirmatory-v11-celebration-20260714b",
+    "state_volume_object_id": "vo-IwKmcv5FfXvheefG7K7V7y",
     "state_volume_version": 2,
     "wandb_secret_name": "j-lens-rl-wandb"
   },
   "prepared_state": {
     "expected_files": [
-      "configs/jlens_seed216.json",
-      "configs/jlens_seed217.json",
-      "configs/jlens_seed218.json",
-      "configs/jlens_seed219.json",
+      "configs/jlens_seed220.json",
+      "configs/jlens_seed221.json",
+      "configs/jlens_seed222.json",
+      "configs/jlens_seed223.json",
       "configs/sealed_eval.json",
-      "configs/signflip_seed216.json",
-      "configs/signflip_seed217.json",
-      "configs/signflip_seed218.json",
-      "configs/signflip_seed219.json",
+      "configs/signflip_seed220.json",
+      "configs/signflip_seed221.json",
+      "configs/signflip_seed222.json",
+      "configs/signflip_seed223.json",
       "reproducibility/final_protocol_spec.json",
       "reproducibility/v10_disjointness_receipt.json",
       "reproducibility/v10_final_automation_audit.json",
@@ -131,7 +148,7 @@
     "remote_relative_path": "manifests/sealed_final_indices.json",
     "sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8"
   },
-  "protocol": "j-lens-rl-confirmatory-v10-modal-execution-contract-v1",
+  "protocol": "j-lens-rl-confirmatory-v11-modal-execution-contract-v1",
   "repository_path": "protocol_archive/v10_modal_execution_contract.json",
   "runtime_source": {
     "commit_recipe": {
@@ -158,33 +175,33 @@
       },
       "modal_confirmatory_v10_fast.py": {
         "mode": 420,
-        "sha256": "be2c00ba9c7c828f92ddea6506fb74e81e43a9515db5b7847f0837dc7ec0298e",
-        "size_bytes": 59736
+        "sha256": "db07ca04836c528224430fc1e23143c615a5b97221c84e170214e9ded97f4380",
+        "size_bytes": 60191
       },
-      "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/fuck_calibration.json": {
+      "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json": {
         "mode": 420,
-        "sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
-        "size_bytes": 775
+        "sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+        "size_bytes": 942
       },
-      "protocol_archive/v10_fast_candidate_freeze.json": {
+      "protocol_archive/v11_celebration_candidate_freeze.json": {
         "mode": 420,
-        "sha256": "4909b81b54e20f66ce07d05f082e135e2de1bb9be94102bb3901c7825c3a84d3",
-        "size_bytes": 3543
+        "sha256": "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9",
+        "size_bytes": 1892
       },
-      "protocol_archive/v10_fast_candidate_freeze_correction.json": {
+      "protocol_archive/v11_celebration_metric_schema.json": {
         "mode": 420,
-        "sha256": "722069b67c4b78f99c8340abd37858335728de2455b93fd93c9c7936ab89fa50",
-        "size_bytes": 1873
+        "sha256": "9c1e4eab6101436d89ef687ce3a1d47857f48dd5779bea47bf179d7708beac44",
+        "size_bytes": 1264
       },
-      "protocol_archive/v10_fast_metric_schema.json": {
+      "protocol_archive/v11_celebration_registration_draft.json": {
         "mode": 420,
-        "sha256": "967da026db0e7d99b6c440c2f3223aba17100d12846f45d39e861d9a35a891e8",
-        "size_bytes": 1255
+        "sha256": "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1",
+        "size_bytes": 2504
       },
-      "protocol_archive/v10_fast_registration_draft.json": {
+      "protocol_archive/v11_celebration_selection_integrity.json": {
         "mode": 420,
-        "sha256": "17426cc963192c94ecca6907a033e2924b0f88990e3d31c622a781f5fa92a120",
-        "size_bytes": 6285
+        "sha256": "def794febcf01cfc23040e68da521dec401894abf06ba6cdf4387b0c42b32447",
+        "size_bytes": 1077
       },
       "pyproject.toml": {
         "mode": 420,
@@ -193,8 +210,8 @@
       },
       "scripts/confirmatory_v10_final_protocol.py": {
         "mode": 420,
-        "sha256": "dec695d88e70e944dac05909f39dabdb0e7bf57df57b255a73e60abd1a8b2ae0",
-        "size_bytes": 122633
+        "sha256": "a373a465887bef405a97e6705ecfb922d55829cb81a9e50c62c5397bff9fb42c",
+        "size_bytes": 122844
       },
       "scripts/confirmatory_v10_final_runner.py": {
         "mode": 420,
@@ -248,8 +265,8 @@
       },
       "tests/test_v10_final_automation.py": {
         "mode": 420,
-        "sha256": "bfdabd326d0beeb76303b276ab31511d7d56bab021ff37f6d5dcebabd0971f01",
-        "size_bytes": 60712
+        "sha256": "78817d401959cc3e439edeac450204979fcafca77c74072efe21db1811ba8559",
+        "size_bytes": 62213
       },
       "trl/.ai/AGENTS.md": {
         "mode": 420,
@@ -2262,20 +2279,20 @@
         "size_bytes": 46428
       }
     },
-    "git_commit": "892e52d7315512bed72aefa9358fc7ee07a87f87",
-    "git_tree": "0fb3381745a1655666bd43919ca2ffd764f99130",
-    "source_tree_sha256": "e79dba95bd90b85f01e0ed2a9924651912a001354703becdfde84e6afb4e83d3"
+    "git_commit": "34698669364067b98a9192ab40bd75784974458c",
+    "git_tree": "39ab12232d7b51b2e962e32653d3031a25ef92f6",
+    "source_tree_sha256": "97fedb4b73223da79eae580d55e3e01123069423a5c4cde4441876811b974592"
   },
   "schema_version": 1,
   "science_registration": {
-    "candidate_freeze_path": "protocol_archive/v10_fast_candidate_freeze.json",
-    "candidate_freeze_sha256": "4909b81b54e20f66ce07d05f082e135e2de1bb9be94102bb3901c7825c3a84d3",
-    "draft_path": "protocol_archive/v10_fast_registration_draft.json",
-    "draft_sha256": "17426cc963192c94ecca6907a033e2924b0f88990e3d31c622a781f5fa92a120",
-    "integrity_amendment_path": "protocol_archive/v10_fast_candidate_freeze_correction.json",
-    "integrity_amendment_sha256": "722069b67c4b78f99c8340abd37858335728de2455b93fd93c9c7936ab89fa50"
+    "candidate_freeze_path": "protocol_archive/v11_celebration_candidate_freeze.json",
+    "candidate_freeze_sha256": "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9",
+    "draft_path": "protocol_archive/v11_celebration_registration_draft.json",
+    "draft_sha256": "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1",
+    "integrity_amendment_path": "protocol_archive/v11_celebration_selection_integrity.json",
+    "integrity_amendment_sha256": "def794febcf01cfc23040e68da521dec401894abf06ba6cdf4387b0c42b32447"
   },
-  "scientific_protocol": "j-lens-rl-confirmatory-v10-fast-negative-fuck-u2-u3-u4",
+  "scientific_protocol": "j-lens-rl-confirmatory-v11-celebration-u4-u5-u6",
   "tracking": {
     "resume": "never",
     "training_mode": "online",

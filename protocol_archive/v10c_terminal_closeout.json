@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-confirmatory-v10c-terminal-closeout-v1",
+  "closed_at_utc": "2026-07-14T22:07:00+00:00",
+  "app_id": "ap-JtvgKtrJADuMLa9mGYaDYz",
+  "volume": "j-lens-rl-confirmatory-v10-fast-20260714c",
+  "volume_object_id": "vo-rZWrjxSCBnhfqGtCLq3OIN",
+  "claim_id": "181e4aa4938b43148ce4ea58ce68e295",
+  "root_call_id": "fc-01KXHA0JWC40JWDET5KEQVCKJ3",
+  "contract_sha256": "fb25ed3fb4dc668f597535d060738b50515ae0a5ce67774fc31ce0a9b31a8164",
+  "status": "failed_closed_never_resume_or_pool",
+  "verifier_failure": {
+    "stage": "post_training_pre_curve_gate",
+    "reason": "abs_tol_1e-12_rejected_benign_float32_reward_std_reduction_roundoff",
+    "maximum_observed_abs_difference": 2.9802322387695312e-08,
+    "reward_contamination_found": false
+  },
+  "public_treatment_curves": {
+    "216": [0.3825, 0.385, 0.38, 0.3925],
+    "217": [0.3825, 0.37, 0.38, 0.39],
+    "218": [0.3825, 0.3825, 0.4, 0.3825],
+    "219": [0.3825, 0.39, 0.405, 0.38]
+  },
+  "curve_steps": [0, 2, 3, 4],
+  "mean_curve": [0.3825, 0.381875, 0.39125, 0.38625],
+  "counterfactual_registered_gate_passed": false,
+  "gate_failures": ["M2_not_above_M0", "M4_below_M3"],
+  "controls_dispatched": false,
+  "curve_gate_artifact_written": false,
+  "protected_final_unlocked_or_accessed": false,
+  "all_four_online_wandb_terminal_outputs_preserved": true,
+  "inference_eligibility": "none"
+}

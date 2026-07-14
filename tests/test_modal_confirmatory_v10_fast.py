@@ -64,9 +64,9 @@ def test_plan_is_four_treatments_gate_four_controls_then_serial_nine() -> None:
         "matched_signflip_training",
         "sealed_final_collection",
     ]
-    assert [job["seed"] for job in plan[0]["jobs"]] == [216, 217, 218, 219]
+    assert [job["seed"] for job in plan[0]["jobs"]] == [220, 221, 222, 223]
     assert [job["slot"] for job in plan[0]["jobs"]] == [0, 1, 2, 3]
-    assert plan[1]["steps"] == [0, 2, 3, 4]
+    assert plan[1]["steps"] == [0, 4, 5, 6]
     assert plan[1]["failure_action"] == "stop_without_controls_or_final"
     assert plan[2]["requires"] == "registered_curve_gate_passed"
     assert [job["slot"] for job in plan[2]["jobs"]] == [0, 1, 2, 3]
@@ -79,33 +79,33 @@ def test_curve_gate_requires_first_rise_and_no_later_drop() -> None:
     histories = {
         f"jlens_seed{seed}": {
             0: {"exact_match": 0.38},
-            2: {"exact_match": 0.39 + offset},
-            3: {"exact_match": 0.40 + offset},
-            4: {"exact_match": 0.40 + offset},
+            4: {"exact_match": 0.39 + offset},
+            5: {"exact_match": 0.40 + offset},
+            6: {"exact_match": 0.40 + offset},
         }
         for offset, seed in zip((0.0, 0.01, -0.005, 0.005), runner.SEEDS)
     }
     gate = runner.curve_gate_from_histories(histories)
     assert gate["passed"] is True
-    assert gate["mean_exact_match"]["2"] > gate["mean_exact_match"]["0"]
-    histories["jlens_seed216"][4]["exact_match"] = 0.30
+    assert gate["mean_exact_match"]["4"] > gate["mean_exact_match"]["0"]
+    histories["jlens_seed220"][6]["exact_match"] = 0.30
     assert runner.curve_gate_from_histories(histories)["passed"] is False
     with pytest.raises(runner.ModalV10Error, match="exactly four"):
-        runner.curve_gate_from_histories({"jlens_seed216": histories["jlens_seed216"]})
+        runner.curve_gate_from_histories({"jlens_seed220": histories["jlens_seed220"]})
 
 
-def test_contract_freezes_negative_fuck_and_exact_positive_signflip() -> None:
+def test_contract_freezes_celebration_taper_and_exact_negative_signflip() -> None:
     value = contract()
     treatment = value["candidate"]["treatment_score_components"]
     control = value["candidate"]["matched_control_score_components"]
-    assert treatment == [{
-        "layer": 8,
-        "start_fraction": 0.5,
-        "end_fraction": 1.0,
-        "aggregation": "mean",
-        "weight": -1.0,
-    }]
-    assert control == [{**treatment[0], "weight": 1.0}]
+    assert treatment == [
+        {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+        {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25},
+    ]
+    assert control == [
+        {**treatment[0], "weight": -1.0},
+        {**treatment[1], "weight": -0.25},
+    ]
     changed = copy.deepcopy(value)
     changed["candidate"]["matched_control_score_components"][0]["weight"] = 0.0
     with pytest.raises(runner.ModalV10Error, match="candidate/design"):
@@ -119,11 +119,11 @@ def test_registered_spec_must_bind_exact_contract_and_modal_runtime() -> None:
     registration = value["science_registration"]
     spec = {
         "protocol": runner.FROZEN_SCIENTIFIC_PROTOCOL,
-        "target_words": ["fuck"],
+        "target_words": ["yay", "great", "success", "nice"],
         "seeds": list(runner.SEEDS),
         "conditions": list(runner.CONDITIONS),
-        "terminal_step": 4,
-        "curve_gate": {"steps": [0, 2, 3, 4], "criterion": runner.CURVE_CRITERION},
+        "terminal_step": 6,
+        "curve_gate": {"steps": [0, 4, 5, 6], "criterion": runner.CURVE_CRITERION},
         "treatment_score_components": value["candidate"]["treatment_score_components"],
         "matched_control_score_components": value["candidate"]["matched_control_score_components"],
         "artifacts": {
@@ -131,10 +131,10 @@ def test_registered_spec_must_bind_exact_contract_and_modal_runtime() -> None:
             "calibration_sha256": runner.CALIBRATION_SHA256,
         },
         "training": {
-            "updates": 4,
+            "updates": 6,
             "learning_rate": 3e-6,
-            "score_stride": 5,
-            "validation_steps": [2, 3, 4],
+            "score_stride": 10,
+            "validation_steps": [4, 5, 6],
         },
         "hardware": {
             "backend": "modal",

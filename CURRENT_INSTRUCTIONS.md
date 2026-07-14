@@ -1,82 +1,59 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 21:47 UTC
+Last reconciled: 2026-07-14 22:25 UTC. This file is the current operating
+brief; older instructions in chat or historical closeouts do not override it.
 
-## Objective and evidence
+## Objective
 
-Produce honest evidence that **J-lens intrinsic word reward alone** (apart from
-the configured KL regularizer) improves GSM8K. Keep adaptive development
-separate from confirmatory claims.
+Produce honest evidence that intrinsic J-lens reward for emotionally charged
+words, apart from the fixed KL regularizer, improves GSM8K. Do not launch new
+`solved` work. Adaptive screens may suggest candidates, but only a freshly
+registered attempt on untouched data may support significance.
 
-- Start no new `solved` experiment and exclude it from future selection. Use
-  emotionally charged words or predeclared combinations; try different ideas,
-  not only seeds. Maintain at least five candidates. Current examples are
-  `yay`, `wow`, `joy`, `proud`, `excited`, and negative `damn`, `fuck`, and
-  `worried`.
-- Separately measure emotional J-space association with correctness. Freeze the
-  observed direction before testing that word in RL; never infer reward sign
-  from semantic valence.
-- Significance requires untouched data, prospectively registered matched
-  controls, and provenance checks—not a selected development run.
-- Work toward a terminal result by **2026-07-15 02:00 UTC (7:00 PM Pacific)**.
-  For this deadline the user accepts a prospectively declared significance
-  threshold of `p < 0.15`; four fresh matched seeds can attain exact two-sided
-  sign-test `p = 0.125` only if all four registered effects have the same
-  positive direction and none tie.
-- A qualifying confirmatory mean curve has baseline plus three registered
-  post-baseline nodes: the first is above baseline and neither later node goes
-  down. More frequent evaluation (for example every 5 steps) is allowed, but
-  freeze the nodes before opening outcomes.
-- Report negative and partial results; never relabel adaptive W&B curves as
-  significance.
+The current and final candidate switch is V11 celebration-tail:
+`yay/great/success/nice`, calibration SHA `93d05caf...8ee6`, layer 8, stride
+10, weights `+1` on response fraction `.50-.75` and `+.25` on `.75-1.0`.
+It directly follows the useful seed-195 development lineage using fresh L40S
+seeds 220--223. Training is six fixed updates, LR `3e-6`, DAPO, LoRA r8/alpha
+16, eight generations, target masking, J-lens reward plus KL beta `.02`, and
+no correctness reward or accuracy-based stopping.
 
-## Execution and continuity
+Evaluate treatment curves at fixed nodes `0/4/5/6`. The curve gate passes only
+if the four-seed mean satisfies `M4 > M0`, `M5 >= M4`, and `M6 >= M5`. On
+failure, stop without controls or final access. On pass, run exact matched
+sign-flip controls on the same four seeds by negating both component weights;
+then, and only after all eight runs verify, unlock one immutable nine-label
+collection on the still-unopened 900-row final.
 
-- Run at most **5 Modal GPUs** at once before 2026-07-14 23:00 UTC (4:00 PM
-  Pacific), then at most **10 Modal GPUs** at once. Prefer distinct registered
-  emotional reward ideas over duplicate seeds during development. Never mix
-  L40S and RTX 4090 runs inside one inferential attempt.
-- Spend at least half of experiment/GPU time running RL. Word search must never
-  hold ready registered RL for over one hour; launch RL and resume search later.
-- Keep working while the user is away. If Modal is unavailable, immutably close
-  any partial attempt and register an entirely fresh local attempt with new
-  state, seeds, manifests, configs, W&B IDs, and one hardware type.
-- Keep active/completed RL visible in the `j-lens-rl` W&B project. Offline local
-  runs must be synced without rerunning training.
-- Treat Codex usage as a **rate**, never a cumulative stop. Prior use cannot
-  pause work. Only if known current/recent use exceeds twice the plan's weekly
-  average rate (`weekly allowance / 84` per hour), pause 20 minutes, resume, and
-  reassess that current rate.
+The deadline is 2026-07-15 02:00 UTC (7:00 PM Pacific). Nominal `alpha=.15` is
+accepted: each registered four-seed sign test needs four strictly positive
+effects, no ties, positive mean, giving exact two-sided `p=.125`. Report 95%
+crossed intervals descriptively. State clearly that this is nominal evidence
+inside a broader adaptive program, not familywise-error-corrected evidence.
 
-## Reproducibility and safety
+## Execution
 
-- Support exact replay and reconstruction without rerunning: commit/push before
-  outcome-bearing runs and archive code/runtime, commands, configs, manifests,
-  histories, metric definitions, artifact hashes, and W&B identities in
-  `audit.md` and `protocol_archive/`.
-- Never inspect sealed final/reserve/correlation outcomes before a registered
-  gate permits it. Do not open any sealed final until its evaluation and
-  analysis implementation is separately audited.
-- Preserve V5–V8 as closed negative/partial or infrastructure-failed evidence;
-  never resume or pool them. V9 completed eight negative-`damn/fuck` treatments
-  on one RTX 4090; its mean `.3975/.3971875/.3971875/.3925` failed the curve
-  gate. Never run V9 controls or open its final.
-- The fixed Modal tournament under claim
-  `1d6ea36d356c420f92e125c35a1a6aeb` completed `-fuck`, `+yay`, `-worried`;
-  no arm passed the full shape and the registered development ranking selected
-  `-fuck`. Preserve and close out its evidence; never resume it or reuse retired
-  Volume A. A separate development-only celebration-family tail-taper probe
-  (`yay/great/success/nice`, seed 193, nodes `0/2/4/6`) ran on the local RTX
-  4090 from pushed commit `bf85a74`; it completed
-  `.3975/.3975/.3950/.4075`, a terminal improvement that failed the strict
-  shape. Preserve/sync it but never pool it with L40S results. The five-arm
-  Modal development screen of `joy`, celebration family, `excited`, `wow`, and
-  negative `fuck` is closed as development evidence. The current confirmatory
-  lane is the frozen negative-`fuck` recipe on four fresh Modal L40S treatment
-  seeds, followed only after its registered curve gate by four exact sign-flip
-  controls. Candidate selection preceded inspection (not creation) of seed
-  198's step-6 outcome; bind the append-only correction in every prepared
-  registration and claim. Volumes A and B are retired after fail-closed
-  pre-training infrastructure checks; neither produced a claim, GPU task, W&B
-  run, or outcome. Launch only from the current contract and fresh Volume C.
-  Correlation attempt 4 remains closed with outcomes uninspected.
+- Run at most five Modal GPUs before 23:00 UTC, then at most ten. The registered
+  V11 launcher uses four treatment GPUs and only conditionally four controls.
+- Spend at least half of experiment/GPU time on RL. Never hold ready RL behind
+  word search for over an hour. Do not reopen candidate selection after V11.
+- Keep every active/completed run visible in W&B. If Modal becomes unavailable,
+  close the attempt immutably before registering a genuinely fresh local
+  attempt; never mix L40S and RTX 4090 within one inference.
+- Codex usage limits apply to current rate, never accumulated prior use. Only
+  pause for 20 minutes if known recent use exceeds twice the weekly-average
+  allowance rate; then resume and reassess.
+
+## Integrity and continuity
+
+Commit and push the exact code/config/contract before outcome-bearing work.
+Preserve commands, manifests, raw histories, resolved configs, artifact and
+source hashes, hardware/environment, W&B identities, attempts, failures, and
+decisions so results can be reconstructed without retraining and replayed when
+needed. Never inspect any sealed final, reserve, or correlation payload before
+its registered gate. Never resume, pool, or silently repair closed V5--V10
+attempts. V10c negative-`fuck` is terminal: its mean public curve
+`.3825/.381875/.39125/.38625` at `0/2/3/4` failed the requested shape, and its
+verifier also failed on an overly strict float32 standard-deviation tolerance;
+no controls or protected final ran. Preserve that closeout, but draw no V11
+recipe choice from its outcomes.

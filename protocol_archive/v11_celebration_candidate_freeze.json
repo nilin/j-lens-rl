@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-confirmatory-v11-celebration-candidate-freeze-v1",
+  "selection_basis_recorded_at_utc": "2026-07-14T22:03:00+00:00",
+  "materialized_after_v10c_closeout": true,
+  "selection_process": "independent contingency analysis used only already-public development evidence and was returned before the complete V10c gate was known to the coordinating agent",
+  "candidate": {
+    "target_words": ["yay", "great", "success", "nice"],
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "score_stride": 10,
+    "treatment_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+    ],
+    "matched_control_rule": "negate_only_both_registered_component_weights",
+    "updates": 6,
+    "curve_steps": [0, 4, 5, 6],
+    "curve_criterion": "M4 > M0, M5 >= M4, and M6 >= M5 on the four-treatment-seed mean"
+  },
+  "already_public_support": {
+    "six_seed_v6_l40s_mean_at_steps_0_4_6": [0.375, 0.38416666666666666, 0.385],
+    "v6_terminal_closeout_path": "protocol_archive/v6_celebration_terminal_closeout.json",
+    "seed167_terminal_step6_minus_baseline": 0.01,
+    "seed193_terminal_step6_minus_baseline": 0.01,
+    "seed195_partial_step4_minus_baseline": 0.01,
+    "step5_previously_unobserved_for_this_fixed_six_update_recipe": true
+  },
+  "ineligible_inputs": {
+    "v10c_outcomes_used_for_candidate_or_recipe_selection": false,
+    "protected_final_reserve_or_correlation_payloads_used": false,
+    "solved_candidates_considered": false
+  },
+  "multiple_testing_caveat": "Any passing V11 result is nominal alpha-0.15 evidence for this prospectively fixed attempt; the broader adaptive research program is not familywise-error corrected."
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-confirmatory-v11-celebration-u4-u5-u6",
+  "registered_at_utc": "2026-07-14T22:08:00+00:00",
+  "claim": "J-lens celebration-family intrinsic word reward alone, apart from KL beta 0.02, improves untouched GSM8K exact match",
+  "candidate_freeze_path": "protocol_archive/v11_celebration_candidate_freeze.json",
+  "v10c_closeout_path": "protocol_archive/v10c_terminal_closeout.json",
+  "target_words": ["yay", "great", "success", "nice"],
+  "seeds": [220, 221, 222, 223],
+  "conditions": ["jlens", "signflip"],
+  "treatment_components": [
+    {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+    {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+  ],
+  "signflip_components": [
+    {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": -1.0},
+    {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.25}
+  ],
+  "training": {
+    "updates": 6,
+    "learning_rate": 3e-06,
+    "schedule": "constant",
+    "warmup_ratio": 0.0,
+    "score_stride": 10,
+    "kl_beta": 0.02,
+    "num_generations": 8,
+    "mask_target_tokens": true,
+    "correctness_reward": false
+  },
+  "curve_gate": {
+    "steps": [0, 4, 5, 6],
+    "criterion": "M4 > M0, M5 >= M4, and M6 >= M5 on the four-treatment-seed mean",
+    "failure_action": "stop_without_controls_or_final"
+  },
+  "final": {
+    "examples": 900,
+    "labels": ["base", "jlens_seed220", "jlens_seed221", "jlens_seed222", "jlens_seed223", "signflip_seed220", "signflip_seed221", "signflip_seed222", "signflip_seed223"],
+    "single_immutable_collection": true,
+    "unlock_requires_curve_and_all_eight_verified_runs": true
+  },
+  "acceptance": {
+    "alpha": 0.15,
+    "primary": "all four treatment-minus-signflip seed effects strictly positive, no ties, positive mean; exact two-sided sign p=0.125",
+    "secondary": "all four treatment-minus-base seed effects strictly positive, no ties, positive mean; exact two-sided sign p=0.125",
+    "crossed_95pct_intervals": "descriptive_only"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "confirm-v11-celebration-u4-u5-u6",
+    "run_id_template": "confirm-v11-celebration-{condition}-seed{seed}",
+    "resume": "never",
+    "online_required": true
+  },
+  "protected_payloads_accessed": false,
+  "no_further_candidate_switch_after_v11_launch": true
+}

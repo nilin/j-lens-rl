@@ -84,7 +84,7 @@ def _training() -> dict[str, object]:
         "max_new_tokens": 256,
         "min_new_tokens": 64,
         "temperature": 1.0,
-        "updates": 4,
+        "updates": 6,
         "learning_rate": 3e-6,
         "lr_scheduler_type": "constant",
         "warmup_steps": 0,
@@ -95,7 +95,7 @@ def _training() -> dict[str, object]:
         "gradient_accumulation_steps": 1,
         "lora_rank": 8,
         "lora_alpha": 16,
-        "score_stride": 5,
+        "score_stride": 10,
         "score_start_fraction": 0.5,
         "score_layers": [8],
         "score_aggregation": "mean",
@@ -103,11 +103,11 @@ def _training() -> dict[str, object]:
         "vocab_chunk_size": 16384,
         "mask_target_tokens": True,
         "eval_every": 1,
-        "validation_steps": [2, 3, 4],
+        "validation_steps": [4, 5, 6],
         "validation_observational_only": True,
         "early_stopping_patience": None,
         "early_stopping_min_delta": 0.0,
-        "save_every": 4,
+        "save_every": 6,
         "save_total_limit": 1,
     }
 
@@ -198,8 +198,8 @@ def _create_completed_runs(
 ) -> None:
     run_records: dict[str, object] = {}
     per_seed: dict[str, dict[str, float]] = {}
-    treatment_curve = {0: 0.30, 2: 0.35, 3: 0.36, 4: 0.37}
-    control_curve = {0: 0.30, 2: 0.29, 3: 0.28, 4: 0.27}
+    treatment_curve = {0: 0.30, 4: 0.35, 5: 0.36, 6: 0.37}
+    control_curve = {0: 0.30, 4: 0.29, 5: 0.28, 6: 0.27}
     train_indices = list(range(max(excluded_indices) + 1, max(excluded_indices) + 1001))
     for condition in final.CONDITIONS:
         for seed in final.SEEDS:
@@ -583,12 +583,18 @@ def _future_context(
         "wandb": {
             "entity": "nilinabra-spare-time",
             "project": "j-lens-rl",
-            "group": "confirm-v10-fast-negative-fuck-u2-u3-u4",
+            "group": "confirm-v11-celebration-u4-u5-u6",
             "mode": "online",
-            "tags": ["confirmatory-v10", "emotional"],
+            "tags": [
+                "confirmatory-v11",
+                "emotional",
+                "celebration-family",
+                "tail-taper",
+                "prospective",
+            ],
             "run_ids": {
                 f"{condition}_seed{seed}": (
-                    f"confirm-v10-fast-fuck-{condition}-seed{seed}"
+                    f"confirm-v11-celebration-{condition}-seed{seed}"
                 )
                 for condition in final.CONDITIONS
                 for seed in final.SEEDS
@@ -965,11 +971,26 @@ def _analysis_process(context: final.FinalContext) -> dict[str, object]:
 
 
 def test_design_is_four_fresh_seeds_and_exact_requested_curve() -> None:
-    assert final.SEEDS == tuple(range(216, 220))
-    assert final.CURVE_STEPS == (0, 2, 3, 4)
-    assert final.TERMINAL_STEP == 4
-    assert final.TARGET_WORDS == ("fuck",)
-    assert final.TREATMENT_SCORE_COMPONENTS[0]["weight"] == -1.0
+    assert final.SEEDS == tuple(range(220, 224))
+    assert final.CURVE_STEPS == (0, 4, 5, 6)
+    assert final.TERMINAL_STEP == 6
+    assert final.TARGET_WORDS == ("yay", "great", "success", "nice")
+    assert final.TREATMENT_SCORE_COMPONENTS == (
+        {
+            "layer": 8,
+            "start_fraction": 0.5,
+            "end_fraction": 0.75,
+            "aggregation": "mean",
+            "weight": 1.0,
+        },
+        {
+            "layer": 8,
+            "start_fraction": 0.75,
+            "end_fraction": 1.0,
+            "aggregation": "mean",
+            "weight": 0.25,
+        },
+    )
     assert len(final.FINAL_LABELS) == 9
     assert final.ACCEPTANCE_REGISTRATION[
         "treatment_vs_base_exact_two_sided_sign_p"
@@ -985,14 +1006,14 @@ def test_module_is_frozen_and_inert_until_registration() -> None:
     assert "frozen_inert" in summary["status"]
     source = Path(final.__file__).read_text().lower()
     assert final.FINAL_MANIFEST_SHA256 in source
-    assert 'target_words = ("fuck",)' in source
+    assert 'target_words = ("yay", "great", "success", "nice")' in source
 
 
 def test_spec_rejects_design_schema_and_signflip_mutations(tmp_path: Path) -> None:
     context = _future_context(tmp_path)
     mutations = []
     value = copy.deepcopy(context.spec)
-    value["seeds"] = list(range(216, 224))
+    value["seeds"] = list(range(220, 228))
     mutations.append(value)
     value = copy.deepcopy(context.spec)
     value["training"]["updates"] = 5
@@ -1118,6 +1139,30 @@ def test_each_completed_evidence_binding_rejects_mutation(
         path.write_text(path.read_text() + "\n# changed audited test\n")
     with pytest.raises(final.FinalProtocolError):
         final.verify_preclaim(context)
+
+
+def test_reward_std_verifier_allows_float32_reduction_noise_only(
+    tmp_path: Path,
+) -> None:
+    context = _future_context(tmp_path)
+    label = f"jlens_seed{final.SEEDS[0]}"
+    directory = context.run_dir / label
+    config = json.loads((context.config_dir / f"{label}.json").read_text())
+    history = final._history_rows(directory / "validation_history.jsonl")
+    log_path = directory / "log_history.json"
+    rows = json.loads(log_path.read_text())
+    reward_std_key = (
+        f"rewards/jlens_{'_'.join(config['target_words'])}_reward/std"
+    )
+
+    rows[0][reward_std_key] = float(rows[0]["reward_std"]) + 3e-8
+    _write(log_path, rows)
+    final._training_behavior_summary(log_path, config, history)
+
+    rows[0][reward_std_key] = float(rows[0]["reward_std"]) + 1.1e-7
+    _write(log_path, rows)
+    with pytest.raises(final.FinalProtocolError, match="one-J-reward behavior"):
+        final._training_behavior_summary(log_path, config, history)
 
 
 def test_firewall_receipt_and_training_disjointness_are_enforced(tmp_path: Path) -> None:

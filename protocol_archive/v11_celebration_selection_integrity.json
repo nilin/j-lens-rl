@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-confirmatory-v11-celebration-selection-integrity-v1",
+  "recorded_at_utc": "2026-07-14T22:09:00+00:00",
+  "candidate_freeze": {
+    "path": "protocol_archive/v11_celebration_candidate_freeze.json",
+    "sha256": "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9"
+  },
+  "registration_draft": {
+    "path": "protocol_archive/v11_celebration_registration_draft.json",
+    "sha256": "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1"
+  },
+  "triggering_closeout": {
+    "path": "protocol_archive/v10c_terminal_closeout.json",
+    "sha256": "80e7c56b960043443c36d9cccfd4a46059dd8a6f53cff6f9d576ce4252ade62a",
+    "curve_gate_passed": false,
+    "controls_or_final_accessed": false
+  },
+  "selection_used_only_preexisting_public_development_evidence": true,
+  "v10c_treatment_outcomes_changed_v11_candidate_or_recipe": false,
+  "protected_final_reserve_or_correlation_payloads_accessed": false,
+  "replacement_is_a_new_attempt_not_a_retry": true,
+  "no_further_candidate_switch_after_launch": true
+}

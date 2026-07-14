@@ -1,6 +1,6 @@
-"""Prospectively frozen final-collection machinery for confirmatory V10.
+"""Prospectively frozen final-collection machinery for confirmatory V11.
 
-This module does not create a V10 registration, prepare state, unlock a final
+This module does not create a V11 registration, prepare state, unlock a final
 set, or read the protected final manifest.  A separately created prospective
 registration must materialize ``final_protocol_spec.json`` and an unlock marker.
 The final path then enforces one immutable 9-label collection (base,
@@ -25,26 +25,26 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Sequence
 
 
-PROTOCOL_FAMILY = "j-lens-rl-confirmatory-v10-fast"
-PROTOCOL_ID = "j-lens-rl-confirmatory-v10-fast-negative-fuck-u2-u3-u4"
+PROTOCOL_FAMILY = "j-lens-rl-confirmatory-v11-celebration"
+PROTOCOL_ID = "j-lens-rl-confirmatory-v11-celebration-u4-u5-u6"
 SCHEMA_VERSION = 1
-SEEDS = tuple(range(216, 220))
+SEEDS = tuple(range(220, 224))
 CONDITIONS = ("jlens", "signflip")
-CURVE_STEPS = (0, 2, 3, 4)
-TERMINAL_STEP = 4
+CURVE_STEPS = (0, 4, 5, 6)
+TERMINAL_STEP = 6
 FINAL_EXAMPLES = 900
-TARGET_WORDS = ("fuck",)
-CALIBRATION_SHA256 = "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d"
+TARGET_WORDS = ("yay", "great", "success", "nice")
+CALIBRATION_SHA256 = "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6"
 FINAL_MANIFEST_SHA256 = "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8"
-SCIENCE_REGISTRATION_PATH = "protocol_archive/v10_fast_registration_draft.json"
-SCIENCE_REGISTRATION_SHA256 = "17426cc963192c94ecca6907a033e2924b0f88990e3d31c622a781f5fa92a120"
-CANDIDATE_FREEZE_PATH = "protocol_archive/v10_fast_candidate_freeze.json"
-CANDIDATE_FREEZE_SHA256 = "4909b81b54e20f66ce07d05f082e135e2de1bb9be94102bb3901c7825c3a84d3"
+SCIENCE_REGISTRATION_PATH = "protocol_archive/v11_celebration_registration_draft.json"
+SCIENCE_REGISTRATION_SHA256 = "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1"
+CANDIDATE_FREEZE_PATH = "protocol_archive/v11_celebration_candidate_freeze.json"
+CANDIDATE_FREEZE_SHA256 = "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9"
 CANDIDATE_FREEZE_CORRECTION_PATH = (
-    "protocol_archive/v10_fast_candidate_freeze_correction.json"
+    "protocol_archive/v11_celebration_selection_integrity.json"
 )
 CANDIDATE_FREEZE_CORRECTION_SHA256 = (
-    "722069b67c4b78f99c8340abd37858335728de2455b93fd93c9c7936ab89fa50"
+    "def794febcf01cfc23040e68da521dec401894abf06ba6cdf4387b0c42b32447"
 )
 MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
 MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
@@ -52,8 +52,8 @@ DATASET_REVISION = "740312add88f781978c0658806c59bc2815b9866"
 LENS_PATH = "artifacts/qwen25_05b_solved_lens.pt"
 LENS_SHA256 = "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
 CALIBRATION_PATH = (
-    "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/"
-    "fuck_calibration.json"
+    "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/"
+    "celebration_calibration.json"
 )
 CURVE_MANIFEST_PATH = ".confirmatory/manifests/curve_indices.json"
 CURVE_MANIFEST_SHA256 = "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1"
@@ -64,9 +64,16 @@ TREATMENT_SCORE_COMPONENTS = (
     {
         "layer": 8,
         "start_fraction": 0.5,
+        "end_fraction": 0.75,
+        "aggregation": "mean",
+        "weight": 1.0,
+    },
+    {
+        "layer": 8,
+        "start_fraction": 0.75,
         "end_fraction": 1.0,
         "aggregation": "mean",
-        "weight": -1.0,
+        "weight": 0.25,
     },
 )
 FINAL_LABELS = (
@@ -74,7 +81,7 @@ FINAL_LABELS = (
     *(f"jlens_seed{seed}" for seed in SEEDS),
     *(f"signflip_seed{seed}" for seed in SEEDS),
 )
-CURVE_CRITERION = "M2 > M0, M3 >= M2, and M4 >= M3 on the four-treatment-seed mean"
+CURVE_CRITERION = "M4 > M0, M5 >= M4, and M6 >= M5 on the four-treatment-seed mean"
 COLLECTION_POLICY = (
     "collect all 9 registered labels serially before semantically parsing, scoring, "
     "comparing, reporting, or exposing any per-label outcome; opaque SHA-256 receipt "
@@ -584,7 +591,9 @@ def validate_spec(value: Any) -> dict[str, Any]:
     ):
         raise FinalProtocolError("final spec changed the immutable 9-label collection")
     if spec.get("target_words") != list(TARGET_WORDS):
-        raise FinalProtocolError("V10 target must remain the frozen emotional profanity word")
+        raise FinalProtocolError(
+            "V11 targets must remain the frozen celebration-family words"
+        )
     if (
         not _is_commit(spec.get("git_commit"))
         or not _is_sha256(spec.get("source_tree_sha256"))
@@ -656,7 +665,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         != _negated_components(treatment)
     ):
         raise FinalProtocolError(
-            "future V10 treatment/signflip differs from frozen layer-8 late-half recipe"
+            "future V11 treatment/signflip differs from the frozen celebration-tail recipe"
         )
     training = spec.get("training", {})
     if training != {
@@ -669,7 +678,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         "max_new_tokens": 256,
         "min_new_tokens": 64,
         "temperature": 1.0,
-        "updates": 4,
+        "updates": 6,
         "learning_rate": 3e-6,
         "lr_scheduler_type": "constant",
         "warmup_steps": 0,
@@ -680,7 +689,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         "gradient_accumulation_steps": 1,
         "lora_rank": 8,
         "lora_alpha": 16,
-        "score_stride": 5,
+        "score_stride": 10,
         "score_start_fraction": 0.5,
         "score_layers": [8],
         "score_aggregation": "mean",
@@ -688,11 +697,11 @@ def validate_spec(value: Any) -> dict[str, Any]:
         "vocab_chunk_size": 16384,
         "mask_target_tokens": True,
         "eval_every": 1,
-        "validation_steps": [2, 3, 4],
+        "validation_steps": [4, 5, 6],
         "validation_observational_only": True,
         "early_stopping_patience": None,
         "early_stopping_min_delta": 0.0,
-        "save_every": 4,
+        "save_every": 6,
         "save_total_limit": 1,
     }:
         raise FinalProtocolError("future V10 training schema/hyperparameters changed")
@@ -751,7 +760,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
     if (
         wandb.get("entity") != "nilinabra-spare-time"
         or wandb.get("project") != "j-lens-rl"
-        or wandb.get("group") != "confirm-v10-fast-negative-fuck-u2-u3-u4"
+        or wandb.get("group") != "confirm-v11-celebration-u4-u5-u6"
         or wandb.get("mode") != "online"
         or not isinstance(wandb.get("tags"), list)
         or not wandb["tags"]
@@ -760,7 +769,7 @@ def validate_spec(value: Any) -> dict[str, Any]:
         or wandb["run_ids"]
         != {
             f"{condition}_seed{seed}": (
-                f"confirm-v10-fast-fuck-{condition}-seed{seed}"
+                f"confirm-v11-celebration-{condition}-seed{seed}"
             )
             for condition in CONDITIONS
             for seed in SEEDS
@@ -1283,7 +1292,7 @@ def _training_behavior_summary(
             )
             or not math.isclose(
                 float(row["reward_std"]), float(row[reward_std_key]),
-                rel_tol=0.0, abs_tol=1e-12,
+                rel_tol=0.0, abs_tol=1e-7,
             )
             or not 0 <= float(row[literal_key]) <= 1
             or not 0 <= float(row["completions/clipped_ratio"]) <= 1

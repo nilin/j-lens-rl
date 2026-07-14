@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Materialize the prospective V10 Modal state without touching the final set.
+"""Materialize the prospective V11 Modal state without touching the final set.
 
 The protected final manifest is deliberately represented only by its previously
 registered path and SHA-256 string.  This module never resolves, stats, opens,
@@ -24,8 +24,8 @@ from scripts import confirmatory_v10_final_protocol as protocol
 
 REMOTE_REPOSITORY = "/workspace/j-lens-rl"
 REMOTE_STATE = "/state"
-METRIC_SCHEMA_PATH = "protocol_archive/v10_fast_metric_schema.json"
-CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v10-modal-execution-contract-v1"
+METRIC_SCHEMA_PATH = "protocol_archive/v11_celebration_metric_schema.json"
+CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v11-modal-execution-contract-v1"
 
 
 class PreparationError(RuntimeError):
@@ -218,7 +218,7 @@ def _training() -> dict[str, Any]:
         "max_new_tokens": 256,
         "min_new_tokens": 64,
         "temperature": 1.0,
-        "updates": 4,
+        "updates": 6,
         "learning_rate": 3e-6,
         "lr_scheduler_type": "constant",
         "warmup_steps": 0,
@@ -229,7 +229,7 @@ def _training() -> dict[str, Any]:
         "gradient_accumulation_steps": 1,
         "lora_rank": 8,
         "lora_alpha": 16,
-        "score_stride": 5,
+        "score_stride": 10,
         "score_start_fraction": 0.5,
         "score_layers": [8],
         "score_aggregation": "mean",
@@ -237,11 +237,11 @@ def _training() -> dict[str, Any]:
         "vocab_chunk_size": 16384,
         "mask_target_tokens": True,
         "eval_every": 1,
-        "validation_steps": [2, 3, 4],
+        "validation_steps": [4, 5, 6],
         "validation_observational_only": True,
         "early_stopping_patience": None,
         "early_stopping_min_delta": 0.0,
-        "save_every": 4,
+        "save_every": 6,
         "save_total_limit": 1,
     }
 
@@ -375,10 +375,10 @@ def prepare(args: argparse.Namespace) -> dict[str, str]:
             "metric_schema": {"path": METRIC_SCHEMA_PATH, "sha256": protocol.sha256_file(metric_path)},
             "wandb": {
                 "entity": "nilinabra-spare-time", "project": "j-lens-rl",
-                "group": "confirm-v10-fast-negative-fuck-u2-u3-u4", "mode": "online",
-                "tags": ["confirmatory-v10", "emotional", "negative-fuck", "prospective"],
+                "group": "confirm-v11-celebration-u4-u5-u6", "mode": "online",
+                "tags": ["confirmatory-v11", "emotional", "celebration-family", "tail-taper", "prospective"],
                 "run_ids": {
-                    f"{condition}_seed{seed}": f"confirm-v10-fast-fuck-{condition}-seed{seed}"
+                    f"{condition}_seed{seed}": f"confirm-v11-celebration-{condition}-seed{seed}"
                     for condition in protocol.CONDITIONS for seed in protocol.SEEDS
                 },
             },

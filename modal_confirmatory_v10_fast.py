@@ -1,8 +1,8 @@
-"""Fail-closed Modal adapter for the frozen negative-``fuck`` V10 attempt.
+"""Fail-closed Modal adapter for the frozen celebration-family V11 attempt.
 
 This file is execution plumbing, not a second scientific protocol.  It is
 inert unless ``JLENS_V10_MODAL_CONTRACT`` names a byte-pinned, launch-enabled
-contract which is itself bound by the registered V10 protocol spec.  The
+contract which is itself bound by the registered V11 protocol spec.  The
 scientific protocol owns config derivation, terminal-run verification, curve
 semantics, unlock semantics, the one-shot final collection, and analysis.
 
@@ -40,63 +40,77 @@ LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = Path("/state")
 CONTRACT_ENV = "JLENS_V10_MODAL_CONTRACT"
-CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v10-modal-execution-contract-v1"
+CONTRACT_PROTOCOL = "j-lens-rl-confirmatory-v11-modal-execution-contract-v1"
 FROZEN_SCIENTIFIC_PROTOCOL = (
-    "j-lens-rl-confirmatory-v10-fast-negative-fuck-u2-u3-u4"
+    "j-lens-rl-confirmatory-v11-celebration-u4-u5-u6"
 )
-SCIENCE_REGISTRATION_PATH = "protocol_archive/v10_fast_registration_draft.json"
+SCIENCE_REGISTRATION_PATH = "protocol_archive/v11_celebration_registration_draft.json"
 SCIENCE_REGISTRATION_SHA256 = (
-    "17426cc963192c94ecca6907a033e2924b0f88990e3d31c622a781f5fa92a120"
+    "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1"
 )
-CANDIDATE_FREEZE_PATH = "protocol_archive/v10_fast_candidate_freeze.json"
+CANDIDATE_FREEZE_PATH = "protocol_archive/v11_celebration_candidate_freeze.json"
 CANDIDATE_FREEZE_SHA256 = (
-    "4909b81b54e20f66ce07d05f082e135e2de1bb9be94102bb3901c7825c3a84d3"
+    "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9"
 )
 INTEGRITY_AMENDMENT_PATH = (
-    "protocol_archive/v10_fast_candidate_freeze_correction.json"
+    "protocol_archive/v11_celebration_selection_integrity.json"
 )
 INTEGRITY_AMENDMENT_SHA256 = (
-    "722069b67c4b78f99c8340abd37858335728de2455b93fd93c9c7936ab89fa50"
+    "def794febcf01cfc23040e68da521dec401894abf06ba6cdf4387b0c42b32447"
 )
-APP_FALLBACK = "j-lens-rl-confirmatory-v10-unmaterialized"
-VOLUME_FALLBACK = "j-lens-rl-confirmatory-v10-unmaterialized"
+APP_FALLBACK = "j-lens-rl-confirmatory-v11-unmaterialized"
+VOLUME_FALLBACK = "j-lens-rl-confirmatory-v11-unmaterialized"
 GPU_TYPE = "L40S"
-IMAGE_SPEC = "j-lens-rl-v10-negative-fuck-l40s-v1"
+IMAGE_SPEC = "j-lens-rl-v11-celebration-l40s-v1"
 MAX_PARALLEL_TRAINING_GPUS = 4
 MAX_PARALLEL_FINAL_GPUS = 1
-SEEDS = (216, 217, 218, 219)
+SEEDS = (220, 221, 222, 223)
 CONDITIONS = ("jlens", "signflip")
-CURVE_STEPS = (0, 2, 3, 4)
-TERMINAL_STEP = 4
+CURVE_STEPS = (0, 4, 5, 6)
+TERMINAL_STEP = 6
 CURVE_CRITERION = (
-    "M2 > M0, M3 >= M2, and M4 >= M3 on the four-treatment-seed mean"
+    "M4 > M0, M5 >= M4, and M6 >= M5 on the four-treatment-seed mean"
 )
 FINAL_MANIFEST_SHA256 = (
     "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8"
 )
 CALIBRATION_PATH = (
-    "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/"
-    "fuck_calibration.json"
+    "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/"
+    "celebration_calibration.json"
 )
 CALIBRATION_SHA256 = (
-    "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d"
+    "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6"
 )
 TREATMENT_COMPONENTS = (
     {
         "layer": 8,
         "start_fraction": 0.5,
+        "end_fraction": 0.75,
+        "aggregation": "mean",
+        "weight": 1.0,
+    },
+    {
+        "layer": 8,
+        "start_fraction": 0.75,
         "end_fraction": 1.0,
         "aggregation": "mean",
-        "weight": -1.0,
+        "weight": 0.25,
     },
 )
 CONTROL_COMPONENTS = (
     {
         "layer": 8,
         "start_fraction": 0.5,
+        "end_fraction": 0.75,
+        "aggregation": "mean",
+        "weight": -1.0,
+    },
+    {
+        "layer": 8,
+        "start_fraction": 0.75,
         "end_fraction": 1.0,
         "aggregation": "mean",
-        "weight": 1.0,
+        "weight": -0.25,
     },
 )
 TREATMENT_LABELS = tuple(f"jlens_seed{seed}" for seed in SEEDS)
@@ -124,7 +138,7 @@ REQUIRED_RUNTIME_FILES = {
     "src/jlens_rl/train.py",
     "tests/test_v10_final_automation.py",
     "tests/test_paired_eval.py",
-    "protocol_archive/v10_fast_metric_schema.json",
+    "protocol_archive/v11_celebration_metric_schema.json",
     "pyproject.toml",
     SCIENCE_REGISTRATION_PATH,
     CANDIDATE_FREEZE_PATH,
@@ -169,12 +183,12 @@ def _safe_relative(value: Any) -> Path:
 
 def _exact_candidate() -> dict[str, Any]:
     return {
-        "target_words": ["fuck"],
+        "target_words": ["yay", "great", "success", "nice"],
         "calibration_path": CALIBRATION_PATH,
         "calibration_sha256": CALIBRATION_SHA256,
-        "score_stride": 5,
-        "treatment_score_components": [dict(TREATMENT_COMPONENTS[0])],
-        "matched_control_score_components": [dict(CONTROL_COMPONENTS[0])],
+        "score_stride": 10,
+        "treatment_score_components": [dict(item) for item in TREATMENT_COMPONENTS],
+        "matched_control_score_components": [dict(item) for item in CONTROL_COMPONENTS],
         "learning_rate": 3e-6,
     }
 
@@ -427,10 +441,10 @@ def validate_scientific_binding(
         != candidate["matched_control_score_components"]
         or calibration.get("calibration_path") != CALIBRATION_PATH
         or calibration.get("calibration_sha256") != CALIBRATION_SHA256
-        or training.get("updates") != 4
+        or training.get("updates") != 6
         or training.get("learning_rate") != 3e-6
-        or training.get("score_stride") != 5
-        or training.get("validation_steps") != [2, 3, 4]
+        or training.get("score_stride") != 10
+        or training.get("validation_steps") != [4, 5, 6]
         or str(hardware.get("backend")).lower() != "modal"
         or "L40S" not in str(hardware.get("device_name"))
         or hardware.get("max_gpu_processes") != 1
@@ -464,7 +478,7 @@ def validate_scientific_binding(
         }
     ):
         raise ModalV10Error(
-            "registered V10 spec does not bind the frozen negative-fuck Modal attempt"
+            "registered V11 spec does not bind the frozen celebration Modal attempt"
         )
 
 
@@ -480,7 +494,10 @@ def curve_gate_from_histories(
         history = histories[label]
         normalized = {int(step): row for step, row in history.items()}
         if set(normalized) != set(CURVE_STEPS):
-            raise ModalV10Error(f"{label} history is not exact 0/2/3/4")
+            raise ModalV10Error(
+                f"{label} history is not exact "
+                + "/".join(str(step) for step in CURVE_STEPS)
+            )
         values: dict[str, float] = {}
         for step in CURVE_STEPS:
             exact = normalized[step].get("exact_match")

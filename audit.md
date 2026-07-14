@@ -2343,3 +2343,66 @@ contract has SHA-256
 runtime Git tree `0fb3381745a1655666bd43919ca2ffd764f99130`, commit
 `892e52d7315512bed72aefa9358fc7ee07a87f87`, and content-tree SHA-256
 `e79dba95bd90b85f01e0ed2a9924651912a001354703becdfde84e6afb4e83d3`.
+
+### V10c terminal result and V11 celebration follow-up
+
+V10c reached real training on four distinct Modal L40S workers, seeds
+216--219. Each run used only the registered negative intrinsic `fuck` J-lens
+score plus KL beta `.02`; correctness was observational and gold answers were
+absent from training inputs. All four exact W&B IDs became visible and all
+terminal adapters and evidence files were preserved. The terminal verifier
+then failed closed because two mathematically equivalent float32 standard-
+deviation reductions differed by at most `2.98e-8`, while the verifier required
+absolute equality within `1e-12`. This was a verifier tolerance defect, not an
+extra reward or training contamination. The duplicate check now retains
+`1e-12` for reward-mean identity and allows only `1e-7` on the redundant
+float32 reward-standard-deviation reduction, with passing/failing boundary
+regressions.
+
+Independently of that verifier issue, V10c cannot satisfy the scientific gate.
+The four treatment curves were `.3825/.3850/.3800/.3925`,
+`.3825/.3700/.3800/.3900`, `.3825/.3825/.4000/.3825`, and
+`.3825/.3900/.4050/.3800` at steps `0/2/3/4`. Their mean was
+`.3825/.381875/.39125/.38625`: the first post-baseline node declined and the
+last node declined. V10c is therefore closed without controls or protected
+final access. Its canonical record is
+`protocol_archive/v10c_terminal_closeout.json`; it must never be resumed or
+pooled.
+
+The replacement V11 candidate was supplied by an independent contingency
+analysis before the coordinating agent learned the complete V10c gate, using
+only already-public celebration evidence. It follows
+`dev-v12-five-celebration-tail-u4-h20-seed195`: the effective reward is exactly
+`yay/great/success/nice`, celebration calibration SHA
+`93d05caf...8ee6`, layer 8/stride 10, with weights `+1` on `.50-.75` and
+`+.25` on `.75-1.0`. Core optimizer/model/data settings are also preserved.
+The development run's locally reconstructable early nodes were
+`.3825 -> .3925` at `0/4`; its later W&B nodes are not yet archived locally.
+V11 honestly changes horizon 20 to 6 and evaluates `0/4/5/6`, rather than
+claiming an exact long-horizon replication, so the requested three-transition
+shape and matched controls can finish before the deadline.
+
+V11 prospectively fixes fresh seeds 220--223, four exact sign-flip controls,
+and gate `M4>M0, M5>=M4, M6>=M5`. If it passes, the primary four-seed
+treatment-minus-control and secondary treatment-minus-base sign tests each
+require four positive effects with no ties (`p=.125`, two-sided) and positive
+means on one immutable still-sealed 900-row collection. This is nominal
+alpha-.15 evidence in an adaptive research program, not a multiplicity-
+corrected program-wide claim. The freeze, registration, selection-integrity
+record, and metric schema are respectively
+`protocol_archive/v11_celebration_candidate_freeze.json`,
+`protocol_archive/v11_celebration_registration_draft.json`,
+`protocol_archive/v11_celebration_selection_integrity.json`, and
+`protocol_archive/v11_celebration_metric_schema.json`.
+
+The fresh execution resource is Modal v2 Volume
+`j-lens-rl-confirmatory-v11-celebration-20260714b`, object
+`vo-IwKmcv5FfXvheefG7K7V7y`; the V11 app name is
+`j-lens-rl-confirmatory-v11-celebration-20260714a`. The pre-preparation
+contract binds 424 exact public runtime files, synthetic Git tree
+`39ab12232d7b51b2e962e32653d3031a25ef92f6`, synthetic commit
+`34698669364067b98a9192ab40bd75784974458c`, content-tree SHA-256 (recorded in
+the contract), and contract SHA-256
+`6fca76d9d7a1e7c4821e44445a36167cb5bb5ffe680911f55c25f8281511eacf`.
+The protected-final bytes are not in the runtime allowlist. Forty-five focused
+Modal/protocol/paired-evaluation tests pass.
