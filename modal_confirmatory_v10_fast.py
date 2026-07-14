@@ -541,6 +541,13 @@ def _build_image() -> modal.Image:
     image = modal.Image.debian_slim(python_version="3.11")
     if CONTRACT is None or LOCAL_CONTRACT_PATH is None or CONTRACT_SHA256 is None:
         return image
+    expected_files = set(CONTRACT["runtime_source"]["files"])
+    expected_directories = {
+        parent.as_posix()
+        for relative in expected_files
+        for parent in Path(relative).parents
+        if parent != Path(".")
+    }
     for relative, identity in sorted(CONTRACT["runtime_source"]["files"].items()):
         local_path = LOCAL_REPO / relative
         if (
@@ -550,9 +557,21 @@ def _build_image() -> modal.Image:
             or local_path.stat().st_size != identity["size_bytes"]
         ):
             raise ModalV10Error(f"registered runtime source changed: {relative}")
-        image = image.add_local_file(
-            local_path, (REMOTE_REPO / relative).as_posix(), copy=True
-        )
+    def ignore_unregistered(path: Path) -> bool:
+        try:
+            relative = path.relative_to(LOCAL_REPO).as_posix()
+        except ValueError:
+            relative = path.as_posix().lstrip("./")
+        return relative not in expected_files and relative not in expected_directories
+
+    # One allowlisted directory layer avoids hundreds of sequential COPY image
+    # builds while retaining the exact same fail-closed runtime inventory.
+    image = image.add_local_dir(
+        LOCAL_REPO,
+        REMOTE_REPO.as_posix(),
+        copy=True,
+        ignore=ignore_unregistered,
+    )
     image = image.add_local_file(
         LOCAL_CONTRACT_PATH, REMOTE_CONTRACT_PATH.as_posix(), copy=True
     )
