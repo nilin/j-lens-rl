@@ -20,14 +20,19 @@ from typing import Any, Iterable
 
 import modal
 
+from scripts.modal_verify_v6_volume_c import verify_volume_c_v2
+
 
 LOCAL_REPO = Path(__file__).resolve().parent
 LOCAL_STATE = LOCAL_REPO / ".confirmatory" / "v6"
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = REMOTE_REPO / ".confirmatory" / "v6"
 ORIGINAL_VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714a"
-VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714b"
+RETIRED_VOLUME_B_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714b"
+VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714c"
+VOLUME_OBJECT_ID = "vo-UYlAzgmVfmtRarECX4DYJg"
 PRELAUNCH_ATTEMPT_A_APP_ID = "ap-sujvjQTDFQV2qwrVIFjNRq"
+PRELAUNCH_ATTEMPT_B_APP_ID = "ap-Mhzw5O7P2QdnHzyhQJaomJ"
 SEEDS = tuple(range(176, 184))
 MAX_GPU_CONTAINERS = 1
 GPU_TYPE = "L40S"
@@ -41,7 +46,7 @@ FINAL_LABELS = (
 )
 
 app = modal.App("j-lens-rl-confirmatory-v6-celebration-taper")
-state_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True, version=2)
+state_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=False, version=2)
 wandb_secret = modal.Secret.from_name("j-lens-rl-wandb")
 huggingface_secret = modal.Secret.from_name(
     "huggingface-token", required_keys=["HF_TOKEN"]
@@ -260,6 +265,12 @@ def _validate_operational_preflight(value: Any) -> dict[str, Any]:
         raise RuntimeError("V6 launch changed the global Modal GPU limit")
     if value.get("active_other_modal_apps") != []:
         raise RuntimeError("another Modal app remains active at V6 launch")
+    if value.get("volume_c_name") != VOLUME_NAME:
+        raise RuntimeError("V6 launch changed the registered Volume C name")
+    if value.get("volume_c_version") != 2:
+        raise RuntimeError("V6 launch did not verify Volume C as version 2")
+    if value.get("volume_c_object_id") != VOLUME_OBJECT_ID:
+        raise RuntimeError("V6 launch changed the registered Volume C object identity")
     return value
 
 
@@ -922,6 +933,7 @@ def _local_operational_preflight() -> dict[str, Any]:
             "all other Modal GPU apps are idle, then set "
             f"JLENS_MODAL_GPU_EXCLUSIVE_CONFIRM={GPU_EXCLUSIVE_CONFIRMATION}"
         )
+    volume_c_object_id = verify_volume_c_v2()
     modal_cli = Path(sys.executable).parent / "modal"
     listing_text = subprocess.check_output(
         [str(modal_cli), "app", "list", "--json"],
@@ -929,20 +941,25 @@ def _local_operational_preflight() -> dict[str, Any]:
         text=True,
     )
     listing = json.loads(listing_text[listing_text.index("[") :])
-    attempt_a = next(
-        (item for item in listing if item.get("app_id") == PRELAUNCH_ATTEMPT_A_APP_ID),
-        None,
-    )
-    if (
-        not isinstance(attempt_a, dict)
-        or attempt_a.get("state") != "stopped"
-        or attempt_a.get("stopped_at") is None
-        or str(attempt_a.get("tasks")) != "0"
+    for attempt_label, attempt_app_id in (
+        ("A", PRELAUNCH_ATTEMPT_A_APP_ID),
+        ("B", PRELAUNCH_ATTEMPT_B_APP_ID),
     ):
-        raise RuntimeError(
-            "refusing Volume-B launch until exact attempt-A app is stopped with zero tasks"
+        attempt = next(
+            (item for item in listing if item.get("app_id") == attempt_app_id),
+            None,
         )
-    for volume_name in (ORIGINAL_VOLUME_NAME, VOLUME_NAME):
+        if (
+            not isinstance(attempt, dict)
+            or attempt.get("state") != "stopped"
+            or attempt.get("stopped_at") is None
+            or str(attempt.get("tasks")) != "0"
+        ):
+            raise RuntimeError(
+                f"refusing Volume-C launch until exact attempt-{attempt_label} app "
+                "is stopped with zero tasks"
+            )
+    for volume_name in (ORIGINAL_VOLUME_NAME, RETIRED_VOLUME_B_NAME, VOLUME_NAME):
         inventory_text = subprocess.check_output(
             [str(modal_cli), "volume", "ls", volume_name, "/", "--json"],
             cwd=LOCAL_REPO,
@@ -951,7 +968,7 @@ def _local_operational_preflight() -> dict[str, Any]:
         inventory = json.loads(inventory_text[inventory_text.index("[") :])
         if inventory != []:
             raise RuntimeError(
-                f"refusing Volume-B launch unless {volume_name} is empty: {inventory}"
+                f"refusing Volume-C launch unless {volume_name} is empty: {inventory}"
             )
     current_app_id = app.app_id
     active_other_apps = [
@@ -975,6 +992,9 @@ def _local_operational_preflight() -> dict[str, Any]:
             "exclusive_gpu_confirmation": confirmation,
             "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
             "active_other_modal_apps": active_other_apps,
+            "volume_c_name": VOLUME_NAME,
+            "volume_c_object_id": volume_c_object_id,
+            "volume_c_version": 2,
         }
     )
 

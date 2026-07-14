@@ -324,7 +324,7 @@ def test_v6_isolated_exact_recipe_seeds_labels_and_one_gpu() -> None:
     assert v6.FINAL_LABELS[1] == "jlens_seed176"
     assert v6.FINAL_LABELS[-1] == "signflip_seed183"
     assert v6.VOLUME_NAME == (
-        "j-lens-rl-confirmatory-v6-celebration-taper-20260714b"
+        "j-lens-rl-confirmatory-v6-celebration-taper-20260714c"
     )
     lock = json.loads(
         (ROOT / "protocol_archive" / "v6_celebration_selected_recipe.json").read_text()
@@ -620,7 +620,7 @@ def test_registration_freezes_condition_nodes_controls_wandb_and_cancellation() 
         v6.CONDITIONAL_LAUNCH_PREDICATE
     )
     assert registration["operator_knowledge_boundary"] == (
-        v6.INFRASTRUCTURE_AMENDMENT1_OPERATOR_KNOWLEDGE_BOUNDARY
+        v6.INFRASTRUCTURE_AMENDMENT2_OPERATOR_KNOWLEDGE_BOUNDARY
     )
     assert registration["wandb"]["run_ids"] == v6.WANDB_RUN_IDS
     assert len(set(registration["wandb"]["run_ids"].values())) == 16
@@ -656,7 +656,7 @@ def test_committed_registration_is_the_exact_completed_template() -> None:
     v6._validate_registration_shape(registration)
 
 
-def test_v4_amendment_preserves_every_registered_scientific_and_wandb_field() -> None:
+def test_v5_amendment_preserves_every_registered_scientific_and_wandb_field() -> None:
     v1_path = (
         ROOT
         / "protocol_archive"
@@ -677,13 +677,27 @@ def test_v4_amendment_preserves_every_registered_scientific_and_wandb_field() ->
     amendment_path = (
         ROOT / "protocol_archive" / "v6_celebration_infrastructure_amendment1.json"
     )
-    v4_path = ROOT / "protocol_archive" / "v6_celebration_registration.json"
+    v4_path = (
+        ROOT
+        / "protocol_archive"
+        / "v6_celebration_registration_v4_superseded.json"
+    )
+    closeout_b_path = (
+        ROOT / "protocol_archive" / "v6_celebration_prelaunch_attempt_b_closeout.json"
+    )
+    amendment2_path = (
+        ROOT / "protocol_archive" / "v6_celebration_infrastructure_amendment2.json"
+    )
+    v5_path = ROOT / "protocol_archive" / "v6_celebration_registration.json"
     assert v6.sha256_file(v1_path) == v6.SUPERSEDED_V1_REGISTRATION_SHA256
     assert v6.sha256_file(correction1_path) == v6.PRELAUNCH_CORRECTION1_SHA256
     assert v6.sha256_file(v2_path) == v6.SUPERSEDED_V2_REGISTRATION_SHA256
     assert v6.sha256_file(correction2_path) == v6.PRELAUNCH_CORRECTION2_SHA256
     assert v6.sha256_file(v3_path) == v6.SUPERSEDED_V3_REGISTRATION_SHA256
     assert v6.sha256_file(amendment_path) == v6.INFRASTRUCTURE_AMENDMENT1_SHA256
+    assert v6.sha256_file(v4_path) == v6.SUPERSEDED_V4_REGISTRATION_SHA256
+    assert v6.sha256_file(closeout_b_path) == v6.PRELAUNCH_ATTEMPT_B_CLOSEOUT_SHA256
+    assert v6.sha256_file(amendment2_path) == v6.INFRASTRUCTURE_AMENDMENT2_SHA256
     v1 = json.loads(v1_path.read_text())
     correction1 = json.loads(correction1_path.read_text())
     v2 = json.loads(v2_path.read_text())
@@ -691,12 +705,16 @@ def test_v4_amendment_preserves_every_registered_scientific_and_wandb_field() ->
     v3 = json.loads(v3_path.read_text())
     amendment = json.loads(amendment_path.read_text())
     v4 = json.loads(v4_path.read_text())
-    fields = amendment["scientific_projection"]["fields"]
+    closeout_b = json.loads(closeout_b_path.read_text())
+    amendment2 = json.loads(amendment2_path.read_text())
+    v5 = json.loads(v5_path.read_text())
+    fields = amendment2["scientific_projection"]["fields"]
     v1_projection = {field: v1[field] for field in fields}
     v2_projection = {field: v2[field] for field in fields}
     v3_projection = {field: v3[field] for field in fields}
     v4_projection = {field: v4[field] for field in fields}
-    assert v1_projection == v2_projection == v3_projection == v4_projection
+    v5_projection = {field: v5[field] for field in fields}
+    assert v1_projection == v2_projection == v3_projection == v4_projection == v5_projection
     assert v6.canonical_sha256(v1_projection) == (
         v6.SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
     )
@@ -754,9 +772,46 @@ def test_v4_amendment_preserves_every_registered_scientific_and_wandb_field() ->
     assert closeout["verification"]["wandb_group_run_count"] == 0
     assert amendment["authorized_changes"]["volume"] == {
         "from": v6.ORIGINAL_VOLUME_NAME,
-        "to": v6.VOLUME_NAME,
+        "to": v6.RETIRED_VOLUME_B_NAME,
     }
     assert amendment["fresh_volume_b_preflight"]["root_listing"] == []
+    assert closeout_b["app"] == {
+        "app_id": "ap-Mhzw5O7P2QdnHzyhQJaomJ",
+        "created_at_utc": "2026-07-14T11:17:52Z",
+        "description": "j-lens-rl-confirmatory-v6-celebration-taper",
+        "state": "stopped",
+        "stopped_at_utc": "2026-07-14T11:17:53Z",
+        "tasks_at_closeout": 0,
+    }
+    assert closeout_b["failure"] == {
+        "exact_modal_error": (
+            "Volume 'j-lens-rl-confirmatory-v6-celebration-taper-20260714b' "
+            "exists but has version v1, not v2 as requested."
+        ),
+        "failed_phase": "Modal app hydration before image build and local entrypoint dispatch",
+        "image_build_started": False,
+        "scientific_code_entered": False,
+    }
+    assert closeout_b["verification"]["wandb_group_run_count"] == 0
+    assert not any(closeout_b["outcome_boundary"].values())
+    assert amendment2["authorized_changes"]["volume"]["to"] == v6.VOLUME_NAME
+    assert amendment2["authorized_changes"]["volume"]["to_version"] == 2
+    assert amendment2["fresh_volume_c_preflight"] == {
+        "checked_at_utc": "2026-07-14T11:19:23Z",
+        "created_at_utc": "2026-07-14T11:18:26Z",
+        "file_count": 0,
+        "inventory_command": (
+            "/j-lens-rl/.venv/bin/modal volume ls "
+            "j-lens-rl-confirmatory-v6-celebration-taper-20260714c / --json"
+        ),
+        "modal_object_id": "vo-UYlAzgmVfmtRarECX4DYJg",
+        "name": v6.VOLUME_NAME,
+        "positive_version_probe": (
+            "modal.Volume.from_name(name, create_if_missing=False, version=2).hydrate()"
+        ),
+        "root_listing": [],
+        "version": 2,
+    }
 
 
 def test_generated_configs_use_exact_wandb_ids_and_matched_signflips() -> None:
@@ -927,8 +982,14 @@ def test_modal_and_shell_runners_are_serial_fresh_and_protocol_gated() -> None:
     shell_source = (ROOT / "run_confirmatory_v6.sh").read_text()
     cache_source = (ROOT / "scripts" / "modal_cache_assets_v6.py").read_text()
     finalizer_source = (ROOT / "scripts" / "modal_finalize_image_v6.py").read_text()
+    volume_preflight_source = (
+        ROOT / "scripts" / "modal_verify_v6_volume_c.py"
+    ).read_text()
     assert 'ORIGINAL_VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714a"' in modal_source
-    assert 'VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714b"' in modal_source
+    assert 'RETIRED_VOLUME_B_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714b"' in modal_source
+    assert 'VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714c"' in modal_source
+    assert 'VOLUME_OBJECT_ID = "vo-UYlAzgmVfmtRarECX4DYJg"' in modal_source
+    assert "create_if_missing=False, version=2" in modal_source
     assert "SEEDS = tuple(range(176, 184))" in modal_source
     assert "MAX_GPU_CONTAINERS = 1" in modal_source
     assert "GLOBAL_MODAL_GPU_LIMIT = 1" in modal_source
@@ -947,6 +1008,47 @@ def test_modal_and_shell_runners_are_serial_fresh_and_protocol_gated() -> None:
     assert "if not token:" in cache_source
     assert 'if os.environ.get("HF_TOKEN"):' in finalizer_source
     assert "ap-sujvjQTDFQV2qwrVIFjNRq" in modal_source
+    assert "ap-Mhzw5O7P2QdnHzyhQJaomJ" in modal_source
+    assert "verify_volume_c_v2" in modal_source
+    assert "create_if_missing=False, version=2" in volume_preflight_source
     assert "SEEDS=(176 177 178 179 180 181 182 183)" in shell_source
     assert '"$STATE/configs/jlens_seed176.json"' in shell_source
     assert "solved_seed" not in modal_source + shell_source
+
+
+def test_volume_c_v2_probe_requires_exact_noncreating_factory_and_identity() -> None:
+    from scripts.modal_verify_v6_volume_c import VOLUME_C_NAME, verify_volume_c_v2
+
+    calls = []
+
+    class Volume:
+        object_id = "vo-UYlAzgmVfmtRarECX4DYJg"
+
+        def hydrate(self) -> None:
+            calls.append("hydrate")
+
+    def factory(name, *, create_if_missing, version):
+        calls.append((name, create_if_missing, version))
+        return Volume()
+
+    assert verify_volume_c_v2(factory) == "vo-UYlAzgmVfmtRarECX4DYJg"
+    assert calls == [(VOLUME_C_NAME, False, 2), "hydrate"]
+
+
+@pytest.mark.parametrize("failure", ["version", "identity"])
+def test_volume_c_v2_probe_fails_closed(failure: str) -> None:
+    from scripts.modal_verify_v6_volume_c import verify_volume_c_v2
+
+    class Volume:
+        object_id = "" if failure == "identity" else "vo-unused"
+
+        def hydrate(self) -> None:
+            if failure == "version":
+                raise ValueError("v1 is not v2")
+
+    if failure == "version":
+        match = "absent or not version 2"
+    else:
+        match = "stable Modal object identity"
+    with pytest.raises(RuntimeError, match=match):
+        verify_volume_c_v2(lambda *args, **kwargs: Volume())
