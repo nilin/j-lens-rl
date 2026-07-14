@@ -62,6 +62,7 @@ LAUNCH_RECEIPT_PATH = STATE_DIR / "launch_receipt.json"
 CLOSEOUT_CANDIDATE_PATH = EVIDENCE_DIR / "git_closeout_candidate.json"
 EXPORT_PLAN_PATH = EVIDENCE_DIR / "durable_export_plan.json"
 EXPORT_DIR = STATE_DIR / "exports"
+GPU_DISPATCH_DIR = STATE_DIR / "gpu_dispatches"
 
 REGISTRATION_PATH = (
     REPO / "protocol_archive" / "v7_profanity_registration.json"
@@ -71,6 +72,12 @@ DEFAULT_RECIPE_LOCK_PATH = (
 )
 SELECTION_CLOSEOUT_PATH = (
     REPO / "protocol_archive" / "v7_profanity_selection_closeout.json"
+)
+SOURCE_CLEANUP_AMENDMENT_PATH = (
+    REPO / "protocol_archive" / "v7_profanity_prelaunch_source_cleanup.json"
+)
+RUNTIME_SOURCE_ALLOWLIST_PATH = (
+    REPO / "scripts" / "v7_runtime_source_allowlist.json"
 )
 V6_REGISTRATION_PATH = (
     REPO / "protocol_archive" / "v6_celebration_registration.json"
@@ -83,19 +90,23 @@ V6_TERMINAL_CLOSEOUT_PATH = (
 V6_TERMINAL_EVIDENCE_DIR = (
     REPO / "protocol_archive" / "v6_celebration_terminal_evidence"
 )
-V6_TERMINAL_EVIDENCE_PATHS = {
+V6_TERMINAL_COMMON_EVIDENCE_PATHS = {
     name: V6_TERMINAL_EVIDENCE_DIR / filename
     for name, filename in {
         "attempt_claim": "attempt_claim.json",
         "launch_receipt": "launch_receipt.json",
         "attempt_status": "attempt_status.json",
-        "curve_gate": "curve_gate.json",
-        "curve_plot": "curve.png",
         "bundle_inventory": "evidence_bundle_inventory.json",
         "root_inventory": "root_inventory.json",
         "evidence_inventory": "evidence_inventory.json",
         "durable_export_receipt": "durable_export_receipt.json",
     }.items()
+}
+V6_TERMINAL_EVIDENCE_PATHS_BY_STAGE = {
+    "failed_before_final": {
+        **V6_TERMINAL_COMMON_EVIDENCE_PATHS,
+        "run_inventory": V6_TERMINAL_EVIDENCE_DIR / "run_inventory.json",
+    },
 }
 
 SOURCE_MANIFEST_DIR = REPO / ".confirmatory" / "manifests"
@@ -124,10 +135,11 @@ GPU_LEASE_DICT_NAME = "j-lens-rl-global-gpu-lease-v1"
 GPU_LEASE_KEY = "global-one-gpu"
 GPU_LEASE_ENVIRONMENT = "main"
 GPU_LEASE_POLICY = (
-    "every GPU entrypoint atomically claims the named Dict key with a fresh nonce, "
-    "fails closed if occupied or ambiguous, releases only its own nonce after durable "
-    "publication, never steals by timeout, and permits only root-authorized forensic "
-    "recovery after immutable closeout"
+    "the CPU orchestrator atomically claims the named Dict key with a fresh nonce and "
+    "durably publishes a root-bound dispatch intent before every GPU schedule; each "
+    "worker verifies that token and releases only its own nonce after durable result "
+    "publication; occupancy or ambiguity fails closed, no timeout steals a lease, and "
+    "only root-authorized forensic recovery may clear an orphan after immutable closeout"
 )
 BACKEND_FALLBACK_POLICY = (
     "this registration permits one whole attempt on Modal L40S with online W&B only; "
@@ -195,50 +207,46 @@ V7_FINAL_SET_SHA256 = "eadcd0e2fc194b0e38bc1c9f4aa1bbf6e6b3ba1043b0015eedee59aec
 RESERVE_SHA256 = "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6"
 TRAIN_EXCLUSIONS_SHA256 = "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
 V6_REGISTRATION_SHA256 = "12cb17f896b117a43d9d266a53d43423ec5c5613fcc2dfda209f59bc27c507f2"
-SELECTION_CLOSEOUT_SHA256 = "c8db90955f34b61d03fe510c4ef4483fd1249a1b9a5cfcd42d4f411e4e5b2d0a"
-
-V5_PROTOCOL = "j-lens-rl-confirmatory-v5-emotional"
-V5_MODAL_APP_NAME = "j-lens-rl-confirmatory-v5-emotional"
-V5_VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714b"
-V5_CLAIM_ID = "c2d9ed29ebba46649f1ea182d7d50014"
-V5_CLAIM_GIT_COMMIT = "252a2319dc0ada5e99ddeecf507d7246590531d7"
-V5_MODAL_APP_ID = "ap-2o4XOP7jhqcrHyqkGN55wL"
-V5_MODAL_FUNCTION_CALL_ID = "fc-01KXFXCF23D6DRB5VNXCVJB8TN"
-V5_LAUNCH_RECEIPT_SHA256 = (
-    "5123864f59094b572304a9aaf1317f41a9082fdafa5725876b4801858ca216d8"
+V6_TERMINAL_CLOSEOUT_SHA256 = (
+    "e14022a7dd5614726d7bf7fd4c9c8a40f4eb056b1c3a5dad9dbf3c1069912081"
 )
-V5_LAUNCH_SUBMITTED_AT_UTC = "2026-07-14T08:55:08.732683+00:00"
-V5_GPU_APP_OVERLAP_POLICY = "no other Modal GPU app may overlap this V5 attempt"
-V5_RECIPE_LOCK_SHA256 = "006bd685f045a385889d1e418e76437140a404177f0d1148d308226390a2a547"
-V5_TERMINAL_EVIDENCE_SHA256 = {
-    "attempt_claim": "d8f7779ba539b4e4a23d0b5cb96f3d75b6fd97f47f3917d151f42f6e6ba098ed",
-    "launch_receipt": V5_LAUNCH_RECEIPT_SHA256,
-    "attempt_status": "463d2dc01b44c837daf7cc761d6f587bce804048889e4dbe95463058e734a75e",
-    "curve_gate": "09770542837464bb80c48c036099521f0ae05ec2e0c81c2440f1f06816a4eede",
-    "curve_plot": "61d6c49740bb277335a0500a1842396d3328baa3f576540d7a1c78ccc659f280",
-    "root_inventory": "e9f08d9e5a102f4c980f0d00ada6b3ad6d810bf8f8bb790aed7607d91542af60",
-    "evidence_inventory": "7f46f397b22756d6b6b2cf607ea2f4c5c4fa97e999258eb45b25a6469b88369b",
-    "bundle_inventory": "f098574bbbf97f645c4f66b4e33ce96c8ef8694bc6d37a721fc37f2a7f0976c2",
-    "durable_export_receipt": "155c699733510b16975099e6f9aa1566697a0dc62716510c11db38b13be4ed78",
+V6_TERMINAL_EVIDENCE_SHA256 = {
+    "attempt_claim": "244b92be1cbacbab33af460e820632f6cb9aec2ee9ede8bb641b68e763d3f3ae",
+    "attempt_status": "ffd9e1c71f1f706be516a74f105162274f71139d2b0e00c0ef0e8bb7efa83be6",
+    "bundle_inventory": "37e6aa15bf3eb1b0ab9b09aecd720e934aabab208b85bc58f8ae6c7fbd3b009e",
+    "durable_export_receipt": "c7667d652e8fa7c0b9ada6c4f5cb961c5d66c14352ea3c58dccef17c333295ff",
+    "evidence_inventory": "f5137850e951ac2e30854d00ecfa0208d45c1de5521d8a0e71759da9d444a9e1",
+    "launch_receipt": "c55b9ddcd1a5e128b7b2148488fefc22ed409acdc4a622c0c38328e56fef9d26",
+    "root_inventory": "e25a7f02e2376ae2024751c6889b13a4e008c6a7f539b496f65cc472a80f32e1",
+    "run_inventory": "b68ecf6367d725324a1ad7e2ec8fe2ae780e1aca27a121adf1e7875281fa97bf",
 }
-V5_DURABLE_ARCHIVE_SHA256 = (
-    "8710288864aac8bde570beff50ccc9835b1b0d98e2470a7a3bab897bcf620b17"
+SELECTION_CLOSEOUT_SHA256 = "c8db90955f34b61d03fe510c4ef4483fd1249a1b9a5cfcd42d4f411e4e5b2d0a"
+PRE_CLEANUP_REGISTRATION_SHA256 = (
+    "5495c2f91b5bbfdba3a1bfd67ba6e7a04154eff92bcc7cfadfcf83ba76ae0f20"
 )
-V3_OUTCOME_STATUS_AT_FREEZE = (
-    "prelaunch correction 2: no V7 outcome existed; selecting agent used no V5 "
-    "outcomes; root knew the full terminal V5 mean and per-seed curves and evidence; "
-    "scientific and W&B choices remain byte-semantically identical to V1 and V2"
+PRE_CLEANUP_PROTOCOL_SHA256 = (
+    "f8c3c96ec0e2e4eb49b5cc27dc04e51731b3305dcb44e620e4c9a413e84c714d"
 )
-V4_OUTCOME_STATUS_AT_FREEZE = (
-    "infrastructure amendment 1: attempt A stopped during image build before local "
-    "entrypoint, protocol upload, claim, function call, GPU, W&B, or any V7 outcome; "
-    "scientific and W&B choices remain byte-semantically identical to V1/V2/V3"
+SCIENTIFIC_AND_WANDB_PROJECTION_FIELDS = (
+    "claim_protocol",
+    "operator_knowledge_boundary",
+    "selection_closeout",
+    "selected_recipe_lock",
+    "split",
+    "seeds",
+    "fixed_updates",
+    "curve_gate",
+    "matched_control",
+    "analysis",
+    "acceptance",
+    "final_collection",
+    "wandb",
+    "outcome_status_at_freeze",
 )
-V5_OUTCOME_STATUS_AT_FREEZE = (
-    "infrastructure amendment 2: attempt B stopped at app hydration before image "
-    "build, local entrypoint, protocol upload, claim, function call, GPU, W&B, or "
-    "any V7 outcome; scientific/W&B choices remain identical to V1/V2/V3/V4"
+SCIENTIFIC_AND_WANDB_PROJECTION_SHA256 = (
+    "ce5b3a7c0a13846cc8053d207a0916ceba5d9b8f63edc7998e7173aa3df950c5"
 )
+
 OUTCOME_STATUS_AT_FREEZE = (
     "conditional V7 frozen while V6 remained nonterminal; the V7 implementer inspected "
     "no additional V6 or sealed-final outcome and no V7 outcome exists"
@@ -247,7 +255,7 @@ OUTCOME_STATUS_AT_FREEZE = (
 CONDITIONAL_LAUNCH_PREDICATE = {
     "closeout_path": "protocol_archive/v6_celebration_terminal_closeout.json",
     "required_protocol": "j-lens-rl-confirmatory-v6-celebration-terminal-closeout-v1",
-    "allowed_terminal_stages": ["curve_failed", "failed_before_final"],
+    "allowed_terminal_stages": ["failed_before_final"],
     "required_final_unlocked_present": False,
     "required_final_collection_present": False,
     "required_evals_directory_present": False,
@@ -255,10 +263,15 @@ CONDITIONAL_LAUNCH_PREDICATE = {
     "required_sealed_comparison_present": False,
     "required_final_outcomes_unopened": True,
     "required_v6_registration_sha256": V6_REGISTRATION_SHA256,
+    "required_terminal_closeout_sha256": V6_TERMINAL_CLOSEOUT_SHA256,
+    "required_source_evidence_sha256": V6_TERMINAL_EVIDENCE_SHA256,
     "required_sealed_final_manifest_sha256": V7_FINAL_SHA256,
-    "required_source_evidence_paths": {
-        name: path.relative_to(REPO).as_posix()
-        for name, path in V6_TERMINAL_EVIDENCE_PATHS.items()
+    "required_source_evidence_paths_by_terminal_stage": {
+        stage: {
+            name: path.relative_to(REPO).as_posix()
+            for name, path in paths.items()
+        }
+        for stage, paths in V6_TERMINAL_EVIDENCE_PATHS_BY_STAGE.items()
     },
     "source_evidence_policy": (
         "the closeout must name each exact committed evidence path and SHA-256; the "
@@ -444,29 +457,6 @@ def load_indices(path: Path) -> list[int]:
     if len(values) != len(set(values)) or any(value < 0 for value in values):
         raise ProtocolError(f"duplicate or negative index in {path}")
     return values
-
-
-def _v5_allocation_key(index: int) -> bytes:
-    return hashlib.sha256(f"{V5_ALLOCATION_SALT}:{index}".encode()).digest()
-
-
-def reconstruct_v5_split(parent: Sequence[int]) -> tuple[list[int], list[int]]:
-    if len(parent) != 1700 or len(set(parent)) != 1700:
-        raise ProtocolError("V5 source parent must contain exactly 1,700 unique indices")
-    ordered = sorted((int(index) for index in parent), key=_v5_allocation_key)
-    return ordered[:400], ordered[400:]
-
-
-def _v7_allocation_key(index: int) -> bytes:
-    return hashlib.sha256(f"{V7_ALLOCATION_SALT}:{index}".encode()).digest()
-
-
-def allocate_v7(parent: Sequence[int]) -> tuple[list[int], list[int]]:
-    """Split only V5's conditionally unopened 1,300-row final parent."""
-    if len(parent) != 1300 or len(set(parent)) != 1300:
-        raise ProtocolError("V7 source parent must contain exactly 1,300 unique indices")
-    ordered = sorted((int(index) for index in parent), key=_v7_allocation_key)
-    return ordered[:400], ordered[400:]
 
 
 def validate_curve_steps(
@@ -862,14 +852,11 @@ def negate_score_components(value: Sequence[dict[str, Any]]) -> list[dict[str, A
 
 
 def _tracked_runtime_tree_sha256(prefix: str) -> str:
-    """Hash runtime trees without requiring Git inside the strict Modal image."""
-    root = REPO / prefix
+    """Hash only files named by the frozen, exact runtime allowlist."""
     names = [
-        path.relative_to(REPO).as_posix()
-        for path in root.rglob("*")
-        if path.is_file()
-        and "__pycache__" not in path.parts
-        and path.suffix not in {".pyc", ".pyo"}
+        name
+        for name in _runtime_source_names()
+        if name == prefix or name.startswith(f"{prefix}/")
     ]
     if not names:
         raise ProtocolError(f"registered runtime source tree is empty: {prefix}")
@@ -890,6 +877,7 @@ def _expected_execution_hashes() -> dict[str, str]:
         "modal_volume_preflight_sha256": (
             REPO / "scripts" / "modal_verify_v7_volume.py"
         ),
+        "runtime_source_allowlist_sha256": RUNTIME_SOURCE_ALLOWLIST_PATH,
         "pyproject_sha256": REPO / "pyproject.toml",
     }
     return {
@@ -958,6 +946,17 @@ def registration_horizon(registration: dict[str, Any]) -> int:
     return updates
 
 
+def _source_cleanup_amendment_identity() -> dict[str, Any]:
+    return {
+        "path": str(SOURCE_CLEANUP_AMENDMENT_PATH.relative_to(REPO)),
+        "sha256": (
+            sha256_file(SOURCE_CLEANUP_AMENDMENT_PATH)
+            if SOURCE_CLEANUP_AMENDMENT_PATH.is_file()
+            else None
+        ),
+    }
+
+
 def registration_template() -> dict[str, Any]:
     """Return an intentionally incomplete template; it cannot launch V7."""
     return {
@@ -975,6 +974,7 @@ def registration_template() -> dict[str, Any]:
             "path": str(SELECTION_CLOSEOUT_PATH.relative_to(REPO)),
             "sha256": SELECTION_CLOSEOUT_SHA256,
         },
+        "prelaunch_source_cleanup": _source_cleanup_amendment_identity(),
         "selected_recipe_lock": {
             "path": str(DEFAULT_RECIPE_LOCK_PATH.relative_to(REPO)),
             "sha256": None,
@@ -1070,338 +1070,6 @@ def _load_registration() -> tuple[dict[str, Any], str]:
 
 
 def _validate_archive_lineage(registration: dict[str, Any]) -> None:
-    expected_files = {
-        EMOTIONAL_DECISION_PATH: EMOTIONAL_DECISION_SHA256,
-        V4_CLOSEOUT_PATH: V4_CLOSEOUT_SHA256,
-        V5_REGISTRATION_PATH: V5_REGISTRATION_SHA256,
-        V5_INFRASTRUCTURE_AMENDMENT1_PATH: (
-            V5_INFRASTRUCTURE_AMENDMENT1_SHA256
-        ),
-        SELECTION_CLOSEOUT_PATH: SELECTION_CLOSEOUT_SHA256,
-        SUPERSEDED_V1_REGISTRATION_PATH: SUPERSEDED_V1_REGISTRATION_SHA256,
-        PRELAUNCH_CORRECTION1_PATH: PRELAUNCH_CORRECTION1_SHA256,
-        SUPERSEDED_V2_REGISTRATION_PATH: SUPERSEDED_V2_REGISTRATION_SHA256,
-        PRELAUNCH_CORRECTION2_PATH: PRELAUNCH_CORRECTION2_SHA256,
-        SUPERSEDED_V3_REGISTRATION_PATH: SUPERSEDED_V3_REGISTRATION_SHA256,
-        PRELAUNCH_ATTEMPT_A_CLOSEOUT_PATH: (
-            PRELAUNCH_ATTEMPT_A_CLOSEOUT_SHA256
-        ),
-        INFRASTRUCTURE_AMENDMENT1_PATH: INFRASTRUCTURE_AMENDMENT1_SHA256,
-        SUPERSEDED_V4_REGISTRATION_PATH: SUPERSEDED_V4_REGISTRATION_SHA256,
-        PRELAUNCH_ATTEMPT_B_CLOSEOUT_PATH: (
-            PRELAUNCH_ATTEMPT_B_CLOSEOUT_SHA256
-        ),
-        INFRASTRUCTURE_AMENDMENT2_PATH: INFRASTRUCTURE_AMENDMENT2_SHA256,
-    }
-    for path, expected in expected_files.items():
-        if not path.is_file() or sha256_file(path) != expected:
-            raise ProtocolError(f"predecessor archive is absent or changed: {path}")
-    expected_lineage = {
-        "emotional_only_decision_sha256": EMOTIONAL_DECISION_SHA256,
-        "v4_closeout_sha256": V4_CLOSEOUT_SHA256,
-        "v5_scientific_registration_sha256": V5_REGISTRATION_SHA256,
-        "v5_infrastructure_amendment1_sha256": (
-            V5_INFRASTRUCTURE_AMENDMENT1_SHA256
-        ),
-        "v7_prelaunch_correction1_sha256": PRELAUNCH_CORRECTION1_SHA256,
-        "v7_prelaunch_correction2_sha256": PRELAUNCH_CORRECTION2_SHA256,
-        "v7_infrastructure_amendment1_sha256": (
-            INFRASTRUCTURE_AMENDMENT1_SHA256
-        ),
-        "v7_infrastructure_amendment2_sha256": (
-            INFRASTRUCTURE_AMENDMENT2_SHA256
-        ),
-    }
-    if registration.get("lineage") != expected_lineage:
-        raise ProtocolError("registration does not pin the emotional-only lineage")
-    if registration.get("conditional_launch_predicate") != (
-        CONDITIONAL_LAUNCH_PREDICATE
-    ):
-        raise ProtocolError("registration changed the conditional V5 launch predicate")
-    if registration.get("operator_knowledge_boundary") != (
-        INFRASTRUCTURE_AMENDMENT2_OPERATOR_KNOWLEDGE_BOUNDARY
-    ):
-        raise ProtocolError("registration changed the operator knowledge boundary")
-    if registration.get("supersedes_registration") != {
-        "path": str(SUPERSEDED_V4_REGISTRATION_PATH.relative_to(REPO)),
-        "sha256": SUPERSEDED_V4_REGISTRATION_SHA256,
-    }:
-        raise ProtocolError("V5 registration changed its superseded V4 identity")
-    if registration.get("prelaunch_correction") != {
-        "path": str(INFRASTRUCTURE_AMENDMENT2_PATH.relative_to(REPO)),
-        "sha256": INFRASTRUCTURE_AMENDMENT2_SHA256,
-    }:
-        raise ProtocolError("V5 registration changed infrastructure amendment 2")
-    v1 = json.loads(SUPERSEDED_V1_REGISTRATION_PATH.read_text())
-    v2 = json.loads(SUPERSEDED_V2_REGISTRATION_PATH.read_text())
-    v3 = json.loads(SUPERSEDED_V3_REGISTRATION_PATH.read_text())
-    v4 = json.loads(SUPERSEDED_V4_REGISTRATION_PATH.read_text())
-    correction1 = json.loads(PRELAUNCH_CORRECTION1_PATH.read_text())
-    correction2 = json.loads(PRELAUNCH_CORRECTION2_PATH.read_text())
-    amendment1 = json.loads(INFRASTRUCTURE_AMENDMENT1_PATH.read_text())
-    closeout_a = json.loads(PRELAUNCH_ATTEMPT_A_CLOSEOUT_PATH.read_text())
-    amendment2 = json.loads(INFRASTRUCTURE_AMENDMENT2_PATH.read_text())
-    closeout_b = json.loads(PRELAUNCH_ATTEMPT_B_CLOSEOUT_PATH.read_text())
-    projection_fields = amendment2.get("scientific_projection", {}).get("fields")
-    if (
-        not isinstance(v1, dict)
-        or not isinstance(v2, dict)
-        or not isinstance(v3, dict)
-        or not isinstance(v4, dict)
-        or not isinstance(projection_fields, list)
-        or correction1.get("scientific_projection", {}).get("fields")
-        != projection_fields
-        or correction2.get("scientific_projection", {}).get("fields")
-        != projection_fields
-    ):
-        raise ProtocolError("prelaunch corrections lack one scientific projection")
-    v1_projection = {field: v1.get(field) for field in projection_fields}
-    v2_projection = {field: v2.get(field) for field in projection_fields}
-    v3_projection = {field: v3.get(field) for field in projection_fields}
-    v4_projection = {field: v4.get(field) for field in projection_fields}
-    v5_projection = {field: registration.get(field) for field in projection_fields}
-    if (
-        canonical_sha256(v1_projection)
-        != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
-        or correction1["scientific_projection"].get(
-            "superseded_registration_canonical_sha256"
-        )
-        != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
-        or correction2["scientific_projection"].get(
-            "superseded_registration_canonical_sha256"
-        )
-        != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
-        or amendment1["scientific_projection"].get(
-            "superseded_registration_canonical_sha256"
-        )
-        != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
-        or amendment2["scientific_projection"].get(
-            "superseded_registration_canonical_sha256"
-        )
-        != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
-        or v2_projection != v1_projection
-        or v3_projection != v1_projection
-        or v4_projection != v1_projection
-        or v5_projection != v1_projection
-    ):
-        raise ProtocolError("V5 changed a prohibited scientific/W&B V1/V2/V3/V4 field")
-    expected_outcome_boundary = {
-        "attempt_claim_created": False,
-        "function_call_dispatched": False,
-        "gpu_task_started": False,
-        "local_entrypoint_ran": False,
-        "protocol_state_uploaded": False,
-        "scientific_outcome_exists": False,
-        "scientific_outcome_inspected": False,
-        "wandb_run_created": False,
-    }
-    if (
-        closeout_a.get("protocol")
-        != "j-lens-rl-confirmatory-v7-profanity-u5-prelaunch-attempt-a-closeout-v1"
-        or closeout_a.get("git_commit")
-        != "4524e643a97d084cd2d62176075ddd9e477525e9"
-        or closeout_a.get("frozen_registration")
-        != {
-            "path": str(SUPERSEDED_V3_REGISTRATION_PATH.relative_to(REPO)),
-            "sha256": SUPERSEDED_V3_REGISTRATION_SHA256,
-        }
-        or closeout_a.get("app", {}).get("app_id")
-        != "ap-sujvjQTDFQV2qwrVIFjNRq"
-        or closeout_a.get("app", {}).get("state") != "stopped"
-        or closeout_a.get("app", {}).get("tasks_at_closeout") != 0
-        or closeout_a.get("volume")
-        != {
-            "created_at_utc": "2026-07-14T10:45:00Z",
-            "file_count_at_closeout": 0,
-            "name": ORIGINAL_VOLUME_NAME,
-            "root_listing": [],
-        }
-        or closeout_a.get("outcome_boundary") != expected_outcome_boundary
-        or closeout_a.get("verification", {}).get("container_inventory") != []
-        or closeout_a.get("verification", {}).get("registered_wandb_run_ids_found")
-        != 0
-        or closeout_a.get("verification", {}).get("registered_wandb_run_ids_queried")
-        != 16
-        or closeout_a.get("verification", {}).get("wandb_group_run_count") != 0
-    ):
-        raise ProtocolError("attempt-A closeout crossed its build-only boundary")
-    amendment1_active_files = {
-        "modal_cache_assets_sha256": "ead04f6fcc2aa5970bb2854f39cd20887c62fe2850a19bf7ecc86dd32e14888c",
-        "modal_finalize_image_sha256": "795982448d60daa798febab6e4bc3c15aafe498cc72f9a618e9ae5d9d2f62590",
-        "modal_runner_sha256": "450ea7c57f5d1243d8b2a1e5b201b6afc0f4a9aa175fbf277b7e5570128a7eee",
-    }
-    if (
-        amendment1.get("protocol")
-        != "j-lens-rl-confirmatory-v7-profanity-u5-infrastructure-amendment-v1"
-        or amendment1.get("scientific_protocol_changed") is not False
-        or amendment1.get("superseded_registration", {}).get("sha256")
-        != SUPERSEDED_V3_REGISTRATION_SHA256
-        or amendment1.get("prelaunch_attempt_a_closeout")
-        != {
-            "path": str(PRELAUNCH_ATTEMPT_A_CLOSEOUT_PATH.relative_to(REPO)),
-            "sha256": PRELAUNCH_ATTEMPT_A_CLOSEOUT_SHA256,
-        }
-        or amendment1.get("authorized_changes", {}).get("volume")
-        != {"from": ORIGINAL_VOLUME_NAME, "to": RETIRED_VOLUME_B_NAME}
-        or amendment1.get("authorized_changes", {}).get(
-            "asset_cache_authentication", {}
-        ).get("modal_secret_name")
-        != "huggingface-token"
-        or amendment1.get("authorized_changes", {}).get(
-            "asset_cache_authentication", {}
-        ).get("required_key")
-        != "HF_TOKEN"
-        or amendment1.get("fresh_volume_b_preflight", {}).get("name")
-        != RETIRED_VOLUME_B_NAME
-        or amendment1.get("fresh_volume_b_preflight", {}).get("file_count") != 0
-        or amendment1.get("fresh_volume_b_preflight", {}).get("root_listing") != []
-        or amendment1.get("active_execution_files") != amendment1_active_files
-    ):
-        raise ProtocolError("V7 infrastructure amendment 1 changed or is incomplete")
-    expected_b_outcome_boundary = {
-        **expected_outcome_boundary,
-        "image_build_started": False,
-    }
-    expected_closeout_b = {
-        "app": {
-            "app_id": "ap-Mhzw5O7P2QdnHzyhQJaomJ",
-            "created_at_utc": "2026-07-14T11:17:52Z",
-            "description": "j-lens-rl-confirmatory-v7-profanity-u5",
-            "state": "stopped",
-            "stopped_at_utc": "2026-07-14T11:17:53Z",
-            "tasks_at_closeout": 0,
-        },
-        "closed_at_utc": "2026-07-14T11:19:23Z",
-        "deployed_git_commit": "6f150b3a5fb404ebdcac95778d84880b4d1acef4",
-        "failure": {
-            "exact_modal_error": (
-                "Volume 'j-lens-rl-confirmatory-v7-profanity-u5-20260714b' "
-                "exists but has version v1, not v2 as requested."
-            ),
-            "failed_phase": (
-                "Modal app hydration before image build and local entrypoint dispatch"
-            ),
-            "image_build_started": False,
-            "scientific_code_entered": False,
-        },
-        "frozen_registration": {
-            "path": str(SUPERSEDED_V4_REGISTRATION_PATH.relative_to(REPO)),
-            "sha256": SUPERSEDED_V4_REGISTRATION_SHA256,
-        },
-        "git_commit": "6f150b3a5fb404ebdcac95778d84880b4d1acef4",
-        "outcome_boundary": expected_b_outcome_boundary,
-        "protocol": (
-            "j-lens-rl-confirmatory-v7-profanity-u5-"
-            "prelaunch-attempt-b-closeout-v1"
-        ),
-        "replay_policy": (
-            "Volume B is permanently ineligible despite being empty; retry only on "
-            "explicitly created v2 Volume C with the identical HF mitigation and "
-            "scientific/W&B projection."
-        ),
-        "verification": {
-            "app_inventory_command": "/j-lens-rl/.venv/bin/modal app list --json",
-            "checked_at_utc": "2026-07-14T11:19:23Z",
-            "container_inventory": [],
-            "container_inventory_command": (
-                "/j-lens-rl/.venv/bin/modal container list --json"
-            ),
-            "wandb_group": "confirm-v7-emotional-profanity-u5-h10",
-            "wandb_group_run_count": 0,
-            "volume_inventory_command": (
-                "/j-lens-rl/.venv/bin/modal volume ls "
-                "j-lens-rl-confirmatory-v7-profanity-u5-20260714b / --json"
-            ),
-        },
-        "volume": {
-            "created_at_utc": "2026-07-14T11:03:58Z",
-            "file_count_at_closeout": 0,
-            "name": RETIRED_VOLUME_B_NAME,
-            "requested_version": 2,
-            "root_listing": [],
-            "stored_version": 1,
-        },
-    }
-    if closeout_b != expected_closeout_b:
-        raise ProtocolError("attempt-B closeout crossed its pre-image-build boundary")
-    current_active_files = {
-        "modal_cache_assets_sha256": sha256_file(
-            REPO / "scripts" / "modal_cache_assets_v7.py"
-        ),
-        "modal_finalize_image_sha256": sha256_file(
-            REPO / "scripts" / "modal_finalize_image_v7.py"
-        ),
-        "modal_runner_sha256": sha256_file(REPO / "modal_confirmatory_v7.py"),
-        "modal_volume_preflight_sha256": sha256_file(
-            REPO / "scripts" / "modal_verify_v7_volume.py"
-        ),
-    }
-    if (
-        amendment2.get("protocol")
-        != "j-lens-rl-confirmatory-v7-profanity-u5-infrastructure-amendment-v2"
-        or amendment2.get("scientific_protocol_changed") is not False
-        or amendment2.get("superseded_registration")
-        != {
-            "deployed_git_commit": "6f150b3a5fb404ebdcac95778d84880b4d1acef4",
-            "path": str(SUPERSEDED_V4_REGISTRATION_PATH.relative_to(REPO)),
-            "sha256": SUPERSEDED_V4_REGISTRATION_SHA256,
-        }
-        or amendment2.get("prelaunch_attempt_b_closeout")
-        != {
-            "path": str(PRELAUNCH_ATTEMPT_B_CLOSEOUT_PATH.relative_to(REPO)),
-            "sha256": PRELAUNCH_ATTEMPT_B_CLOSEOUT_SHA256,
-        }
-        or amendment2.get("preserved_infrastructure_amendment1")
-        != {
-            "asset_cache_authentication_unchanged": True,
-            "path": str(INFRASTRUCTURE_AMENDMENT1_PATH.relative_to(REPO)),
-            "sha256": INFRASTRUCTURE_AMENDMENT1_SHA256,
-        }
-        or amendment2.get("authorized_changes", {}).get("volume")
-        != {
-            "from": RETIRED_VOLUME_B_NAME,
-            "reason": (
-                "the manually created Volume B was v1 and Modal rejected the "
-                "runner's registered v2 mount before image build or entrypoint"
-            ),
-            "to": VOLUME_NAME,
-            "to_creation_command": (
-                "/j-lens-rl/.venv/bin/modal volume create --version 2 "
-                "j-lens-rl-confirmatory-v7-profanity-u5-20260714c"
-            ),
-            "to_version": 2,
-        }
-        or amendment2.get("fresh_volume_c_preflight")
-        != {
-            "checked_at_utc": "2026-07-14T11:19:23Z",
-            "created_at_utc": "2026-07-14T11:18:26Z",
-            "file_count": 0,
-            "inventory_command": (
-                "/j-lens-rl/.venv/bin/modal volume ls "
-                "j-lens-rl-confirmatory-v7-profanity-u5-20260714c / --json"
-            ),
-            "modal_object_id": "vo-UYlAzgmVfmtRarECX4DYJg",
-            "name": VOLUME_NAME,
-            "positive_version_probe": (
-                "modal.Volume.from_name(name, create_if_missing=False, "
-                "version=2).hydrate()"
-            ),
-            "root_listing": [],
-            "version": 2,
-        }
-        or amendment2.get("active_execution_files") != current_active_files
-    ):
-        raise ProtocolError("V7 infrastructure amendment 2 changed or is incomplete")
-    selection_identity = registration.get("selection_closeout")
-    if selection_identity != registration_template()["selection_closeout"]:
-        raise ProtocolError("registration changed the V7 selection closeout identity")
-    _load_tracked_pinned_json(
-        selection_identity,
-        "selection_closeout",
-    )
-
-
-def _validate_archive_lineage(registration: dict[str, Any]) -> None:
     """Validate only the outcome-free V7 selection and V6 registration lineage."""
     expected_lineage = {
         "v6_registration_path": str(V6_REGISTRATION_PATH.relative_to(REPO)),
@@ -1442,6 +1110,42 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
         "sha256": SELECTION_CLOSEOUT_SHA256,
     }:
         raise ProtocolError("registration changed the V7 selection closeout identity")
+    amendment_identity = registration.get("prelaunch_source_cleanup")
+    if (
+        not isinstance(amendment_identity, dict)
+        or set(amendment_identity) != {"path", "sha256"}
+        or amendment_identity.get("path")
+        != str(SOURCE_CLEANUP_AMENDMENT_PATH.relative_to(REPO))
+    ):
+        raise ProtocolError("registration lacks the exact prelaunch source cleanup")
+    _, amendment = _load_tracked_pinned_json(
+        amendment_identity,
+        "V7 prelaunch source cleanup",
+    )
+    projection = {
+        field: registration.get(field)
+        for field in SCIENTIFIC_AND_WANDB_PROJECTION_FIELDS
+    }
+    execution = registration.get("execution", {})
+    if (
+        amendment.get("protocol")
+        != "j-lens-rl-confirmatory-v7-profanity-u5-prelaunch-source-cleanup-v1"
+        or amendment.get("superseded_registration_sha256")
+        != PRE_CLEANUP_REGISTRATION_SHA256
+        or amendment.get("superseded_protocol_sha256")
+        != PRE_CLEANUP_PROTOCOL_SHA256
+        or amendment.get("active_protocol_sha256")
+        != _expected_execution_hashes()["protocol_sha256"]
+        or execution.get("protocol_sha256") != amendment.get("active_protocol_sha256")
+        or amendment.get("scientific_and_wandb_projection_fields")
+        != list(SCIENTIFIC_AND_WANDB_PROJECTION_FIELDS)
+        or amendment.get("scientific_and_wandb_projection_sha256")
+        != SCIENTIFIC_AND_WANDB_PROJECTION_SHA256
+        or canonical_sha256(projection) != SCIENTIFIC_AND_WANDB_PROJECTION_SHA256
+        or amendment.get("scientific_or_wandb_change") is not False
+        or amendment.get("v7_outcome_existed_before_cleanup") is not False
+    ):
+        raise ProtocolError("V7 prelaunch source cleanup changed frozen science or W&B")
 
 
 def _validate_registration_shape(
@@ -1613,281 +1317,281 @@ def _load_tracked_pinned_json(
     return path, payload
 
 
-def verify_v6_launch_predicate() -> dict[str, Any]:
-    """Prove that V5 failed its curve gate before touching its sealed final.
+def _is_sha256(value: Any) -> bool:
+    return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) is not None
 
-    The selecting agent did not inspect V5 outcomes.  This verifier validates
-    the later exact pinned terminal bytes, including the failed curve record,
-    but does not use any outcome value to select or change V7 science.
-    """
-    if not V5_TERMINAL_CLOSEOUT_PATH.is_file():
-        raise ProtocolError(
-            "V7 is cancelled/inert until a committed V5 curve-failed terminal "
-            "closeout proves that all sealed-final outcomes remain unopened"
-        )
-    relative = V5_TERMINAL_CLOSEOUT_PATH.relative_to(REPO).as_posix()
+
+def _is_nonempty_string(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _is_utc_timestamp(value: Any) -> bool:
+    if not _is_nonempty_string(value):
+        return False
     try:
-        tracked = git("ls-files", "--error-unmatch", relative)
-    except subprocess.CalledProcessError as error:
-        raise ProtocolError("V5 terminal closeout must be committed before V7") from error
-    if tracked != relative:
-        raise ProtocolError("V5 terminal closeout Git identity is ambiguous")
-    closeout = json.loads(V5_TERMINAL_CLOSEOUT_PATH.read_text())
-    if not isinstance(closeout, dict):
-        raise ProtocolError("V5 terminal closeout must be a JSON object")
-    expected = {
-        "protocol": CONDITIONAL_LAUNCH_PREDICATE["required_protocol"],
-        "v5_registration_sha256": V5_REGISTRATION_SHA256,
-        "v5_infrastructure_amendment1_sha256": (
-            V5_INFRASTRUCTURE_AMENDMENT1_SHA256
-        ),
-        "v5_sealed_final_manifest_sha256": V5_FINAL_SHA256,
-        "v5_sealed_final_sorted_set_sha256": V5_FINAL_SET_SHA256,
-        "terminal_stage": CONDITIONAL_LAUNCH_PREDICATE[
-            "required_terminal_stage"
-        ],
-        "final_unlocked_present": False,
-        "final_collection_present": False,
-        "evals_directory_present": False,
-        "final_evaluation_labels": [],
-        "sealed_comparison_present": False,
-        "final_outcomes_unopened": True,
-        "operational_identity": CONDITIONAL_LAUNCH_PREDICATE[
-            "required_operational_identity"
-        ],
-    }
-    if any(closeout.get(key) != value for key, value in expected.items()):
-        raise ProtocolError(
-            "V5 did not prove curve_failed before unlock/collection/evaluation; "
-            "the conditional V7 registration is cancelled"
-        )
-    evidence_identities = closeout.get("source_evidence")
-    expected_paths = CONDITIONAL_LAUNCH_PREDICATE[
-        "required_source_evidence_paths"
-    ]
-    if not isinstance(evidence_identities, dict) or set(evidence_identities) != set(
-        expected_paths
-    ):
-        raise ProtocolError("V5 closeout must identify every registered source file")
-    evidence_payloads: dict[str, dict[str, Any]] = {}
-    evidence_hashes: dict[str, str] = {}
-    for name, expected_path in expected_paths.items():
-        identity = evidence_identities[name]
-        expected_sha256 = V5_TERMINAL_EVIDENCE_SHA256[name]
-        if identity != {
-            "path": expected_path,
-            "sha256": expected_sha256,
-        }:
-            raise ProtocolError(f"V5 {name} evidence identity changed")
-        if name == "curve_plot":
-            path = _load_tracked_pinned_file(
-                identity,
-                "v5_terminal_evidence.curve_plot",
-                expected_sha256=expected_sha256,
-            )
-            payload = None
-        else:
-            path, payload = _load_tracked_pinned_json(
-                identity,
-                f"v5_terminal_evidence.{name}",
-                expected_sha256=expected_sha256,
-            )
-        if path != V5_TERMINAL_EVIDENCE_PATHS[name]:
-            raise ProtocolError(f"V5 {name} resolved outside its registered path")
-        if payload is not None:
-            evidence_payloads[name] = payload
-        evidence_hashes[name] = sha256_file(path)
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None and parsed.utcoffset() is not None
 
-    claim = evidence_payloads["attempt_claim"]
-    preflight = claim.get("operational_preflight")
+
+def _validate_v6_directory_inventory(
+    payload: dict[str, Any],
+    *,
+    scope: str,
+    claim_id: str,
+    volume: str,
+    exact_entries: list[str],
+) -> list[str]:
+    entries = payload.get("entries")
     if (
-        claim.get("claim_id") != V5_CLAIM_ID
-        or claim.get("protocol") != V5_PROTOCOL
-        or claim.get("registration_sha256") != V5_REGISTRATION_SHA256
-        or claim.get("recipe_lock_sha256") != V5_RECIPE_LOCK_SHA256
-        or claim.get("global_modal_gpu_limit") != 1
-        or claim.get("gpu_app_overlap_policy") != V5_GPU_APP_OVERLAP_POLICY
-        or claim.get("git_commit") != V5_CLAIM_GIT_COMMIT
-        or not isinstance(preflight, dict)
-        or preflight.get("exclusive_gpu_confirmation")
-        != "confirmed-no-other-modal-gpu-app-running"
-        or preflight.get("active_other_modal_apps") != []
-        or preflight.get("global_modal_gpu_limit") != 1
-    ):
-        raise ProtocolError("tracked V5 attempt claim is not the exact amended claim")
-
-    receipt = evidence_payloads["launch_receipt"]
-    expected_receipt = {
-        "app_id": V5_MODAL_APP_ID,
-        "claim_id": V5_CLAIM_ID,
-        "function_call_id": V5_MODAL_FUNCTION_CALL_ID,
-        "global_modal_gpu_limit": 1,
-        "gpu_app_overlap_policy": V5_GPU_APP_OVERLAP_POLICY,
-        "gpu_type": "L40S",
-        "max_parallel_gpu_workers": 1,
-        "modal_app": V5_MODAL_APP_NAME,
-        "receipt_status": "present",
-        "submitted_at_utc": V5_LAUNCH_SUBMITTED_AT_UTC,
-        "volume": V5_VOLUME_NAME,
-    }
-    if receipt != expected_receipt:
-        raise ProtocolError("tracked V5 launch receipt changed from exact Volume-B call")
-
-    curve = evidence_payloads["curve_gate"]
-    status = evidence_payloads["attempt_status"]
-    status_curve = status.get("curve")
-    if not isinstance(status_curve, dict):
-        raise ProtocolError("tracked V5 terminal status does not bind its curve gate")
-    status_curve_payload = dict(status_curve)
-    curve_returncode = status_curve_payload.pop("returncode", None)
-    if (
-        status.get("claim_id") != V5_CLAIM_ID
-        or status.get("stage") != "curve_failed"
-        or curve_returncode != 2
-        or status_curve_payload != curve
-        or curve.get("protocol") != V5_PROTOCOL
-        or curve.get("git_commit") != claim["git_commit"]
-        or curve.get("registration_sha256") != V5_REGISTRATION_SHA256
-        or curve.get("criterion") != CURVE_CRITERION
-        or curve.get("predeclared_steps") != [0, 2, 4, 6]
-        or curve.get("n_seeds") != 8
-        or curve.get("examples_per_seed") != 400
-        or curve.get("passed") is not False
-        or curve.get("curve_plot", {}).get("sha256")
-        != evidence_hashes["curve_plot"]
+        payload.get("protocol")
+        != "j-lens-rl-confirmatory-v6-celebration-terminal-inventory-v1"
+        or payload.get("claim_id") != claim_id
+        or payload.get("volume") != volume
+        or payload.get("scope") != scope
+        or not _is_utc_timestamp(payload.get("inspected_at_utc"))
+        or not isinstance(entries, list)
+        or entries != sorted(set(entries))
+        or entries != exact_entries
         or any(
-            key in status
-            for key in ("final_collection_id", "final_labels", "acceptance")
+            not isinstance(item, str) or not item or "/" in item
+            for item in entries
         )
     ):
-        raise ProtocolError("tracked V5 status/curve bytes do not prove curve_failed")
+        raise ProtocolError(f"V6 {scope} inventory is malformed")
+    return entries
 
-    root_inventory = evidence_payloads["root_inventory"]
-    evidence_inventory = evidence_payloads["evidence_inventory"]
-    for payload, scope in (
-        (root_inventory, "volume_root"),
-        (evidence_inventory, "evidence_directory"),
+
+def _validate_v6_run_inventory(
+    run_inventory: dict[str, Any],
+    *,
+    claim_id: str,
+    volume: str,
+    bundle: dict[str, Any],
+    bundle_sha256: str,
+    registration: dict[str, Any],
+    closeout: dict[str, Any],
+) -> None:
+    valid_labels = [f"jlens_seed{seed}" for seed in range(176, 182)]
+    incomplete_labels = ["jlens_seed182", "jlens_seed183"]
+    valid = run_inventory.get("valid_terminal_treatments")
+    incomplete = run_inventory.get("incomplete_treatments")
+    if (
+        run_inventory.get("schema_version") != 1
+        or run_inventory.get("protocol")
+        != "j-lens-rl-confirmatory-v6-celebration-terminal-run-inventory-v1"
+        or run_inventory.get("claim_id") != claim_id
+        or run_inventory.get("volume") != volume
+        or not _is_utc_timestamp(run_inventory.get("inspected_at_utc"))
+        or run_inventory.get("curve_steps") != [0, 4, 6, 10]
+        or run_inventory.get("bundle_inventory_sha256") != bundle_sha256
+        or run_inventory.get("remote_premature_bundle_inventory_sha256")
+        != bundle.get("remote_inventory_sha256")
+        or run_inventory.get("validation_indices_sha256")
+        != registration.get("split", {}).get("curve", {}).get("manifest_sha256")
+        or not isinstance(valid, dict)
+        or set(valid) != set(valid_labels)
+        or not isinstance(incomplete, dict)
+        or set(incomplete) != set(incomplete_labels)
     ):
-        entries = payload.get("entries")
+        raise ProtocolError("V6 terminal run inventory has the wrong identity")
+    registered_ids = registration.get("wandb", {}).get("run_ids", {})
+    curves: dict[str, list[float]] = {}
+    for label in valid_labels:
+        item = valid[label]
+        seed = int(label.rsplit("seed", 1)[1])
         if (
-            payload.get("protocol")
-            != "j-lens-rl-confirmatory-v5-emotional-terminal-inventory-v1"
-            or payload.get("claim_id") != V5_CLAIM_ID
-            or payload.get("volume") != V5_VOLUME_NAME
-            or payload.get("scope") != scope
-            or not isinstance(entries, list)
-            or entries != sorted(set(entries))
+            not isinstance(item, dict)
+            or item.get("seed") != seed
+            or item.get("completed_updates") != 10
+            or item.get("valid_terminal") is not True
+            or not isinstance(item.get("curve"), list)
+            or len(item["curve"]) != 4
             or any(
-                not isinstance(item, str) or not item or "/" in item
-                for item in entries
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(float(value))
+                or not 0.0 <= float(value) <= 1.0
+                for value in item["curve"]
             )
+            or item.get("wandb_run_id") != registered_ids.get(label)
+            or item.get("wandb_run_state") != "finished"
+            or not isinstance(item.get("wandb_artifact_digest"), str)
+            or re.fullmatch(r"[0-9a-f]{32}", item["wandb_artifact_digest"])
+            is None
+            or not _is_sha256(item.get("run_result_manifest_sha256"))
+            or not _is_sha256(item.get("validation_history_sha256"))
+            or not _is_sha256(item.get("wandb_terminal_publish_receipt_sha256"))
         ):
-            raise ProtocolError(f"tracked V5 {scope} inventory is malformed")
-    root_entries = root_inventory["entries"]
-    evidence_entries = evidence_inventory["entries"]
-    required_root = {
-        "attempt_claim.json",
-        "attempt_status.json",
-        "evidence",
-        "launch_receipt.json",
-        "manifests",
-        "protocol_state.json",
-        "reproducibility",
-        "runs",
-    }
-    required_evidence_entries = {
-        "curve.png",
-        "curve_gate.json",
-        "durable_export_plan.json",
-        "evidence_bundle_inventory.json",
-        "git_closeout_candidate.json",
-    }
-    forbidden_root = {"final_unlocked.json", "final_collection.json", "evals"}
-    forbidden_evidence = {
-        "acceptance.json",
-        "completed_runs.json",
-        "sealed_comparison.json",
-    }
-    if (
-        not required_root <= set(root_entries)
-        or not required_evidence_entries <= set(evidence_entries)
-        or forbidden_root & set(root_entries)
-        or forbidden_evidence & set(evidence_entries)
-    ):
-        raise ProtocolError("V5 closeout inventory contains opened-final artifacts")
+            raise ProtocolError(f"V6 terminal run inventory is malformed for {label}")
+        curves[str(seed)] = item["curve"]
 
-    bundle = evidence_payloads["bundle_inventory"]
-    bundle_files = bundle.get("files")
-    if (
-        bundle.get("schema_version") != 1
-        or bundle.get("protocol") != V5_PROTOCOL
-        or bundle.get("git_commit") != V5_CLAIM_GIT_COMMIT
-        or bundle.get("registration_sha256") != V5_REGISTRATION_SHA256
-        or bundle.get("recipe_lock_sha256") != V5_RECIPE_LOCK_SHA256
-        or bundle.get("bundle_root") != "."
-        or bundle.get("terminal_stage") != "curve_failed"
-        or bundle.get("sealed_evaluation_file_count") != 0
-        or bundle.get("registered_sealed_evaluation_file_count") != 17
-        or bundle.get("analysis_inputs")
-        != {"base": None, "treatments": {}, "controls": {}}
-        or bundle.get("file_count") != 253
-        or bundle.get("total_size_bytes") != 763400824
-        or not isinstance(bundle_files, dict)
-        or len(bundle_files) != 253
-    ):
-        raise ProtocolError("tracked V5 finalizer bundle inventory is malformed")
-    forbidden_bundle_paths = {
-        "final_unlocked.json",
-        "final_collection.json",
-        "evidence/acceptance.json",
-        "evidence/completed_runs.json",
-        "evidence/sealed_comparison.json",
+    absent_terminal_files = sorted(
+        [
+            "checkpoint-10",
+            "final",
+            "log_history.json",
+            "run_result_manifest.json",
+            "validation_history.jsonl",
+            "wandb_terminal_publish_receipt.json",
+        ]
+    )
+    expected_present = {
+        "jlens_seed182": sorted(
+            [
+                "data_indices.json",
+                "environment_snapshot.json",
+                "resolved_config.json",
+                "run_manifest.json",
+            ]
+        ),
+        "jlens_seed183": [],
     }
-    if forbidden_bundle_paths & set(bundle_files) or any(
-        name.startswith("evals/") for name in bundle_files
-    ):
-        raise ProtocolError("V5 finalizer bundle inventory contains opened-final artifacts")
-    expected_bundle_hashes = {
-        "attempt_claim.json": evidence_hashes["attempt_claim"],
-        "attempt_status.json": evidence_hashes["attempt_status"],
-        "launch_receipt.json": evidence_hashes["launch_receipt"],
-        "evidence/curve_gate.json": evidence_hashes["curve_gate"],
-        "evidence/curve.png": evidence_hashes["curve_plot"],
-        "reproducibility/registration.json": V5_REGISTRATION_SHA256,
-        "reproducibility/selected_recipe_lock.json": V5_RECIPE_LOCK_SHA256,
-    }
-    for relative_path, expected_sha256 in expected_bundle_hashes.items():
-        entry = bundle_files.get(relative_path)
+    for label in incomplete_labels:
+        item = incomplete[label]
+        seed = int(label.rsplit("seed", 1)[1])
+        present_names = expected_present[label]
         if (
-            not isinstance(entry, dict)
-            or entry.get("sha256") != expected_sha256
-            or not isinstance(entry.get("size_bytes"), int)
-            or entry["size_bytes"] <= 0
-        ):
-            raise ProtocolError(
-                f"V5 finalizer bundle inventory does not bind {relative_path}"
+            not isinstance(item, dict)
+            or item.get("valid_terminal") is not False
+            or item.get("seed") != seed
+            or item.get("directory_present") is not bool(present_names)
+            or item.get("validation_history_present") is not False
+            or item.get("wandb_run_present") is not False
+            or item.get("wandb_terminal_publish_receipt_present") is not False
+            or item.get("absent_terminal_files") != absent_terminal_files
+            or item.get("present_files") != present_names
+            or not isinstance(item.get("present_file_sha256"), dict)
+            or sorted(item["present_file_sha256"]) != present_names
+            or any(
+                not _is_sha256(digest)
+                for digest in item["present_file_sha256"].values()
             )
+        ):
+            raise ProtocolError(f"V6 incomplete run inventory is malformed for {label}")
 
-    export_receipt = evidence_payloads["durable_export_receipt"]
+    controls = run_inventory.get("controls")
+    final = run_inventory.get("final")
+    gate = run_inventory.get("registered_curve_gate")
+    control_labels = [f"signflip_seed{seed}" for seed in range(176, 184)]
     if (
-        export_receipt.get("schema_version") != 1
-        or export_receipt.get("archive_relative_path")
-        != f"exports/v5_emotional_evidence_{V5_CLAIM_ID}.zip"
-        or export_receipt.get("sha256") != V5_DURABLE_ARCHIVE_SHA256
-        or export_receipt.get("size_bytes") != 763510552
-        or export_receipt.get("entry_count") != 254
-        or export_receipt.get("evidence_inventory_sha256")
-        != evidence_hashes["bundle_inventory"]
+        controls
+        != {
+            "registered_labels": control_labels,
+            "terminal_labels": [],
+            "directories_present": [],
+        }
+        or not isinstance(final, dict)
+        or final.get("evals_directory_present") is not False
+        or final.get("final_collection_present") is not False
+        or final.get("final_evaluation_labels") != []
+        or final.get("final_unlocked_present") is not False
+        or final.get("sealed_comparison_present") is not False
+        or final.get("sealed_final_outcomes_opened") is not False
+        or final.get("sealed_final_manifest_sha256") != V7_FINAL_SHA256
+        or final.get("sealed_final_size") != 900
+        or not isinstance(gate, dict)
+        or gate.get("evaluated") is not False
+        or not _is_nonempty_string(gate.get("reason"))
     ):
-        raise ProtocolError("tracked V5 durable-export receipt is malformed")
-    return {
-        "path": relative,
-        "sha256": sha256_file(V5_TERMINAL_CLOSEOUT_PATH),
-        "terminal_stage": closeout["terminal_stage"],
-        "final_outcomes_unopened": closeout["final_outcomes_unopened"],
-        "operational_identity": closeout["operational_identity"],
-        "source_evidence_sha256": evidence_hashes,
+        raise ProtocolError("V6 run inventory crosses the pre-final boundary")
+
+    wandb_query = run_inventory.get("wandb_query")
+    incomplete_run_ids = {
+        registered_ids[label]: "not_found" for label in incomplete_labels
     }
+    if (
+        not isinstance(wandb_query, dict)
+        or not _is_utc_timestamp(wandb_query.get("checked_at_utc"))
+        or wandb_query.get("entity") != registration.get("wandb", {}).get("entity")
+        or wandb_query.get("project") != registration.get("wandb", {}).get("project")
+        or not _is_nonempty_string(wandb_query.get("method"))
+        or wandb_query.get("results") != incomplete_run_ids
+    ):
+        raise ProtocolError("V6 incomplete runs lack an exact negative W&B query")
+
+    counts = [0, 0, 0, 0]
+    for curve in curves.values():
+        for position, value in enumerate(curve):
+            scaled = float(value) * 400
+            if not math.isclose(scaled, round(scaled), abs_tol=1e-9):
+                raise ProtocolError("V6 terminal curve is not a 400-row exact fraction")
+            counts[position] += round(scaled)
+    expected_aggregate = {
+        "correct_counts": counts,
+        "denominator_per_step": 2400,
+        "exact_fractions": [f"{count}/2400" for count in counts],
+        "mean_exact_match": [count / 2400 for count in counts],
+    }
+    run_aggregate = run_inventory.get("partial_six_seed_aggregate")
+    closeout_partial = closeout.get("partial_treatment_result")
+    if (
+        not isinstance(run_aggregate, dict)
+        or run_aggregate.get("n_seeds") != 6
+        or any(run_aggregate.get(key) != value for key, value in expected_aggregate.items())
+        or run_aggregate.get("comparisons")
+        != {
+            "step4_gt_step0": counts[1] > counts[0],
+            "step6_gte_step4": counts[2] >= counts[1],
+            "step10_gte_step6": counts[3] >= counts[2],
+        }
+        or not _is_nonempty_string(run_aggregate.get("warning"))
+        or not isinstance(closeout_partial, dict)
+        or closeout_partial.get("curves") != curves
+        or closeout_partial.get("n_valid_terminal_seeds") != 6
+        or closeout_partial.get("registered_decision") != "not evaluated"
+        or not isinstance(closeout_partial.get("exact_aggregate"), dict)
+        or closeout_partial["exact_aggregate"].get("steps") != [0, 4, 6, 10]
+        or any(
+            closeout_partial["exact_aggregate"].get(key) != value
+            for key, value in expected_aggregate.items()
+        )
+    ):
+        raise ProtocolError("V6 six-run aggregate is internally inconsistent")
+
+    replay = closeout.get("infrastructure_incident", {}).get("replay", {})
+    replay_receipts = replay.get("existing_terminal_receipts_returned")
+    if (
+        not isinstance(replay_receipts, list)
+        or len(replay_receipts) != 6
+        or replay.get("model_optimization_replayed_for_seeds_176_through_181")
+        is not False
+    ):
+        raise ProtocolError("V6 terminal receipt replay is malformed")
+    for expected_seed, receipt in zip(range(176, 182), replay_receipts, strict=True):
+        item = valid[f"jlens_seed{expected_seed}"]
+        if (
+            not isinstance(receipt, dict)
+            or receipt.get("seed") != expected_seed
+            or not _is_utc_timestamp(receipt.get("at_utc"))
+            or receipt.get("artifact_digest") != item["wandb_artifact_digest"]
+            or receipt.get("run_result_manifest_sha256")
+            != item["run_result_manifest_sha256"]
+        ):
+            raise ProtocolError("V6 replay receipt does not bind a terminal run")
+
+    seed181 = valid["jlens_seed181"]
+    seed181_closeout = closeout.get("seed181_terminal_artifacts")
+    terminal_fields = {
+        "run_result_manifest_sha256",
+        "validation_history_sha256",
+        "wandb_terminal_publish_receipt_sha256",
+        "wandb_artifact_digest",
+        "source_tree_sha256",
+        "terminal_checkpoint_sha256",
+        "final_adapter_and_tokenizer_sha256",
+    }
+    if (
+        not isinstance(seed181_closeout, dict)
+        or any(seed181_closeout.get(field) != seed181.get(field) for field in terminal_fields)
+        or any(
+            not _is_sha256(seed181.get(field))
+            for field in terminal_fields
+            if field != "wandb_artifact_digest"
+        )
+    ):
+        raise ProtocolError("V6 seed181 terminal artifact identity is inconsistent")
 
 
 def verify_v6_launch_predicate() -> dict[str, Any]:
@@ -1897,6 +1601,9 @@ def verify_v6_launch_predicate() -> dict[str, Any]:
             "V7 is inert until a committed V6 terminal closeout proves the 900-item "
             "sealed final was never unlocked, collected, evaluated, or inspected"
         )
+    closeout_sha256 = sha256_file(V6_TERMINAL_CLOSEOUT_PATH)
+    if closeout_sha256 != V6_TERMINAL_CLOSEOUT_SHA256:
+        raise ProtocolError("the canonical V6 terminal closeout bytes changed")
     closeout_relative = V6_TERMINAL_CLOSEOUT_PATH.relative_to(REPO).as_posix()
     try:
         tracked = git("ls-files", "--error-unmatch", closeout_relative)
@@ -1917,9 +1624,8 @@ def verify_v6_launch_predicate() -> dict[str, Any]:
     }
     if closeout.get("protocol") != CONDITIONAL_LAUNCH_PREDICATE["required_protocol"]:
         raise ProtocolError("wrong V6 terminal-closeout protocol")
-    if closeout.get("terminal_stage") not in CONDITIONAL_LAUNCH_PREDICATE[
-        "allowed_terminal_stages"
-    ]:
+    terminal_stage = closeout.get("terminal_stage")
+    if terminal_stage not in CONDITIONAL_LAUNCH_PREDICATE["allowed_terminal_stages"]:
         raise ProtocolError("V6 terminal stage is not eligible to preserve the final")
     for field, expected in required_boundary.items():
         if closeout.get(field) != expected:
@@ -1934,13 +1640,24 @@ def verify_v6_launch_predicate() -> dict[str, Any]:
         V6_REGISTRATION_SHA256
     ):
         raise ProtocolError("the outcome-free V6 registration bytes changed")
+    registration = json.loads(V6_REGISTRATION_PATH.read_text())
+    if not isinstance(registration, dict):
+        raise ProtocolError("V6 registration must be a JSON object")
 
     source = closeout.get("source_evidence")
-    if not isinstance(source, dict) or set(source) != set(V6_TERMINAL_EVIDENCE_PATHS):
+    expected_paths = V6_TERMINAL_EVIDENCE_PATHS_BY_STAGE[terminal_stage]
+    expected_hashes = CONDITIONAL_LAUNCH_PREDICATE[
+        "required_source_evidence_sha256"
+    ]
+    if (
+        not isinstance(source, dict)
+        or set(source) != set(expected_paths)
+        or set(source) != set(expected_hashes)
+    ):
         raise ProtocolError("V6 closeout lacks the exact terminal evidence inventory")
     evidence_payloads: dict[str, Any] = {}
     evidence_hashes: dict[str, str] = {}
-    for name, expected_path in V6_TERMINAL_EVIDENCE_PATHS.items():
+    for name, expected_path in expected_paths.items():
         identity = source.get(name)
         if not isinstance(identity, dict) or set(identity) != {"path", "sha256"}:
             raise ProtocolError(f"V6 closeout evidence {name} lacks path/SHA-256")
@@ -1953,7 +1670,13 @@ def verify_v6_launch_predicate() -> dict[str, Any]:
         except subprocess.CalledProcessError as error:
             raise ProtocolError(f"V6 evidence {name} must be committed") from error
         digest = identity.get("sha256")
-        if evidence_tracked != relative or not path.is_file() or sha256_file(path) != digest:
+        if (
+            not _is_sha256(digest)
+            or digest != expected_hashes[name]
+            or evidence_tracked != relative
+            or not path.is_file()
+            or sha256_file(path) != digest
+        ):
             raise ProtocolError(f"V6 evidence {name} bytes do not match the closeout")
         evidence_hashes[name] = digest
         if path.suffix == ".json":
@@ -1962,34 +1685,330 @@ def verify_v6_launch_predicate() -> dict[str, Any]:
                 raise ProtocolError(f"V6 evidence {name} must be a JSON object")
             evidence_payloads[name] = payload
 
-    status = evidence_payloads.get("attempt_status", {})
-    if status.get("stage") not in {"curve_failed", "failed"}:
-        raise ProtocolError("V6 attempt status is not terminal before final evaluation")
-    bundle = evidence_payloads.get("bundle_inventory", {})
-    bundle_files = bundle.get("files")
-    if not isinstance(bundle_files, dict):
-        raise ProtocolError("V6 bundle inventory does not enumerate its files")
-    forbidden_exact = {
-        "final_unlocked.json",
-        "final_collection.json",
-        "evidence/sealed_comparison.json",
-        "evidence/acceptance.json",
-        "evidence/analysis_process.json",
-    }
-    if forbidden_exact & set(bundle_files) or any(
-        path.startswith("evals/") for path in bundle_files
+    claim = evidence_payloads["attempt_claim"]
+    receipt = evidence_payloads["launch_receipt"]
+    status = evidence_payloads["attempt_status"]
+    bundle = evidence_payloads["bundle_inventory"]
+    root_inventory = evidence_payloads["root_inventory"]
+    evidence_inventory = evidence_payloads["evidence_inventory"]
+    export_receipt = evidence_payloads["durable_export_receipt"]
+    run_inventory = evidence_payloads["run_inventory"]
+
+    claim_id = claim.get("claim_id")
+    volume = receipt.get("volume")
+    expected_overlap = "no other Modal GPU app may overlap this V6 attempt"
+    preflight = claim.get("operational_preflight")
+    if (
+        set(claim)
+        != {
+            "claim_id",
+            "git_commit",
+            "global_modal_gpu_limit",
+            "gpu_app_overlap_policy",
+            "operational_preflight",
+            "protocol",
+            "recipe_lock_sha256",
+            "registration_sha256",
+        }
+        or not isinstance(claim_id, str)
+        or re.fullmatch(r"[0-9a-f]{32}", claim_id) is None
+        or not isinstance(claim.get("git_commit"), str)
+        or re.fullmatch(r"[0-9a-f]{40}", claim["git_commit"]) is None
+        or claim.get("protocol") != registration.get("claim_protocol")
+        or claim.get("registration_sha256") != V6_REGISTRATION_SHA256
+        or claim.get("recipe_lock_sha256")
+        != registration.get("selected_recipe_lock", {}).get("sha256")
+        or claim.get("global_modal_gpu_limit") != 1
+        or claim.get("gpu_app_overlap_policy") != expected_overlap
+        or not isinstance(preflight, dict)
+        or set(preflight)
+        != {
+            "active_other_modal_apps",
+            "checked_at_utc",
+            "exclusive_gpu_confirmation",
+            "global_modal_gpu_limit",
+            "volume_c_name",
+            "volume_c_object_id",
+            "volume_c_version",
+        }
+        or preflight.get("active_other_modal_apps") != []
+        or not _is_utc_timestamp(preflight.get("checked_at_utc"))
+        or preflight.get("exclusive_gpu_confirmation")
+        != "confirmed-no-other-modal-gpu-app-running"
+        or preflight.get("global_modal_gpu_limit") != 1
+        or preflight.get("volume_c_name")
+        != registration.get("execution", {}).get("volume")
+        or not _is_nonempty_string(preflight.get("volume_c_object_id"))
+        or preflight.get("volume_c_version") != 2
     ):
-        raise ProtocolError("V6 evidence bundle contains a sealed-final artifact")
-    analysis_inputs = bundle.get("analysis_inputs")
-    if analysis_inputs != {"base": None, "controls": {}, "treatments": {}}:
-        raise ProtocolError("V6 evidence bundle records a final-analysis input")
-    curve = evidence_payloads.get("curve_gate", {})
-    if closeout.get("terminal_stage") == "curve_failed" and curve.get("passed") is not False:
-        raise ProtocolError("V6 curve-failed closeout lacks a failed curve gate")
+        raise ProtocolError("V6 attempt claim is malformed or inconsistent")
+
+    if (
+        set(receipt)
+        != {
+            "app_id",
+            "claim_id",
+            "function_call_id",
+            "global_modal_gpu_limit",
+            "gpu_app_overlap_policy",
+            "gpu_type",
+            "max_parallel_gpu_workers",
+            "modal_app",
+            "receipt_status",
+            "submitted_at_utc",
+            "volume",
+        }
+        or receipt.get("receipt_status") != "present"
+        or receipt.get("claim_id") != claim_id
+        or receipt.get("modal_app")
+        != registration.get("execution", {}).get("modal_app")
+        or receipt.get("volume")
+        != registration.get("execution", {}).get("volume")
+        or receipt.get("gpu_type") != "L40S"
+        or receipt.get("max_parallel_gpu_workers") != 1
+        or receipt.get("global_modal_gpu_limit") != 1
+        or receipt.get("gpu_app_overlap_policy") != expected_overlap
+        or not _is_nonempty_string(receipt.get("app_id"))
+        or not _is_nonempty_string(receipt.get("function_call_id"))
+        or not _is_utc_timestamp(receipt.get("submitted_at_utc"))
+    ):
+        raise ProtocolError("V6 launch receipt is malformed or inconsistent")
+
+    operational_identity = closeout.get("operational_identity")
+    if (
+        not isinstance(operational_identity, dict)
+        or operational_identity.get("claim_id") != claim_id
+        or operational_identity.get("git_commit") != claim["git_commit"]
+        or operational_identity.get("launch_receipt_sha256")
+        != evidence_hashes["launch_receipt"]
+        or operational_identity.get("launch_submitted_at_utc")
+        != receipt["submitted_at_utc"]
+        or operational_identity.get("modal_app") != receipt["modal_app"]
+        or operational_identity.get("modal_app_id") != receipt["app_id"]
+        or operational_identity.get("modal_function_call_id")
+        != receipt["function_call_id"]
+        or operational_identity.get("volume") != volume
+        or operational_identity.get("gpu_type") != "L40S"
+        or operational_identity.get("max_parallel_gpu_workers") != 1
+        or operational_identity.get("global_modal_gpu_limit") != 1
+    ):
+        raise ProtocolError("V6 closeout operational identity is inconsistent")
+
+    if (
+        set(status)
+        != {
+            "claim_id",
+            "error",
+            "failed_from_stage",
+            "failure_phase",
+            "launch_receipt_present",
+            "stage",
+            "updated_at_utc",
+        }
+        or status.get("claim_id") != claim_id
+        or status.get("stage") != "failed"
+        or status.get("failed_from_stage") != "semantic_training"
+        or status.get("failure_phase") != "semantic_training"
+        or status.get("launch_receipt_present") is not True
+        or not _is_nonempty_string(status.get("error"))
+        or not _is_utc_timestamp(status.get("updated_at_utc"))
+        or closeout.get("v6_attempt_disposition") != "infrastructure_failed"
+    ):
+        raise ProtocolError("V6 attempt status is not an exact pre-final failure")
+
+    root_entries = _validate_v6_directory_inventory(
+        root_inventory,
+        scope="volume_root_after_manual_stop",
+        claim_id=claim_id,
+        volume=volume,
+        exact_entries=sorted(
+            [
+                "attempt_claim.json",
+                "attempt_status.json",
+                "configs",
+                "evidence",
+                "exports",
+                "frozen_artifacts",
+                "launch_receipt.json",
+                "manifests",
+                "protocol_state.json",
+                "reproducibility",
+                "runs",
+            ]
+        ),
+    )
+    if (
+        root_inventory.get("app_id") != receipt["app_id"]
+        or root_inventory.get("app_state") != "stopped"
+        or not _is_utc_timestamp(root_inventory.get("app_stopped_at_utc"))
+        or root_inventory.get("evals_directory_present") is not False
+    ):
+        raise ProtocolError("V6 root inventory does not prove a stopped pre-final state")
+    evidence_entries = _validate_v6_directory_inventory(
+        evidence_inventory,
+        scope="volume_evidence_directory_after_manual_stop",
+        claim_id=claim_id,
+        volume=volume,
+        exact_entries=sorted(
+            [
+                "durable_export_plan.json",
+                "evidence_bundle_inventory.json",
+                "git_closeout_candidate.json",
+            ]
+        ),
+    )
+    if not _is_nonempty_string(evidence_inventory.get("note")):
+        raise ProtocolError("V6 evidence-directory inventory has no interpretation")
+    forbidden_root = {"evals", "final_collection.json", "final_unlocked.json"}
+    forbidden_evidence = {
+        "acceptance.json",
+        "analysis_process.json",
+        "curve.png",
+        "curve_gate.json",
+        "sealed_comparison.json",
+    }
+    if forbidden_root & set(root_entries) or forbidden_evidence & set(evidence_entries):
+        raise ProtocolError("V6 terminal inventories contain a final/gate artifact")
+
+    if (
+        set(bundle)
+        != {
+            "archive_entry_count",
+            "archive_relative_path",
+            "archive_sha256",
+            "archive_size_bytes",
+            "attempt_status_sha256_at_inventory_time",
+            "closeout_candidate_sha256",
+            "generated_at_utc",
+            "inventory_file_count",
+            "inventory_total_size_bytes",
+            "note",
+            "protocol",
+            "remote_inventory_path",
+            "remote_inventory_sha256",
+            "retrieval_command",
+            "schema_version",
+            "volume",
+        }
+        or bundle.get("schema_version") != 1
+        or bundle.get("protocol")
+        != "j-lens-rl-confirmatory-v6-celebration-premature-bundle-binding-v1"
+        or bundle.get("volume") != volume
+        or bundle.get("remote_inventory_path")
+        != "evidence/evidence_bundle_inventory.json"
+        or not _is_sha256(bundle.get("remote_inventory_sha256"))
+        or not _is_sha256(bundle.get("archive_sha256"))
+        or not _is_sha256(bundle.get("attempt_status_sha256_at_inventory_time"))
+        or not _is_sha256(bundle.get("closeout_candidate_sha256"))
+        or not _is_utc_timestamp(bundle.get("generated_at_utc"))
+        or not isinstance(bundle.get("inventory_file_count"), int)
+        or bundle["inventory_file_count"] <= 0
+        or not isinstance(bundle.get("inventory_total_size_bytes"), int)
+        or bundle["inventory_total_size_bytes"] <= 0
+        or bundle.get("archive_entry_count") != bundle["inventory_file_count"] + 1
+        or not isinstance(bundle.get("archive_size_bytes"), int)
+        or bundle["archive_size_bytes"] <= bundle["inventory_total_size_bytes"]
+        or not _is_nonempty_string(bundle.get("archive_relative_path"))
+        or not _is_nonempty_string(bundle.get("retrieval_command"))
+        or not _is_nonempty_string(bundle.get("note"))
+    ):
+        raise ProtocolError("V6 compact bundle binding is malformed")
+
+    premature = closeout.get("infrastructure_incident", {}).get(
+        "premature_finalizer", {}
+    )
+    if (
+        premature.get("archive_entry_count") != bundle["archive_entry_count"]
+        or premature.get("archive_relative_path") != bundle["archive_relative_path"]
+        or premature.get("archive_sha256") != bundle["archive_sha256"]
+        or premature.get("archive_size_bytes") != bundle["archive_size_bytes"]
+        or premature.get("closeout_candidate_generated_at_utc")
+        != bundle["generated_at_utc"]
+        or premature.get("closeout_candidate_sha256")
+        != bundle["closeout_candidate_sha256"]
+        or premature.get("evidence_inventory_file_count")
+        != bundle["inventory_file_count"]
+        or premature.get("evidence_inventory_sha256")
+        != bundle["remote_inventory_sha256"]
+        or premature.get("evidence_inventory_total_size_bytes")
+        != bundle["inventory_total_size_bytes"]
+        or not _is_nonempty_string(premature.get("non_authoritative_reason"))
+    ):
+        raise ProtocolError("V6 closeout does not bind the premature bundle exactly")
+
+    if (
+        set(export_receipt)
+        != {
+            "archive_relative_path",
+            "entry_count",
+            "evidence_inventory_sha256",
+            "schema_version",
+            "sha256",
+            "size_bytes",
+        }
+        or export_receipt.get("schema_version") != 1
+        or export_receipt.get("archive_relative_path")
+        != bundle["archive_relative_path"]
+        or export_receipt.get("entry_count") != bundle["archive_entry_count"]
+        or export_receipt.get("evidence_inventory_sha256")
+        != bundle["remote_inventory_sha256"]
+        or export_receipt.get("sha256") != bundle["archive_sha256"]
+        or export_receipt.get("size_bytes") != bundle["archive_size_bytes"]
+    ):
+        raise ProtocolError("V6 durable export receipt is malformed or inconsistent")
+
+    _validate_v6_run_inventory(
+        run_inventory,
+        claim_id=claim_id,
+        volume=volume,
+        bundle=bundle,
+        bundle_sha256=evidence_hashes["bundle_inventory"],
+        registration=registration,
+        closeout=closeout,
+    )
+
+    closeout_gate = closeout.get("curve_gate")
+    run_gate = run_inventory.get("registered_curve_gate")
+    if (
+        closeout_gate
+        != {
+            "evaluated": False,
+            "reason": run_gate.get("reason"),
+            "registered_steps": [0, 4, 6, 10],
+        }
+        or closeout.get("closed_at_utc")
+        != run_inventory.get("inspected_at_utc")
+        or closeout.get("closed_at_utc") != root_inventory.get("inspected_at_utc")
+        or closeout.get("closed_at_utc")
+        != evidence_inventory.get("inspected_at_utc")
+    ):
+        raise ProtocolError("V6 failed-before-final gate identity is inconsistent")
+
+    if (
+        closeout.get("final_evaluation_labels") != []
+        or closeout.get("evals_directory_present") is not False
+        or closeout.get("final_collection_present") is not False
+        or closeout.get("final_unlocked_present") is not False
+        or closeout.get("sealed_comparison_present") is not False
+        or closeout.get("final_outcomes_unopened") is not True
+    ):
+        raise ProtocolError("V6 closeout crosses the registered final boundary")
+
+    v7_predicate = closeout.get("v7_conditional_predicate")
+    if (
+        not isinstance(v7_predicate, dict)
+        or v7_predicate.get("eligible_on_commit_and_hash_verification") is not True
+        or v7_predicate.get("predicate_terminal_stage") != terminal_stage
+        or not _is_nonempty_string(v7_predicate.get("fresh_attempt_requirement"))
+        or not _is_nonempty_string(v7_predicate.get("sealed_final_continuity"))
+        or not _is_nonempty_string(v7_predicate.get("warning"))
+    ):
+        raise ProtocolError("V6 closeout lacks an exact fresh-attempt handoff")
+
     return {
         "path": closeout_relative,
-        "sha256": sha256_file(V6_TERMINAL_CLOSEOUT_PATH),
-        "terminal_stage": closeout["terminal_stage"],
+        "sha256": closeout_sha256,
+        "terminal_stage": terminal_stage,
         "final_outcomes_unopened": True,
         "source_evidence_sha256": evidence_hashes,
     }
@@ -2466,34 +2485,33 @@ def _config_files() -> dict[str, Path]:
 
 def _runtime_source_names() -> list[str]:
     """Return the strict, outcome-free source allowlist needed to replay V7."""
-    exact = {
-        "pyproject.toml",
-        "modal_confirmatory_v7.py",
-        "run_confirmatory_v7.sh",
-        "scripts/confirmatory_v7_protocol.py",
-        "scripts/modal_cache_assets_v7.py",
-        "scripts/modal_finalize_image_v7.py",
-        "scripts/modal_verify_v7_volume.py",
-        "trl/pyproject.toml",
-        "trl/MANIFEST.in",
-        "trl/VERSION",
-        "trl/README.md",
-        "trl/LICENSE",
-        "trl/CONTRIBUTING.md",
-    }
-    for prefix in ("src/jlens_rl", "trl/trl"):
-        root = REPO / prefix
-        exact.update(
-            path.relative_to(REPO).as_posix()
-            for path in root.rglob("*")
-            if path.is_file()
-            and "__pycache__" not in path.parts
-            and path.suffix not in {".pyc", ".pyo"}
+    payload = json.loads(RUNTIME_SOURCE_ALLOWLIST_PATH.read_text())
+    names = payload.get("files") if isinstance(payload, dict) else None
+    if (
+        not isinstance(payload, dict)
+        or payload.get("schema_version") != 1
+        or payload.get("protocol")
+        != "j-lens-rl-confirmatory-v7-runtime-source-allowlist-v1"
+        or not isinstance(names, list)
+        or names != sorted(set(names))
+        or any(
+            not isinstance(name, str)
+            or not name
+            or Path(name).is_absolute()
+            or ".." in Path(name).parts
+            or any(part.startswith(".") for part in Path(name).parts)
+            for name in names
         )
-    names = sorted(exact)
-    missing = [name for name in names if not (REPO / name).is_file()]
-    if missing:
-        raise ProtocolError(f"strict V7 runtime source is incomplete: {missing}")
+        or RUNTIME_SOURCE_ALLOWLIST_PATH.relative_to(REPO).as_posix() not in names
+    ):
+        raise ProtocolError("V7 runtime source allowlist is malformed")
+    unsafe = [
+        name
+        for name in names
+        if not (REPO / name).is_file() or (REPO / name).is_symlink()
+    ]
+    if unsafe:
+        raise ProtocolError(f"strict V7 runtime source is missing or unsafe: {unsafe}")
     return names
 
 
@@ -3637,9 +3655,28 @@ def verify_completed_runs(
                 "data_indices.json",
             )
             artifact_receipt = wandb_receipt.get("artifact", {})
+            observed_wandb = {
+                key: expected_wandb[key]
+                for key in (
+                    "run_id",
+                    "entity",
+                    "project",
+                    "run_name",
+                    "url",
+                    "group",
+                    "tags",
+                )
+            }
+            artifact_version = artifact_receipt.get("version")
+            artifact_name = (
+                f"{expected_wandb['run_id']}-terminal-evidence:"
+                f"{artifact_version}"
+            )
             if (
-                wandb_receipt.get("schema_version") != 1
+                wandb_receipt.get("schema_version") != 2
                 or wandb_receipt.get("wandb_identity") != expected_wandb
+                or wandb_receipt.get("observed_wandb_identity")
+                != observed_wandb
                 or wandb_receipt.get("terminal_run_result_sha256")
                 != sha256_file(result_path)
                 or wandb_receipt.get("uploaded_file_sha256")
@@ -3650,6 +3687,14 @@ def verify_completed_runs(
                 or not artifact_receipt["id"]
                 or not isinstance(artifact_receipt.get("digest"), str)
                 or not artifact_receipt["digest"]
+                or not isinstance(artifact_version, str)
+                or re.fullmatch(r"v[0-9]+", artifact_version) is None
+                or artifact_receipt.get("name") != artifact_name
+                or artifact_receipt.get("qualified_name")
+                != (
+                    f"{expected_wandb['entity']}/{expected_wandb['project']}/"
+                    f"{artifact_name}"
+                )
             ):
                 raise ProtocolError(f"terminal W&B evidence is not durable for {label}")
 
@@ -4354,6 +4399,7 @@ def _bundle_scientific_files() -> list[Path]:
         RUN_DIR,
         EVAL_DIR,
         EVIDENCE_DIR,
+        GPU_DISPATCH_DIR,
     ]
     files = [
         path
@@ -4392,6 +4438,8 @@ def _bundle_role(relative: str) -> str:
         return "byte-pinned J-lens or target calibration artifact"
     if relative.startswith("reproducibility/"):
         return "registration, metric semantics, replay command, or source snapshot"
+    if relative.startswith("gpu_dispatches/"):
+        return "CPU-pre-dispatch GPU lease intent or durable result publication"
     if relative in {
         "attempt_claim.json",
         "attempt_status.json",

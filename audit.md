@@ -1588,3 +1588,57 @@ it is incident evidence, not the terminal closeout. V6 Volume C must never be
 resumed or pooled. The closeout establishes only that the separately frozen V7
 negative-`damn/fuck` attempt may inherit the still-unopened final after using a
 fresh claim and fresh empty Volume; it does not unlock that final.
+
+### V7 prelaunch hardening audit
+
+The conditional profanity-U5 V7 implementation was independently rehearsed on
+canonical main `89ada46` without reading protected V7 state or launching Modal,
+GPU, or W&B work. The frozen scientific projection is unchanged: treatment is
+the one-component negative intrinsic J-lens reward on `damn`/`fuck`, its matched
+control flips only that sign, seeds remain 184--191, updates remain 20, the
+exposed curve remains 0/4/10/20 with the requested three-rise predicate, and the
+900-row final/significance plan and all W&B run identities remain fixed. The
+unchanged projection SHA-256 is
+`ce5b3a7c0a13846cc8053d207a0916ceba5d9b8f63edc7998e7173aa3df950c5`.
+
+The audit found four prelaunch integrity problems: shadowed stale predecessor
+definitions made the active protocol hard to audit; the global lease was first
+acquired inside an already GPU-decorated function; recursive source-directory
+inclusion admitted ignored or hidden files; and the predecessor predicate
+accepted empty or weakly bound failure evidence. W&B publication also checked
+only the run ID while copying the other expected identity fields into receipts.
+All five were corrected before launch.
+
+V7 now pins canonical V6 closeout
+`e14022a7dd5614726d7bf7fd4c9c8a40f4eb056b1c3a5dad9dbf3c1069912081`
+and run inventory
+`b68ecf6367d725324a1ad7e2ec8fe2ae780e1aca27a121adf1e7875281fa97bf`.
+The predicate recomputes all eight source hashes and cross-checks the exact
+claim, root call and receipt, failure status, stopped Volume inventories,
+premature archive/export binding, six terminal treatment curves and receipts,
+the incomplete seed-182/183 file inventories and negative W&B lookup, no
+control directories, and no unlock/evaluation/analysis artifact. Empty hashes,
+malformed timestamps, missing fields, inconsistent aggregates, terminal files
+for incomplete runs, and any final-boundary crossing fail closed.
+
+Every GPU dispatch is now preceded on CPU by an atomic account-wide lease and
+an immutable Volume intent containing the nonce, claim, root-call receipt,
+phase, and subject. Workers revalidate that record before work and again before
+completion publication; only the exact nonce may be removed, after a committed
+completion record binds the result hashes. Uncertain cuts intentionally strand
+the lease. The Modal image is built from one exact 180-file manifest rather
+than recursive directories, with hashes baked into the image; finalization
+rejects hidden, extra, symlinked, missing, or changed files. W&B receipt schema
+2 validates observed entity, project, run ID/name, group, tags, and URL, and
+the exact terminal artifact name, numeric version, qualified name, ID, and
+digest. These infrastructure changes are recorded in
+`protocol_archive/v7_profanity_prelaunch_source_cleanup.json`; they do not
+authorize a launch by themselves.
+
+Outcome-free focused checks passed: the canonical predecessor predicate, six
+adversarial run-inventory mutations, hidden/extra/symlink/wrong-byte image
+cases, CPU-before-GPU lease ordering, nonce-owned publication ordering, the
+full 18-test V7 protocol suite, compilation, and the focused W&B receipt test.
+The final broad outcome-free sweep passed 154 tests (44 protocol/core and 110
+Modal/correlation/recovery tests) with only six expected local-Modal warnings.
+No V7 outcome exists at this audit cutoff.

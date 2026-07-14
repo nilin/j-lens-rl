@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import hashlib
 import os
+import re
 import subprocess
 import sys
 import time
@@ -38,6 +39,9 @@ GPU_EXCLUSIVE_CONFIRMATION = "confirmed-no-other-modal-gpu-app-running"
 GPU_LEASE_DICT_NAME = "j-lens-rl-global-gpu-lease-v1"
 GPU_LEASE_KEY = "global-one-gpu"
 GPU_LEASE_ENVIRONMENT = "main"
+GPU_LEASE_PROTOCOL = "j-lens-rl-global-gpu-lease-v1"
+GPU_LEASE_WORKLOAD = "confirmatory-v7-profanity-u5"
+GPU_DISPATCH_DIR = REMOTE_STATE / "gpu_dispatches"
 FINAL_LABELS = (
     "base",
     *(f"jlens_seed{seed}" for seed in SEEDS),
@@ -56,33 +60,54 @@ huggingface_secret = modal.Secret.from_name(
     "huggingface-token", required_keys=["HF_TOKEN"]
 )
 
+RUNTIME_SOURCE_ALLOWLIST = LOCAL_REPO / "scripts" / "v7_runtime_source_allowlist.json"
+
+
+def _local_file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _load_runtime_source_inventory() -> dict[str, str]:
+    payload = json.loads(RUNTIME_SOURCE_ALLOWLIST.read_text())
+    names = payload.get("files") if isinstance(payload, dict) else None
+    if (
+        not isinstance(payload, dict)
+        or payload.get("schema_version") != 1
+        or payload.get("protocol")
+        != "j-lens-rl-confirmatory-v7-runtime-source-allowlist-v1"
+        or not isinstance(names, list)
+        or names != sorted(set(names))
+    ):
+        raise RuntimeError("V7 runtime source allowlist is malformed")
+    hashes: dict[str, str] = {}
+    for name in names:
+        if not isinstance(name, str) or not name:
+            raise RuntimeError(f"unsafe V7 runtime source allowlist entry: {name!r}")
+        relative = Path(name)
+        path = LOCAL_REPO / relative
+        if (
+            relative.is_absolute()
+            or ".." in relative.parts
+            or any(part.startswith(".") for part in relative.parts)
+            or not path.is_file()
+            or path.is_symlink()
+        ):
+            raise RuntimeError(f"unsafe V7 runtime source allowlist entry: {name!r}")
+        hashes[name] = _local_file_sha256(path)
+    return hashes
+
+
+RUNTIME_SOURCE_SHA256 = _load_runtime_source_inventory()
+RUNTIME_SOURCE_SHA256_JSON = json.dumps(
+    RUNTIME_SOURCE_SHA256, sort_keys=True, separators=(",", ":")
+)
+
 repo_image = modal.Image.debian_slim(python_version="3.11")
-repo_image = repo_image.add_local_dir(
-    LOCAL_REPO / "src" / "jlens_rl",
-    (REMOTE_REPO / "src" / "jlens_rl").as_posix(),
-    copy=True,
-)
-repo_image = repo_image.add_local_dir(
-    LOCAL_REPO / "trl" / "trl",
-    (REMOTE_REPO / "trl" / "trl").as_posix(),
-    copy=True,
-)
-for relative in (
-    "pyproject.toml",
-    "modal_confirmatory_v7.py",
-    "run_confirmatory_v7.sh",
-    "scripts/confirmatory_v7_protocol.py",
-    "scripts/modal_cache_assets_v7.py",
-    "scripts/modal_finalize_image_v7.py",
-    "scripts/modal_verify_v7_volume.py",
-    "artifacts/qwen25_05b_solved_lens.pt",
-    "trl/pyproject.toml",
-    "trl/MANIFEST.in",
-    "trl/VERSION",
-    "trl/README.md",
-    "trl/LICENSE",
-    "trl/CONTRIBUTING.md",
-):
+for relative in sorted(RUNTIME_SOURCE_SHA256):
     repo_image = repo_image.add_local_file(
         LOCAL_REPO / relative,
         (REMOTE_REPO / relative).as_posix(),
@@ -99,6 +124,7 @@ repo_image = (
             "JLENS_MODAL_IMAGE_SPEC": (
                 "j-lens-rl-confirmatory-v7-profanity-u5-image-v1-strict-allowlist-hf-auth"
             ),
+            "JLENS_V7_IMAGE_FILE_SHA256": RUNTIME_SOURCE_SHA256_JSON,
             "PYTHONPATH": (
                 f"{(REMOTE_REPO / 'src').as_posix()}:"
                 f"{(REMOTE_REPO / 'trl').as_posix()}"
@@ -222,35 +248,182 @@ def _claim_id_from_volume() -> str:
     return claim_id
 
 
-def _acquire_gpu_lease(phase: str, subject: str) -> dict[str, Any]:
-    """Atomically claim the sole global GPU key; never steal or time out."""
+def _json_sha256(value: Any) -> str:
+    encoded = json.dumps(
+        value, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _validate_shared_gpu_lease_record(value: Any) -> dict[str, Any]:
+    if (
+        not isinstance(value, dict)
+        or value.get("protocol") != GPU_LEASE_PROTOCOL
+        or value.get("environment_name") != GPU_LEASE_ENVIRONMENT
+        or value.get("slot") != GPU_LEASE_KEY
+        or value.get("global_modal_gpu_limit") != GLOBAL_MODAL_GPU_LIMIT
+        or not isinstance(value.get("owner"), str)
+        or not isinstance(value.get("workload"), str)
+        or not isinstance(value.get("claim_id"), str)
+        or not isinstance(value.get("acquired_at_utc"), str)
+        or not isinstance(value.get("heartbeat_at_utc"), str)
+        or not isinstance(value.get("submission_preflight"), dict)
+        or not isinstance(value.get("submission_preflight_sha256"), str)
+    ):
+        raise RuntimeError("global Modal GPU lease record is invalid")
+    if value["owner"] != f"{value['workload']}:{value['claim_id']}":
+        raise RuntimeError("global Modal GPU lease owner is invalid")
+    if value["submission_preflight_sha256"] != _json_sha256(
+        value["submission_preflight"]
+    ):
+        raise RuntimeError("global Modal GPU lease preflight hash is invalid")
+    return value
+
+
+def _gpu_dispatch_stem(phase: str, subject: str) -> str:
+    stem = f"{phase}-{subject}"
+    if not stem or any(character not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for character in stem):
+        raise RuntimeError(f"unsafe V7 GPU dispatch identity: {stem!r}")
+    return stem
+
+
+def _gpu_dispatch_intent_path(payload: dict[str, Any]) -> Path:
+    nonce = payload.get("nonce")
+    if not isinstance(nonce, str) or re.fullmatch(r"[0-9a-f]{32}", nonce) is None:
+        raise RuntimeError("V7 GPU dispatch token has an invalid nonce")
+    stem = _gpu_dispatch_stem(payload["phase"], payload["subject"])
+    return GPU_DISPATCH_DIR / f"{stem}-{nonce}.json"
+
+
+def _gpu_dispatch_completion_path(payload: dict[str, Any]) -> Path:
+    intent = _gpu_dispatch_intent_path(payload)
+    return intent.with_suffix(".complete.json")
+
+
+def _acquire_gpu_lease(
+    claim_id: str, root_call_id: str, phase: str, subject: str
+) -> dict[str, Any]:
+    """CPU-side CAS and durable intent; this must finish before GPU scheduling."""
+    claim = _verify_attempt_claim(claim_id)
+    receipt_path = REMOTE_STATE / "launch_receipt.json"
+    receipt = json.loads(receipt_path.read_text()) if receipt_path.is_file() else {}
+    if (
+        receipt.get("receipt_status") != "present"
+        or receipt.get("claim_id") != claim_id
+        or receipt.get("function_call_id") != root_call_id
+    ):
+        raise RuntimeError("GPU dispatch lacks its durable V7 root-call receipt")
+    preflight = _validate_operational_preflight(claim.get("operational_preflight"))
+    now = datetime.now(timezone.utc).isoformat()
     payload = {
-        "protocol": "j-lens-rl-global-gpu-lease-v1",
-        "key": GPU_LEASE_KEY,
+        "protocol": GPU_LEASE_PROTOCOL,
+        "environment_name": GPU_LEASE_ENVIRONMENT,
+        "slot": GPU_LEASE_KEY,
+        "owner": f"{GPU_LEASE_WORKLOAD}:{claim_id}",
+        "workload": GPU_LEASE_WORKLOAD,
+        "claim_id": claim_id,
+        "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
+        "submission_preflight": preflight,
+        "submission_preflight_sha256": _json_sha256(preflight),
+        "acquired_at_utc": now,
+        "heartbeat_at_utc": now,
         "nonce": uuid.uuid4().hex,
-        "claim_id": _claim_id_from_volume(),
         "modal_app": app.name,
         "volume": VOLUME_NAME,
+        "root_call_id": root_call_id,
         "phase": phase,
         "subject": subject,
-        "acquired_at_utc": datetime.now(timezone.utc).isoformat(),
     }
-    inserted = gpu_lease.put(GPU_LEASE_KEY, payload, skip_if_exists=True)
-    if inserted is not True:
-        owner = gpu_lease.get(GPU_LEASE_KEY, None)
+    if gpu_lease.put(GPU_LEASE_KEY, payload, skip_if_exists=True) is not True:
+        existing = gpu_lease.get(GPU_LEASE_KEY, None)
+        if existing is not None:
+            _validate_shared_gpu_lease_record(existing)
         raise RuntimeError(
-            "global GPU lease is occupied; V7 fails closed without dispatch: "
-            f"{owner!r}"
+            "global GPU lease is occupied; refusing V7 GPU dispatch: "
+            f"{existing!r}"
         )
-    observed = gpu_lease.get(GPU_LEASE_KEY, None)
-    if observed != payload:
+    if gpu_lease.get(GPU_LEASE_KEY, None) != payload:
         raise RuntimeError("global GPU lease ownership is ambiguous after acquisition")
+    intent = {
+        "schema_version": 1,
+        "protocol": "j-lens-rl-confirmatory-v7-gpu-dispatch-intent-v1",
+        "lease": payload,
+        "lease_sha256": _json_sha256(payload),
+        "dispatch_status": "leased_before_gpu_schedule",
+    }
+    try:
+        _write_json_exclusive_atomic(_gpu_dispatch_intent_path(payload), intent)
+        state_volume.commit()
+        state_volume.reload()
+    except BaseException:
+        # An uncertain Volume publication intentionally strands the global key.
+        raise
+    if json.loads(_gpu_dispatch_intent_path(payload).read_text()) != intent:
+        raise RuntimeError("durable V7 GPU dispatch intent changed after publication")
     return payload
+
+
+def _verify_gpu_worker_token(
+    payload: dict[str, Any], phase: str, subject: str
+) -> None:
+    record = _validate_shared_gpu_lease_record(
+        gpu_lease.get(GPU_LEASE_KEY, None)
+    )
+    if (
+        record != payload
+        or payload.get("phase") != phase
+        or payload.get("subject") != subject
+        or payload.get("nonce") is None
+        or payload.get("claim_id") != _claim_id_from_volume()
+    ):
+        raise RuntimeError("GPU worker received an invalid or stale lease token")
+    receipt_path = REMOTE_STATE / "launch_receipt.json"
+    receipt = json.loads(receipt_path.read_text()) if receipt_path.is_file() else {}
+    if (
+        receipt.get("receipt_status") != "present"
+        or receipt.get("claim_id") != payload["claim_id"]
+        or receipt.get("function_call_id") != payload.get("root_call_id")
+    ):
+        raise RuntimeError("GPU worker token is not bound to the durable root receipt")
+    intent = json.loads(_gpu_dispatch_intent_path(payload).read_text())
+    if (
+        intent.get("lease") != payload
+        or intent.get("lease_sha256") != _json_sha256(payload)
+        or intent.get("dispatch_status") != "leased_before_gpu_schedule"
+    ):
+        raise RuntimeError("GPU worker lacks its durable pre-dispatch intent")
+
+
+def _complete_gpu_dispatch(
+    payload: dict[str, Any], publication: dict[str, Any]
+) -> None:
+    _verify_gpu_worker_token(payload, payload["phase"], payload["subject"])
+    if not publication or any(
+        not isinstance(digest, str) or len(digest) != 64
+        for digest in publication.values()
+    ):
+        raise RuntimeError("GPU result publication identity is incomplete")
+    completion = {
+        "schema_version": 1,
+        "protocol": "j-lens-rl-confirmatory-v7-gpu-dispatch-completion-v1",
+        "lease_sha256": _json_sha256(payload),
+        "nonce": payload["nonce"],
+        "publication_sha256": publication,
+        "published_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    path = _gpu_dispatch_completion_path(payload)
+    _write_json_exclusive_atomic(path, completion)
+    state_volume.commit()
+    state_volume.reload()
+    if json.loads(path.read_text()) != completion:
+        raise RuntimeError("durable V7 GPU completion changed after publication")
 
 
 def _release_gpu_lease(payload: dict[str, Any]) -> None:
     """Release only the exact nonce we acquired; ambiguous state stays locked."""
-    observed = gpu_lease.get(GPU_LEASE_KEY, None)
+    observed = _validate_shared_gpu_lease_record(
+        gpu_lease.get(GPU_LEASE_KEY, None)
+    )
     if observed != payload or observed.get("nonce") != payload.get("nonce"):
         raise RuntimeError("refusing to release a GPU lease owned by another nonce")
     removed = gpu_lease.pop(GPU_LEASE_KEY)
@@ -533,11 +706,14 @@ def record_launch_receipt(
     secrets=[wandb_secret],
     volumes={REMOTE_STATE: state_volume},
 )
-def train_config(condition: str, seed: int) -> dict[str, Any]:
+def train_config(
+    condition: str, seed: int, lease_token: dict[str, Any]
+) -> dict[str, Any]:
     if condition not in {"jlens", "signflip"} or seed not in SEEDS:
         raise ValueError("training input is outside registered V7")
     state_volume.reload()
-    lease = _acquire_gpu_lease("training", f"{condition}_seed{seed}")
+    subject = f"{condition}_seed{seed}"
+    _verify_gpu_worker_token(lease_token, "training", subject)
     try:
         _ensure_runtime_git()
         _protocol("verify")
@@ -565,23 +741,8 @@ def train_config(condition: str, seed: int) -> dict[str, Any]:
                 raise RuntimeError("terminal W&B publication produced no receipt")
             summary = _history_summary(condition, seed)
             summary["reused_existing_terminal_result"] = True
-            return summary
-        try:
-            _run(
-                [
-                    sys.executable,
-                    "-m",
-                    "jlens_rl.train",
-                    "--config",
-                    str(config),
-                    "--wandb-mode",
-                    "online",
-                ]
-            )
-        except subprocess.CalledProcessError:
-            if not completed.is_file():
-                raise
-            if not wandb_receipt.is_file():
+        else:
+            try:
                 _run(
                     [
                         sys.executable,
@@ -589,17 +750,40 @@ def train_config(condition: str, seed: int) -> dict[str, Any]:
                         "jlens_rl.train",
                         "--config",
                         str(config),
-                        "--publish-existing-result",
+                        "--wandb-mode",
+                        "online",
                     ]
                 )
-        summary = _history_summary(condition, seed)
-        summary["reused_existing_terminal_result"] = False
-        return summary
-    finally:
-        # A failed commit intentionally strands the lease for root-authorized
-        # forensic recovery; no later GPU job may guess that publication worked.
+            except subprocess.CalledProcessError:
+                if not completed.is_file():
+                    raise
+                if not wandb_receipt.is_file():
+                    _run(
+                        [
+                            sys.executable,
+                            "-m",
+                            "jlens_rl.train",
+                            "--config",
+                            str(config),
+                            "--publish-existing-result",
+                        ]
+                    )
+            summary = _history_summary(condition, seed)
+            summary["reused_existing_terminal_result"] = False
         state_volume.commit()
-        _release_gpu_lease(lease)
+        _complete_gpu_dispatch(
+            lease_token,
+            {
+                "run_result_manifest": _local_file_sha256(completed),
+                "wandb_terminal_publish_receipt": _local_file_sha256(wandb_receipt),
+            },
+        )
+        _release_gpu_lease(lease_token)
+        return summary
+    except BaseException:
+        # Any ambiguous/partial result keeps the global lease stranded for audit.
+        state_volume.commit()
+        raise
 
 
 @app.function(
@@ -662,66 +846,80 @@ def claim_final_collection(collection_id: str) -> dict[str, Any]:
     single_use_containers=True,
     volumes={REMOTE_STATE: state_volume},
 )
-def evaluate_label(label: str, collection_id: str) -> dict[str, Any]:
+def evaluate_label(
+    label: str, collection_id: str, lease_token: dict[str, Any]
+) -> dict[str, Any]:
     if label not in FINAL_LABELS:
         raise ValueError("evaluation label is outside registered V7")
     state_volume.reload()
-    lease = _acquire_gpu_lease("sealed_evaluation", label)
+    _verify_gpu_worker_token(lease_token, "sealed_evaluation", label)
     try:
         _ensure_runtime_git()
         _protocol("verify-final", "--collection-id", collection_id)
         output = REMOTE_STATE / "evals" / f"{label}.jsonl"
         if output.exists():
             _protocol("verify-eval", "--path", str(output), "--label", label)
-            return {
+            result = {
                 "label": label,
                 "collection_id": collection_id,
                 "reused_verified_output": True,
             }
-        if label == "base":
-            experiment_config = (
-                REMOTE_STATE / "configs" / f"jlens_seed{SEEDS[0]}.json"
-            )
-            adapter_args: list[str] = []
         else:
-            condition, seed_text = label.rsplit("_seed", 1)
-            experiment_config = (
-                REMOTE_STATE / "configs" / f"{condition}_seed{seed_text}.json"
+            if label == "base":
+                experiment_config = (
+                    REMOTE_STATE / "configs" / f"jlens_seed{SEEDS[0]}.json"
+                )
+                adapter_args: list[str] = []
+            else:
+                condition, seed_text = label.rsplit("_seed", 1)
+                experiment_config = (
+                    REMOTE_STATE / "configs" / f"{condition}_seed{seed_text}.json"
+                )
+                adapter_args = [
+                    "--adapter", str(REMOTE_STATE / "runs" / label / "final")
+                ]
+            output.parent.mkdir(parents=True, exist_ok=True)
+            _run(
+                [
+                    sys.executable,
+                    "-m",
+                    "jlens_rl.eval",
+                    "--config",
+                    str(REMOTE_STATE / "configs" / "sealed_eval.json"),
+                    "--experiment-config",
+                    str(experiment_config),
+                    "--indices-manifest",
+                    str(REMOTE_STATE / "manifests" / "sealed_final_indices.json"),
+                    "--output-jsonl",
+                    str(output),
+                    "--run-label",
+                    label,
+                    "--batch-size",
+                    "64",
+                    "--skip-jlens-metric",
+                    *adapter_args,
+                ]
             )
-            adapter_args = [
-                "--adapter", str(REMOTE_STATE / "runs" / label / "final")
-            ]
-        output.parent.mkdir(parents=True, exist_ok=True)
-        _run(
-            [
-                sys.executable,
-                "-m",
-                "jlens_rl.eval",
-                "--config",
-                str(REMOTE_STATE / "configs" / "sealed_eval.json"),
-                "--experiment-config",
-                str(experiment_config),
-                "--indices-manifest",
-                str(REMOTE_STATE / "manifests" / "sealed_final_indices.json"),
-                "--output-jsonl",
-                str(output),
-                "--run-label",
-                label,
-                "--batch-size",
-                "64",
-                "--skip-jlens-metric",
-                *adapter_args,
-            ]
-        )
-        _protocol("verify-eval", "--path", str(output), "--label", label)
-        return {
-            "label": label,
-            "collection_id": collection_id,
-            "reused_verified_output": False,
-        }
-    finally:
+            _protocol("verify-eval", "--path", str(output), "--label", label)
+            result = {
+                "label": label,
+                "collection_id": collection_id,
+                "reused_verified_output": False,
+            }
         state_volume.commit()
-        _release_gpu_lease(lease)
+        environment = REMOTE_STATE / "evals" / f"{label}.environment.json"
+        _complete_gpu_dispatch(
+            lease_token,
+            {
+                "evaluation_jsonl": _local_file_sha256(output),
+                "evaluation_environment": _local_file_sha256(environment),
+            },
+        )
+        _release_gpu_lease(lease_token)
+        return result
+    except BaseException:
+        state_volume.commit()
+        raise
 
 
 def _comparison_args(labels: Iterable[str], option: str) -> list[str]:
@@ -867,7 +1065,14 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
     _verify_attempt_claim(claim_id)
     failure_phase = "launch_receipt_wait"
     try:
-        _wait_for_launch_receipt(claim_id)
+        receipt = _wait_for_launch_receipt(claim_id)
+        root_call_id = modal.current_function_call_id()
+        if (
+            not isinstance(root_call_id, str)
+            or not root_call_id
+            or receipt.get("function_call_id") != root_call_id
+        ):
+            raise RuntimeError("V7 orchestrator lacks its durable root-call authority")
         failure_phase = "initial_protocol_verify"
         _protocol("verify")
         failure_phase = "semantic_training"
@@ -884,7 +1089,15 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
                 gpu_app_overlap_policy=GPU_APP_OVERLAP_POLICY,
             )
             state_volume.commit()
-            semantic.extend(_mapped_results(train_config, ["jlens"] * len(wave), wave))
+            tokens = [
+                _acquire_gpu_lease(
+                    claim_id, root_call_id, "training", f"jlens_seed{seed}"
+                )
+                for seed in wave
+            ]
+            semantic.extend(
+                _mapped_results(train_config, ["jlens"] * len(wave), wave, tokens)
+            )
             state_volume.reload()
         semantic_check = protocol_step.remote("verify-semantic")
         if semantic_check.get("returncode") or not semantic_check.get("verified"):
@@ -919,8 +1132,16 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
                 gpu_app_overlap_policy=GPU_APP_OVERLAP_POLICY,
             )
             state_volume.commit()
+            tokens = [
+                _acquire_gpu_lease(
+                    claim_id, root_call_id, "training", f"signflip_seed{seed}"
+                )
+                for seed in wave
+            ]
             controls.extend(
-                _mapped_results(train_config, ["signflip"] * len(wave), wave)
+                _mapped_results(
+                    train_config, ["signflip"] * len(wave), wave, tokens
+                )
             )
         failure_phase = "sealed_collection_unlock"
         unlock = protocol_step.remote("unlock")
@@ -957,11 +1178,18 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
                 gpu_app_overlap_policy=GPU_APP_OVERLAP_POLICY,
             )
             state_volume.commit()
+            tokens = [
+                _acquire_gpu_lease(
+                    claim_id, root_call_id, "sealed_evaluation", label
+                )
+                for label in wave
+            ]
             sealed.extend(
                 _mapped_results(
                     evaluate_label,
                     wave,
                     [collection_id] * len(wave),
+                    tokens,
                 )
             )
         failure_phase = "sealed_analysis"

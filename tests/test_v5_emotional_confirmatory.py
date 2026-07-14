@@ -933,6 +933,8 @@ def test_terminal_wandb_evidence_includes_hash_manifest_and_raw_histories(
 ) -> None:
     from jlens_rl.train import (
         _load_valid_terminal_publish_receipt,
+        _observe_active_wandb_identity,
+        _validate_terminal_artifact_identity,
         publish_run_result_to_wandb,
     )
 
@@ -961,7 +963,7 @@ def test_terminal_wandb_evidence_includes_hash_manifest_and_raw_histories(
             self.name = name
             self.version = "v0"
             self.digest = "artifact-digest"
-            self.qualified_name = f"entity/project/{name}:v0"
+            self.qualified_name = None
             self.type = type
             self.metadata = metadata
             self.files = []
@@ -970,9 +972,29 @@ def test_terminal_wandb_evidence_includes_hash_manifest_and_raw_histories(
             self.files.append((path, name))
 
         def wait(self):
+            self.name = f"{self.name}:v0"
+            self.qualified_name = f"entity/project/{self.name}"
             return self
 
-    fake_run = SimpleNamespace(id="frozen-id")
+    frozen_identity = {
+        "run_id": "frozen-id",
+        "entity": "entity",
+        "project": "project",
+        "run_name": "frozen-name",
+        "url": "https://wandb.ai/entity/project/runs/frozen-id",
+        "group": "frozen-group",
+        "tags": ["confirmatory-v5", "emotional-j-lens"],
+        "resume": "never",
+    }
+    fake_run = SimpleNamespace(
+        id=frozen_identity["run_id"],
+        entity=frozen_identity["entity"],
+        project=frozen_identity["project"],
+        name=frozen_identity["run_name"],
+        url=frozen_identity["url"],
+        group=frozen_identity["group"],
+        tags=tuple(frozen_identity["tags"]),
+    )
     fake_run.log_artifact = lambda artifact, **kwargs: artifact
 
     fake_wandb = SimpleNamespace(
@@ -983,7 +1005,7 @@ def test_terminal_wandb_evidence_includes_hash_manifest_and_raw_histories(
     )
     monkeypatch.setitem(sys.modules, "wandb", fake_wandb)
     result = {
-        "wandb_identity": {"run_id": "frozen-id"},
+        "wandb_identity": frozen_identity,
         "terminal_checkpoint": {"sha256": "a" * 64},
         "final_adapter_and_tokenizer": {"sha256": "b" * 64},
         "raw_history_sha256": {"validation_history.jsonl": "c" * 64},
@@ -1001,6 +1023,15 @@ def test_terminal_wandb_evidence_includes_hash_manifest_and_raw_histories(
     ]
     assert all(item[1]["policy"] == "now" for item in uploads)
     assert receipt["artifact"]["id"] == "artifact-id"
+    assert receipt["artifact"]["name"] == "frozen-id-terminal-evidence:v0"
+    assert receipt["artifact"]["version"] == "v0"
+    assert receipt["artifact"]["qualified_name"] == (
+        "entity/project/frozen-id-terminal-evidence:v0"
+    )
+    assert receipt["observed_wandb_identity"] == {
+        key: frozen_identity[key]
+        for key in ("run_id", "entity", "project", "run_name", "url", "group", "tags")
+    }
     assert (tmp_path / "wandb_terminal_publish_receipt.json").is_file()
     assert not (tmp_path / "wandb_terminal_publish_receipt.json.tmp").exists()
     assert _load_valid_terminal_publish_receipt(
@@ -1012,12 +1043,37 @@ def test_terminal_wandb_evidence_includes_hash_manifest_and_raw_histories(
     ) is None
 
     fake_run.id = "wrong-id"
-    with pytest.raises(RuntimeError, match="frozen run identity"):
+    with pytest.raises(RuntimeError, match="frozen observable identity"):
         publish_run_result_to_wandb(
             output_dir=tmp_path,
             result=result,
             enabled=True,
         )
+    fake_run.id = frozen_identity["run_id"]
+    for attribute, bad_value in (
+        ("entity", "wrong-entity"),
+        ("project", "wrong-project"),
+        ("group", "wrong-group"),
+        ("tags", ("wrong-tag",)),
+        ("url", "https://wandb.ai/wrong"),
+    ):
+        original = getattr(fake_run, attribute)
+        setattr(fake_run, attribute, bad_value)
+        with pytest.raises(RuntimeError, match="frozen observable identity"):
+            _observe_active_wandb_identity(fake_run, frozen_identity)
+        setattr(fake_run, attribute, original)
+
+    exact_artifact = receipt["artifact"]
+    _validate_terminal_artifact_identity(exact_artifact, frozen_identity)
+    for field, bad_value in (
+        ("name", "wrong:v0"),
+        ("version", "latest"),
+        ("qualified_name", "wrong/project/name:v0"),
+    ):
+        malformed = dict(exact_artifact)
+        malformed[field] = bad_value
+        with pytest.raises(RuntimeError, match="exact terminal evidence artifact"):
+            _validate_terminal_artifact_identity(malformed, frozen_identity)
 
 
 def test_v4_entrypoints_and_state_paths_are_untouched() -> None:

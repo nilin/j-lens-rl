@@ -299,6 +299,78 @@ def write_run_result_manifest(
     return result
 
 
+def _expected_observed_wandb_identity(identity: Any) -> dict[str, Any]:
+    if not isinstance(identity, dict):
+        raise RuntimeError("terminal result lacks its frozen W&B identity")
+    expected = {
+        "run_id": identity.get("run_id"),
+        "entity": identity.get("entity"),
+        "project": identity.get("project"),
+        "run_name": identity.get("run_name"),
+        "url": identity.get("url"),
+        "group": identity.get("group"),
+        "tags": identity.get("tags"),
+    }
+    if (
+        any(
+            not isinstance(expected[key], str) or not expected[key]
+            for key in ("run_id", "entity", "project", "run_name", "url", "group")
+        )
+        or not isinstance(expected["tags"], list)
+        or not expected["tags"]
+        or any(not isinstance(tag, str) or not tag for tag in expected["tags"])
+    ):
+        raise RuntimeError("frozen W&B identity is incomplete")
+    return expected
+
+
+def _observe_active_wandb_identity(run: Any, identity: Any) -> dict[str, Any]:
+    """Read back every W&B run field that the confirmatory config freezes."""
+    expected = _expected_observed_wandb_identity(identity)
+    raw_tags = getattr(run, "tags", None)
+    observed = {
+        "run_id": getattr(run, "id", None),
+        "entity": getattr(run, "entity", None),
+        "project": getattr(run, "project", None),
+        "run_name": getattr(run, "name", None),
+        "url": getattr(run, "url", None),
+        "group": getattr(run, "group", None),
+        "tags": list(raw_tags) if isinstance(raw_tags, (list, tuple)) else raw_tags,
+    }
+    if observed != expected:
+        raise RuntimeError(
+            "active W&B run does not match the frozen observable identity: "
+            f"{observed!r} != {expected!r}"
+        )
+    return observed
+
+
+def _validate_terminal_artifact_identity(
+    artifact_identity: Any, wandb_identity: Any
+) -> dict[str, Any]:
+    expected_run = _expected_observed_wandb_identity(wandb_identity)
+    if not isinstance(artifact_identity, dict):
+        raise RuntimeError("W&B terminal artifact identity is absent")
+    version = artifact_identity.get("version")
+    base_name = f"{expected_run['run_id']}-terminal-evidence"
+    expected_name = f"{base_name}:{version}"
+    expected_qualified_name = (
+        f"{expected_run['entity']}/{expected_run['project']}/{expected_name}"
+    )
+    if (
+        not isinstance(artifact_identity.get("id"), str)
+        or not artifact_identity["id"]
+        or not isinstance(artifact_identity.get("digest"), str)
+        or not artifact_identity["digest"]
+        or not isinstance(version, str)
+        or re.fullmatch(r"v[0-9]+", version) is None
+        or artifact_identity.get("name") != expected_name
+        or artifact_identity.get("qualified_name") != expected_qualified_name
+    ):
+        raise RuntimeError("W&B did not confirm the exact terminal evidence artifact")
+    return artifact_identity
+
+
 def publish_run_result_to_wandb(
     *,
     output_dir: Path,
@@ -312,13 +384,11 @@ def publish_run_result_to_wandb(
 
     if wandb.run is None:
         raise RuntimeError("cannot publish terminal evidence without an active W&B run")
-    expected_run_id = (result.get("wandb_identity") or {}).get("run_id")
-    actual_run_id = getattr(wandb.run, "id", None)
-    if expected_run_id is not None and actual_run_id != expected_run_id:
-        raise RuntimeError(
-            "active W&B run does not match the frozen run identity: "
-            f"{actual_run_id!r} != {expected_run_id!r}"
-        )
+    wandb_identity = result.get("wandb_identity")
+    observed_wandb_identity = _observe_active_wandb_identity(
+        wandb.run, wandb_identity
+    )
+    expected_run_id = observed_wandb_identity["run_id"]
     wandb.config.update(
         {"terminal_run_result": result},
         allow_val_change=True,
@@ -330,7 +400,7 @@ def publish_run_result_to_wandb(
             base_path=str(output_dir),
             policy="now",
         )
-    artifact_name = f"{expected_run_id or actual_run_id}-terminal-evidence"
+    artifact_name = f"{expected_run_id}-terminal-evidence"
     artifact = wandb.Artifact(
         artifact_name,
         type="confirmatory-run-evidence",
@@ -357,13 +427,11 @@ def publish_run_result_to_wandb(
         key: getattr(logged, key, None)
         for key in ("id", "name", "version", "digest", "qualified_name")
     }
-    if not isinstance(artifact_identity["id"], str) or not isinstance(
-        artifact_identity["digest"], str
-    ):
-        raise RuntimeError("W&B did not confirm the terminal evidence artifact")
+    _validate_terminal_artifact_identity(artifact_identity, wandb_identity)
     receipt = {
-        "schema_version": 1,
-        "wandb_identity": result.get("wandb_identity"),
+        "schema_version": 2,
+        "wandb_identity": wandb_identity,
+        "observed_wandb_identity": observed_wandb_identity,
         "artifact": artifact_identity,
         "terminal_run_result_sha256": sha256_file(
             output_dir / "run_result_manifest.json"
@@ -398,21 +466,24 @@ def _load_valid_terminal_publish_receipt(
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         return None
     artifact = receipt.get("artifact", {}) if isinstance(receipt, dict) else {}
+    wandb_identity = result.get("wandb_identity")
     expected_uploads = {
         name: sha256_file(output_dir / name) for name in TERMINAL_EVIDENCE_FILE_NAMES
     }
     if (
         not isinstance(receipt, dict)
-        or receipt.get("schema_version") != 1
-        or receipt.get("wandb_identity") != result.get("wandb_identity")
+        or receipt.get("schema_version") != 2
+        or receipt.get("wandb_identity") != wandb_identity
+        or receipt.get("observed_wandb_identity")
+        != _expected_observed_wandb_identity(wandb_identity)
         or receipt.get("terminal_run_result_sha256")
         != sha256_file(output_dir / "run_result_manifest.json")
         or receipt.get("uploaded_file_sha256") != expected_uploads
-        or not isinstance(artifact.get("id"), str)
-        or not artifact["id"]
-        or not isinstance(artifact.get("digest"), str)
-        or not artifact["digest"]
     ):
+        return None
+    try:
+        _validate_terminal_artifact_identity(artifact, wandb_identity)
+    except RuntimeError:
         return None
     return receipt
 

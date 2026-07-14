@@ -1,0 +1,35 @@
+{
+  "active_protocol_sha256": "3643f5720e4395474a86def8ed92b85aec0e129f356461e2f2cc48d7d9ebf812",
+  "amended_at_utc": "2026-07-14T13:30:21Z",
+  "authorized_prelaunch_changes": [
+    "remove duplicate, shadowed, and stale predecessor protocol definitions without changing the active V7 scientific design",
+    "pin the canonical failed-before-final V6 closeout and validate its claim, receipt, status, compact bundle binding, directory inventories, durable export, six terminal runs, two incomplete runs, negative W&B query, and unopened final boundary",
+    "replace recursive Modal source directories with one exact file allowlist, bake every file hash into the image, and reject every missing, extra, hidden, symlinked, or byte-changed file",
+    "acquire the account-wide GPU lease in the CPU orchestrator and durably publish a nonce/root-bound dispatch intent before every GPU schedule; workers revalidate the token and release only that nonce after durable result publication",
+    "record and validate W&B's observable run entity, project, group, tags, URL, ID, and name plus the exact terminal artifact name, version, and qualified name"
+  ],
+  "canonical_v6_terminal_closeout_sha256": "e14022a7dd5614726d7bf7fd4c9c8a40f4eb056b1c3a5dad9dbf3c1069912081",
+  "canonical_v6_terminal_run_inventory_sha256": "b68ecf6367d725324a1ad7e2ec8fe2ae780e1aca27a121adf1e7875281fa97bf",
+  "protocol": "j-lens-rl-confirmatory-v7-profanity-u5-prelaunch-source-cleanup-v1",
+  "scientific_and_wandb_projection_fields": [
+    "claim_protocol",
+    "operator_knowledge_boundary",
+    "selection_closeout",
+    "selected_recipe_lock",
+    "split",
+    "seeds",
+    "fixed_updates",
+    "curve_gate",
+    "matched_control",
+    "analysis",
+    "acceptance",
+    "final_collection",
+    "wandb",
+    "outcome_status_at_freeze"
+  ],
+  "scientific_and_wandb_projection_sha256": "ce5b3a7c0a13846cc8053d207a0916ceba5d9b8f63edc7998e7173aa3df950c5",
+  "scientific_or_wandb_change": false,
+  "superseded_protocol_sha256": "f8c3c96ec0e2e4eb49b5cc27dc04e51731b3305dcb44e620e4c9a413e84c714d",
+  "superseded_registration_sha256": "5495c2f91b5bbfdba3a1bfd67ba6e7a04154eff92bcc7cfadfcf83ba76ae0f20",
+  "v7_outcome_existed_before_cleanup": false
+}

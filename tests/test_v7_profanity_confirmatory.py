@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+import copy
 import hashlib
 import importlib.util
 import json
@@ -23,6 +25,9 @@ def load_module(name: str, path: Path):
 v7 = load_module("confirmatory_v7_test", ROOT / "scripts" / "confirmatory_v7_protocol.py")
 volume_probe = load_module(
     "modal_verify_v7_volume_test", ROOT / "scripts" / "modal_verify_v7_volume.py"
+)
+image_finalizer = load_module(
+    "modal_finalize_image_v7_test", ROOT / "scripts" / "modal_finalize_image_v7.py"
 )
 VOLUME_NAME = volume_probe.VOLUME_NAME
 verify_v7_volume_v2 = volume_probe.verify_v7_volume_v2
@@ -173,9 +178,13 @@ def test_metric_schema_describes_the_actual_one_component_reward() -> None:
     assert "one-component" in named["unit"]
 
 
-def test_conditional_v6_closeout_is_missing_and_protocol_fails_closed(
+def test_conditional_v6_closeout_is_exact_and_missing_fails_closed(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
+    verified = v7.verify_v6_launch_predicate()
+    assert verified["sha256"] == v7.V6_TERMINAL_CLOSEOUT_SHA256
+    assert verified["terminal_stage"] == "failed_before_final"
+    assert verified["source_evidence_sha256"] == v7.V6_TERMINAL_EVIDENCE_SHA256
     missing = tmp_path / "not-yet-created.json"
     monkeypatch.setattr(v7, "V6_TERMINAL_CLOSEOUT_PATH", missing)
     with pytest.raises(v7.ProtocolError, match="V7 is inert"):
@@ -184,26 +193,138 @@ def test_conditional_v6_closeout_is_missing_and_protocol_fails_closed(
 
 def test_modal_image_is_strict_and_gpu_functions_hold_global_lease() -> None:
     source = (ROOT / "modal_confirmatory_v7.py").read_text()
-    assert "add_local_dir(\n    LOCAL_REPO," not in source
-    assert 'LOCAL_REPO / "src" / "jlens_rl"' in source
-    assert 'LOCAL_REPO / "trl" / "trl"' in source
+    tree = ast.parse(source)
+
+    def body(name: str) -> str:
+        node = next(
+            item
+            for item in tree.body
+            if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and item.name == name
+        )
+        return ast.get_source_segment(source, node) or ""
+
+    assert "add_local_dir(" not in source
+    assert "RUNTIME_SOURCE_SHA256 = _load_runtime_source_inventory()" in source
+    assert "for relative in sorted(RUNTIME_SOURCE_SHA256)" in source
+    assert "add_local_file(" in source
     assert "protocol_archive" not in source
     assert 'create_if_missing=False, version=2' in source
     assert 'GPU_LEASE_DICT_NAME = "j-lens-rl-global-gpu-lease-v1"' in source
     assert 'GPU_LEASE_KEY = "global-one-gpu"' in source
     assert "skip_if_exists=True" in source
+    acquisition = body("_acquire_gpu_lease")
+    assert "skip_if_exists=True" in acquisition
+    assert acquisition.index("_write_json_exclusive_atomic") < acquisition.index(
+        "return payload"
+    )
+    assert acquisition.index("state_volume.commit()") < acquisition.index(
+        "return payload"
+    )
+    orchestration = body("orchestrate")
+    assert orchestration.count("_acquire_gpu_lease(") == 3
+    assert orchestration.count("_mapped_results(") == 3
+    assert orchestration.index("_acquire_gpu_lease(") < orchestration.index(
+        "_mapped_results("
+    )
     for function_name in ("train_config", "evaluate_label"):
-        start = source.index(f"def {function_name}(")
-        end = source.find("\n@app.function", start)
-        body = source[start : end if end != -1 else None]
-        assert "_acquire_gpu_lease(" in body
-        assert "state_volume.commit()" in body
-        assert "_release_gpu_lease(lease)" in body
-        assert body.index("state_volume.commit()") < body.index(
-            "_release_gpu_lease(lease)"
+        worker = body(function_name)
+        assert "_acquire_gpu_lease(" not in worker
+        assert worker.index("_verify_gpu_worker_token(") < worker.index(
+            "_ensure_runtime_git()"
         )
+        assert worker.index("_complete_gpu_dispatch(") < worker.index(
+            "_release_gpu_lease(lease_token)"
+        )
+    release = body("_release_gpu_lease")
+    assert "nonce" in release and ".pop(" in release
     assert "_serial_gpu_waves(SEEDS)" in source
     assert "_serial_gpu_waves(FINAL_LABELS)" in source
+
+
+def test_image_inventory_rejects_hidden_extra_symlink_and_wrong_bytes(
+    tmp_path: Path,
+) -> None:
+    allowed = tmp_path / "src" / "allowed.py"
+    allowed.parent.mkdir()
+    allowed.write_text("allowed = True\n")
+    expected = {"src/allowed.py": sha256(allowed)}
+    image_finalizer.validate_exact_image_inventory(tmp_path, expected)
+
+    hidden = tmp_path / "src" / ".env"
+    hidden.write_text("secret=forbidden\n")
+    with pytest.raises(RuntimeError, match="strict Modal image inventory failed"):
+        image_finalizer.validate_exact_image_inventory(tmp_path, expected)
+    hidden.unlink()
+
+    extra = tmp_path / "src" / "extra.py"
+    extra.write_text("extra = True\n")
+    with pytest.raises(RuntimeError, match="unexpected"):
+        image_finalizer.validate_exact_image_inventory(tmp_path, expected)
+    extra.unlink()
+
+    link = tmp_path / "src" / "link.py"
+    link.symlink_to(allowed)
+    with pytest.raises(RuntimeError, match="unsafe"):
+        image_finalizer.validate_exact_image_inventory(tmp_path, expected)
+    link.unlink()
+
+    allowed.write_text("changed = True\n")
+    with pytest.raises(RuntimeError, match="wrong_hash"):
+        image_finalizer.validate_exact_image_inventory(tmp_path, expected)
+
+
+def test_v6_failed_before_final_inventory_rejects_adversarial_mutations() -> None:
+    evidence = ARCHIVE / "v6_celebration_terminal_evidence"
+    canonical = json.loads((evidence / "run_inventory.json").read_text())
+    bundle = json.loads((evidence / "evidence_bundle_inventory.json").read_text())
+    closeout = json.loads(
+        (ARCHIVE / "v6_celebration_terminal_closeout.json").read_text()
+    )
+    registration = json.loads(
+        (ARCHIVE / "v6_celebration_registration.json").read_text()
+    )
+
+    def validate(value: dict) -> None:
+        v7._validate_v6_run_inventory(
+            value,
+            claim_id=canonical["claim_id"],
+            volume=canonical["volume"],
+            bundle=bundle,
+            bundle_sha256=v7.V6_TERMINAL_EVIDENCE_SHA256["bundle_inventory"],
+            registration=registration,
+            closeout=closeout,
+        )
+
+    validate(canonical)
+    mutations = []
+    value = copy.deepcopy(canonical)
+    value["valid_terminal_treatments"] = {}
+    mutations.append(value)
+    value = copy.deepcopy(canonical)
+    value["valid_terminal_treatments"]["jlens_seed176"][
+        "run_result_manifest_sha256"
+    ] = ""
+    mutations.append(value)
+    value = copy.deepcopy(canonical)
+    value["incomplete_treatments"]["jlens_seed182"][
+        "validation_history_present"
+    ] = True
+    mutations.append(value)
+    value = copy.deepcopy(canonical)
+    value["wandb_query"]["results"][
+        registration["wandb"]["run_ids"]["jlens_seed182"]
+    ] = "finished"
+    mutations.append(value)
+    value = copy.deepcopy(canonical)
+    value["final"]["evals_directory_present"] = True
+    mutations.append(value)
+    value = copy.deepcopy(canonical)
+    value["partial_six_seed_aggregate"]["correct_counts"][0] += 1
+    mutations.append(value)
+    for malformed in mutations:
+        with pytest.raises(v7.ProtocolError):
+            validate(malformed)
 
 
 def test_modal_volume_probe_is_noncreating_and_version_two() -> None:

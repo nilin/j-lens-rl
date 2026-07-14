@@ -21,7 +21,6 @@
   "claim_protocol": "j-lens-rl-confirmatory-v7-profanity-u5",
   "conditional_launch_predicate": {
     "allowed_terminal_stages": [
-      "curve_failed",
       "failed_before_final"
     ],
     "authorization": "the closeout is intentionally unavailable at V7 freeze; prepare and every launch verification require later committed bytes and record their SHA-256",
@@ -35,17 +34,29 @@
     "required_protocol": "j-lens-rl-confirmatory-v6-celebration-terminal-closeout-v1",
     "required_sealed_comparison_present": false,
     "required_sealed_final_manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
-    "required_source_evidence_paths": {
-      "attempt_claim": "protocol_archive/v6_celebration_terminal_evidence/attempt_claim.json",
-      "attempt_status": "protocol_archive/v6_celebration_terminal_evidence/attempt_status.json",
-      "bundle_inventory": "protocol_archive/v6_celebration_terminal_evidence/evidence_bundle_inventory.json",
-      "curve_gate": "protocol_archive/v6_celebration_terminal_evidence/curve_gate.json",
-      "curve_plot": "protocol_archive/v6_celebration_terminal_evidence/curve.png",
-      "durable_export_receipt": "protocol_archive/v6_celebration_terminal_evidence/durable_export_receipt.json",
-      "evidence_inventory": "protocol_archive/v6_celebration_terminal_evidence/evidence_inventory.json",
-      "launch_receipt": "protocol_archive/v6_celebration_terminal_evidence/launch_receipt.json",
-      "root_inventory": "protocol_archive/v6_celebration_terminal_evidence/root_inventory.json"
+    "required_source_evidence_paths_by_terminal_stage": {
+      "failed_before_final": {
+        "attempt_claim": "protocol_archive/v6_celebration_terminal_evidence/attempt_claim.json",
+        "attempt_status": "protocol_archive/v6_celebration_terminal_evidence/attempt_status.json",
+        "bundle_inventory": "protocol_archive/v6_celebration_terminal_evidence/evidence_bundle_inventory.json",
+        "durable_export_receipt": "protocol_archive/v6_celebration_terminal_evidence/durable_export_receipt.json",
+        "evidence_inventory": "protocol_archive/v6_celebration_terminal_evidence/evidence_inventory.json",
+        "launch_receipt": "protocol_archive/v6_celebration_terminal_evidence/launch_receipt.json",
+        "root_inventory": "protocol_archive/v6_celebration_terminal_evidence/root_inventory.json",
+        "run_inventory": "protocol_archive/v6_celebration_terminal_evidence/run_inventory.json"
+      }
     },
+    "required_source_evidence_sha256": {
+      "attempt_claim": "244b92be1cbacbab33af460e820632f6cb9aec2ee9ede8bb641b68e763d3f3ae",
+      "attempt_status": "ffd9e1c71f1f706be516a74f105162274f71139d2b0e00c0ef0e8bb7efa83be6",
+      "bundle_inventory": "37e6aa15bf3eb1b0ab9b09aecd720e934aabab208b85bc58f8ae6c7fbd3b009e",
+      "durable_export_receipt": "c7667d652e8fa7c0b9ada6c4f5cb961c5d66c14352ea3c58dccef17c333295ff",
+      "evidence_inventory": "f5137850e951ac2e30854d00ecfa0208d45c1de5521d8a0e71759da9d444a9e1",
+      "launch_receipt": "c55b9ddcd1a5e128b7b2148488fefc22ed409acdc4a622c0c38328e56fef9d26",
+      "root_inventory": "e25a7f02e2376ae2024751c6889b13a4e008c6a7f539b496f65cc472a80f32e1",
+      "run_inventory": "b68ecf6367d725324a1ad7e2ec8fe2ae780e1aca27a121adf1e7875281fa97bf"
+    },
+    "required_terminal_closeout_sha256": "e14022a7dd5614726d7bf7fd4c9c8a40f4eb056b1c3a5dad9dbf3c1069912081",
     "required_v6_registration_sha256": "12cb17f896b117a43d9d266a53d43423ec5c5613fcc2dfda209f59bc27c507f2",
     "source_evidence_policy": "the closeout must name each exact committed evidence path and SHA-256; the validator recomputes every digest and rejects any final/eval/analysis artifact"
   },
@@ -66,19 +77,20 @@
       "dict_name": "j-lens-rl-global-gpu-lease-v1",
       "environment": "main",
       "key": "global-one-gpu",
-      "policy": "every GPU entrypoint atomically claims the named Dict key with a fresh nonce, fails closed if occupied or ambiguous, releases only its own nonce after durable publication, never steals by timeout, and permits only root-authorized forensic recovery after immutable closeout"
+      "policy": "the CPU orchestrator atomically claims the named Dict key with a fresh nonce and durably publishes a root-bound dispatch intent before every GPU schedule; each worker verifies that token and releases only its own nonce after durable result publication; occupancy or ambiguity fails closed, no timeout steals a lease, and only root-authorized forensic recovery may clear an orphan after immutable closeout"
     },
     "gpu_type": "L40S",
     "infrastructure_retry_policy": "a completed run may only retry publication of its immutable terminal W&B artifact; never overwrite or resume model optimization; any partial nonterminal run closes the whole attempt immutably and requires a fresh registered claim/volume",
-    "jlens_rl_runtime_tree_sha256": "14937bca23392634f52a3cc890d4c3723f4cf51343b18a2c29d36f1602dc3628",
+    "jlens_rl_runtime_tree_sha256": "fea903596c17bc4de3a98f4e83ba6e7253e49555bfcf81406fcbcac808a7d78b",
     "max_parallel_gpu_workers": 1,
     "modal_app": "j-lens-rl-confirmatory-v7-profanity-u5",
     "modal_cache_assets_sha256": "4c6997d776d127dfa909bea4fc8e059b6484dc40d39b81cddf47ae6d3974491e",
-    "modal_finalize_image_sha256": "06178c37674354687f44018a1feaeb84fdecd0bccf54b35f797b6393f274ca89",
-    "modal_runner_sha256": "9379fc6980c6167acb093b1189eb3ddd6a0c892251c85d11e40d61da2bb3265b",
+    "modal_finalize_image_sha256": "24cd3b649de70116b7c463db678da3223fef467fcffd22d72845c133ebd6d86c",
+    "modal_runner_sha256": "ff6e24fe0b2456897055a9acec09d7b099197c74f1233a5b08f924f46403764d",
     "modal_volume_preflight_sha256": "a68b66f44c922e99bde9c3fa36f13f6bde9ce963eac9a67ffdd58a661a43e5a3",
-    "protocol_sha256": "f8c3c96ec0e2e4eb49b5cc27dc04e51731b3305dcb44e620e4c9a413e84c714d",
+    "protocol_sha256": "3643f5720e4395474a86def8ed92b85aec0e129f356461e2f2cc48d7d9ebf812",
     "pyproject_sha256": "8d61fd00ddd948627960d85f5ca2998c4ae4198104bc613afb5a324923aaa823",
+    "runtime_source_allowlist_sha256": "ab65b2efbc942b572cfed8ce25d3e6c9749d0fa6e17f021ec4925fb494846e0e",
     "shell_launcher_sha256": "3ea50a7c0f2f4bfd11494cd6789ac0c5babbbfbacd3a0b0a9f1ee2485bd0603b",
     "trl_build_metadata_sha256": "f2665076902b2b6c86a8161c57fa34ac839f7f57acf0dceadb3138006d91071c",
     "trl_runtime_tree_sha256": "e5cf1ef7b3aaa34f55840c786c6642081f0a1beaea3dc3a68cbf9e74a4ca7b87",
@@ -124,6 +136,10 @@
     "selection_agent": "the V7 implementer used only committed completed exploratory artifacts and did not inspect any additional V6 or sealed-final outcome"
   },
   "outcome_status_at_freeze": "conditional V7 frozen while V6 remained nonterminal; the V7 implementer inspected no additional V6 or sealed-final outcome and no V7 outcome exists",
+  "prelaunch_source_cleanup": {
+    "path": "protocol_archive/v7_profanity_prelaunch_source_cleanup.json",
+    "sha256": "d624e1a7dddc26a0ac8d0bae48618fe62c9be7904472df409b96f991e8c399ed"
+  },
   "protocol": "j-lens-rl-confirmatory-v7-profanity-u5-registration-v1",
   "seeds": [
     184,
