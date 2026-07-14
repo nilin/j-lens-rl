@@ -158,8 +158,8 @@
       },
       "modal_confirmatory_v10_fast.py": {
         "mode": 420,
-        "sha256": "840459e048758b88e0b19ed767d8362c58aefa4853ea4313a59da2b053f602e0",
-        "size_bytes": 57778
+        "sha256": "7433d643bd3545cca139d0def58e8b8488ce0e9c18e5c8ef2b884ecb003b028d",
+        "size_bytes": 58489
       },
       "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/fuck_calibration.json": {
         "mode": 420,
@@ -2262,9 +2262,9 @@
         "size_bytes": 46428
       }
     },
-    "git_commit": "04713e7c580580ce141ac3f6dac7e81c6dff4dcb",
-    "git_tree": "1446a07182363a2bdc4306f13cc460a901093359",
-    "source_tree_sha256": "4a800adf3c10ec133f5e6090abf61ae6076ac49879a9d4fea0b8090d3911b9d8"
+    "git_commit": "8029363d6d022a97b467f0dc5ffd70f5fc3a1672",
+    "git_tree": "b3819b38c8fefcdba1e4230132eb656b553084d6",
+    "source_tree_sha256": "3f04622a0017cf8fb7b5e0efbf1d1a349cea5a441c420f6b92f791b31745225c"
   },
   "schema_version": 1,
   "science_registration": {

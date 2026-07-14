@@ -2272,15 +2272,27 @@ preparer does not resolve, stat, open, copy, or hash the protected final path;
 the launcher can release it only after a passing curve, eight verified runs,
 and a durable unlock.
 
-The launch-enabled execution contract was then materialized without opening any
-protected payload at
+The first launch-enabled contract had SHA-256
+`16e8ec05b70a58e275d7c3cdde8d908b5c49f24cbf651055c52b92c55d8a516c`.
+Modal app `ap-jAM2BBkWGm13c5Kyn9cZy2` began only its image build at 21:28:31
+UTC. It was stopped at 21:30:20 after an operational review found that the 424
+allowlisted files were becoming hundreds of sequential image layers. It had
+zero tasks, containers, claims, Volume files, W&B runs, GPU allocations, or
+scientific outcomes. This is an unspent pre-dispatch build, not a training
+attempt.
+
+The launcher now batches exactly the same fail-closed allowlist into one image
+layer; this operational-only revision has SHA-256
+`7433d643bd3545cca139d0def58e8b8488ce0e9c18e5c8ef2b884ecb003b028d`
+and its seven focused Modal tests pass. A replacement launch-enabled contract
+was materialized without opening any protected payload at
 `protocol_archive/v10_modal_execution_contract.json` (SHA-256
-`16e8ec05b70a58e275d7c3cdde8d908b5c49f24cbf651055c52b92c55d8a516c`).
+`9b4aba9bd9b89cb984af8929f01613b19ffe26d45ecab387e0b1ad0c2764a72f`).
 It pins fresh Modal v2 Volume `vo-LreEdmtTCwyu4VlrcP5FOJ`, a 424-file public
 runtime allowlist, synthetic runtime Git tree
-`1446a07182363a2bdc4306f13cc460a901093359`, commit
-`04713e7c580580ce141ac3f6dac7e81c6dff4dcb`, and content-tree SHA-256
-`4a800adf3c10ec133f5e6090abf61ae6076ac49879a9d4fea0b8090d3911b9d8`.
+`b3819b38c8fefcdba1e4230132eb656b553084d6`, commit
+`8029363d6d022a97b467f0dc5ffd70f5fc3a1672`, and content-tree SHA-256
+`3f04622a0017cf8fb7b5e0efbf1d1a349cea5a441c420f6b92f791b31745225c`.
 The allowlist contains the model lens, calibration, exposed curve/exclusions,
 training/evaluation/analysis sources and tests, and vendored runtime dependency;
 it excludes every sealed-final, reserve, and correlation payload.
