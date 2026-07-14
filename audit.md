@@ -1976,3 +1976,14 @@ ledger is `protocol_archive/v9_local_seed209_terminal_ledger.json`; the compact
 source evidence was added beside seed 208 under
 `protocol_archive/v9_local_live_evidence/`. The sole GPU remains assigned to the
 serial RL queue, so candidate-word analysis is not gating training.
+
+Seed 210 completed with curve `.3975/.3875/.3900/.3825` and zero literal
+target-word completions. The three-seed descriptive mean is now
+`.3975/.4000/.3975/.38917`: the first rise remains positive, while step 10 is
+`.0025` below step 4 and step 20 is `.00833` below step 10. Five treatments
+remain, so the registered gate is still unevaluated. Seed 211 began immediately
+on the same sole RTX 4090. Seed 210's receipt-bound offline directory was then
+synced CPU-only and its exact remote W&B identity and all seven evidence files
+verified. Its reconstructable ledger is
+`protocol_archive/v9_local_seed210_terminal_ledger.json`, with compact raw
+evidence under `protocol_archive/v9_local_live_evidence/`.

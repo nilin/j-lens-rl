@@ -1,0 +1,153 @@
+{
+  "embedded_evidence_relative_paths": {
+    "data_indices.json": "files/data_indices.json",
+    "environment_snapshot.json": "files/environment_snapshot.json",
+    "log_history.json": "files/log_history.json",
+    "resolved_config.json": "files/resolved_config.json",
+    "run_manifest.json": "files/run_manifest.json",
+    "run_result_manifest.json": "files/run_result_manifest.json",
+    "validation_history.jsonl": "files/validation_history.jsonl"
+  },
+  "embedded_evidence_storage": "regular_files_inside_offline_run_root",
+  "observed_offline_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v9-local-emotional-profanity-u5-h20",
+    "mode": "offline",
+    "project": "j-lens-rl",
+    "resume": "never",
+    "run_files_dir": "/j-lens-rl/.confirmatory/v9_local/offline_wandb/jlens_seed210/wandb/offline-run-20260714_170125-confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210/files",
+    "run_id": "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210",
+    "run_name": "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210",
+    "tags": [
+      "confirmatory-v9-local",
+      "emotional-j-lens",
+      "profanity-u5",
+      "rtx4090",
+      "offline-wandb",
+      "curve-exposed-final-sealed"
+    ],
+    "url": null
+  },
+  "offline_run_file_symlink_count": 12,
+  "offline_run_file_symlink_inventory": [
+    {
+      "mode": "0o644",
+      "path": "files/data_indices.json",
+      "sha256": "00a765732d6f301b3364319d944bc46b2fc62e3b292492908e44a8f4e3ec464e",
+      "size_bytes": 13890,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "files/environment_snapshot.json",
+      "sha256": "f91f003b3e1f2a7ec8ea46b978b489f34e81de07f7129b527eef6d9526a5c7c6",
+      "size_bytes": 4179,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "files/log_history.json",
+      "sha256": "2101ec92f50e3ec0bc9ab86aa7b5e125bab8b74c532e3690a2d1416f5412aa7e",
+      "size_bytes": 21810,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "files/requirements.txt",
+      "sha256": "9c408a77167b8543aa7ab37e8a6693d33a5c18e2d6009ca5217254191b5ba63f",
+      "size_bytes": 2019,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "files/resolved_config.json",
+      "sha256": "05e7dafe3facbb0f53ffee8b5222619fc383cffb5e377e1e9f7761f312aba27d",
+      "size_bytes": 3993,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "files/run_manifest.json",
+      "sha256": "22abc7861bf4ab7f32efd852ffae4970a28a14787d62936b4ca7948e2068ae73",
+      "size_bytes": 32972,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "files/run_result_manifest.json",
+      "sha256": "9f4de63f500bcd251c00190ca5ea6102d160d21765241a790a0b939ed2a4d765",
+      "size_bytes": 34758,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "files/validation_history.jsonl",
+      "sha256": "c24dc001eb49d88196dc546d615a3d34b49ecae8ab8ca204f6b15c1f237ac8de",
+      "size_bytes": 1253,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "logs/debug-core.log",
+      "target": "/j-lens-rl/.confirmatory/v9_local/wandb_cache/jlens_seed210/wandb/logs/core-debug-20260714_170125.log",
+      "type": "symlink"
+    },
+    {
+      "mode": "0o644",
+      "path": "logs/debug-internal.log",
+      "sha256": "d7d4dbce7318ea51058f09e538572bff83e5afc014391ffd05433e36be98085e",
+      "size_bytes": 1737,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "logs/debug.log",
+      "sha256": "19f1823e442bc1697044b2c2c6b7709eba79fd2520e55fc5a893a1f7a7514e5d",
+      "size_bytes": 85713,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "run-confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210.wandb",
+      "sha256": "51b61604427d75461c2d0a1ac62a5f6b98c76188cc7f725b330a71533d62b631",
+      "size_bytes": 327704,
+      "type": "file"
+    }
+  ],
+  "offline_run_root": "/j-lens-rl/.confirmatory/v9_local/offline_wandb/jlens_seed210/wandb/offline-run-20260714_170125-confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210",
+  "offline_run_root_relative_to_wandb_dir": "wandb/offline-run-20260714_170125-confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210",
+  "offline_run_tree_sha256": "a3ca923293006e963dcbcbd11082274a9bcc2828124dd379b22ecc7b14f009f2",
+  "queued_evidence_sha256": {
+    "data_indices.json": "00a765732d6f301b3364319d944bc46b2fc62e3b292492908e44a8f4e3ec464e",
+    "environment_snapshot.json": "f91f003b3e1f2a7ec8ea46b978b489f34e81de07f7129b527eef6d9526a5c7c6",
+    "log_history.json": "2101ec92f50e3ec0bc9ab86aa7b5e125bab8b74c532e3690a2d1416f5412aa7e",
+    "resolved_config.json": "05e7dafe3facbb0f53ffee8b5222619fc383cffb5e377e1e9f7761f312aba27d",
+    "run_manifest.json": "22abc7861bf4ab7f32efd852ffae4970a28a14787d62936b4ca7948e2068ae73",
+    "run_result_manifest.json": "9f4de63f500bcd251c00190ca5ea6102d160d21765241a790a0b939ed2a4d765",
+    "validation_history.jsonl": "c24dc001eb49d88196dc546d615a3d34b49ecae8ab8ca204f6b15c1f237ac8de"
+  },
+  "remote_artifact_claimed": false,
+  "schema_version": 1,
+  "sync_completed": false,
+  "sync_policy": "Preserve this completed offline directory with its seven embedded terminal files; sync this directory only. Never rerun or resume optimization to repair tracking infrastructure.",
+  "terminal_run_result_sha256": "9f4de63f500bcd251c00190ca5ea6102d160d21765241a790a0b939ed2a4d765",
+  "transport": "offline_wandb_pending_explicit_sync",
+  "wandb_dir": "/j-lens-rl/.confirmatory/v9_local/offline_wandb/jlens_seed210",
+  "wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v9-local-emotional-profanity-u5-h20",
+    "project": "j-lens-rl",
+    "resume": "never",
+    "run_id": "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210",
+    "run_name": "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210",
+    "tags": [
+      "confirmatory-v9-local",
+      "emotional-j-lens",
+      "profanity-u5",
+      "rtx4090",
+      "offline-wandb",
+      "curve-exposed-final-sealed"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210"
+  }
+}
