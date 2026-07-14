@@ -32,6 +32,7 @@ ATTEMPT4_INVENTORY_PATH = (
 ATTEMPT4_LAUNCH_PATH = (
     ROOT / "protocol_archive/word_correlation_attempt4_launch_receipt.json"
 )
+CORRELATION_FINALIZER_PATH = ROOT / "scripts/modal_finalize_correlation_image.py"
 TRAIN_EXCLUSIONS_PATH = ROOT / ".confirmatory/manifests/train_exclusions.json"
 SOURCE = MODAL_PATH.read_text()
 TREE = ast.parse(SOURCE)
@@ -279,6 +280,13 @@ def test_preregistration_pins_the_exact_unlaunched_emotional_scanner():
     assert current["root_authority_protocol"] == _assignment(
         "ROOT_AUTHORITY_PROTOCOL"
     )
+    assert current["repository_metadata_included"] is False
+    assert current["source_provenance_env"] == _assignment(
+        "SOURCE_PROVENANCE_ENV"
+    )
+    assert current["source_snapshot_protocol"] == _assignment(
+        "SOURCE_SNAPSHOT_PROTOCOL"
+    )
     assert current["scanner_sha256"] == _sha256(SCANNER_PATH)
     assert current["launcher_sha256"] == _sha256(MODAL_PATH)
     assert current["no_attempt4_artifact_may_be_reused"] is True
@@ -309,13 +317,16 @@ def test_modal_mounts_exactly_three_safe_inputs_and_no_sealed_outcomes():
         and isinstance(node.func, ast.Attribute)
         and node.func.attr == "add_local_file"
     ]
-    assert len(mounts) == 3
+    # One call is inside the exact source-allowlist loop; the other three are
+    # the only registered data/artifact inputs.
+    assert len(mounts) == 4
     mount_source = [
         ast.get_source_segment(SOURCE, call.args[0]) or "" for call in mounts
     ]
     mount_destination = [
         ast.get_source_segment(SOURCE, call.args[1]) or "" for call in mounts
     ]
+    assert sum("_relative" in text for text in mount_source) == 1
     assert sum("qwen25_05b_solved_lens.pt" in text for text in mount_source) == 1
     assert sum("curve_indices.json" in text for text in mount_source) == 1
     assert sum("train_exclusions.json" in text for text in mount_source) == 1
@@ -338,12 +349,66 @@ def test_modal_mounts_exactly_three_safe_inputs_and_no_sealed_outcomes():
         and isinstance(node.func, ast.Attribute)
         and node.func.attr == "add_local_dir"
     ]
-    assert len(directory_copies) == 1
-    copied_source = ast.get_source_segment(SOURCE, directory_copies[0]) or ""
-    assert '".confirmatory"' in copied_source
-    assert '".confirmatory/**"' in copied_source
-    assert '"artifacts"' in copied_source
-    assert '"artifacts/**"' in copied_source
+    assert directory_copies == []
+
+    safe_source = next(
+        node.value
+        for node in TREE.body
+        if isinstance(node, ast.Assign)
+        and len(node.targets) == 1
+        and isinstance(node.targets[0], ast.Name)
+        and node.targets[0].id == "SAFE_SOURCE_RELATIVES"
+    )
+    assert isinstance(safe_source, ast.Tuple)
+    observed = [ast.get_source_segment(SOURCE, item) for item in safe_source.elts]
+    assert observed == [
+        '"modal_word_correlation.py"',
+        '"run_word_correlation.sh"',
+        '"pyproject.toml"',
+        "CONFIG_RELATIVE",
+        '"src/jlens_rl/__init__.py"',
+        '"src/jlens_rl/common.py"',
+        '"src/jlens_rl/reward.py"',
+        "SCANNER_RELATIVE",
+        '"scripts/modal_cache_assets.py"',
+        '"scripts/modal_finalize_correlation_image.py"',
+        "PREREGISTRATION_RELATIVE",
+        "CURRENT_AMENDMENT_RELATIVE",
+        "AMENDMENT4_RELATIVE",
+        "ATTEMPT4_CLOSEOUT_RELATIVE",
+        "ATTEMPT4_INVENTORY_RELATIVE",
+    ]
+    joined = "\n".join(str(item) for item in observed)
+    for forbidden in (
+        ".git",
+        "source_snapshot",
+        "source_manifest",
+        "confirmatory_protocol.py",
+        "confirmatory_v5_protocol.py",
+        "emotional_screen_forensic_bundle",
+        "audit.md",
+        "runs/",
+    ):
+        assert forbidden not in joined
+
+    source_loop = next(
+        node
+        for node in TREE.body
+        if isinstance(node, ast.For)
+        and isinstance(node.iter, ast.Name)
+        and node.iter.id == "SAFE_SOURCE_RELATIVES"
+    )
+    assert len(source_loop.body) == 1
+    loop_source = ast.get_source_segment(SOURCE, source_loop) or ""
+    assert "repo_image.add_local_file" in loop_source
+    assert "LOCAL_REPO / _relative" in loop_source
+    assert "REMOTE_REPO / _relative" in loop_source
+
+    finalizer = CORRELATION_FINALIZER_PATH.read_text()
+    assert "git status" not in finalizer
+    assert "git rev-parse" not in finalizer
+    assert 'REPO / ".git"' in finalizer
+    assert "actual != set(expected)" in finalizer
 
 
 def test_remote_repository_boundary_fails_closed_on_any_extra_manifest_or_artifact():

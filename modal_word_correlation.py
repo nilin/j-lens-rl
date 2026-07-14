@@ -19,11 +19,12 @@ below.  A discovery merge additionally contains ``selection`` with
 negative with correctness), and ``token_ids``.  Validation is given the
 byte-pinned selection lock and scores only that selected word.
 
-Only the exposed failed-V4 curve manifest, an outcome-free train-exclusion
-manifest needed to reproduce the clean Git checkout, and the target-independent
-transport are copied into the image.  The scanner never reads the exclusion
-manifest.  No sealed-final, reserve, or retired manifest is available to these
-jobs.
+The image is assembled from an exact source-file allowlist with no Git metadata,
+historical outcome bundles, or confirmatory allocation generators.  Its only
+data inputs are the exposed failed-V4 curve manifest, an outcome-free
+train-exclusion manifest, and the target-independent transport.  The scanner
+never reads the exclusion manifest.  No sealed-final, reserve, retired, or
+other experiment snapshot/manifest is available to these jobs.
 """
 
 from __future__ import annotations
@@ -123,6 +124,38 @@ FORBIDDEN_MANIFEST_NAMES = (
     "retired_v3_curve_indices.json",
 )
 
+# The correlation image is an allowlisted source snapshot, not a checkout.
+# In particular, it must never contain ``.git`` (whose object database can
+# retain files absent from the working tree), historical run bundles, the
+# confirmatory split-generators, or any source snapshot made for a different
+# experiment.  These are the only repository files baked into the image; the
+# three registered data/artifact inputs below are appended to this inventory.
+SOURCE_SNAPSHOT_PROTOCOL = "j-lens-rl-word-correlation-source-snapshot-v1"
+SOURCE_PROVENANCE_ENV = "JLENS_CORRELATION_SOURCE_PROVENANCE_JSON"
+SAFE_SOURCE_RELATIVES = (
+    "modal_word_correlation.py",
+    "run_word_correlation.sh",
+    "pyproject.toml",
+    CONFIG_RELATIVE,
+    "src/jlens_rl/__init__.py",
+    "src/jlens_rl/common.py",
+    "src/jlens_rl/reward.py",
+    SCANNER_RELATIVE,
+    "scripts/modal_cache_assets.py",
+    "scripts/modal_finalize_correlation_image.py",
+    PREREGISTRATION_RELATIVE,
+    CURRENT_AMENDMENT_RELATIVE,
+    AMENDMENT4_RELATIVE,
+    ATTEMPT4_CLOSEOUT_RELATIVE,
+    ATTEMPT4_INVENTORY_RELATIVE,
+)
+SAFE_IMAGE_RELATIVES = (
+    *SAFE_SOURCE_RELATIVES,
+    LENS_RELATIVE,
+    CURVE_MANIFEST_RELATIVE,
+    TRAIN_EXCLUSIONS_RELATIVE,
+)
+
 
 app = modal.App("j-lens-rl-word-correlation-v1")
 output_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True, version=2)
@@ -142,33 +175,84 @@ root_authority_registry = modal.Dict.from_name(
     create_if_missing=True,
 )
 
-repo_image = (
-    modal.Image.debian_slim(python_version="3.11")
-    .apt_install("git")
-    .add_local_dir(
-        LOCAL_REPO,
-        REMOTE_REPO.as_posix(),
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _git(*args: str, repo: Path) -> str:
+    return subprocess.check_output(["git", *args], cwd=repo, text=True).strip()
+
+
+def _source_snapshot(repo: Path) -> dict[str, Any]:
+    """Describe exactly the allowlisted bytes baked into the Modal image."""
+
+    hashes: dict[str, str] = {}
+    for relative in SAFE_IMAGE_RELATIVES:
+        path = repo / relative
+        if not path.is_file() or path.is_symlink():
+            raise RuntimeError(f"safe correlation image input is missing: {relative}")
+        hashes[relative] = _sha256(path)
+    status = _git("status", "--porcelain=v1", "--untracked-files=all", repo=repo)
+    snapshot = {
+        "protocol": SOURCE_SNAPSHOT_PROTOCOL,
+        "git_commit": _git("rev-parse", "HEAD", repo=repo),
+        "git_dirty": bool(status),
+        "git_status_sha256": hashlib.sha256(status.encode()).hexdigest(),
+        "image_file_sha256": hashes,
+        "repository_metadata_included": False,
+    }
+    encoded = json.dumps(
+        snapshot,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode()
+    snapshot["source_snapshot_sha256"] = hashlib.sha256(encoded).hexdigest()
+    return snapshot
+
+
+def _initial_source_snapshot() -> dict[str, Any]:
+    # Modal may import this module inside the already-built image.  In that
+    # environment the baked provenance is authoritative and no Git metadata
+    # exists; only the local deployment process computes it from a checkout.
+    baked = os.environ.get(SOURCE_PROVENANCE_ENV)
+    if baked:
+        try:
+            value = json.loads(baked)
+        except json.JSONDecodeError as error:
+            raise RuntimeError("baked correlation source provenance is invalid") from error
+        if not isinstance(value, dict):
+            raise RuntimeError("baked correlation source provenance is not an object")
+        return value
+    return _source_snapshot(LOCAL_REPO)
+
+
+LOCAL_SOURCE_SNAPSHOT = _initial_source_snapshot()
+LOCAL_SOURCE_SNAPSHOT_JSON = json.dumps(
+    LOCAL_SOURCE_SNAPSHOT,
+    sort_keys=True,
+    separators=(",", ":"),
+    allow_nan=False,
+)
+
+
+# Build the image file-by-file from the allowlist.  Using ``add_local_dir``
+# here would make the firewall depend on an ever-growing denylist and would
+# copy Git metadata under Modal's explicit-ignore semantics.
+repo_image = modal.Image.debian_slim(python_version="3.11").apt_install("git")
+for _relative in SAFE_SOURCE_RELATIVES:
+    repo_image = repo_image.add_local_file(
+        LOCAL_REPO / _relative,
+        (REMOTE_REPO / _relative).as_posix(),
         copy=True,
-        ignore=[
-            ".venv",
-            ".venv/**",
-            ".env",
-            "modal.sh",
-            "artifacts",
-            "artifacts/**",
-            "runs",
-            "runs/**",
-            "wandb",
-            "wandb/**",
-            ".confirmatory",
-            ".confirmatory/**",
-            ".pytest_cache",
-            ".pytest_cache/**",
-            "**/__pycache__/**",
-            "*.egg-info/**",
-        ],
     )
-    .add_local_file(
+repo_image = (
+    repo_image.add_local_file(
         LOCAL_ARTIFACTS / "qwen25_05b_solved_lens.pt",
         (REMOTE_REPO / LENS_RELATIVE).as_posix(),
         copy=True,
@@ -188,35 +272,19 @@ repo_image = (
         {
             "HF_HUB_DISABLE_TELEMETRY": "1",
             "JLENS_REPOSITORY_ROOT": REMOTE_REPO.as_posix(),
-            "PYTHONPATH": (
-                f"{(REMOTE_REPO / 'src').as_posix()}:"
-                f"{(REMOTE_REPO / 'trl').as_posix()}"
-            ),
+            "PYTHONPATH": (REMOTE_REPO / "src").as_posix(),
             "TOKENIZERS_PARALLELISM": "false",
             "PYTHONUNBUFFERED": "1",
+            SOURCE_PROVENANCE_ENV: LOCAL_SOURCE_SNAPSHOT_JSON,
         }
     )
     .run_commands(
         "python -m pip install --upgrade pip==26.0.1",
-        "python -m pip install './trl[peft]' '.[dev]'",
+        "python -m pip install '.'",
         "python scripts/modal_cache_assets.py",
-        "python scripts/modal_finalize_image.py",
+        "python scripts/modal_finalize_correlation_image.py",
     )
 )
-
-
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def _git(*args: str, repo: Path) -> str:
-    return subprocess.check_output(["git", *args], cwd=repo, text=True).strip()
-
-
 def _write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -559,6 +627,9 @@ def _validate_preregistration(repo: Path) -> tuple[str, str, str, str, set[str]]
         "publication_dict_name": PUBLICATION_DICT_NAME,
         "root_authority_dict_name": ROOT_AUTHORITY_DICT_NAME,
         "root_authority_protocol": ROOT_AUTHORITY_PROTOCOL,
+        "repository_metadata_included": False,
+        "source_provenance_env": SOURCE_PROVENANCE_ENV,
+        "source_snapshot_protocol": SOURCE_SNAPSHOT_PROTOCOL,
         "scanner_sha256": scanner_sha256,
         "launcher_sha256": launcher_sha256,
         "safe_train_exclusions_sha256": TRAIN_EXCLUSIONS_SHA256,
@@ -643,6 +714,9 @@ def _launch_manifest(preflight: dict[str, Any], claim_id: str) -> dict[str, Any]
     status = _git("status", "--porcelain=v1", "--untracked-files=all", repo=LOCAL_REPO)
     if status:
         raise RuntimeError(f"word-correlation launch requires a clean committed tree:\n{status}")
+    snapshot = _validate_source_snapshot_payload(_source_snapshot(LOCAL_REPO))
+    if snapshot != LOCAL_SOURCE_SNAPSHOT:
+        raise RuntimeError("baked source snapshot differs from the clean local tree")
     curve_indices = _validate_curve_manifest(LOCAL_REPO)
     lens_path = LOCAL_REPO / LENS_RELATIVE
     if not lens_path.is_file() or _sha256(lens_path) != LENS_SHA256:
@@ -655,6 +729,7 @@ def _launch_manifest(preflight: dict[str, Any], claim_id: str) -> dict[str, Any]
         "protocol": "j-lens-rl-jspace-word-correlation-v1",
         "git_commit": _git("rev-parse", "HEAD", repo=LOCAL_REPO),
         "git_status": status,
+        "source_snapshot": snapshot,
         "model_revision": MODEL_REVISION,
         "dataset_revision": GSM8K_REVISION,
         "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
@@ -721,13 +796,94 @@ def _validate_gpu_preflight(value: Any, context: str) -> dict[str, Any]:
     return value
 
 
+def _validate_source_snapshot_payload(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise RuntimeError("source snapshot provenance is not an object")
+    hashes = value.get("image_file_sha256")
+    commit = value.get("git_commit")
+    expected_keys = {
+        "protocol",
+        "git_commit",
+        "git_dirty",
+        "git_status_sha256",
+        "image_file_sha256",
+        "repository_metadata_included",
+        "source_snapshot_sha256",
+    }
+    if (
+        set(value) != expected_keys
+        or value.get("protocol") != SOURCE_SNAPSHOT_PROTOCOL
+        or value.get("git_dirty") is not False
+        or value.get("git_status_sha256") != hashlib.sha256(b"").hexdigest()
+        or value.get("repository_metadata_included") is not False
+        or not isinstance(commit, str)
+        or len(commit) != 40
+        or any(character not in "0123456789abcdef" for character in commit)
+        or not isinstance(hashes, dict)
+        or set(hashes) != set(SAFE_IMAGE_RELATIVES)
+        or any(
+            not isinstance(digest, str)
+            or len(digest) != 64
+            or any(character not in "0123456789abcdef" for character in digest)
+            for digest in hashes.values()
+        )
+    ):
+        raise RuntimeError("source snapshot provenance has an invalid identity")
+    without_claim = dict(value)
+    claimed = without_claim.pop("source_snapshot_sha256")
+    if claimed != _json_sha256(without_claim):
+        raise RuntimeError("source snapshot provenance hash is invalid")
+    return value
+
+
+def _verify_remote_source_snapshot(manifest: dict[str, Any]) -> None:
+    raw = os.environ.get(SOURCE_PROVENANCE_ENV)
+    if not raw:
+        raise RuntimeError("remote image has no baked source provenance")
+    try:
+        baked = json.loads(raw)
+    except json.JSONDecodeError as error:
+        raise RuntimeError("remote source provenance is invalid JSON") from error
+    baked = _validate_source_snapshot_payload(baked)
+    if manifest.get("source_snapshot") != baked:
+        raise RuntimeError("remote source snapshot differs from the launch claim")
+    if manifest.get("git_commit") != baked["git_commit"]:
+        raise RuntimeError("remote source commit differs from the launch claim")
+    if (REMOTE_REPO / ".git").exists() or any(
+        path.name == ".git" for path in REMOTE_REPO.rglob(".git")
+    ):
+        raise RuntimeError("Git metadata is available to the correlation scanner")
+
+    expected = baked["image_file_sha256"]
+    actual_files: set[str] = set()
+    for path in REMOTE_REPO.rglob("*"):
+        relative = path.relative_to(REMOTE_REPO)
+        if path.is_symlink():
+            raise RuntimeError(f"remote source snapshot contains a symlink: {relative}")
+        if not path.is_file():
+            continue
+        # Python may create bytecode after the build-time exact-inventory
+        # check.  No other runtime-created file inside the source root is safe.
+        if "__pycache__" in relative.parts and path.suffix == ".pyc":
+            continue
+        actual_files.add(relative.as_posix())
+    if actual_files != set(expected):
+        raise RuntimeError(
+            "remote source snapshot file inventory changed: "
+            f"missing={sorted(set(expected) - actual_files)}, "
+            f"extra={sorted(actual_files - set(expected))}"
+        )
+    actual_hashes = {
+        relative: _sha256(REMOTE_REPO / relative) for relative in sorted(actual_files)
+    }
+    if actual_hashes != expected:
+        raise RuntimeError("remote source snapshot bytes changed")
+
+
 def _verify_remote_manifest(manifest: dict[str, Any]) -> None:
     if manifest.get("protocol") != "j-lens-rl-jspace-word-correlation-v1":
         raise RuntimeError("wrong word-correlation protocol")
-    if manifest.get("git_commit") != _git("rev-parse", "HEAD", repo=REMOTE_REPO):
-        raise RuntimeError("remote commit differs from launch")
-    if _git("status", "--porcelain=v1", "--untracked-files=all", repo=REMOTE_REPO):
-        raise RuntimeError("remote repository is dirty")
+    _verify_remote_source_snapshot(manifest)
     _validate_repository_boundary(REMOTE_REPO)
     curve_indices = _validate_curve_manifest(REMOTE_REPO)
     if manifest.get("curve_manifest_size") != len(curve_indices):
@@ -765,6 +921,9 @@ def _verify_remote_manifest(manifest: dict[str, Any]) -> None:
         "root_authority_dict_name": ROOT_AUTHORITY_DICT_NAME,
         "root_authority_protocol": ROOT_AUTHORITY_PROTOCOL,
         "controller_recovery_policy": CONTROLLER_RECOVERY_POLICY,
+        "source_snapshot": _validate_source_snapshot_payload(
+            manifest.get("source_snapshot")
+        ),
         "gpu_type": GPU_TYPE,
         "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
         "num_shards_per_phase": NUM_SHARDS,
@@ -970,6 +1129,13 @@ def _selection_identity(
         "protocol": manifest["protocol"],
         "claim_id": manifest["claim_id"],
         "git_commit": manifest["git_commit"],
+        "source_snapshot_sha256": manifest["source_snapshot"][
+            "source_snapshot_sha256"
+        ],
+        "source_snapshot_file_sha256": manifest["source_snapshot"][
+            "image_file_sha256"
+        ],
+        "repository_metadata_included": False,
         "config_sha256": manifest["config_sha256"],
         "scanner_sha256": manifest["scanner_sha256"],
         "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
@@ -1555,6 +1721,13 @@ def _lock_selection(
         "protocol": manifest["protocol"],
         "claim_id": manifest["claim_id"],
         "git_commit": manifest["git_commit"],
+        "source_snapshot_sha256": manifest["source_snapshot"][
+            "source_snapshot_sha256"
+        ],
+        "source_snapshot_file_sha256": manifest["source_snapshot"][
+            "image_file_sha256"
+        ],
+        "repository_metadata_included": False,
         "config_sha256": manifest["config_sha256"],
         "scanner_sha256": manifest["scanner_sha256"],
         "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
@@ -1586,6 +1759,13 @@ def _load_selection_lock(
         "protocol": manifest["protocol"],
         "claim_id": manifest["claim_id"],
         "git_commit": manifest["git_commit"],
+        "source_snapshot_sha256": manifest["source_snapshot"][
+            "source_snapshot_sha256"
+        ],
+        "source_snapshot_file_sha256": manifest["source_snapshot"][
+            "image_file_sha256"
+        ],
+        "repository_metadata_included": False,
         "config_sha256": manifest["config_sha256"],
         "scanner_sha256": manifest["scanner_sha256"],
         "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
@@ -2277,6 +2457,13 @@ def _finalize_result(
         "protocol": manifest["protocol"],
         "claim_id": claim_id,
         "git_commit": manifest["git_commit"],
+        "source_snapshot_sha256": manifest["source_snapshot"][
+            "source_snapshot_sha256"
+        ],
+        "source_snapshot_file_sha256": manifest["source_snapshot"][
+            "image_file_sha256"
+        ],
+        "repository_metadata_included": False,
         "config_sha256": manifest["config_sha256"],
         "scanner_sha256": manifest["scanner_sha256"],
         "preregistration_sha256": manifest["preregistration_sha256"],
@@ -2355,6 +2542,13 @@ def _load_committed_result(
         "protocol": manifest["protocol"],
         "claim_id": claim_id,
         "git_commit": manifest["git_commit"],
+        "source_snapshot_sha256": manifest["source_snapshot"][
+            "source_snapshot_sha256"
+        ],
+        "source_snapshot_file_sha256": manifest["source_snapshot"][
+            "image_file_sha256"
+        ],
+        "repository_metadata_included": False,
         "config_sha256": manifest["config_sha256"],
         "scanner_sha256": manifest["scanner_sha256"],
         "current_amendment_sha256": manifest["current_amendment_sha256"],

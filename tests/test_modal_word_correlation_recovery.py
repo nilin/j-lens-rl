@@ -447,6 +447,85 @@ def minimal_manifest(claim_id: str = "a" * 32) -> dict:
     }
 
 
+def source_snapshot(repo: Path, commit: str = "f" * 40) -> dict:
+    hashes: dict[str, str] = {}
+    for index, relative in enumerate(runner.SAFE_IMAGE_RELATIVES):
+        path = repo / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(f"safe-{index}-{relative}\n".encode())
+        hashes[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+    payload = {
+        "protocol": runner.SOURCE_SNAPSHOT_PROTOCOL,
+        "git_commit": commit,
+        "git_dirty": False,
+        "git_status_sha256": hashlib.sha256(b"").hexdigest(),
+        "image_file_sha256": hashes,
+        "repository_metadata_included": False,
+    }
+    payload["source_snapshot_sha256"] = runner._json_sha256(payload)
+    return payload
+
+
+def test_remote_source_snapshot_needs_no_git_and_rejects_repository_metadata(
+    tmp_path, monkeypatch
+) -> None:
+    snapshot = source_snapshot(tmp_path)
+    manifest = {
+        "git_commit": snapshot["git_commit"],
+        "source_snapshot": snapshot,
+    }
+    monkeypatch.setattr(runner, "REMOTE_REPO", tmp_path)
+    monkeypatch.setenv(runner.SOURCE_PROVENANCE_ENV, json.dumps(snapshot))
+    monkeypatch.setattr(
+        runner,
+        "_git",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            AssertionError("remote verifier must not invoke Git")
+        ),
+    )
+    bytecode = tmp_path / "src/jlens_rl/__pycache__/word_correlation.pyc"
+    bytecode.parent.mkdir(parents=True)
+    bytecode.write_bytes(b"runtime-bytecode")
+    runner._verify_remote_source_snapshot(manifest)
+
+    git_head = tmp_path / ".git/HEAD"
+    git_head.parent.mkdir()
+    git_head.write_text("ref: refs/heads/main\n")
+    with pytest.raises(RuntimeError, match="Git metadata"):
+        runner._verify_remote_source_snapshot(manifest)
+
+
+def test_baked_source_snapshot_loads_without_a_git_checkout(monkeypatch) -> None:
+    baked = {
+        "protocol": runner.SOURCE_SNAPSHOT_PROTOCOL,
+        "source_snapshot_sha256": "a" * 64,
+    }
+    monkeypatch.setenv(runner.SOURCE_PROVENANCE_ENV, json.dumps(baked))
+    monkeypatch.setattr(
+        runner,
+        "_source_snapshot",
+        lambda _repo: (_ for _ in ()).throw(
+            AssertionError("remote module import must not inspect Git")
+        ),
+    )
+    assert runner._initial_source_snapshot() == baked
+
+
+def test_source_snapshot_rejects_any_extra_nonbytecode_file(
+    tmp_path, monkeypatch
+) -> None:
+    snapshot = source_snapshot(tmp_path)
+    manifest = {
+        "git_commit": snapshot["git_commit"],
+        "source_snapshot": snapshot,
+    }
+    monkeypatch.setattr(runner, "REMOTE_REPO", tmp_path)
+    monkeypatch.setenv(runner.SOURCE_PROVENANCE_ENV, json.dumps(snapshot))
+    (tmp_path / "source_snapshot.zip").write_bytes(b"forbidden-indirect-input")
+    with pytest.raises(RuntimeError, match="file inventory changed"):
+        runner._verify_remote_source_snapshot(manifest)
+
+
 def test_default_claim_identity_is_deterministic_and_explicit_ids_are_checked(
     monkeypatch,
 ) -> None:
@@ -644,6 +723,10 @@ def test_result_marker_repairs_a_nonterminal_status(tmp_path, monkeypatch) -> No
         **minimal_manifest(),
         "protocol": "j-lens-rl-jspace-word-correlation-v1",
         "git_commit": "f" * 40,
+        "source_snapshot": {
+            "source_snapshot_sha256": "9" * 64,
+            "image_file_sha256": {"safe": "8" * 64},
+        },
         "config_sha256": "c" * 64,
         "scanner_sha256": "d" * 64,
         "current_amendment_sha256": "e" * 64,
@@ -664,6 +747,17 @@ def test_result_marker_repairs_a_nonterminal_status(tmp_path, monkeypatch) -> No
             "current_amendment_sha256",
         )
     }
+    result.update(
+        {
+            "source_snapshot_sha256": manifest["source_snapshot"][
+                "source_snapshot_sha256"
+            ],
+            "source_snapshot_file_sha256": manifest["source_snapshot"][
+                "image_file_sha256"
+            ],
+            "repository_metadata_included": False,
+        }
+    )
     result["selection"] = {"canonical_word": "yay", "reward_sign": 1}
     generation = runner._new_generation_dir("result")
     controller_snapshot = generation / "controller_state.json"
