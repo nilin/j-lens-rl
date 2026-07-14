@@ -1,0 +1,159 @@
+{
+  "artifact_sha256": {
+    "calibration": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "lens": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
+  },
+  "emotional_only": true,
+  "frozen_at_utc": "2026-07-14T09:27:52Z",
+  "protocol": "j-lens-rl-celebration-taper-selected-recipe-lock-v1",
+  "resolved_training_config": {
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "dataset_revision": "740312add88f781978c0658806c59bc2815b9866",
+    "early_stopping_min_delta": 0.0,
+    "early_stopping_patience": null,
+    "eval_every": 2,
+    "eval_strategy": "no",
+    "gradient_accumulation_steps": 1,
+    "kl_beta": 0.02,
+    "learning_rate": 3e-06,
+    "lens_path": "artifacts/qwen25_05b_solved_lens.pt",
+    "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "lora_alpha": 16,
+    "lora_rank": 8,
+    "loss_type": "dapo",
+    "lr_scheduler_type": "constant",
+    "mask_target_tokens": true,
+    "max_new_tokens": 256,
+    "max_prompt_tokens": 384,
+    "min_new_tokens": 64,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "num_generations": 8,
+    "num_generations_eval": 1,
+    "output_dir": "/word_explore/runs/celebration_taper",
+    "require_clean_repository": true,
+    "reserved_train_indices_path": ".confirmatory/manifests/train_exclusions.json",
+    "reward_type": "jlens",
+    "run_name": "word-screen-celebration-tail-taper-seed167",
+    "save_every": 10,
+    "save_total_limit": 1,
+    "scale_rewards": "group",
+    "score_aggregation": "mean",
+    "score_components": [
+      {
+        "aggregation": "mean",
+        "end_fraction": 0.75,
+        "layer": 8,
+        "start_fraction": 0.5,
+        "weight": 1.0
+      },
+      {
+        "aggregation": "mean",
+        "end_fraction": 1.0,
+        "layer": 8,
+        "start_fraction": 0.75,
+        "weight": 0.25
+      }
+    ],
+    "score_include_final": false,
+    "score_layers": [
+      8,
+      14,
+      20
+    ],
+    "score_start_fraction": 0.0,
+    "score_stride": 10,
+    "seed": 167,
+    "target_words": [
+      "yay",
+      "great",
+      "success",
+      "nice"
+    ],
+    "temperature": 1.0,
+    "train_examples": 1000,
+    "updates": 10,
+    "validation_batch_size": 64,
+    "validation_examples": 400,
+    "validation_indices_path": ".confirmatory/manifests/curve_indices.json",
+    "validation_observational_only": true,
+    "validation_source": "train",
+    "validation_steps": [
+      4,
+      6,
+      10
+    ],
+    "vocab_chunk_size": 16384,
+    "wandb_mode": "online",
+    "wandb_project": "j-lens-rl",
+    "warmup_ratio": 0.0,
+    "warmup_steps": 0
+  },
+  "selection_provenance": {
+    "declared_transformations": {
+      "calibration_path": {
+        "from": "/word_explore/artifacts/celebration_calibration.json",
+        "to": "source_calibration.path"
+      },
+      "generated_run_identity": {
+        "artifact_paths": "replace with byte-identical V6 frozen artifacts",
+        "control": "negate only the registered treatment component weights",
+        "data_paths": "replace with frozen V6 curve/exclusion/final manifests",
+        "output_dir": "derive from registered V6 condition and seed",
+        "run_name_and_wandb": "use the exact registered W&B identity per condition",
+        "seed": "replace exploratory seed 167 with registered seeds 176..183"
+      },
+      "save_every": {
+        "from": 25,
+        "to": 10
+      },
+      "updates": {
+        "from": 25,
+        "to": 10
+      },
+      "validation_steps": {
+        "from": [
+          2,
+          4,
+          6,
+          10,
+          15,
+          20,
+          25
+        ],
+        "to": [
+          4,
+          6,
+          10
+        ]
+      }
+    },
+    "operator_knowledge_boundary": {
+      "claim_boundary": "V6 is prospective only for its newly allocated curve/final rows and does not erase the adaptive seed-167 source selection",
+      "independence_scope": "the partial V5 result did not select or alter the celebration recipe, curve nodes, seeds, controls, or fresh V6 repartition",
+      "root_operator": "root had seen partial seed-168 V5 joy results before this V6 freeze",
+      "selection_agent": "recipe and 0/4/6/10 nodes derived only from committed seed-167 emotional-family artifacts; no V5 outcome was inspected by that agent"
+    },
+    "source_calibration": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+      "sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6"
+    },
+    "source_closeout": {
+      "path": "protocol_archive/v6_celebration_selection_closeout.json",
+      "sha256": "3efb6adaa070e8c77838d55333d7b556e2e96bf27e7a18d9740443e6c724e2b8"
+    },
+    "source_evidence_sha256": {
+      "calibration": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+      "log_history": "263d030f5305e90761aa845943092982761d5541c826334609926645efad1719",
+      "resolved_config": "a5f2105f2e45f85d9d82d347d20302c0a937eb0e2c377d539ded6e9c59939fc2",
+      "run_manifest": "40d95256a51202c82bea0d2447e29b2b14d67d40ad27ec412468d748eb298006",
+      "screen_result": "9786d6f36a2175d21e16d48f4485b6d0b8b75cccacee772f46946d14165d5718",
+      "validation_history": "b45495431ca43a1270c5ffc8c8d25e6057272130594d74429d43c1137535d6ed"
+    },
+    "source_resolved_config": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/celebration_taper/resolved_config.json",
+      "sha256": "a5f2105f2e45f85d9d82d347d20302c0a937eb0e2c377d539ded6e9c59939fc2"
+    }
+  }
+}

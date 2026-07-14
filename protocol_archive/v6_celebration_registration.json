@@ -1,0 +1,175 @@
+{
+  "acceptance": {
+    "curve_gate": "the first registered post-baseline eight-seed mean is strictly above the registered baseline mean, and each of the next two registered means is greater than or equal to its predecessor",
+    "difference_in_differences_crossed_95pct_ci_low": "> 0",
+    "difference_in_differences_mean": "> 0",
+    "literal_provenance_environment_and_collection_audits": "all pass",
+    "treatment_vs_base_crossed_95pct_ci_low": "> 0",
+    "treatment_vs_base_exact_two_sided_sign_p": 0.0078125,
+    "treatment_vs_base_mean": "> 0",
+    "treatment_vs_base_seed_effects": "8 positive, 0 negative, 0 ties"
+  },
+  "analysis": {
+    "bootstrap_method": "crossed seed-and-item percentile bootstrap",
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 0,
+    "confidence": 0.95,
+    "primary_estimand": "paired difference-in-differences: (celebration-treatment minus base) minus (signflip-control minus base), matched by seed and sealed item",
+    "secondary_estimand": "paired celebration-treatment minus base across seeds and items",
+    "seed_sign_test": "exact two-sided sign test across eight registered seeds"
+  },
+  "claim_protocol": "j-lens-rl-confirmatory-v6-celebration-taper",
+  "conditional_launch_predicate": {
+    "authorization": "the closeout is intentionally unavailable at V6 freeze; prepare and every launch verification require later committed bytes and record their SHA-256",
+    "cancellation_rule": "missing or non-curve-failed V5 closeout, any unlock/collection/evaluation, or any uncertainty about sealed-final exposure permanently cancels V6",
+    "closeout_path": "protocol_archive/v5_emotional_terminal_closeout.json",
+    "required_evals_directory_present": false,
+    "required_final_collection_present": false,
+    "required_final_evaluation_labels": [],
+    "required_final_outcomes_unopened": true,
+    "required_final_unlocked_present": false,
+    "required_protocol": "j-lens-rl-confirmatory-v5-emotional-terminal-closeout-v1",
+    "required_sealed_comparison_present": false,
+    "required_terminal_stage": "curve_failed"
+  },
+  "curve_gate": {
+    "criterion": "the first registered post-baseline eight-seed mean is strictly above the registered baseline mean, and each of the next two registered means is greater than or equal to its predecessor",
+    "steps": [
+      0,
+      4,
+      6,
+      10
+    ]
+  },
+  "execution": {
+    "backend_fallback_policy": "this registration permits one whole attempt on Modal L40S with online W&B only; never mix hardware or tracking modes within an attempt; an RTX4090/offline-W&B fallback requires a separate registration made either before any Modal outcome or after immutable closeout of a partial Modal attempt, plus fresh state/claim, preserved offline W&B directories, and the same frozen IDs and scientific inputs",
+    "global_modal_gpu_limit": 1,
+    "gpu_app_overlap_policy": "no other Modal GPU app may overlap this V6 attempt",
+    "gpu_type": "L40S",
+    "infrastructure_retry_policy": "a completed run may only retry publication of its immutable terminal W&B artifact; never overwrite or resume model optimization; any partial nonterminal run closes the whole attempt immutably and requires a fresh registered claim/volume",
+    "jlens_rl_runtime_tree_sha256": "5d2f94ad6113acc0016bae5f5fe9b947e054a9d515dd297139eade9b487cfcc1",
+    "max_parallel_gpu_workers": 1,
+    "modal_app": "j-lens-rl-confirmatory-v6-celebration-taper",
+    "modal_cache_assets_sha256": "8770d9e0b1af264fd7fae52b2e2fcb2321a9d596275e0be9b3209e056f7c1b03",
+    "modal_finalize_image_sha256": "3c44567dd83e1e4f06f993a9ef1e7d3eb38f7a22ea8b56d0d75495741f61c00a",
+    "modal_runner_sha256": "d71c09ffe98da76836314564e902d6d07023b3c358a13649e6b6d784b9b4fb51",
+    "protocol_sha256": "c6bb1800b9b6c5a95570d1b8a428595d03b12f50884a89e8ff1a78f06f8c6ab9",
+    "pyproject_sha256": "8d61fd00ddd948627960d85f5ca2998c4ae4198104bc613afb5a324923aaa823",
+    "shell_launcher_sha256": "14ef940fea4e4f09c3d614678ec3d812b46fe23eae6a626d43cadfc0cb4f63d8",
+    "trl_build_metadata_sha256": "f2665076902b2b6c86a8161c57fa34ac839f7f57acf0dceadb3138006d91071c",
+    "trl_runtime_tree_sha256": "e5cf1ef7b3aaa34f55840c786c6642081f0a1beaea3dc3a68cbf9e74a4ca7b87",
+    "volume": "j-lens-rl-confirmatory-v6-celebration-taper-20260714a"
+  },
+  "final_collection": {
+    "labels": [
+      "base",
+      "jlens_seed176",
+      "jlens_seed177",
+      "jlens_seed178",
+      "jlens_seed179",
+      "jlens_seed180",
+      "jlens_seed181",
+      "jlens_seed182",
+      "jlens_seed183",
+      "signflip_seed176",
+      "signflip_seed177",
+      "signflip_seed178",
+      "signflip_seed179",
+      "signflip_seed180",
+      "signflip_seed181",
+      "signflip_seed182",
+      "signflip_seed183"
+    ],
+    "one_immutable_collection": true,
+    "terminal_adapter_step": 10
+  },
+  "fixed_updates": 10,
+  "frozen_at_utc": "2026-07-14T09:35:41Z",
+  "lineage": {
+    "emotional_only_decision_sha256": "50cc3cb32e0cf74feeaeae79c2faf7b91c6caeae34b6e4f1101819d51e15b238",
+    "v4_closeout_sha256": "aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35",
+    "v5_infrastructure_amendment1_sha256": "d845fd829b00deb80cfed402e8fd8a04543c2ddffc451329dcfc572e296f3f42",
+    "v5_scientific_registration_sha256": "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527"
+  },
+  "matched_control": "negate every selected treatment score-component weight and change nothing else except condition identity",
+  "operator_knowledge_boundary": {
+    "claim_boundary": "V6 is prospective only for its newly allocated curve/final rows and does not erase the adaptive seed-167 source selection",
+    "independence_scope": "the partial V5 result did not select or alter the celebration recipe, curve nodes, seeds, controls, or fresh V6 repartition",
+    "root_operator": "root had seen partial seed-168 V5 joy results before this V6 freeze",
+    "selection_agent": "recipe and 0/4/6/10 nodes derived only from committed seed-167 emotional-family artifacts; no V5 outcome was inspected by that agent"
+  },
+  "outcome_status_at_freeze": "V6 not launched; V6 curve/final outcomes unopened; selecting agent used no V5 outcomes, while root had seen partial V5 seed-168 joy results",
+  "protocol": "j-lens-rl-confirmatory-v6-celebration-taper-registration-v1",
+  "seeds": [
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183
+  ],
+  "selected_recipe_lock": {
+    "path": "protocol_archive/v6_celebration_selected_recipe.json",
+    "sha256": "fb87e1ccb984c4a7fa99bc5e503ed072d3373b99bd28018caf00cad7c5155f35"
+  },
+  "selection_closeout": {
+    "path": "protocol_archive/v6_celebration_selection_closeout.json",
+    "sha256": "3efb6adaa070e8c77838d55333d7b556e2e96bf27e7a18d9740443e6c724e2b8"
+  },
+  "split": {
+    "allocation_salt": "j-lens-rl-confirmatory-v6-celebration-taper-2026-07-14",
+    "curve": {
+      "manifest_sha256": "9c04151e1dac6b226bed07873e1003ab5c399a2978ca2b0dcb0d32c3a337ade5",
+      "size": 400,
+      "sorted_set_sha256": "0bf980d5426e3daffbbc1fc375756617a0b45eda6339eb97cf6003e5a31f1ec1"
+    },
+    "future_reserve": {
+      "manifest_sha256": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+      "size": 64
+    },
+    "sealed_final": {
+      "manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+      "size": 900,
+      "sorted_set_sha256": "eadcd0e2fc194b0e38bc1c9f4aa1bbf6e6b3ba1043b0015eedee59aec133637c"
+    },
+    "source_parent": {
+      "manifest_sha256": "6298b8e3d15b11985cf9febcd243dafd409ef07f22091388fa0793b6ebfe4228",
+      "role": "V5 sealed final, usable only after the conditional predicate passes",
+      "size": 1300,
+      "sorted_set_sha256": "60308ed7212072ab0f1b2dbbf2d818ccfdc8da65134885e4c8d731058b051801"
+    },
+    "train_exclusions_manifest_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v6-emotional-celebration-taper-h10",
+    "project": "j-lens-rl",
+    "run_ids": {
+      "jlens_seed176": "confirm-v6-emotional-celebration-taper-h10-jlens_seed176",
+      "jlens_seed177": "confirm-v6-emotional-celebration-taper-h10-jlens_seed177",
+      "jlens_seed178": "confirm-v6-emotional-celebration-taper-h10-jlens_seed178",
+      "jlens_seed179": "confirm-v6-emotional-celebration-taper-h10-jlens_seed179",
+      "jlens_seed180": "confirm-v6-emotional-celebration-taper-h10-jlens_seed180",
+      "jlens_seed181": "confirm-v6-emotional-celebration-taper-h10-jlens_seed181",
+      "jlens_seed182": "confirm-v6-emotional-celebration-taper-h10-jlens_seed182",
+      "jlens_seed183": "confirm-v6-emotional-celebration-taper-h10-jlens_seed183",
+      "signflip_seed176": "confirm-v6-emotional-celebration-taper-h10-signflip_seed176",
+      "signflip_seed177": "confirm-v6-emotional-celebration-taper-h10-signflip_seed177",
+      "signflip_seed178": "confirm-v6-emotional-celebration-taper-h10-signflip_seed178",
+      "signflip_seed179": "confirm-v6-emotional-celebration-taper-h10-signflip_seed179",
+      "signflip_seed180": "confirm-v6-emotional-celebration-taper-h10-signflip_seed180",
+      "signflip_seed181": "confirm-v6-emotional-celebration-taper-h10-signflip_seed181",
+      "signflip_seed182": "confirm-v6-emotional-celebration-taper-h10-signflip_seed182",
+      "signflip_seed183": "confirm-v6-emotional-celebration-taper-h10-signflip_seed183"
+    },
+    "run_prefix": "confirm-v6-emotional-celebration-taper-h10",
+    "tags": [
+      "confirmatory-v6",
+      "emotional-j-lens",
+      "celebration-taper",
+      "conditional-on-v5-curve-failure"
+    ]
+  }
+}
