@@ -526,3 +526,141 @@ only endpoint remains step 25. V2's exposed 400-item curve is permanently
 retired. V3 remains the sole final-outcome look, so it does not spend alpha on
 the failed descriptive v2 gate; if any v2 sealed row is opened, this branch is
 invalid and must not run.
+
+## V3 outcome and parallel reward-design screens (2026-07-14)
+
+### Confirmatory v3 is a valid negative result
+
+V3 ran from clean commit
+`a617b59f20c84172454b7cd80b9668535f11be8f` (source-tree SHA-256
+`f888e27210cf883edd6eee2dcda5dccd8813852eebc0933362ea58502b22770b`)
+on Modal app `ap-HF5YGgsdlh2D6m9qELb0D1` and Volume
+`j-lens-rl-confirmatory-v3-20260714a`. The app stopped normally at
+2026-07-14 04:09:37 UTC. All ten run manifests record clean source, the pinned
+model/dataset/lens/calibration, `reward_type: jlens`, NVIDIA L40S/CUDA 12.8,
+one layer-8 late-half `solved` component, constant `3e-6`, zero warmup, fixed
+25 updates, and observational evaluation every five updates. At most five GPU
+workers were live at once.
+
+The exact frozen curve was:
+
+| Seed | Step 0 | Step 5 | Step 10 | Step 15 |
+|---:|---:|---:|---:|---:|
+| 148 | 0.43500 | 0.40750 | 0.43250 | 0.42250 |
+| 149 | 0.43500 | 0.43000 | 0.41625 | 0.42500 |
+| 150 | 0.43500 | 0.42500 | 0.41125 | 0.42125 |
+| 151 | 0.43500 | 0.41750 | 0.41625 | 0.40625 |
+| 152 | 0.43500 | 0.41875 | 0.42000 | 0.41375 |
+| 153 | 0.43500 | 0.43000 | 0.41625 | 0.42000 |
+| 154 | 0.43500 | 0.42000 | 0.42250 | 0.41125 |
+| 155 | 0.43500 | 0.42500 | 0.42500 | 0.42875 |
+| 156 | 0.43500 | 0.43500 | 0.43125 | 0.41500 |
+| 157 | 0.43500 | 0.40375 | 0.43250 | 0.42125 |
+| **Mean** | **0.435000** | **0.421250** | **0.422375** | **0.418500** |
+
+The first change was `-1.375` percentage points, step 5 to 10 recovered only
+`0.1125` points, and step 10 to 15 fell another `0.3875` points. The stored
+gate has `passed: false`; the curve PNG SHA-256 is
+`a1fdc390f4b4c6e9923f639a760798b6e206d5711c5942f22a172bb0043f8d95`.
+The durable stage is `curve_failed`. No sign-flip control, unlock file, base
+final evaluation, or sealed-final adapter evaluation exists. V3 therefore
+adds valid negative evidence and no significant positive evidence.
+
+The failure is not explained by an obvious shortcut. All 60 greedy validation
+rows had zero literal-target completions and stable mean length (228.82 tokens
+at baseline and 228.29 at step 25). Reward variance was positive in all 250
+updates (minimum standard deviation 0.1838), KL was at most 0.001609, and no
+NaN, OOM, traceback, or provenance failure occurred. Training did have mild
+length pressure and eight literal occurrences among 2,000 sampled rollouts;
+these occurred in isolated masked batches and are disclosed rather than
+rounded down to zero. Twenty-one of 250 rollout batches were fully capped at
+256 tokens, but that pressure did not transfer to greedy validation. The known
+nondeterministic attention warning remains a replay caveat.
+
+### First parallel exploratory design screen
+
+The first independent screen ran three *different reward constructions*, not
+three seeds, from clean commit `20635432d3e31c2c85418d00873a47d078ec9fa6`
+on app `ap-XAiL1nGDZdmSB7NCX8oJpI`, call
+`fc-01KXFBK014AX86Q33CPZMBV0MT`, and fresh Volume
+`j-lens-rl-exploratory-screen-v1-20260714a`. The peak was three L40S workers.
+All variants used seed 158, constant `3e-6`, the retired/exposed V2 400-item
+development curve, and fixed 25-update endpoints. A combined exclusion-only
+manifest kept the retired curve and every current V3 curve/final/reserve row
+out of all 1,000 selected training examples. Live reconstruction found zero
+train/evaluation and zero train/current-V3 overlap. Current V3 manifests and
+outcomes were not mounted.
+
+| Reward construction | 0 | 5 | 10 | 15 | 20 | 25 | Requested pattern |
+|---|---:|---:|---:|---:|---:|---:|:---:|
+| Layer-8 late minus early | .3750 | .3750 | .3900 | .3725 | .3750 | .3850 | No |
+| Layer-8 late, stride 10 | .3750 | .3775 | .3825 | .3775 | .3750 | .3775 | No |
+| Equal layers 8/14/20 late | .3750 | .3850 | .3675 | .3775 | .3825 | .3575 | No |
+
+The dense variant was closest but its step-15 decline is still a failure. All
+validation and training literal rates were zero, validation lengths remained
+stable, reward variance never collapsed, all recorded learning rates were
+exactly `3e-6`, and the app stopped normally with durable histories, results,
+and adapters. These are adaptive development results only.
+
+### Second parallel screen and pre-outcome v4 branch
+
+The current script is committed at
+`56280f0a8f2da1eb3a4c6106f49b7cacca6a6489`; `40/40` tests, Python syntax,
+and `git diff --check` pass. Screen 2 is live on app
+`ap-dt7cQSw2be0iYFolyt2nQp`, call `fc-01KXFDGBTCYDYDSNH3E21C362B`, and fresh
+Volume `j-lens-rl-exploratory-screen-v2-20260714a`, capped at four L40S
+workers. All four live manifests were independently checked for clean matching
+source, J-only reward, L40S/CUDA 12.8, constant `3e-6`, fixed 25 updates, the
+same 1,000 training examples and 400 retired validation examples, and zero
+overlap with validation or any current V3 allocation. The ignored manifest
+files are now pinned to their exact SHA-256 values before launch, and the claim
+function is serialized to reject a simultaneous duplicate submission.
+
+The screen evaluates only at `0/2/4/6/10/15/20/25`. Its newly fixed requested
+curve is step 2 strictly above baseline, step 4 non-downward, and step 6
+non-downward. The four reward ideas, in fixed priority order, are:
+
+1. layer-8 late-half mean with stride 5 (`ultradense5`);
+2. stride-10 layer-8 quarters weighted `1.0/0.25` (`tail_taper`);
+3. stride-10 late `+1`, early `-0.25` (`tempered_delta`);
+4. stride-10 late layers 8/14/20 weighted `0.8/0.1/0.1`
+   (`layer_shrink`).
+
+At 2026-07-14T04:23:11Z, only the first post-update node had been inspected:
+`ultradense5` was `.3750 -> .3875`, `tail_taper` `.3750 -> .3800`,
+`tempered_delta` `.3750 -> .3575`, and `layer_shrink` `.3750 -> .3675`.
+The latter two can no longer pass. No step-4 or step-6 outcome had been used
+when the following branch was frozen. If multiple variants pass, select the
+first in the priority list above; neither effect magnitude nor later diagnostic
+nodes may override that rule. If none passes, no v4 is launched from this
+screen. A pass is still candidate-selection evidence, not significance.
+
+Conditional v4 is permitted only after re-verifying V3's formal
+`curve_failed` closeout and the absence of any V3 final outcome. It orders only
+V3's unopened 2,100-item sealed parent (file SHA-256
+`84da0c0472b4442b4f35406d1b1fbd3b956803e5f19bf51fc02f6db013224f7b`,
+sorted-set SHA-256
+`875334925160d6c0c49dd8cf1523e1aeb081fd90f6e4b08611eccb8394dbe4d5`)
+by ascending `SHA256("j-lens-rl-confirmatory-v4-screen2-2026-07-14:" + index)`.
+The first 400 indices are the sole new curve (manifest SHA-256
+`ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1`)
+and the remaining 1,700 are the sole sealed final (manifest SHA-256
+`acd2d497dcf96b2f3355925bb34979b9b7b3301e4c394066fc54ea57d093b6e3`).
+The V3 800-item curve is retired and the 64-item reserve remains untouched.
+
+V4 uses new seeds 159--166, eight semantic runs in one eight-L40S wave, the
+same fixed `0/2/4/6` mean-curve gate, and fixed step-25 endpoints. On a curve
+pass it runs eight matched sign flips, negating every chosen component weight
+and changing nothing else. Only after all 16 runs verify may it evaluate one
+base, eight semantic adapters, and eight sign-flip adapters on the new 1,700.
+Acceptance requires the curve pass, positive mean semantic-minus-base effect,
+a crossed seed/item 95% lower bound above zero, all eight seed effects strictly
+positive (ties fail; exact two-sided sign `p=0.0078125`), positive
+semantic-minus-sign-flip difference-in-differences, and its crossed 95% lower
+bound above zero, plus unchanged provenance, raw-record, target-literal, and
+artifact checks. No correctness-reward control is on the critical path.
+
+The current research conclusion is therefore unchanged: the J-only optimizer
+path is verified, but reliable or significant evaluation improvement has not
+yet been demonstrated.
