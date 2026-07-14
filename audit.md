@@ -2296,3 +2296,22 @@ runtime allowlist, synthetic runtime Git tree
 The allowlist contains the model lens, calibration, exposed curve/exclusions,
 training/evaluation/analysis sources and tests, and vendored runtime dependency;
 it excludes every sealed-final, reserve, and correlation payload.
+
+The cached-image launch under that contract reached one CPU `claim_attempt` on
+app `ap-RpVl391ZyhS04IA3sRSAWT` and failed before claim creation or GPU
+dispatch. Modal's directory layer had honored `.gitignore` and omitted the two
+public `.confirmatory/manifests` files, while the package build left an
+unregistered `trl/build` copy. The app stopped at 21:36:56 UTC. It had no GPU
+workers or W&B runs; Volume A contains only the 14 prepared config and
+reproducibility files uploaded before the failing claim and is now retired.
+
+The image now explicitly copies the two hash-pinned public manifests and
+removes `trl/build`; the seven focused Modal tests still pass. This revision has
+launcher SHA-256
+`d8b95add301d7ac67c0cb61e712571f4aaac62076f59e7d3b12b20f61824c4af`.
+The fresh replacement Volume B is `vo-f4E8UW02e3PVrcZi7i3tO6`. Its
+launch-enabled contract SHA-256 is
+`14ace2af7bd2a02902fbf9f092d64216b82922c2b98ed5d3103d5b6895c52e93`,
+with runtime Git tree `a11a261be7ff14ed79424803efb771ef4a778339`, commit
+`df1d092d55f464f8451a80c7e2f4483af92361f3`, and content-tree SHA-256
+`66db68986484b01b06b260cc7124304dea493fdc0d4e44550c4cb67d4bccca60`.
