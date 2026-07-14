@@ -31,7 +31,7 @@
     "canonical_inventory_sha256": "c9c7734dae769679e29a57d8ae557f4d8b454185052796ddb79960aee0e839dc",
     "file_count": 68,
     "path": "protocol_archive/word_correlation_attempt4_forensic_inventory.json",
-    "sha256": "a9553ce1bd484ffbea120d7a814a16720fe565df9ce5dda6ce6143855cfe0577",
+    "sha256": "4f69fb8c9e85d65cec64759071d7d772c56ffc11bbe53eb305751452651d6420",
     "total_size_bytes": 24722096
   },
   "frozen_execution": {

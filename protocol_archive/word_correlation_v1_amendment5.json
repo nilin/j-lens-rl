@@ -1,8 +1,8 @@
 {
   "amendment4_sha256": "6b17b616d0d73cab7181f0dbb72c8c5343f48125b1856bf8f72398bb0a9644a7",
-  "attempt4_closeout_sha256": "ddddfb04317bbbd6b85b91b2b231222895f16245d39cb0ce2f565e1ec5d28d31",
-  "attempt4_forensic_inventory_sha256": "a9553ce1bd484ffbea120d7a814a16720fe565df9ce5dda6ce6143855cfe0577",
-  "frozen_at_utc": "2026-07-14T12:08:34Z",
+  "attempt4_closeout_sha256": "1e28eb37bd1511f030b62cab950567f213634899690c545d15b0bd062e3608e0",
+  "attempt4_forensic_inventory_sha256": "4f69fb8c9e85d65cec64759071d7d772c56ffc11bbe53eb305751452651d6420",
+  "frozen_at_utc": "2026-07-14T12:14:57Z",
   "new_attempt": {
     "controller_recovery_policy": "same-call automatic restart with immutable generation markers, an idempotent claim/submission ledger, a durable cross-app GPU lease, a durable single-job ledger, and no terminalization of controller KeyboardInterrupt",
     "global_modal_gpu_limit": 1,
