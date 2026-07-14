@@ -134,6 +134,9 @@ CORRELATION_ATTEMPT4_LAUNCH_SHA256 = "77c1e1adc8416d570bddc5e404774c19708bdcc69a
 ORIGINAL_REGISTRATION_SHA256 = "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527"
 ORIGINAL_PROTOCOL_SHA256 = "2a01feb963d690051b08ae8a1ae73edfd128c06ea3b627304be2d550ae83a75a"
 ORIGINAL_MODAL_RUNNER_SHA256 = "b99cadbf89d116f21aade7b7500f61d6a1215704073e398d5b1b1cd28fb8990f"
+ORIGINAL_JLENS_RL_RUNTIME_TREE_SHA256 = (
+    "5d2f94ad6113acc0016bae5f5fe9b947e054a9d515dd297139eade9b487cfcc1"
+)
 # These byte hashes identify the immutable records below.  They authorize
 # only an outcome-free packaging retry; the scientific registration stays
 # byte-identical and remains the source of all W&B identities.
@@ -678,13 +681,17 @@ def _registered_execution_hashes() -> dict[str, str]:
     """Return the byte pins frozen before the outcome-free packaging retry.
 
     Infrastructure amendment 1 preserves the original registration bytes and
-    therefore the preregistered W&B identities.  Only the protocol and Modal
-    runner changed to encode the new Volume and Modal's disk floor; all other
-    execution inputs must still match both the registration and current tree.
+    therefore the preregistered W&B identities.  The later, prelaunch V6 replay
+    correction generalized non-claim replay recognition in ``train.py`` only;
+    retain V5's original registered runtime-tree hash rather than retroactively
+    changing the already executed V5 identity.
     """
     hashes = _expected_execution_hashes()
     hashes["protocol_sha256"] = ORIGINAL_PROTOCOL_SHA256
     hashes["modal_runner_sha256"] = ORIGINAL_MODAL_RUNNER_SHA256
+    hashes["jlens_rl_runtime_tree_sha256"] = (
+        ORIGINAL_JLENS_RL_RUNTIME_TREE_SHA256
+    )
     return hashes
 
 

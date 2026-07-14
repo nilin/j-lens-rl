@@ -1,0 +1,69 @@
+{
+  "authorized_changes": [
+    {
+      "category": "registered replay recognition",
+      "scope": "recognize any versioned .confirmatory/vN state root while keeping replay output outside every immutable confirmatory state"
+    },
+    {
+      "category": "source-backed V5 launch predicate",
+      "scope": "bind the exact amended V5 claim, Modal app/call, Volume-B launch receipt, terminal status, failed curve gate, and root/evidence inventories to tracked files whose bytes are SHA-256 verified"
+    },
+    {
+      "category": "metric-schema semantics",
+      "scope": "describe the named and total reward as the weighted sum of two separately clipped component z-scores with range [-6.25, 6.25]"
+    },
+    {
+      "category": "verification and derived identities",
+      "scope": "add regression/smoke tests and update only hashes derived from changed executable bytes"
+    }
+  ],
+  "corrected_at_utc": "2026-07-14T10:15:04Z",
+  "knowledge_boundary_at_correction": {
+    "root_operator": "root had seen partial results for six V5 seeds before this correction",
+    "timing": "the correction was frozen before root saw a V5 aggregate or terminal result",
+    "v6_outcomes": "no V6 training, curve, control, or sealed-final outcome existed",
+    "selection_effect": "the additional V5 partials did not alter the already selected celebration recipe, curve nodes, seeds, controls, data repartition, acceptance rules, or W&B identities"
+  },
+  "outcome_status_at_correction": "prelaunch V6 correction; no V6 outcome existed or was inspected",
+  "prohibited_changes": [
+    "target words or any J-lens layer, position window, stride, calibration, sign, or weight",
+    "model/dataset revisions, optimizer settings, fixed horizon, curve nodes, or curve criterion",
+    "curve/final/reserve allocations, seeds, matched-control construction, estimands, bootstrap, sign test, or acceptance thresholds",
+    "W&B entity, project, group, tags, run prefix, or any run ID",
+    "fresh V6 Volume, one-L40S cap, or no-overlap policy"
+  ],
+  "protocol": "j-lens-rl-confirmatory-v6-celebration-taper-prelaunch-correction-v1",
+  "scientific_projection": {
+    "fields": [
+      "claim_protocol",
+      "selection_closeout",
+      "selected_recipe_lock",
+      "split",
+      "seeds",
+      "fixed_updates",
+      "curve_gate",
+      "matched_control",
+      "analysis",
+      "acceptance",
+      "final_collection",
+      "wandb"
+    ],
+    "superseded_registration_canonical_sha256": "0621bc7402187223b47f665872b4c0bdb2c53b64661b26b94dcc76492a0fe93e",
+    "required_v2_relationship": "the canonical projection over these fields must be byte-semantically identical in V1 and V2"
+  },
+  "selection_artifacts_unchanged": {
+    "selected_recipe_lock": {
+      "path": "protocol_archive/v6_celebration_selected_recipe.json",
+      "sha256": "fb87e1ccb984c4a7fa99bc5e503ed072d3373b99bd28018caf00cad7c5155f35"
+    },
+    "selection_closeout": {
+      "path": "protocol_archive/v6_celebration_selection_closeout.json",
+      "sha256": "3efb6adaa070e8c77838d55333d7b556e2e96bf27e7a18d9740443e6c724e2b8"
+    }
+  },
+  "superseded_registration": {
+    "git_commit": "182b6790fc34d035016d645ac1535f4627b90489",
+    "path": "protocol_archive/v6_celebration_registration_v1_superseded.json",
+    "sha256": "79f80dc0acea6c6b8410f8936ec364bcc4405eaf49ffdbc5500ec0cb103f875d"
+  }
+}

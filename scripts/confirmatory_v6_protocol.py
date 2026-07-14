@@ -71,6 +71,14 @@ DEFAULT_RECIPE_LOCK_PATH = (
 SELECTION_CLOSEOUT_PATH = (
     REPO / "protocol_archive" / "v6_celebration_selection_closeout.json"
 )
+SUPERSEDED_REGISTRATION_PATH = (
+    REPO
+    / "protocol_archive"
+    / "v6_celebration_registration_v1_superseded.json"
+)
+PRELAUNCH_CORRECTION1_PATH = (
+    REPO / "protocol_archive" / "v6_celebration_prelaunch_correction1.json"
+)
 EMOTIONAL_DECISION_PATH = REPO / "protocol_archive" / "emotional_only_decision.json"
 V5_REGISTRATION_PATH = (
     REPO / "protocol_archive" / "v5_emotional_registration.json"
@@ -85,6 +93,22 @@ V5_INFRASTRUCTURE_AMENDMENT1_PATH = (
 V5_TERMINAL_CLOSEOUT_PATH = (
     REPO / "protocol_archive" / "v5_emotional_terminal_closeout.json"
 )
+V5_TERMINAL_EVIDENCE_DIR = (
+    REPO / "protocol_archive" / "v5_emotional_terminal_evidence"
+)
+V5_TERMINAL_EVIDENCE_PATHS = {
+    name: V5_TERMINAL_EVIDENCE_DIR / filename
+    for name, filename in {
+        "attempt_claim": "attempt_claim.json",
+        "launch_receipt": "launch_receipt.json",
+        "attempt_status": "attempt_status.json",
+        "curve_gate": "curve_gate.json",
+        "curve_plot": "curve.png",
+        "root_inventory": "root_inventory.json",
+        "evidence_inventory": "evidence_inventory.json",
+        "durable_export_receipt": "durable_export_receipt.json",
+    }.items()
+}
 
 V4_MANIFEST_DIR = REPO / ".confirmatory" / "manifests"
 V4_PARENT_PATH = V4_MANIFEST_DIR / "sealed_final_indices.json"
@@ -92,7 +116,7 @@ V4_RESERVE_PATH = V4_MANIFEST_DIR / "future_reserve_indices.json"
 V4_TRAIN_EXCLUSIONS_PATH = V4_MANIFEST_DIR / "train_exclusions.json"
 
 REGISTRATION_PROTOCOL = (
-    "j-lens-rl-confirmatory-v6-celebration-taper-registration-v1"
+    "j-lens-rl-confirmatory-v6-celebration-taper-registration-v2"
 )
 RECIPE_LOCK_PROTOCOL = "j-lens-rl-celebration-taper-selected-recipe-lock-v1"
 SELECTION_CLOSEOUT_PROTOCOL = "j-lens-rl-v6-celebration-selection-closeout-v1"
@@ -137,7 +161,7 @@ WANDB_RUN_IDS = {
     if label != "base"
 }
 
-OPERATOR_KNOWLEDGE_BOUNDARY = {
+INITIAL_OPERATOR_KNOWLEDGE_BOUNDARY = {
     "selection_agent": (
         "recipe and 0/4/6/10 nodes derived only from committed seed-167 "
         "emotional-family artifacts; no V5 outcome was inspected by that agent"
@@ -148,6 +172,29 @@ OPERATOR_KNOWLEDGE_BOUNDARY = {
     "independence_scope": (
         "the partial V5 result did not select or alter the celebration recipe, "
         "curve nodes, seeds, controls, or fresh V6 repartition"
+    ),
+    "claim_boundary": (
+        "V6 is prospective only for its newly allocated curve/final rows and "
+        "does not erase the adaptive seed-167 source selection"
+    ),
+}
+OPERATOR_KNOWLEDGE_BOUNDARY = INITIAL_OPERATOR_KNOWLEDGE_BOUNDARY
+CORRECTED_OPERATOR_KNOWLEDGE_BOUNDARY = {
+    "selection_agent": (
+        "recipe and 0/4/6/10 nodes remain derived only from committed seed-167 "
+        "emotional-family artifacts; no V5 outcome was inspected by that agent"
+    ),
+    "root_operator": (
+        "root had seen partial results for six V5 seeds before prelaunch correction 1"
+    ),
+    "timing": (
+        "correction 1 was frozen before root saw a V5 aggregate or terminal result, "
+        "and before any V6 outcome existed"
+    ),
+    "independence_scope": (
+        "the additional partial V5 results did not alter the celebration recipe, "
+        "curve nodes, seeds, controls, fresh V6 repartition, acceptance rules, or "
+        "W&B identities"
     ),
     "claim_boundary": (
         "V6 is prospective only for its newly allocated curve/final rows and "
@@ -174,6 +221,24 @@ EMOTIONAL_DECISION_SHA256 = "50cc3cb32e0cf74feeaeae79c2faf7b91c6caeae34b6e4f1101
 V5_REGISTRATION_SHA256 = "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527"
 V5_INFRASTRUCTURE_AMENDMENT1_SHA256 = "d845fd829b00deb80cfed402e8fd8a04543c2ddffc451329dcfc572e296f3f42"
 SELECTION_CLOSEOUT_SHA256 = "3efb6adaa070e8c77838d55333d7b556e2e96bf27e7a18d9740443e6c724e2b8"
+SUPERSEDED_REGISTRATION_SHA256 = "79f80dc0acea6c6b8410f8936ec364bcc4405eaf49ffdbc5500ec0cb103f875d"
+PRELAUNCH_CORRECTION1_SHA256 = "8d1fe785a495c5a8da689d7f80fec9c5ebcd09f9770a37a3efa5f38732a8e719"
+SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256 = (
+    "0621bc7402187223b47f665872b4c0bdb2c53b64661b26b94dcc76492a0fe93e"
+)
+
+V5_PROTOCOL = "j-lens-rl-confirmatory-v5-emotional"
+V5_MODAL_APP_NAME = "j-lens-rl-confirmatory-v5-emotional"
+V5_VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714b"
+V5_CLAIM_ID = "c2d9ed29ebba46649f1ea182d7d50014"
+V5_MODAL_APP_ID = "ap-2o4XOP7jhqcrHyqkGN55wL"
+V5_MODAL_FUNCTION_CALL_ID = "fc-01KXFXCF23D6DRB5VNXCVJB8TN"
+V5_LAUNCH_RECEIPT_SHA256 = (
+    "5123864f59094b572304a9aaf1317f41a9082fdafa5725876b4801858ca216d8"
+)
+V5_LAUNCH_SUBMITTED_AT_UTC = "2026-07-14T08:55:08.732683+00:00"
+V5_GPU_APP_OVERLAP_POLICY = "no other Modal GPU app may overlap this V5 attempt"
+V5_RECIPE_LOCK_SHA256 = "006bd685f045a385889d1e418e76437140a404177f0d1148d308226390a2a547"
 
 CONDITIONAL_LAUNCH_PREDICATE = {
     "closeout_path": "protocol_archive/v5_emotional_terminal_closeout.json",
@@ -185,6 +250,29 @@ CONDITIONAL_LAUNCH_PREDICATE = {
     "required_final_evaluation_labels": [],
     "required_sealed_comparison_present": False,
     "required_final_outcomes_unopened": True,
+    "required_v5_scientific_registration_sha256": V5_REGISTRATION_SHA256,
+    "required_v5_infrastructure_amendment1_sha256": (
+        V5_INFRASTRUCTURE_AMENDMENT1_SHA256
+    ),
+    "required_operational_identity": {
+        "claim_id": V5_CLAIM_ID,
+        "modal_app": V5_MODAL_APP_NAME,
+        "modal_app_id": V5_MODAL_APP_ID,
+        "modal_function_call_id": V5_MODAL_FUNCTION_CALL_ID,
+        "volume": V5_VOLUME_NAME,
+        "launch_receipt_sha256": V5_LAUNCH_RECEIPT_SHA256,
+        "launch_submitted_at_utc": V5_LAUNCH_SUBMITTED_AT_UTC,
+        "gpu_type": "L40S",
+        "global_modal_gpu_limit": 1,
+    },
+    "required_source_evidence_paths": {
+        name: path.relative_to(REPO).as_posix()
+        for name, path in V5_TERMINAL_EVIDENCE_PATHS.items()
+    },
+    "source_evidence_policy": (
+        "every closeout evidence identity must name its exact registered tracked "
+        "path and its SHA-256 must equal the actual committed source bytes"
+    ),
     "authorization": (
         "the closeout is intentionally unavailable at V6 freeze; prepare and every "
         "launch verification require later committed bytes and record their SHA-256"
@@ -513,11 +601,24 @@ def observed_selected_history_scalar_series(target_label: str) -> dict[str, dict
 
 
 def metric_schema(
-    target_words: Sequence[str], fixed_updates: int
+    target_words: Sequence[str],
+    fixed_updates: int,
+    score_components: Sequence[dict[str, Any]],
 ) -> dict[str, Any]:
     """Semantic map for local histories and their Transformers/W&B names."""
     words = validate_target_words(list(target_words))
     label = "_".join(words)
+    components = validate_score_components(list(score_components))
+    combined_abs_bound = 5.0 * sum(abs(float(item["weight"])) for item in components)
+    combined_range = [-combined_abs_bound, combined_abs_bound]
+    combined_unit = (
+        "weighted sum of calibration z-scores; each component is clipped to [-5, 5]"
+    )
+    combined_definition = (
+        "mean weighted combined reward across the registered spatial components "
+        f"with weights {[float(item['weight']) for item in components]}; this is "
+        "not an individual component score"
+    )
     return {
         "schema_version": 1,
         "target_words": words,
@@ -568,29 +669,37 @@ def metric_schema(
                 "unit": "generated tokens per completion",
                 "definition": "arithmetic mean greedy completion-token count",
             },
-            "intrinsic_reward_component_mean": {
+            "intrinsic_named_weighted_reward_mean": {
                 "local_file": "log_history.json",
                 "local_field": f"rewards/jlens_{label}_reward/mean",
                 "wandb_metric": f"train/rewards/jlens_{label}_reward/mean",
                 "step_axis": "optimizer_update",
-                "unit": "calibration standard deviations, clipped to [-5, 5]",
-                "definition": "mean target J-lens log-probability-mass score after registered spatial aggregation and calibration",
+                "unit": combined_unit,
+                "range": combined_range,
+                "definition": combined_definition,
             },
             "intrinsic_reward_mean": {
                 "local_file": "log_history.json",
                 "local_field": "reward",
                 "wandb_metric": "train/reward",
                 "step_axis": "optimizer_update",
-                "unit": "calibration standard deviations, clipped to [-5, 5]",
-                "definition": "mean of the sole intrinsic reward supplied to GRPO; no answer reward is present",
+                "unit": combined_unit,
+                "range": combined_range,
+                "definition": (
+                    "mean of the sole weighted combined intrinsic reward supplied "
+                    "to GRPO; no answer reward is present"
+                ),
             },
             "intrinsic_reward_std": {
                 "local_file": "log_history.json",
                 "local_field": "reward_std",
                 "wandb_metric": "train/reward_std",
                 "step_axis": "optimizer_update",
-                "unit": "calibration standard deviations",
-                "definition": "standard deviation of the sole intrinsic reward in the logged rollout batch",
+                "unit": combined_unit,
+                "definition": (
+                    "standard deviation of the sole weighted combined intrinsic "
+                    "reward in the logged rollout batch"
+                ),
             },
             "intrinsic_literal_rate": {
                 "local_file": "log_history.json",
@@ -776,9 +885,18 @@ def registration_template() -> dict[str, Any]:
             "v5_infrastructure_amendment1_sha256": (
                 V5_INFRASTRUCTURE_AMENDMENT1_SHA256
             ),
+            "v6_prelaunch_correction1_sha256": PRELAUNCH_CORRECTION1_SHA256,
+        },
+        "supersedes_registration": {
+            "path": str(SUPERSEDED_REGISTRATION_PATH.relative_to(REPO)),
+            "sha256": SUPERSEDED_REGISTRATION_SHA256,
+        },
+        "prelaunch_correction": {
+            "path": str(PRELAUNCH_CORRECTION1_PATH.relative_to(REPO)),
+            "sha256": PRELAUNCH_CORRECTION1_SHA256,
         },
         "conditional_launch_predicate": CONDITIONAL_LAUNCH_PREDICATE,
-        "operator_knowledge_boundary": OPERATOR_KNOWLEDGE_BOUNDARY,
+        "operator_knowledge_boundary": CORRECTED_OPERATOR_KNOWLEDGE_BOUNDARY,
         "selection_closeout": {
             "path": str(SELECTION_CLOSEOUT_PATH.relative_to(REPO)),
             "sha256": SELECTION_CLOSEOUT_SHA256,
@@ -827,8 +945,9 @@ def registration_template() -> dict[str, Any]:
             **_registered_execution_hashes(),
         },
         "outcome_status_at_freeze": (
-            "V6 not launched; V6 curve/final outcomes unopened; selecting agent used "
-            "no V5 outcomes, while root had seen partial V5 seed-168 joy results"
+            "prelaunch correction 1: no V6 outcome existed; selecting agent used no "
+            "V5 outcomes; root had seen six partial V5 seeds but no V5 aggregate or "
+            "terminal result; scientific choices remain identical to V1"
         ),
     }
 
@@ -881,6 +1000,8 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
             V5_INFRASTRUCTURE_AMENDMENT1_SHA256
         ),
         SELECTION_CLOSEOUT_PATH: SELECTION_CLOSEOUT_SHA256,
+        SUPERSEDED_REGISTRATION_PATH: SUPERSEDED_REGISTRATION_SHA256,
+        PRELAUNCH_CORRECTION1_PATH: PRELAUNCH_CORRECTION1_SHA256,
     }
     for path, expected in expected_files.items():
         if not path.is_file() or sha256_file(path) != expected:
@@ -892,6 +1013,7 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
         "v5_infrastructure_amendment1_sha256": (
             V5_INFRASTRUCTURE_AMENDMENT1_SHA256
         ),
+        "v6_prelaunch_correction1_sha256": PRELAUNCH_CORRECTION1_SHA256,
     }
     if registration.get("lineage") != expected_lineage:
         raise ProtocolError("registration does not pin the emotional-only lineage")
@@ -900,9 +1022,36 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
     ):
         raise ProtocolError("registration changed the conditional V5 launch predicate")
     if registration.get("operator_knowledge_boundary") != (
-        OPERATOR_KNOWLEDGE_BOUNDARY
+        CORRECTED_OPERATOR_KNOWLEDGE_BOUNDARY
     ):
         raise ProtocolError("registration changed the operator knowledge boundary")
+    if registration.get("supersedes_registration") != {
+        "path": str(SUPERSEDED_REGISTRATION_PATH.relative_to(REPO)),
+        "sha256": SUPERSEDED_REGISTRATION_SHA256,
+    }:
+        raise ProtocolError("V2 registration changed its superseded V1 identity")
+    if registration.get("prelaunch_correction") != {
+        "path": str(PRELAUNCH_CORRECTION1_PATH.relative_to(REPO)),
+        "sha256": PRELAUNCH_CORRECTION1_SHA256,
+    }:
+        raise ProtocolError("V2 registration changed prelaunch correction 1")
+    v1 = json.loads(SUPERSEDED_REGISTRATION_PATH.read_text())
+    correction = json.loads(PRELAUNCH_CORRECTION1_PATH.read_text())
+    projection_fields = correction.get("scientific_projection", {}).get("fields")
+    if not isinstance(v1, dict) or not isinstance(projection_fields, list):
+        raise ProtocolError("prelaunch correction lacks its V1 scientific projection")
+    v1_projection = {field: v1.get(field) for field in projection_fields}
+    v2_projection = {field: registration.get(field) for field in projection_fields}
+    if (
+        canonical_sha256(v1_projection)
+        != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
+        or correction["scientific_projection"].get(
+            "superseded_registration_canonical_sha256"
+        )
+        != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
+        or v2_projection != v1_projection
+    ):
+        raise ProtocolError("V2 changed a prohibited scientific/W&B V1 field")
     selection_identity = registration.get("selection_closeout")
     if selection_identity != registration_template()["selection_closeout"]:
         raise ProtocolError("registration changed the V6 selection closeout identity")
@@ -974,8 +1123,9 @@ def _validate_registration_shape(registration: dict[str, Any]) -> None:
     ):
         raise ProtocolError("registration W&B run ID contains unsupported characters")
     if registration.get("outcome_status_at_freeze") != (
-        "V6 not launched; V6 curve/final outcomes unopened; selecting agent used "
-        "no V5 outcomes, while root had seen partial V5 seed-168 joy results"
+        "prelaunch correction 1: no V6 outcome existed; selecting agent used no "
+        "V5 outcomes; root had seen six partial V5 seeds but no V5 aggregate or "
+        "terminal result; scientific choices remain identical to V1"
     ):
         raise ProtocolError("registration must freeze before any V6 outcome inspection")
     _validate_archive_lineage(registration)
@@ -1034,12 +1184,12 @@ def _validate_recipe_shape(
     return words, components
 
 
-def _load_tracked_pinned_json(
+def _load_tracked_pinned_file(
     identity: Any,
     label: str,
     *,
     expected_sha256: str | None = None,
-) -> tuple[Path, dict[str, Any]]:
+) -> Path:
     if not isinstance(identity, dict) or set(identity) != {"path", "sha256"}:
         raise ProtocolError(f"{label} must have exactly path and sha256")
     path = _repo_path(identity.get("path"), f"{label}.path")
@@ -1047,7 +1197,7 @@ def _load_tracked_pinned_json(
     if not isinstance(digest, str) or len(digest) != 64:
         raise ProtocolError(f"{label}.sha256 must be explicit")
     if expected_sha256 is not None and digest != expected_sha256:
-        raise ProtocolError(f"{label} is not the exact selected celebration input")
+        raise ProtocolError(f"{label} does not match its registered SHA-256")
     relative = path.relative_to(REPO).as_posix()
     try:
         tracked = git("ls-files", "--error-unmatch", relative)
@@ -1055,6 +1205,18 @@ def _load_tracked_pinned_json(
         raise ProtocolError(f"{label} must be committed before registration") from error
     if tracked != relative or not path.is_file() or sha256_file(path) != digest:
         raise ProtocolError(f"{label} committed bytes changed")
+    return path
+
+
+def _load_tracked_pinned_json(
+    identity: Any,
+    label: str,
+    *,
+    expected_sha256: str | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    path = _load_tracked_pinned_file(
+        identity, label, expected_sha256=expected_sha256
+    )
     payload = json.loads(path.read_text())
     if not isinstance(payload, dict):
         raise ProtocolError(f"{label} must be a JSON object")
@@ -1086,6 +1248,9 @@ def verify_v5_launch_predicate() -> dict[str, Any]:
     expected = {
         "protocol": CONDITIONAL_LAUNCH_PREDICATE["required_protocol"],
         "v5_registration_sha256": V5_REGISTRATION_SHA256,
+        "v5_infrastructure_amendment1_sha256": (
+            V5_INFRASTRUCTURE_AMENDMENT1_SHA256
+        ),
         "v5_sealed_final_manifest_sha256": V5_FINAL_SHA256,
         "v5_sealed_final_sorted_set_sha256": V5_FINAL_SET_SHA256,
         "terminal_stage": CONDITIONAL_LAUNCH_PREDICATE[
@@ -1097,48 +1262,193 @@ def verify_v5_launch_predicate() -> dict[str, Any]:
         "final_evaluation_labels": [],
         "sealed_comparison_present": False,
         "final_outcomes_unopened": True,
+        "operational_identity": CONDITIONAL_LAUNCH_PREDICATE[
+            "required_operational_identity"
+        ],
     }
     if any(closeout.get(key) != value for key, value in expected.items()):
         raise ProtocolError(
             "V5 did not prove curve_failed before unlock/collection/evaluation; "
             "the conditional V6 registration is cancelled"
         )
-    inventory = closeout.get("volume_inventory")
-    if not isinstance(inventory, dict):
-        raise ProtocolError("V5 closeout lacks a sealed-boundary Volume inventory")
-    root_entries = inventory.get("root_entries")
-    evidence_entries = inventory.get("evidence_entries")
-    if (
-        not isinstance(root_entries, list)
-        or not isinstance(evidence_entries, list)
-        or any(not isinstance(item, str) for item in root_entries + evidence_entries)
+    evidence_identities = closeout.get("source_evidence")
+    expected_paths = CONDITIONAL_LAUNCH_PREDICATE[
+        "required_source_evidence_paths"
+    ]
+    if not isinstance(evidence_identities, dict) or set(evidence_identities) != set(
+        expected_paths
     ):
-        raise ProtocolError("V5 closeout Volume inventory is malformed")
-    forbidden_root = {"final_unlocked.json", "final_collection.json", "evals"}
-    if forbidden_root & set(root_entries) or "sealed_comparison.json" in evidence_entries:
-        raise ProtocolError("V5 closeout inventory contains opened-final artifacts")
-    evidence = closeout.get("source_evidence_sha256")
-    required_evidence = {
-        "attempt_status",
-        "curve_gate",
-        "volume_inventory",
-        "durable_export",
-    }
+        raise ProtocolError("V5 closeout must identify every registered source file")
+    evidence_payloads: dict[str, dict[str, Any]] = {}
+    evidence_hashes: dict[str, str] = {}
+    for name, expected_path in expected_paths.items():
+        identity = evidence_identities[name]
+        if not isinstance(identity, dict) or identity.get("path") != expected_path:
+            raise ProtocolError(f"V5 {name} evidence path changed")
+        if name == "curve_plot":
+            path = _load_tracked_pinned_file(
+                identity, "v5_terminal_evidence.curve_plot"
+            )
+            payload = None
+        else:
+            path, payload = _load_tracked_pinned_json(
+                identity,
+                f"v5_terminal_evidence.{name}",
+                expected_sha256=(
+                    V5_LAUNCH_RECEIPT_SHA256
+                    if name == "launch_receipt"
+                    else None
+                ),
+            )
+        if path != V5_TERMINAL_EVIDENCE_PATHS[name]:
+            raise ProtocolError(f"V5 {name} resolved outside its registered path")
+        if payload is not None:
+            evidence_payloads[name] = payload
+        evidence_hashes[name] = sha256_file(path)
+
+    claim = evidence_payloads["attempt_claim"]
+    preflight = claim.get("operational_preflight")
     if (
-        not isinstance(evidence, dict)
-        or set(evidence) != required_evidence
+        claim.get("claim_id") != V5_CLAIM_ID
+        or claim.get("protocol") != V5_PROTOCOL
+        or claim.get("registration_sha256") != V5_REGISTRATION_SHA256
+        or claim.get("recipe_lock_sha256") != V5_RECIPE_LOCK_SHA256
+        or claim.get("global_modal_gpu_limit") != 1
+        or claim.get("gpu_app_overlap_policy") != V5_GPU_APP_OVERLAP_POLICY
+        or not isinstance(claim.get("git_commit"), str)
+        or not re.fullmatch(r"[0-9a-f]{40}", claim["git_commit"])
+        or not isinstance(preflight, dict)
+        or preflight.get("exclusive_gpu_confirmation")
+        != "confirmed-no-other-modal-gpu-app-running"
+        or preflight.get("active_other_modal_apps") != []
+        or preflight.get("global_modal_gpu_limit") != 1
+    ):
+        raise ProtocolError("tracked V5 attempt claim is not the exact amended claim")
+
+    receipt = evidence_payloads["launch_receipt"]
+    expected_receipt = {
+        "app_id": V5_MODAL_APP_ID,
+        "claim_id": V5_CLAIM_ID,
+        "function_call_id": V5_MODAL_FUNCTION_CALL_ID,
+        "global_modal_gpu_limit": 1,
+        "gpu_app_overlap_policy": V5_GPU_APP_OVERLAP_POLICY,
+        "gpu_type": "L40S",
+        "max_parallel_gpu_workers": 1,
+        "modal_app": V5_MODAL_APP_NAME,
+        "receipt_status": "present",
+        "submitted_at_utc": V5_LAUNCH_SUBMITTED_AT_UTC,
+        "volume": V5_VOLUME_NAME,
+    }
+    if receipt != expected_receipt:
+        raise ProtocolError("tracked V5 launch receipt changed from exact Volume-B call")
+
+    curve = evidence_payloads["curve_gate"]
+    status = evidence_payloads["attempt_status"]
+    status_curve = status.get("curve")
+    if not isinstance(status_curve, dict):
+        raise ProtocolError("tracked V5 terminal status does not bind its curve gate")
+    status_curve_payload = dict(status_curve)
+    curve_returncode = status_curve_payload.pop("returncode", None)
+    if (
+        status.get("claim_id") != V5_CLAIM_ID
+        or status.get("stage") != "curve_failed"
+        or curve_returncode != 2
+        or status_curve_payload != curve
+        or curve.get("protocol") != V5_PROTOCOL
+        or curve.get("git_commit") != claim["git_commit"]
+        or curve.get("registration_sha256") != V5_REGISTRATION_SHA256
+        or curve.get("criterion") != CURVE_CRITERION
+        or curve.get("predeclared_steps") != [0, 2, 4, 6]
+        or curve.get("n_seeds") != 8
+        or curve.get("examples_per_seed") != 400
+        or curve.get("passed") is not False
+        or curve.get("curve_plot", {}).get("sha256")
+        != evidence_hashes["curve_plot"]
         or any(
-            not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value)
-            for value in evidence.values()
+            key in status
+            for key in ("final_collection_id", "final_labels", "acceptance")
         )
     ):
-        raise ProtocolError("V5 closeout does not hash every launch-predicate input")
+        raise ProtocolError("tracked V5 status/curve bytes do not prove curve_failed")
+
+    root_inventory = evidence_payloads["root_inventory"]
+    evidence_inventory = evidence_payloads["evidence_inventory"]
+    for payload, scope in (
+        (root_inventory, "volume_root"),
+        (evidence_inventory, "evidence_directory"),
+    ):
+        entries = payload.get("entries")
+        if (
+            payload.get("protocol")
+            != "j-lens-rl-confirmatory-v5-emotional-terminal-inventory-v1"
+            or payload.get("claim_id") != V5_CLAIM_ID
+            or payload.get("volume") != V5_VOLUME_NAME
+            or payload.get("scope") != scope
+            or not isinstance(entries, list)
+            or entries != sorted(set(entries))
+            or any(
+                not isinstance(item, str) or not item or "/" in item
+                for item in entries
+            )
+        ):
+            raise ProtocolError(f"tracked V5 {scope} inventory is malformed")
+    root_entries = root_inventory["entries"]
+    evidence_entries = evidence_inventory["entries"]
+    required_root = {
+        "attempt_claim.json",
+        "attempt_status.json",
+        "evidence",
+        "launch_receipt.json",
+        "manifests",
+        "protocol_state.json",
+        "reproducibility",
+        "runs",
+    }
+    required_evidence_entries = {
+        "curve.png",
+        "curve_gate.json",
+        "durable_export_plan.json",
+        "evidence_bundle_inventory.json",
+        "git_closeout_candidate.json",
+    }
+    forbidden_root = {"final_unlocked.json", "final_collection.json", "evals"}
+    forbidden_evidence = {
+        "acceptance.json",
+        "completed_runs.json",
+        "sealed_comparison.json",
+    }
+    if (
+        not required_root <= set(root_entries)
+        or not required_evidence_entries <= set(evidence_entries)
+        or forbidden_root & set(root_entries)
+        or forbidden_evidence & set(evidence_entries)
+    ):
+        raise ProtocolError("V5 closeout inventory contains opened-final artifacts")
+
+    export_receipt = evidence_payloads["durable_export_receipt"]
+    if (
+        export_receipt.get("schema_version") != 1
+        or not isinstance(export_receipt.get("archive_relative_path"), str)
+        or export_receipt["archive_relative_path"]
+        != f"exports/v5_emotional_evidence_{V5_CLAIM_ID}.zip"
+        or not re.fullmatch(r"[0-9a-f]{64}", str(export_receipt.get("sha256")))
+        or not isinstance(export_receipt.get("size_bytes"), int)
+        or export_receipt["size_bytes"] <= 0
+        or not isinstance(export_receipt.get("entry_count"), int)
+        or export_receipt["entry_count"] <= 0
+        or not re.fullmatch(
+            r"[0-9a-f]{64}",
+            str(export_receipt.get("evidence_inventory_sha256")),
+        )
+    ):
+        raise ProtocolError("tracked V5 durable-export receipt is malformed")
     return {
         "path": relative,
         "sha256": sha256_file(V5_TERMINAL_CLOSEOUT_PATH),
         "terminal_stage": closeout["terminal_stage"],
         "final_outcomes_unopened": closeout["final_outcomes_unopened"],
-        "source_evidence_sha256": evidence,
+        "operational_identity": closeout["operational_identity"],
+        "source_evidence_sha256": evidence_hashes,
     }
 
 
@@ -1423,7 +1733,7 @@ def generated_configs(
         fixed_updates,
     )
     base = dict(recipe)
-    schema = metric_schema(words, fixed_updates)
+    schema = metric_schema(words, fixed_updates, components)
     base.update(
         {
             "validation_indices_path": ".confirmatory/v6/manifests/curve_indices.json",
@@ -1779,7 +2089,9 @@ def _verify_reproducibility_files(
     ):
         raise ProtocolError("registered decision bytes changed in reproducibility bundle")
     expected_schema = metric_schema(
-        recipe["target_words"], registration_horizon(registration)
+        recipe["target_words"],
+        registration_horizon(registration),
+        recipe["score_components"],
     )
     if json.loads((REPRODUCIBILITY_DIR / "metric_schema.json").read_text()) != (
         expected_schema
@@ -1860,7 +2172,9 @@ def prepare() -> None:
         write_json(path, config)
     REPRODUCIBILITY_DIR.mkdir(parents=True)
     schema = metric_schema(
-        source_artifacts["target_words"], registration_horizon(registration)
+        source_artifacts["target_words"],
+        registration_horizon(registration),
+        recipe["score_components"],
     )
     write_json(REPRODUCIBILITY_DIR / "metric_schema.json", schema)
     if sha256_file(REPRODUCIBILITY_DIR / "metric_schema.json") != serialized_json_sha256(
