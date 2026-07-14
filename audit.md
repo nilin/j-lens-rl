@@ -441,3 +441,66 @@ Operational security note: a credential was exposed in internal agent tool
 output during this audit. It is excluded from Git and the Modal image, but it
 should be rotated after the active launch no longer needs it. The credential
 value is intentionally not reproduced here.
+
+## V2 Modal outcome and frozen v3 branch (2026-07-14)
+
+Corrected v2 ran on Modal app `ap-sRwSHPcrmbyFJJlYUBOhws`, Volume
+`j-lens-rl-confirmatory-v2-20260714a`, from clean commit
+`2c00f7fadc3e202c1516c21c4e804ab486ff6cb7`. All six semantic manifests
+recorded the same non-null source-tree hash, the pinned model/dataset and
+lens/calibration hashes, `reward_type: jlens`, and `NVIDIA L40S` with CUDA
+12.8. Five workers ran concurrently and seed 147 queued as intended. No
+traceback, OOM, literal-target emission, stale output, or provenance mismatch
+was observed before the scientific gate resolved.
+
+The fresh, previously unseen curve gave this decisive result:
+
+| Seed | Step 0 | Step 5 | Step 10 |
+|---:|---:|---:|---:|
+| 142 | 0.3750 | 0.3625 | 0.3750 |
+| 143 | 0.3750 | 0.3750 | 0.3575 |
+| 144 | 0.3750 | 0.3850 | 0.3625 |
+| 145 | 0.3750 | 0.3900 | 0.3575 |
+| 146 | 0.3750 | 0.4025 | 0.3800 |
+| 147 | 0.3750 | 0.3800 | 0.3800 |
+| **Mean** | **0.37500** | **0.38250** | **0.36875** |
+
+Thus J-only training produced the requested first rise, `+0.75` percentage
+points at step 5, but then fell `1.375` points at step 10. This violates the
+predeclared no-downward-step condition and puts step 10 `0.625` points below
+the frozen base. V2 is a valid negative curve-gate result, not significant
+evidence. The orchestrator is allowed to finish and persist the semantic
+artifacts, but it must not start sign-flip controls or open any of the 2,900
+sealed-final outcomes. The invalid v1 result is not pooled with this result.
+
+The pre-gate contingency audit found one concrete recipe mismatch that best
+explains why the early rise was not sustained. The historical dense `solved`
+runs used `max_steps: 500`; their nominal linear schedule therefore stayed
+near `3e-6` during the first 25 updates, and their two-seed mean at steps
+`0/10/20/25` was `0.3250/0.3275/0.3325/0.3325`. V2 shortened
+`max_steps` to 25 without freezing the scheduler, so the default linear
+schedule logged approximately `2.52e-6`, `1.92e-6`, `1.32e-6`, `0.72e-6`,
+and `0.12e-6` at steps `5/10/15/20/25`. The confirmatory config therefore did
+not actually preserve the historically selected learning-rate recipe. This is
+a protocol/configuration issue, not permission to select a favorable v2
+checkpoint.
+
+Before seed 147's step-10 result was available, the contingency analysis froze
+the following branch conditional on v2 failure. V3 changes only the scheduler
+to constant `3e-6` with zero warmup and otherwise retains the exact J-only
+`solved`, layer-8 late-half, KL, sampling, LoRA, masking, fixed-step, and
+observational-evaluation recipe. It uses ten new semantic seeds 148--157 and
+ten matched sign-flip controls. At the five-GPU cap, each condition still takes
+two waves, while acceptance requires at least 9/10 strictly positive sealed
+effects (two-sided exact sign-test `p=0.021484375`) plus positive crossed
+95% lower bounds for both semantic-minus-base and semantic-minus-sign-flip.
+
+Because v2 never opens a sealed outcome, v3 may deterministically rehash only
+v2's still-unopened 2,900-item sealed pool under a new frozen salt: 800 items
+become the sole v3 curve and 2,100 remain sealed final; the separate 64-item
+reserve stays untouched. The curve gate remains the exact ten-seed mean at
+`0/5/10/15`, with step 5 strictly above baseline and no later decline, and the
+only endpoint remains step 25. V2's exposed 400-item curve is permanently
+retired. V3 remains the sole final-outcome look, so it does not spend alpha on
+the failed descriptive v2 gate; if any v2 sealed row is opened, this branch is
+invalid and must not run.
