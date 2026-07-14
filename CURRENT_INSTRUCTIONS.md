@@ -71,8 +71,10 @@ from confirmatory claims.
   `.3750/.3675/.3750/.3775` and seed 177 finished
   `.3750/.3700/.3725/.3925` at `0/4/6/10`. Both ended above baseline but dipped
   at the first node; the registered decision remains the eight-seed mean. Seed
-  178 started immediately afterward. Monitor that registered attempt without
-  overlapping another GPU app.
+  178 and 179 then completed; the four-seed running mean is
+  `.3750/.3800/.384375/.383125`, so its first two comparisons pass and its last
+  dips by `.00125`. This is not the registered eight-seed decision. Seed 180 is
+  active. Monitor without overlapping another GPU app.
   Correlation attempt 4 stopped after all eight discovery shards when Modal
   preempted its CPU controller; aggregation/selection/validation never began
   and outcomes remain uninspected. Its preemption-safe recovery and strict

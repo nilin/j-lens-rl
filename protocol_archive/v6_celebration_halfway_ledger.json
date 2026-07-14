@@ -1,0 +1,80 @@
+{
+  "app_id": "ap-W0KYuXL8iKfFlgUS81uNKB",
+  "claim_id": "2c426dfb48e54c759ec6b2cd641f4d97",
+  "evidence_eligibility": "interim_inventory_of_original_registered_confirmatory_attempt",
+  "git_commit_used_by_runs": "3c1666d289b50e70a93ac6d8c8e21157ce530097",
+  "inspection_boundary": {
+    "opened": [
+      "registered curve-split validation histories for seeds 176 through 179",
+      "terminal run-result manifest metadata",
+      "W&B terminal publication receipts"
+    ],
+    "sealed_final_outcomes_opened": false
+  },
+  "interim_curve_gate": {
+    "comparisons": [
+      true,
+      true,
+      false
+    ],
+    "mean_exact_match": [
+      0.375,
+      0.38,
+      0.384375,
+      0.383125
+    ],
+    "registered_gate_evaluated": false,
+    "steps": [
+      0,
+      4,
+      6,
+      10
+    ],
+    "warning": "This four-seed inventory is not the registered eight-seed decision."
+  },
+  "orchestration_function_call_id": "fc-01KXG6MYVEXXGAW2M3KY38769Q",
+  "recorded_at_utc": "2026-07-14T12:28:00Z",
+  "registration_sha256": "12cb17f896b117a43d9d266a53d43423ec5c5613fcc2dfda209f59bc27c507f2",
+  "runs": {
+    "176": {
+      "artifact_digest": "a43271afe414c149d93b376cd799d17c",
+      "curve": [0.375, 0.3675, 0.375, 0.3775],
+      "final_adapter_and_tokenizer_sha256": "f1a9c168ae0f10d832fc16c153b07ea894de4336748ef0096c50d7929c3a5065",
+      "run_result_manifest_sha256": "0045775572ca1867247fb550fa111cae1508b70865f628c338ef558ba34c8b45",
+      "validation_history_sha256": "70fd226af26afac98749d65cb033637e984fb959bdfa40234dea4ab44f2e73e4",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed176",
+      "wandb_terminal_publish_receipt_sha256": "acf3ca1d1144d6e005caf7c73bbdca4eedbd5fc32f4f83c1fd47c4b1a4a0baf5"
+    },
+    "177": {
+      "artifact_digest": "df15694eb070a2872a8c5d71ce1e3e0a",
+      "curve": [0.375, 0.37, 0.3725, 0.3925],
+      "final_adapter_and_tokenizer_sha256": "b46b052e6c099d4844c5b251f8335207b33acd9e80b1b9097421d53daa13dbff",
+      "run_result_manifest_sha256": "6f9549e1f4fd5cc65c7c708356c248ed9bd2070a4553cd98c4add6dfc04706ea",
+      "validation_history_sha256": "b7612f830a89ee6c06a374633ffba458a8379bd06251456f383ca5f81e3ef2a4",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed177",
+      "wandb_terminal_publish_receipt_sha256": "d939492a817519d578d331947fc80b439c38b59f63b198e1cadb4d8d45b0892a"
+    },
+    "178": {
+      "artifact_digest": "4d8139a0da99f9839f4790167d8461f3",
+      "curve": [0.375, 0.3875, 0.385, 0.3625],
+      "final_adapter_and_tokenizer_sha256": "1e26f254b8b9f0154b62f9cd120e8dc39e7097eca9b3e1806ba886c8c07e25e2",
+      "run_result_manifest_sha256": "98e0aa7d82c9eec9be5e7df9b562d6dbe68abfe12cff5788c0f1049428048622",
+      "validation_history_sha256": "bccad28a4c38d20482a2eb3b90dcea01f6dca02d34ac97da6b7e076e2d417cd0",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed178",
+      "wandb_terminal_publish_receipt_sha256": "c182b6e68ab9a4e7cf6eb0ef789e3e77882f7dfa391fb750dd6e5d3ab01900bb"
+    },
+    "179": {
+      "artifact_digest": "415c41ac5b4626f0c1f71727b45ff3d5",
+      "curve": [0.375, 0.395, 0.405, 0.4],
+      "final_adapter_and_tokenizer_sha256": "6b9068b2f50792c15a85012c6cb22ee5ce2873e2975183fc515f963c92eb8471",
+      "run_result_manifest_sha256": "8f48cb42e35363d2766cb0c11ba9fc3ceb18360181edf40fe3d14e670a97b5d5",
+      "validation_history_sha256": "ac522fddcd18c9512fa59074ee90575a11fb529027cfbf4d04a54a08015cc8d7",
+      "wandb_run_id": "confirm-v6-emotional-celebration-taper-h10-jlens_seed179",
+      "wandb_terminal_publish_receipt_sha256": "a1bd9dd74f58282fe4d0fa2de794e1eed78a7ca986048139cbae2ab181d58e74"
+    }
+  },
+  "schema_version": 1,
+  "validation_indices_sha256": "9c04151e1dac6b226bed07873e1003ab5c399a2978ca2b0dcb0d32c3a337ade5",
+  "volume": "j-lens-rl-confirmatory-v6-celebration-taper-20260714c",
+  "wandb_group": "confirm-v6-emotional-celebration-taper-h10"
+}

@@ -1523,3 +1523,25 @@ new named lease cannot atomically exclude that already-running, non-cooperating
 V6 launcher; app-list checks alone leave a launch race. Every future launcher,
 including the conditional profanity-U5 fallback, must acquire the same
 `j-lens-rl-global-gpu-lease-v1` / `global-one-gpu` slot before GPU dispatch.
+
+### V6 halfway checkpoint (not a gate decision)
+
+Seeds 178 and 179 completed normally and were replaced serially by the next
+worker. Their curves were `.3750/.3875/.3850/.3625` and
+`.3750/.3950/.4050/.4000`, respectively. Consequently the four-seed running
+mean at `0/4/6/10` is
+`.3750 -> .3800 -> .384375 -> .383125`: the first post-baseline point is above
+baseline and the next point rises, but the last falls by `.00125`. This is an
+interim inventory only. The registered curve gate remains the mean of all eight
+treatment seeds and has not been evaluated.
+
+Both complete Volume directories were downloaded, and every raw file named by
+their W&B terminal receipts matched its SHA-256. The seed-178/179 run-result
+hashes are `98e0aa7d82c9eec9be5e7df9b562d6dbe68abfe12cff5788c0f1049428048622`
+and `8f48cb42e35363d2766cb0c11ba9fc3ceb18360181edf40fe3d14e670a97b5d5`;
+their W&B artifact digests are `4d8139a0da99f9839f4790167d8461f3`
+and `415c41ac5b4626f0c1f71727b45ff3d5`. The exact four curves, run identities,
+artifact trees, receipts, and inspection boundary are in
+[`protocol_archive/v6_celebration_halfway_ledger.json`](protocol_archive/v6_celebration_halfway_ledger.json).
+No sealed-final outcome was opened. Seed 180 began immediately afterward as
+the sole treatment worker.
