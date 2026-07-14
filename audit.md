@@ -2018,3 +2018,13 @@ to step 20; the middle inequality still has positive margin. Seed 214 began
 immediately. The CPU-only seed-213 upload verified exact W&B identity and all
 seven evidence files; its reconstructable ledger is
 `protocol_archive/v9_local_seed213_terminal_ledger.json`.
+
+Seed 214 completed with curve `.3975/.4000/.3875/.4025` and zero literal
+target-word completions. It rose first, dipped at step 10, and recovered above
+baseline at step 20. The seven-seed descriptive mean is
+`.3975/.396071/.396071/.392857`. Therefore the final treatment seed must have
+step 4 at least `.4100`, step 10 at least equal to its step 4, and step 20 at
+least `.0225` above its step 10 for all three aggregate inequalities to pass.
+Seed 215 began immediately. The CPU-only seed-214 upload verified exact W&B
+identity and all seven evidence files; its reconstructable ledger is
+`protocol_archive/v9_local_seed214_terminal_ledger.json`.
