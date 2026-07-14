@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-confirmatory-v10-fast-registration-draft",
+  "protocol": "j-lens-rl-confirmatory-v10-fast-negative-fuck-u2-u3-u4",
+  "registered_science_at_utc": "2026-07-14T20:55:27Z",
+  "deadline": "2026-07-15T02:00:00Z",
+  "scientific_status": "prospective_alpha_0.15_confirmation_after_adaptive_candidate_freeze",
+  "candidate_freeze": {
+    "path": "protocol_archive/v10_fast_candidate_freeze.json",
+    "sha256": "4909b81b54e20f66ce07d05f082e135e2de1bb9be94102bb3901c7825c3a84d3"
+  },
+  "objective": "Test whether penalizing the internal J-lens representation of the emotionally charged word fuck, without a correctness reward, improves GSM8K relative to both the base model and the exact sign-flip reward.",
+  "target": {
+    "words": ["fuck"],
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/single_word/artifacts/fuck_calibration.json",
+    "calibration_sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+    "treatment_score_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": -1.0}
+    ],
+    "matched_signflip_score_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 1.0, "aggregation": "mean", "weight": 1.0}
+    ],
+    "score_stride": 5,
+    "literal_target_and_causal_predecessor_masking_required": true
+  },
+  "shared_training": {
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "dataset": "openai/gsm8k:main:train",
+    "dataset_revision": "740312add88f781978c0658806c59bc2815b9866",
+    "lens_path": "artifacts/qwen25_05b_solved_lens.pt",
+    "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "reward_type": "jlens",
+    "correctness_reward_used_for_training": false,
+    "kl_beta": 0.02,
+    "train_examples": 1000,
+    "num_generations": 8,
+    "learning_rate": 0.000003,
+    "lr_scheduler_type": "constant",
+    "warmup_steps": 0,
+    "updates": 4,
+    "validation_examples": 400,
+    "validation_batch_size": 64,
+    "validation_steps": [2, 3, 4],
+    "validation_observational_only": true,
+    "save_every": 4,
+    "save_total_limit": 1,
+    "mask_target_tokens": true,
+    "require_clean_repository": true
+  },
+  "data": {
+    "exposed_curve_manifest_path": ".confirmatory/manifests/curve_indices.json",
+    "exposed_curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "training_exclusions_path": ".confirmatory/manifests/train_exclusions.json",
+    "training_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "sealed_final_manifest_path": ".confirmatory/v9_local/manifests/sealed_final_indices.json",
+    "sealed_final_manifest_sha256_from_prior_registration": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+    "sealed_final_examples": 900,
+    "sealed_final_must_not_be_read_copied_mounted_or_uploaded_before_curve_pass_and_unlock": true,
+    "reserve_must_remain_untouched": true
+  },
+  "training_collection": {
+    "seeds": [216, 217, 218, 219],
+    "conditions": ["jlens", "signflip"],
+    "treatment_labels": ["jlens_seed216", "jlens_seed217", "jlens_seed218", "jlens_seed219"],
+    "control_labels": ["signflip_seed216", "signflip_seed217", "signflip_seed218", "signflip_seed219"],
+    "matched_seed_and_training_rows": true,
+    "treatments_must_all_terminalize_before_curve_gate": true,
+    "controls_may_start_only_after_curve_gate_passes": true,
+    "resume_or_replacement_seed_permitted": false
+  },
+  "curve_gate": {
+    "steps": [0, 2, 3, 4],
+    "criterion": "M2 > M0, M3 >= M2, and M4 >= M3 on the four-treatment-seed mean",
+    "first_failure_is_terminal": true,
+    "later_or_individual_peaks_cannot_repair_failure": true
+  },
+  "final_collection": {
+    "labels": ["base", "jlens_seed216", "jlens_seed217", "jlens_seed218", "jlens_seed219", "signflip_seed216", "signflip_seed217", "signflip_seed218", "signflip_seed219"],
+    "count": 9,
+    "same_900_rows_for_every_label": true,
+    "all_labels_must_be_collected_before_any_semantic_outcome_is_parsed_or_compared": true,
+    "opaque_hashing_and_completion_receipts_before_full_collection_are_allowed": true,
+    "partial_collection_is_terminal_and_may_not_resume": true
+  },
+  "analysis_and_acceptance": {
+    "alpha": 0.15,
+    "primary_estimand": "per-seed paired final accuracy difference: treatment minus matched signflip",
+    "primary_test": "exact two-sided sign test across four seeds",
+    "primary_acceptance": "4 positive, 0 negative, 0 ties; exact p=0.125; mean difference > 0",
+    "secondary_estimand": "per-seed paired final accuracy difference: treatment minus base",
+    "secondary_test": "exact two-sided sign test across four seeds",
+    "secondary_acceptance": "4 positive, 0 negative, 0 ties; exact p=0.125; mean difference > 0",
+    "curve_gate_must_pass": true,
+    "crossed_seed_item_bootstrap_samples": 10000,
+    "crossed_seed_item_bootstrap_seed": 0,
+    "crossed_95pct_intervals": "report descriptively but do not use as an alpha-0.15 acceptance gate",
+    "all_source_data_runtime_artifact_literal_and_collection_audits_must_pass": true,
+    "claim_scope": "the exact negative-fuck J-lens recipe only"
+  },
+  "hardware_and_capacity": {
+    "backend": "Modal",
+    "gpu_type": "NVIDIA L40S",
+    "gpu_per_worker": 1,
+    "max_modal_gpus_before_2026_07_14_23_00_utc": 5,
+    "max_modal_gpus_at_or_after_2026_07_14_23_00_utc": 10,
+    "mixed_hardware_within_attempt_forbidden": true
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "confirm-v10-fast-negative-fuck-u2-u3-u4",
+    "online_required": true,
+    "resume": "never",
+    "run_id_template": "confirm-v10-fast-fuck-{condition}-seed{seed}"
+  },
+  "reproducibility": {
+    "launch_only_from_clean_pushed_main": true,
+    "prepared_registration_must_bind_exact_code_and_config_hashes_before_launch": true,
+    "source_commit_and_source_tree_hash_must_be_durable_before_any_worker": true,
+    "raw_histories_configs_manifests_dispatches_artifact_hashes_wandb_ids_and_analysis_must_be_archived": true
+  },
+  "protected_payloads_accessed_when_science_was_registered": false
+}

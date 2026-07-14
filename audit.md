@@ -2214,3 +2214,35 @@ failed their curve gates: V2 mean `.3750/.3825/.36875/.37708`, V3 mean
 `.3825/.393125/.3915625/.389375`. The attractive one-seed curves therefore
 remain candidate-selection evidence; no matched-control sealed analysis
 unlocked after those gate failures.
+
+### Five-arm launch and deadline V10 candidate freeze
+
+The five-arm development screen launched from clean pushed commit `e0ba146` on
+Modal app `ap-hl1q4duAFw0u160g3utmyD`, claim
+`563f96a62af14b188b00c794cdb11395`, and fresh v2 Volume
+`vo-P3ESFZpCj0Wtwnu7Do4ZOM`. Five immutable dispatch intents independently
+record NVIDIA L40S, the same registration/source tree, and the five fixed W&B
+IDs before training. The exact launch identities and record hashes are in
+`protocol_archive/emotional_parallel_v3_launch_ledger.json`. No protected
+final, reserve, or correlation payload was mounted.
+
+At 20:55:27 UTC, before the new negative-`fuck` arm's step-6 outcome existed,
+the next confirmation candidate was frozen. The old seed-167 screen was
+`.3825/.3925/.4075` at `0/2/4`; the new seed-198 partial curve was
+`.3825/.3950/.3950`. Negative `fuck` therefore had two independent exposed
+baseline-to-step-2 rises and no step-2-to-step-4 decline. The new confirmatory
+curve prospectively inserts the previously unobserved step-3 node and fixes
+`0/2/3/4`, four fresh seeds 216--219, exact `+1` sign-flip controls for the
+registered treatment weight `-1`, and the still-unopened 900-row final. The
+adaptive boundary and every competing outcome known at selection are recorded
+in `protocol_archive/v10_fast_candidate_freeze.json`; science is frozen in
+`protocol_archive/v10_fast_registration_draft.json` before launch.
+
+The user accepts a prospectively declared `alpha=.15` for the 02:00 UTC
+deadline. With four registered seeds, the primary treatment-minus-signflip and
+secondary treatment-minus-base tests each require all four seed effects to be
+strictly positive with no ties, giving exact two-sided sign-test `p=.125`.
+Positive means and all provenance/collection audits are also required.
+Crossed 95% bootstrap intervals remain reported diagnostics, but requiring a
+95% lower bound above zero would silently restore an approximately .05 gate
+and is therefore not used as the alpha-.15 acceptance rule.

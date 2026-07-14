@@ -1,0 +1,9 @@
+{
+  "base": "v10_fast_signflip_common.json",
+  "seed": 217,
+  "run_name": "confirm-v10-fast-fuck-signflip-seed217",
+  "wandb_run_id": "confirm-v10-fast-fuck-signflip-seed217",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v10-fast-fuck-signflip-seed217",
+  "wandb_tags": ["confirmatory-v10-fast", "emotional", "fuck", "matched-signflip", "seed217", "alpha0.15"],
+  "output_dir": "/state/runs/signflip_seed217"
+}

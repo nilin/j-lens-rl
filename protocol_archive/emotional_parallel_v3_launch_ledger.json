@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-parallel-launch-ledger",
+  "recorded_at_utc": "2026-07-14T20:49:00Z",
+  "protocol": "j-lens-rl-development-emotional-parallel-v3",
+  "scientific_status": "development_only_no_significance_claim",
+  "registration": {
+    "path": "protocol_archive/emotional_parallel_v3_registration.json",
+    "sha256": "6eeee93e2cca1d5c4167eda682bf710940ba30a2b971bf85e82f479b9329e4dc"
+  },
+  "source": {
+    "git_commit": "e0ba146a48260113fb471c131bdb57f179c2953f",
+    "origin_main_was_identical_before_launch": true,
+    "clean_detached_worktree": "/tmp/jlens-five-e0ba146",
+    "registered_source_tree_sha256": "abb234a7a878d19c31efb3762fae2c4fb497d1a1edf7a144281f244965dc8711",
+    "focused_tests": "4 passed"
+  },
+  "modal": {
+    "app_id": "ap-hl1q4duAFw0u160g3utmyD",
+    "app_name": "j-lens-rl-development-emotional-parallel-v3",
+    "root_call_id": "fc-01KXH65D7VA02GQNR22JPEXCG9",
+    "claim_id": "563f96a62af14b188b00c794cdb11395",
+    "volume_name": "j-lens-rl-development-emotional-parallel-v3-20260714b",
+    "volume_object_id": "vo-P3ESFZpCj0Wtwnu7Do4ZOM",
+    "volume_version": 2,
+    "gpu_type": "NVIDIA L40S",
+    "max_parallel_gpu_workers": 5,
+    "submitted_at_utc": "2026-07-14T20:47:48.120802+00:00"
+  },
+  "workers": {
+    "joy_u2_h6_seed194": "fc-01KXH65K1FV1FW7YSAGPZKVSTR",
+    "celebration_tail_u4_h20_seed195": "fc-01KXH65K6WNENE11QH524SFN8C",
+    "excited_u2_h6_seed196": "fc-01KXH65KC5GCQSWZDZXSAYG6CT",
+    "wow_u2_h6_seed197": "fc-01KXH65KGFCW34DS7E8RS7F4V1",
+    "fuck_penalty_u2_h6_seed198": "fc-01KXH65KMR0WD8P9ZNFDVRZS69"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "dev-v12-emotional-five-ideas",
+    "run_ids": {
+      "joy_u2_h6_seed194": "dev-v12-five-joy-u2-h6-seed194",
+      "celebration_tail_u4_h20_seed195": "dev-v12-five-celebration-tail-u4-h20-seed195",
+      "excited_u2_h6_seed196": "dev-v12-five-excited-u2-h6-seed196",
+      "wow_u2_h6_seed197": "dev-v12-five-wow-u2-h6-seed197",
+      "fuck_penalty_u2_h6_seed198": "dev-v12-five-fuck-penalty-u2-h6-seed198"
+    },
+    "resume": "never",
+    "online_required": true
+  },
+  "durable_launch_record_sha256": {
+    "attempt_claim.json": "e6b2d442af5a1503b3d567a444448558a204e69dd4ade16a02080b6233828b86",
+    "attempt_status.json": "823b320c5aede3d9b456b818ed198d58f665b8f490bfe3d6f89222db3d2af7b2",
+    "launch_receipt.json": "6d78a2c370c6fa018e52659915e89fbffe09584b6317f97f5c33e270b0028fff",
+    "dispatches/celebration_tail_u4_h20_seed195.intent.json": "3c43b54a926b0110674440e0e1172f0c03f808b54811f4ff2437408de2bc4c31",
+    "dispatches/excited_u2_h6_seed196.intent.json": "70bbe55889b4cd8bfd54c0ba87ce26cb64a24b67241763cb1cae7d57fe9e43f4",
+    "dispatches/fuck_penalty_u2_h6_seed198.intent.json": "19ec9fbf09332ef023fa2af887fd9fb861fa1dc792b75ac5007f735ec5d9869e",
+    "dispatches/joy_u2_h6_seed194.intent.json": "9ec6b6f004f4c13345097e4bf4d04fe633fd5a080a355e85129d665a0be16aa1",
+    "dispatches/wow_u2_h6_seed197.intent.json": "7e6d9c4872a33847f0b733678ce592cc2e4d94e7448a6ae317d0b4d44fec5ffd"
+  },
+  "launch_observation": {
+    "all_five_dispatch_intents_written_and_fsynced_before_training": true,
+    "all_five_intents_record_exact_NVIDIA_L40S": true,
+    "active_other_modal_apps_at_preflight": [],
+    "protected_sealed_final_accessed": false,
+    "protected_reserve_accessed": false,
+    "protected_word_correlation_payload_accessed": false,
+    "outcomes_inspected_at_ledger_time": false
+  }
+}

@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 20:43 UTC
+Last reconciled with the user: 2026-07-14 20:53 UTC
 
 ## Objective and evidence
 
@@ -18,6 +18,11 @@ separate from confirmatory claims.
   from semantic valence.
 - Significance requires untouched data, prospectively registered matched
   controls, and provenance checks—not a selected development run.
+- Work toward a terminal result by **2026-07-15 02:00 UTC (7:00 PM Pacific)**.
+  For this deadline the user accepts a prospectively declared significance
+  threshold of `p < 0.15`; four fresh matched seeds can attain exact two-sided
+  sign-test `p = 0.125` only if all four registered effects have the same
+  positive direction and none tie.
 - A qualifying confirmatory mean curve has baseline plus three registered
   post-baseline nodes: the first is above baseline and neither later node goes
   down. More frequent evaluation (for example every 5 steps) is allowed, but
