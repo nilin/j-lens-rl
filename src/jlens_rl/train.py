@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -436,11 +437,32 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--replay-config-smoke-test",
+        action="store_true",
+        help=(
+            "Validate and derive the non-claim replay identity, then exit before "
+            "loading artifacts, data, models, or outcomes. Requires "
+            "--reproduction-replay."
+        ),
+    )
+    parser.add_argument(
         "--skip-jlens-metric",
         action="store_true",
         help="Do not load or compute J-lens scores (useful for short GSM8K-only smoke tests).",
     )
     return parser.parse_args()
+
+
+def _confirmatory_state_root(path: Path) -> Path | None:
+    return next(
+        (
+            candidate
+            for candidate in (path, *path.parents)
+            if candidate.parent.name == ".confirmatory"
+            and re.fullmatch(r"v[1-9][0-9]*", candidate.name)
+        ),
+        None,
+    )
 
 
 def configure_reproduction_replay(
@@ -455,20 +477,20 @@ def configure_reproduction_replay(
         )
     if Path(output_dir).resolve() == Path(cfg["output_dir"]).resolve():
         raise ValueError("reproduction replay output must differ from the original run")
+
     registered_output = Path(cfg["output_dir"]).resolve()
-    registered_state = next(
-        (
-            candidate
-            for candidate in (registered_output, *registered_output.parents)
-            if candidate.name == "v5" and candidate.parent.name == ".confirmatory"
-        ),
-        None,
-    )
+    registered_state = _confirmatory_state_root(registered_output)
     if registered_state is None:
-        raise ValueError("registered replay config has no recognizable V5 state root")
-    if Path(output_dir).resolve().is_relative_to(registered_state):
         raise ValueError(
-            "reproduction replay output must be outside the entire immutable V5 state"
+            "registered replay config has no recognizable versioned "
+            "confirmatory state root"
+        )
+    replay_output = Path(output_dir).resolve()
+    replay_state = _confirmatory_state_root(replay_output)
+    if replay_state is not None:
+        raise ValueError(
+            "reproduction replay output must be outside every immutable "
+            f"confirmatory state, including the immutable {registered_state.name.upper()} state"
         )
     result = dict(cfg)
     original_wandb_identity = {
@@ -591,6 +613,8 @@ def republish_existing_run_result(
 
 def main() -> None:
     args = parse_args()
+    if args.replay_config_smoke_test and not args.reproduction_replay:
+        raise ValueError("--replay-config-smoke-test requires --reproduction-replay")
     cfg = load_config(args.config)
     if args.reproduction_replay:
         if args.updates is not None or args.publish_existing_result:
@@ -607,6 +631,21 @@ def main() -> None:
             output_dir=args.output_dir,
             wandb_mode=args.wandb_mode,
         )
+    if args.replay_config_smoke_test:
+        print(
+            json.dumps(
+                {
+                    "status": "valid_non_claim_replay_config",
+                    "output_dir": cfg["output_dir"],
+                    "wandb_mode": cfg["wandb_mode"],
+                    "evidence_eligibility": cfg["evidence_eligibility"],
+                    "reproduction_source": cfg["reproduction_source"],
+                },
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        return
     if cfg["reward_type"] not in {"gsm8k", "jlens"}:
         raise ValueError("reward_type must be gsm8k or jlens")
     cfg.setdefault("model_revision", QWEN_MODEL_REVISION)
