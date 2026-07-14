@@ -3,12 +3,12 @@
 This transport is deliberately outside the registered optimization path.  It
 reads one completed run, validates its exact registered config and canonical
 V9 terminal receipt twice, packages only the receipt-bound offline W&B tree,
-and asks a CPU-only Modal function to publish it.  Existing remote run IDs are
-never overwritten; ``modal run ...::verify`` is the separate read-only path.
+and asks a CPU-only Modal function to publish it. Existing remote run IDs are
+never overwritten; ``modal run ...::verify_main`` is the separate read-only path.
 
 Example, only after the run has a terminal receipt::
 
-    .venv/bin/modal run modal_v9_wandb_sync.py --label jlens_seed208
+    .venv/bin/modal run modal_v9_wandb_sync.py::main --label jlens_seed208
 """
 
 from __future__ import annotations
