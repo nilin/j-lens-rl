@@ -71,13 +71,21 @@ DEFAULT_RECIPE_LOCK_PATH = (
 SELECTION_CLOSEOUT_PATH = (
     REPO / "protocol_archive" / "v6_celebration_selection_closeout.json"
 )
-SUPERSEDED_REGISTRATION_PATH = (
+SUPERSEDED_V1_REGISTRATION_PATH = (
     REPO
     / "protocol_archive"
     / "v6_celebration_registration_v1_superseded.json"
 )
 PRELAUNCH_CORRECTION1_PATH = (
     REPO / "protocol_archive" / "v6_celebration_prelaunch_correction1.json"
+)
+SUPERSEDED_V2_REGISTRATION_PATH = (
+    REPO
+    / "protocol_archive"
+    / "v6_celebration_registration_v2_superseded.json"
+)
+PRELAUNCH_CORRECTION2_PATH = (
+    REPO / "protocol_archive" / "v6_celebration_prelaunch_correction2.json"
 )
 EMOTIONAL_DECISION_PATH = REPO / "protocol_archive" / "emotional_only_decision.json"
 V5_REGISTRATION_PATH = (
@@ -104,6 +112,7 @@ V5_TERMINAL_EVIDENCE_PATHS = {
         "attempt_status": "attempt_status.json",
         "curve_gate": "curve_gate.json",
         "curve_plot": "curve.png",
+        "bundle_inventory": "evidence_bundle_inventory.json",
         "root_inventory": "root_inventory.json",
         "evidence_inventory": "evidence_inventory.json",
         "durable_export_receipt": "durable_export_receipt.json",
@@ -116,7 +125,7 @@ V4_RESERVE_PATH = V4_MANIFEST_DIR / "future_reserve_indices.json"
 V4_TRAIN_EXCLUSIONS_PATH = V4_MANIFEST_DIR / "train_exclusions.json"
 
 REGISTRATION_PROTOCOL = (
-    "j-lens-rl-confirmatory-v6-celebration-taper-registration-v2"
+    "j-lens-rl-confirmatory-v6-celebration-taper-registration-v3"
 )
 RECIPE_LOCK_PROTOCOL = "j-lens-rl-celebration-taper-selected-recipe-lock-v1"
 SELECTION_CLOSEOUT_PROTOCOL = "j-lens-rl-v6-celebration-selection-closeout-v1"
@@ -160,6 +169,12 @@ WANDB_RUN_IDS = {
     for label in FINAL_LABELS
     if label != "base"
 }
+TREATMENT_COMPONENT_WEIGHTS = (1.0, 0.25)
+COMBINED_REWARD_RANGE = (-6.25, 6.25)
+COMBINED_REWARD_UNIT = (
+    "weighted combined two-component calibration z-score with weights [1.0, 0.25]; "
+    "each component is clipped to [-5, 5], so the combined range is [-6.25, 6.25]"
+)
 
 INITIAL_OPERATOR_KNOWLEDGE_BOUNDARY = {
     "selection_agent": (
@@ -201,6 +216,26 @@ CORRECTED_OPERATOR_KNOWLEDGE_BOUNDARY = {
         "does not erase the adaptive seed-167 source selection"
     ),
 }
+CORRECTION2_OPERATOR_KNOWLEDGE_BOUNDARY = {
+    "selection_agent": (
+        "recipe and 0/4/6/10 nodes remain derived only from committed seed-167 "
+        "emotional-family artifacts; no V5 outcome was inspected by that agent"
+    ),
+    "root_operator": (
+        "root knew the full terminal V5 mean and per-seed curves and terminal "
+        "evidence before prelaunch correction 2"
+    ),
+    "timing": "correction 2 was frozen before any V6 outcome existed",
+    "independence_scope": (
+        "the later V5 terminal outcomes and audit corrections did not alter the "
+        "byte-semantically frozen celebration recipe, curve nodes, seeds, controls, "
+        "fresh V6 repartition, acceptance rules, or W&B identities"
+    ),
+    "claim_boundary": (
+        "V6 is prospective only for its newly allocated curve/final rows and "
+        "does not erase the adaptive seed-167 source selection"
+    ),
+}
 
 V5_ALLOCATION_SALT = "j-lens-rl-confirmatory-v5-alternative-screen-2026-07-14"
 V6_ALLOCATION_SALT = "j-lens-rl-confirmatory-v6-celebration-taper-2026-07-14"
@@ -221,8 +256,10 @@ EMOTIONAL_DECISION_SHA256 = "50cc3cb32e0cf74feeaeae79c2faf7b91c6caeae34b6e4f1101
 V5_REGISTRATION_SHA256 = "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527"
 V5_INFRASTRUCTURE_AMENDMENT1_SHA256 = "d845fd829b00deb80cfed402e8fd8a04543c2ddffc451329dcfc572e296f3f42"
 SELECTION_CLOSEOUT_SHA256 = "3efb6adaa070e8c77838d55333d7b556e2e96bf27e7a18d9740443e6c724e2b8"
-SUPERSEDED_REGISTRATION_SHA256 = "79f80dc0acea6c6b8410f8936ec364bcc4405eaf49ffdbc5500ec0cb103f875d"
+SUPERSEDED_V1_REGISTRATION_SHA256 = "79f80dc0acea6c6b8410f8936ec364bcc4405eaf49ffdbc5500ec0cb103f875d"
 PRELAUNCH_CORRECTION1_SHA256 = "8d1fe785a495c5a8da689d7f80fec9c5ebcd09f9770a37a3efa5f38732a8e719"
+SUPERSEDED_V2_REGISTRATION_SHA256 = "b15aa79bb15d754ad6c8b5015736acd13f95651f9c9751dad0c59d710a8361dd"
+PRELAUNCH_CORRECTION2_SHA256 = "f4b40790859bff1a614c279f9b693571b315a97294221bb3c5aebebb4639ff07"
 SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256 = (
     "0621bc7402187223b47f665872b4c0bdb2c53b64661b26b94dcc76492a0fe93e"
 )
@@ -231,6 +268,7 @@ V5_PROTOCOL = "j-lens-rl-confirmatory-v5-emotional"
 V5_MODAL_APP_NAME = "j-lens-rl-confirmatory-v5-emotional"
 V5_VOLUME_NAME = "j-lens-rl-confirmatory-v5-emotional-20260714b"
 V5_CLAIM_ID = "c2d9ed29ebba46649f1ea182d7d50014"
+V5_CLAIM_GIT_COMMIT = "252a2319dc0ada5e99ddeecf507d7246590531d7"
 V5_MODAL_APP_ID = "ap-2o4XOP7jhqcrHyqkGN55wL"
 V5_MODAL_FUNCTION_CALL_ID = "fc-01KXFXCF23D6DRB5VNXCVJB8TN"
 V5_LAUNCH_RECEIPT_SHA256 = (
@@ -239,6 +277,25 @@ V5_LAUNCH_RECEIPT_SHA256 = (
 V5_LAUNCH_SUBMITTED_AT_UTC = "2026-07-14T08:55:08.732683+00:00"
 V5_GPU_APP_OVERLAP_POLICY = "no other Modal GPU app may overlap this V5 attempt"
 V5_RECIPE_LOCK_SHA256 = "006bd685f045a385889d1e418e76437140a404177f0d1148d308226390a2a547"
+V5_TERMINAL_EVIDENCE_SHA256 = {
+    "attempt_claim": "d8f7779ba539b4e4a23d0b5cb96f3d75b6fd97f47f3917d151f42f6e6ba098ed",
+    "launch_receipt": V5_LAUNCH_RECEIPT_SHA256,
+    "attempt_status": "463d2dc01b44c837daf7cc761d6f587bce804048889e4dbe95463058e734a75e",
+    "curve_gate": "09770542837464bb80c48c036099521f0ae05ec2e0c81c2440f1f06816a4eede",
+    "curve_plot": "61d6c49740bb277335a0500a1842396d3328baa3f576540d7a1c78ccc659f280",
+    "root_inventory": "e9f08d9e5a102f4c980f0d00ada6b3ad6d810bf8f8bb790aed7607d91542af60",
+    "evidence_inventory": "7f46f397b22756d6b6b2cf607ea2f4c5c4fa97e999258eb45b25a6469b88369b",
+    "bundle_inventory": "f098574bbbf97f645c4f66b4e33ce96c8ef8694bc6d37a721fc37f2a7f0976c2",
+    "durable_export_receipt": "155c699733510b16975099e6f9aa1566697a0dc62716510c11db38b13be4ed78",
+}
+V5_DURABLE_ARCHIVE_SHA256 = (
+    "8710288864aac8bde570beff50ccc9835b1b0d98e2470a7a3bab897bcf620b17"
+)
+V3_OUTCOME_STATUS_AT_FREEZE = (
+    "prelaunch correction 2: no V6 outcome existed; selecting agent used no V5 "
+    "outcomes; root knew the full terminal V5 mean and per-seed curves and evidence; "
+    "scientific and W&B choices remain byte-semantically identical to V1 and V2"
+)
 
 CONDITIONAL_LAUNCH_PREDICATE = {
     "closeout_path": "protocol_archive/v5_emotional_terminal_closeout.json",
@@ -269,6 +326,9 @@ CONDITIONAL_LAUNCH_PREDICATE = {
         name: path.relative_to(REPO).as_posix()
         for name, path in V5_TERMINAL_EVIDENCE_PATHS.items()
     },
+    "required_source_evidence_sha256": V5_TERMINAL_EVIDENCE_SHA256,
+    "required_claim_git_commit": V5_CLAIM_GIT_COMMIT,
+    "required_durable_archive_sha256": V5_DURABLE_ARCHIVE_SHA256,
     "source_evidence_policy": (
         "every closeout evidence identity must name its exact registered tracked "
         "path and its SHA-256 must equal the actual committed source bytes"
@@ -529,8 +589,32 @@ def validate_target_words(value: Any) -> list[str]:
     return list(value)
 
 
-def observed_selected_history_scalar_series(target_label: str) -> dict[str, dict[str, Any]]:
+def observed_selected_history_scalar_series(
+    target_label: str,
+    score_components: Sequence[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
     """Map every scalar key observed in the byte-pinned celebration history."""
+    components = validate_score_components(list(score_components))
+    weights = [float(item["weight"]) for item in components]
+    combined_abs_bound = 5.0 * sum(abs(weight) for weight in weights)
+    combined_range = [-combined_abs_bound, combined_abs_bound]
+    combined_unit = (
+        "weighted combined two-component calibration z-score; each component "
+        "is clipped to [-5, 5] before applying the resolved run-config weights"
+    )
+    mean_definition = (
+        "mean weighted combined two-component J-lens output, not an individual "
+        "component score; the actual signed weights come from the resolved run "
+        f"config (registered treatment {weights}, matched signflip "
+        f"{[-weight for weight in weights]}) and the combined score range is "
+        f"{combined_range}"
+    )
+    std_definition = (
+        "nonnegative standard deviation of the weighted combined two-component "
+        "J-lens output, not an individual component; each component is clipped "
+        "to [-5, 5] before applying the actual signed weights from the resolved "
+        "run config"
+    )
     # Transformers sends these five terminal aggregates in the final ``train``
     # log.  The W&B integration promotes them to run summary fields rather than
     # retaining them as points in the scalar history.  Keep the local record
@@ -561,15 +645,15 @@ def observed_selected_history_scalar_series(target_label: str) -> dict[str, dict
         "frac_reward_zero_std": ("fraction of prompt groups", "fraction of GRPO groups with zero reward standard deviation"),
         "grad_norm": ("L2 norm", "optimizer gradient norm before the registered clipping rule"),
         f"jlens/{target_label}_literal_rate": ("fraction of completions", "fraction containing a configured literal target whose causal positions are reward-masked"),
-        f"jlens/{target_label}_mean": ("calibration standard deviations", "mean calibrated target J-lens component score"),
+        f"jlens/{target_label}_mean": (combined_unit, mean_definition),
         "kl": ("nats per sampled token", "mean policy-to-reference KL estimate"),
         "learning_rate": ("optimizer coefficient", "registered optimizer learning rate"),
         "loss": ("dimensionless objective", "logged DAPO/GRPO training loss"),
         "num_tokens": ("tokens", "cumulative processed token count"),
-        "reward": ("calibration standard deviations", "mean sole intrinsic J-lens reward"),
-        "reward_std": ("calibration standard deviations", "standard deviation of the sole intrinsic reward"),
-        f"rewards/jlens_{target_label}_reward/mean": ("calibration standard deviations", "mean named J-lens reward-function output"),
-        f"rewards/jlens_{target_label}_reward/std": ("calibration standard deviations", "standard deviation of the named J-lens reward-function output"),
+        "reward": (combined_unit, mean_definition),
+        "reward_std": (combined_unit, std_definition),
+        f"rewards/jlens_{target_label}_reward/mean": (combined_unit, mean_definition),
+        f"rewards/jlens_{target_label}_reward/std": (combined_unit, std_definition),
         "step": ("optimizer updates", "completed optimizer updates"),
         "step_time": ("seconds per optimizer update", "wall-clock duration of the optimizer update"),
         "total_flos": ("floating-point operations", "trainer estimate of cumulative floating-point operations"),
@@ -582,6 +666,15 @@ def observed_selected_history_scalar_series(target_label: str) -> dict[str, dict
         "validation/exact_match_ci95_low": ("accuracy fraction", "lower endpoint of the fixed-validation 95% binomial interval"),
         "validation/literal_target_completion_rate": ("fraction of completions", "fixed-validation completions containing an emotional target literal"),
         "validation/mean_length": ("generated tokens", "mean fixed-validation completion length"),
+    }
+    combined_mean_keys = {
+        f"jlens/{target_label}_mean",
+        "reward",
+        f"rewards/jlens_{target_label}_reward/mean",
+    }
+    combined_std_keys = {
+        "reward_std",
+        f"rewards/jlens_{target_label}_reward/std",
     }
     result = {}
     for key, (unit, definition) in units_and_definitions.items():
@@ -597,6 +690,18 @@ def observed_selected_history_scalar_series(target_label: str) -> dict[str, dict
             "unit": unit,
             "definition": definition,
         }
+        if key in combined_mean_keys:
+            result[key]["range"] = combined_range
+            result[key]["component_weights_by_condition"] = {
+                "treatment": weights,
+                "signflip_control": [-weight for weight in weights],
+            }
+        elif key in combined_std_keys:
+            result[key]["nonnegative"] = True
+            result[key]["component_weights_by_condition"] = {
+                "treatment": weights,
+                "signflip_control": [-weight for weight in weights],
+            }
     return result
 
 
@@ -609,19 +714,29 @@ def metric_schema(
     words = validate_target_words(list(target_words))
     label = "_".join(words)
     components = validate_score_components(list(score_components))
-    combined_abs_bound = 5.0 * sum(abs(float(item["weight"])) for item in components)
+    component_weights = [float(item["weight"]) for item in components]
+    combined_abs_bound = 5.0 * sum(abs(weight) for weight in component_weights)
     combined_range = [-combined_abs_bound, combined_abs_bound]
     combined_unit = (
-        "weighted sum of calibration z-scores; each component is clipped to [-5, 5]"
+        "weighted combined two-component calibration z-score; each component is "
+        "clipped to [-5, 5] before applying resolved run-config weights"
     )
     combined_definition = (
         "mean weighted combined reward across the registered spatial components "
-        f"with weights {[float(item['weight']) for item in components]}; this is "
+        f"with resolved run-config weights {component_weights}; this is "
         "not an individual component score"
     )
     return {
         "schema_version": 1,
         "target_words": words,
+        "condition_weight_semantics": {
+            "treatment": [1.0, 0.25],
+            "signflip_control": [-1.0, -0.25],
+            "rule": (
+                "the shared schema derives aliases from each resolved run config; "
+                "both conditions combine two components clipped individually to [-5, 5]"
+            ),
+        },
         "step_axes": {
             "optimizer_update": {
                 "local_field": "step",
@@ -678,6 +793,18 @@ def metric_schema(
                 "range": combined_range,
                 "definition": combined_definition,
             },
+            "intrinsic_named_weighted_reward_std": {
+                "local_file": "log_history.json",
+                "local_field": f"rewards/jlens_{label}_reward/std",
+                "wandb_metric": f"train/rewards/jlens_{label}_reward/std",
+                "step_axis": "optimizer_update",
+                "unit": combined_unit,
+                "nonnegative": True,
+                "definition": (
+                    "nonnegative standard deviation of the named weighted combined "
+                    "two-component J-lens output, not an individual component score"
+                ),
+            },
             "intrinsic_reward_mean": {
                 "local_file": "log_history.json",
                 "local_field": "reward",
@@ -696,9 +823,11 @@ def metric_schema(
                 "wandb_metric": "train/reward_std",
                 "step_axis": "optimizer_update",
                 "unit": combined_unit,
+                "nonnegative": True,
                 "definition": (
-                    "standard deviation of the sole weighted combined intrinsic "
-                    "reward in the logged rollout batch"
+                    "nonnegative standard deviation of the sole weighted combined "
+                    "two-component intrinsic reward in the logged rollout batch; "
+                    "this is not an individual component score"
                 ),
             },
             "intrinsic_literal_rate": {
@@ -744,7 +873,9 @@ def metric_schema(
                 "definition": "GSM8K exact-answer correctness recomputed from raw completion and pinned gold row",
             },
         },
-        "observed_history_scalar_series": observed_selected_history_scalar_series(label),
+        "observed_history_scalar_series": observed_selected_history_scalar_series(
+            label, components
+        ),
         "other_trainer_fields": {
             "storage": "all 38 scalar keys from the selected celebration history are explicitly mapped above and preserved verbatim in log_history.json",
             "step_axis": "optimizer_update",
@@ -886,17 +1017,18 @@ def registration_template() -> dict[str, Any]:
                 V5_INFRASTRUCTURE_AMENDMENT1_SHA256
             ),
             "v6_prelaunch_correction1_sha256": PRELAUNCH_CORRECTION1_SHA256,
+            "v6_prelaunch_correction2_sha256": PRELAUNCH_CORRECTION2_SHA256,
         },
         "supersedes_registration": {
-            "path": str(SUPERSEDED_REGISTRATION_PATH.relative_to(REPO)),
-            "sha256": SUPERSEDED_REGISTRATION_SHA256,
+            "path": str(SUPERSEDED_V2_REGISTRATION_PATH.relative_to(REPO)),
+            "sha256": SUPERSEDED_V2_REGISTRATION_SHA256,
         },
         "prelaunch_correction": {
-            "path": str(PRELAUNCH_CORRECTION1_PATH.relative_to(REPO)),
-            "sha256": PRELAUNCH_CORRECTION1_SHA256,
+            "path": str(PRELAUNCH_CORRECTION2_PATH.relative_to(REPO)),
+            "sha256": PRELAUNCH_CORRECTION2_SHA256,
         },
         "conditional_launch_predicate": CONDITIONAL_LAUNCH_PREDICATE,
-        "operator_knowledge_boundary": CORRECTED_OPERATOR_KNOWLEDGE_BOUNDARY,
+        "operator_knowledge_boundary": CORRECTION2_OPERATOR_KNOWLEDGE_BOUNDARY,
         "selection_closeout": {
             "path": str(SELECTION_CLOSEOUT_PATH.relative_to(REPO)),
             "sha256": SELECTION_CLOSEOUT_SHA256,
@@ -944,11 +1076,7 @@ def registration_template() -> dict[str, Any]:
             "infrastructure_retry_policy": INFRASTRUCTURE_RETRY_POLICY,
             **_registered_execution_hashes(),
         },
-        "outcome_status_at_freeze": (
-            "prelaunch correction 1: no V6 outcome existed; selecting agent used no "
-            "V5 outcomes; root had seen six partial V5 seeds but no V5 aggregate or "
-            "terminal result; scientific choices remain identical to V1"
-        ),
+        "outcome_status_at_freeze": V3_OUTCOME_STATUS_AT_FREEZE,
     }
 
 
@@ -1000,8 +1128,10 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
             V5_INFRASTRUCTURE_AMENDMENT1_SHA256
         ),
         SELECTION_CLOSEOUT_PATH: SELECTION_CLOSEOUT_SHA256,
-        SUPERSEDED_REGISTRATION_PATH: SUPERSEDED_REGISTRATION_SHA256,
+        SUPERSEDED_V1_REGISTRATION_PATH: SUPERSEDED_V1_REGISTRATION_SHA256,
         PRELAUNCH_CORRECTION1_PATH: PRELAUNCH_CORRECTION1_SHA256,
+        SUPERSEDED_V2_REGISTRATION_PATH: SUPERSEDED_V2_REGISTRATION_SHA256,
+        PRELAUNCH_CORRECTION2_PATH: PRELAUNCH_CORRECTION2_SHA256,
     }
     for path, expected in expected_files.items():
         if not path.is_file() or sha256_file(path) != expected:
@@ -1014,6 +1144,7 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
             V5_INFRASTRUCTURE_AMENDMENT1_SHA256
         ),
         "v6_prelaunch_correction1_sha256": PRELAUNCH_CORRECTION1_SHA256,
+        "v6_prelaunch_correction2_sha256": PRELAUNCH_CORRECTION2_SHA256,
     }
     if registration.get("lineage") != expected_lineage:
         raise ProtocolError("registration does not pin the emotional-only lineage")
@@ -1022,36 +1153,50 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
     ):
         raise ProtocolError("registration changed the conditional V5 launch predicate")
     if registration.get("operator_knowledge_boundary") != (
-        CORRECTED_OPERATOR_KNOWLEDGE_BOUNDARY
+        CORRECTION2_OPERATOR_KNOWLEDGE_BOUNDARY
     ):
         raise ProtocolError("registration changed the operator knowledge boundary")
     if registration.get("supersedes_registration") != {
-        "path": str(SUPERSEDED_REGISTRATION_PATH.relative_to(REPO)),
-        "sha256": SUPERSEDED_REGISTRATION_SHA256,
+        "path": str(SUPERSEDED_V2_REGISTRATION_PATH.relative_to(REPO)),
+        "sha256": SUPERSEDED_V2_REGISTRATION_SHA256,
     }:
-        raise ProtocolError("V2 registration changed its superseded V1 identity")
+        raise ProtocolError("V3 registration changed its superseded V2 identity")
     if registration.get("prelaunch_correction") != {
-        "path": str(PRELAUNCH_CORRECTION1_PATH.relative_to(REPO)),
-        "sha256": PRELAUNCH_CORRECTION1_SHA256,
+        "path": str(PRELAUNCH_CORRECTION2_PATH.relative_to(REPO)),
+        "sha256": PRELAUNCH_CORRECTION2_SHA256,
     }:
-        raise ProtocolError("V2 registration changed prelaunch correction 1")
-    v1 = json.loads(SUPERSEDED_REGISTRATION_PATH.read_text())
-    correction = json.loads(PRELAUNCH_CORRECTION1_PATH.read_text())
-    projection_fields = correction.get("scientific_projection", {}).get("fields")
-    if not isinstance(v1, dict) or not isinstance(projection_fields, list):
-        raise ProtocolError("prelaunch correction lacks its V1 scientific projection")
+        raise ProtocolError("V3 registration changed prelaunch correction 2")
+    v1 = json.loads(SUPERSEDED_V1_REGISTRATION_PATH.read_text())
+    v2 = json.loads(SUPERSEDED_V2_REGISTRATION_PATH.read_text())
+    correction1 = json.loads(PRELAUNCH_CORRECTION1_PATH.read_text())
+    correction2 = json.loads(PRELAUNCH_CORRECTION2_PATH.read_text())
+    projection_fields = correction2.get("scientific_projection", {}).get("fields")
+    if (
+        not isinstance(v1, dict)
+        or not isinstance(v2, dict)
+        or not isinstance(projection_fields, list)
+        or correction1.get("scientific_projection", {}).get("fields")
+        != projection_fields
+    ):
+        raise ProtocolError("prelaunch corrections lack one scientific projection")
     v1_projection = {field: v1.get(field) for field in projection_fields}
-    v2_projection = {field: registration.get(field) for field in projection_fields}
+    v2_projection = {field: v2.get(field) for field in projection_fields}
+    v3_projection = {field: registration.get(field) for field in projection_fields}
     if (
         canonical_sha256(v1_projection)
         != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
-        or correction["scientific_projection"].get(
+        or correction1["scientific_projection"].get(
+            "superseded_registration_canonical_sha256"
+        )
+        != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
+        or correction2["scientific_projection"].get(
             "superseded_registration_canonical_sha256"
         )
         != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
         or v2_projection != v1_projection
+        or v3_projection != v1_projection
     ):
-        raise ProtocolError("V2 changed a prohibited scientific/W&B V1 field")
+        raise ProtocolError("V3 changed a prohibited scientific/W&B V1/V2 field")
     selection_identity = registration.get("selection_closeout")
     if selection_identity != registration_template()["selection_closeout"]:
         raise ProtocolError("registration changed the V6 selection closeout identity")
@@ -1122,11 +1267,7 @@ def _validate_registration_shape(registration: dict[str, Any]) -> None:
         for run_id in wandb["run_ids"].values()
     ):
         raise ProtocolError("registration W&B run ID contains unsupported characters")
-    if registration.get("outcome_status_at_freeze") != (
-        "prelaunch correction 1: no V6 outcome existed; selecting agent used no "
-        "V5 outcomes; root had seen six partial V5 seeds but no V5 aggregate or "
-        "terminal result; scientific choices remain identical to V1"
-    ):
+    if registration.get("outcome_status_at_freeze") != V3_OUTCOME_STATUS_AT_FREEZE:
         raise ProtocolError("registration must freeze before any V6 outcome inspection")
     _validate_archive_lineage(registration)
 
@@ -1226,9 +1367,9 @@ def _load_tracked_pinned_json(
 def verify_v5_launch_predicate() -> dict[str, Any]:
     """Prove that V5 failed its curve gate before touching its sealed final.
 
-    The selecting agent did not inspect V5 outcomes.  This verifier reads only
-    the later committed terminal closeout's categorical exposure boundary and
-    evidence identities; it never reads per-seed curves or evaluation records.
+    The selecting agent did not inspect V5 outcomes.  This verifier validates
+    the later exact pinned terminal bytes, including the failed curve record,
+    but does not use any outcome value to select or change V6 science.
     """
     if not V5_TERMINAL_CLOSEOUT_PATH.is_file():
         raise ProtocolError(
@@ -1283,22 +1424,24 @@ def verify_v5_launch_predicate() -> dict[str, Any]:
     evidence_hashes: dict[str, str] = {}
     for name, expected_path in expected_paths.items():
         identity = evidence_identities[name]
-        if not isinstance(identity, dict) or identity.get("path") != expected_path:
-            raise ProtocolError(f"V5 {name} evidence path changed")
+        expected_sha256 = V5_TERMINAL_EVIDENCE_SHA256[name]
+        if identity != {
+            "path": expected_path,
+            "sha256": expected_sha256,
+        }:
+            raise ProtocolError(f"V5 {name} evidence identity changed")
         if name == "curve_plot":
             path = _load_tracked_pinned_file(
-                identity, "v5_terminal_evidence.curve_plot"
+                identity,
+                "v5_terminal_evidence.curve_plot",
+                expected_sha256=expected_sha256,
             )
             payload = None
         else:
             path, payload = _load_tracked_pinned_json(
                 identity,
                 f"v5_terminal_evidence.{name}",
-                expected_sha256=(
-                    V5_LAUNCH_RECEIPT_SHA256
-                    if name == "launch_receipt"
-                    else None
-                ),
+                expected_sha256=expected_sha256,
             )
         if path != V5_TERMINAL_EVIDENCE_PATHS[name]:
             raise ProtocolError(f"V5 {name} resolved outside its registered path")
@@ -1315,8 +1458,7 @@ def verify_v5_launch_predicate() -> dict[str, Any]:
         or claim.get("recipe_lock_sha256") != V5_RECIPE_LOCK_SHA256
         or claim.get("global_modal_gpu_limit") != 1
         or claim.get("gpu_app_overlap_policy") != V5_GPU_APP_OVERLAP_POLICY
-        or not isinstance(claim.get("git_commit"), str)
-        or not re.fullmatch(r"[0-9a-f]{40}", claim["git_commit"])
+        or claim.get("git_commit") != V5_CLAIM_GIT_COMMIT
         or not isinstance(preflight, dict)
         or preflight.get("exclusive_gpu_confirmation")
         != "confirmed-no-other-modal-gpu-app-running"
@@ -1425,21 +1567,68 @@ def verify_v5_launch_predicate() -> dict[str, Any]:
     ):
         raise ProtocolError("V5 closeout inventory contains opened-final artifacts")
 
+    bundle = evidence_payloads["bundle_inventory"]
+    bundle_files = bundle.get("files")
+    if (
+        bundle.get("schema_version") != 1
+        or bundle.get("protocol") != V5_PROTOCOL
+        or bundle.get("git_commit") != V5_CLAIM_GIT_COMMIT
+        or bundle.get("registration_sha256") != V5_REGISTRATION_SHA256
+        or bundle.get("recipe_lock_sha256") != V5_RECIPE_LOCK_SHA256
+        or bundle.get("bundle_root") != "."
+        or bundle.get("terminal_stage") != "curve_failed"
+        or bundle.get("sealed_evaluation_file_count") != 0
+        or bundle.get("registered_sealed_evaluation_file_count") != 17
+        or bundle.get("analysis_inputs")
+        != {"base": None, "treatments": {}, "controls": {}}
+        or bundle.get("file_count") != 253
+        or bundle.get("total_size_bytes") != 763400824
+        or not isinstance(bundle_files, dict)
+        or len(bundle_files) != 253
+    ):
+        raise ProtocolError("tracked V5 finalizer bundle inventory is malformed")
+    forbidden_bundle_paths = {
+        "final_unlocked.json",
+        "final_collection.json",
+        "evidence/acceptance.json",
+        "evidence/completed_runs.json",
+        "evidence/sealed_comparison.json",
+    }
+    if forbidden_bundle_paths & set(bundle_files) or any(
+        name.startswith("evals/") for name in bundle_files
+    ):
+        raise ProtocolError("V5 finalizer bundle inventory contains opened-final artifacts")
+    expected_bundle_hashes = {
+        "attempt_claim.json": evidence_hashes["attempt_claim"],
+        "attempt_status.json": evidence_hashes["attempt_status"],
+        "launch_receipt.json": evidence_hashes["launch_receipt"],
+        "evidence/curve_gate.json": evidence_hashes["curve_gate"],
+        "evidence/curve.png": evidence_hashes["curve_plot"],
+        "reproducibility/registration.json": V5_REGISTRATION_SHA256,
+        "reproducibility/selected_recipe_lock.json": V5_RECIPE_LOCK_SHA256,
+    }
+    for relative_path, expected_sha256 in expected_bundle_hashes.items():
+        entry = bundle_files.get(relative_path)
+        if (
+            not isinstance(entry, dict)
+            or entry.get("sha256") != expected_sha256
+            or not isinstance(entry.get("size_bytes"), int)
+            or entry["size_bytes"] <= 0
+        ):
+            raise ProtocolError(
+                f"V5 finalizer bundle inventory does not bind {relative_path}"
+            )
+
     export_receipt = evidence_payloads["durable_export_receipt"]
     if (
         export_receipt.get("schema_version") != 1
-        or not isinstance(export_receipt.get("archive_relative_path"), str)
-        or export_receipt["archive_relative_path"]
+        or export_receipt.get("archive_relative_path")
         != f"exports/v5_emotional_evidence_{V5_CLAIM_ID}.zip"
-        or not re.fullmatch(r"[0-9a-f]{64}", str(export_receipt.get("sha256")))
-        or not isinstance(export_receipt.get("size_bytes"), int)
-        or export_receipt["size_bytes"] <= 0
-        or not isinstance(export_receipt.get("entry_count"), int)
-        or export_receipt["entry_count"] <= 0
-        or not re.fullmatch(
-            r"[0-9a-f]{64}",
-            str(export_receipt.get("evidence_inventory_sha256")),
-        )
+        or export_receipt.get("sha256") != V5_DURABLE_ARCHIVE_SHA256
+        or export_receipt.get("size_bytes") != 763510552
+        or export_receipt.get("entry_count") != 254
+        or export_receipt.get("evidence_inventory_sha256")
+        != evidence_hashes["bundle_inventory"]
     ):
         raise ProtocolError("tracked V5 durable-export receipt is malformed")
     return {
@@ -2408,7 +2597,9 @@ def training_behavior_summary(path: Path, config: dict[str, Any]) -> dict[str, A
         for key, value in row.items()
         if isinstance(value, (int, float)) and not isinstance(value, bool)
     }
-    expected_scalar_keys = set(observed_selected_history_scalar_series(label))
+    expected_scalar_keys = set(
+        observed_selected_history_scalar_series(label, config["score_components"])
+    )
     if observed_scalar_keys != expected_scalar_keys:
         raise ProtocolError(
             "training history scalar schema changed; unmapped/missing keys are "

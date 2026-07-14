@@ -23,8 +23,6 @@
     "authorization": "the closeout is intentionally unavailable at V6 freeze; prepare and every launch verification require later committed bytes and record their SHA-256",
     "cancellation_rule": "missing or non-curve-failed V5 closeout, any unlock/collection/evaluation, or any uncertainty about sealed-final exposure permanently cancels V6",
     "closeout_path": "protocol_archive/v5_emotional_terminal_closeout.json",
-    "required_claim_git_commit": "252a2319dc0ada5e99ddeecf507d7246590531d7",
-    "required_durable_archive_sha256": "8710288864aac8bde570beff50ccc9835b1b0d98e2470a7a3bab897bcf620b17",
     "required_evals_directory_present": false,
     "required_final_collection_present": false,
     "required_final_evaluation_labels": [],
@@ -46,24 +44,12 @@
     "required_source_evidence_paths": {
       "attempt_claim": "protocol_archive/v5_emotional_terminal_evidence/attempt_claim.json",
       "attempt_status": "protocol_archive/v5_emotional_terminal_evidence/attempt_status.json",
-      "bundle_inventory": "protocol_archive/v5_emotional_terminal_evidence/evidence_bundle_inventory.json",
       "curve_gate": "protocol_archive/v5_emotional_terminal_evidence/curve_gate.json",
       "curve_plot": "protocol_archive/v5_emotional_terminal_evidence/curve.png",
       "durable_export_receipt": "protocol_archive/v5_emotional_terminal_evidence/durable_export_receipt.json",
       "evidence_inventory": "protocol_archive/v5_emotional_terminal_evidence/evidence_inventory.json",
       "launch_receipt": "protocol_archive/v5_emotional_terminal_evidence/launch_receipt.json",
       "root_inventory": "protocol_archive/v5_emotional_terminal_evidence/root_inventory.json"
-    },
-    "required_source_evidence_sha256": {
-      "attempt_claim": "d8f7779ba539b4e4a23d0b5cb96f3d75b6fd97f47f3917d151f42f6e6ba098ed",
-      "attempt_status": "463d2dc01b44c837daf7cc761d6f587bce804048889e4dbe95463058e734a75e",
-      "bundle_inventory": "f098574bbbf97f645c4f66b4e33ce96c8ef8694bc6d37a721fc37f2a7f0976c2",
-      "curve_gate": "09770542837464bb80c48c036099521f0ae05ec2e0c81c2440f1f06816a4eede",
-      "curve_plot": "61d6c49740bb277335a0500a1842396d3328baa3f576540d7a1c78ccc659f280",
-      "durable_export_receipt": "155c699733510b16975099e6f9aa1566697a0dc62716510c11db38b13be4ed78",
-      "evidence_inventory": "7f46f397b22756d6b6b2cf607ea2f4c5c4fa97e999258eb45b25a6469b88369b",
-      "launch_receipt": "5123864f59094b572304a9aaf1317f41a9082fdafa5725876b4801858ca216d8",
-      "root_inventory": "e9f08d9e5a102f4c980f0d00ada6b3ad6d810bf8f8bb790aed7607d91542af60"
     },
     "required_terminal_stage": "curve_failed",
     "required_v5_infrastructure_amendment1_sha256": "d845fd829b00deb80cfed402e8fd8a04543c2ddffc451329dcfc572e296f3f42",
@@ -91,7 +77,7 @@
     "modal_cache_assets_sha256": "8770d9e0b1af264fd7fae52b2e2fcb2321a9d596275e0be9b3209e056f7c1b03",
     "modal_finalize_image_sha256": "3c44567dd83e1e4f06f993a9ef1e7d3eb38f7a22ea8b56d0d75495741f61c00a",
     "modal_runner_sha256": "d71c09ffe98da76836314564e902d6d07023b3c358a13649e6b6d784b9b4fb51",
-    "protocol_sha256": "5d49034dfca4c0a3752d193d432379806e44ac40d02354f309fa0edc558d2f02",
+    "protocol_sha256": "518a9e0a69ef9239dc237104b415242b83a761d2dd19503f757b4d11a4f78407",
     "pyproject_sha256": "8d61fd00ddd948627960d85f5ca2998c4ae4198104bc613afb5a324923aaa823",
     "shell_launcher_sha256": "14ef940fea4e4f09c3d614678ec3d812b46fe23eae6a626d43cadfc0cb4f63d8",
     "trl_build_metadata_sha256": "f2665076902b2b6c86a8161c57fa34ac839f7f57acf0dceadb3138006d91071c",
@@ -122,29 +108,28 @@
     "terminal_adapter_step": 10
   },
   "fixed_updates": 10,
-  "frozen_at_utc": "2026-07-14T10:25:41Z",
+  "frozen_at_utc": "2026-07-14T10:15:04Z",
   "lineage": {
     "emotional_only_decision_sha256": "50cc3cb32e0cf74feeaeae79c2faf7b91c6caeae34b6e4f1101819d51e15b238",
     "v4_closeout_sha256": "aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35",
     "v5_infrastructure_amendment1_sha256": "d845fd829b00deb80cfed402e8fd8a04543c2ddffc451329dcfc572e296f3f42",
     "v5_scientific_registration_sha256": "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527",
-    "v6_prelaunch_correction1_sha256": "8d1fe785a495c5a8da689d7f80fec9c5ebcd09f9770a37a3efa5f38732a8e719",
-    "v6_prelaunch_correction2_sha256": "f4b40790859bff1a614c279f9b693571b315a97294221bb3c5aebebb4639ff07"
+    "v6_prelaunch_correction1_sha256": "8d1fe785a495c5a8da689d7f80fec9c5ebcd09f9770a37a3efa5f38732a8e719"
   },
   "matched_control": "negate every selected treatment score-component weight and change nothing else except condition identity",
   "operator_knowledge_boundary": {
     "claim_boundary": "V6 is prospective only for its newly allocated curve/final rows and does not erase the adaptive seed-167 source selection",
-    "independence_scope": "the later V5 terminal outcomes and audit corrections did not alter the byte-semantically frozen celebration recipe, curve nodes, seeds, controls, fresh V6 repartition, acceptance rules, or W&B identities",
-    "root_operator": "root knew the full terminal V5 mean and per-seed curves and terminal evidence before prelaunch correction 2",
+    "independence_scope": "the additional partial V5 results did not alter the celebration recipe, curve nodes, seeds, controls, fresh V6 repartition, acceptance rules, or W&B identities",
+    "root_operator": "root had seen partial results for six V5 seeds before prelaunch correction 1",
     "selection_agent": "recipe and 0/4/6/10 nodes remain derived only from committed seed-167 emotional-family artifacts; no V5 outcome was inspected by that agent",
-    "timing": "correction 2 was frozen before any V6 outcome existed"
+    "timing": "correction 1 was frozen before root saw a V5 aggregate or terminal result, and before any V6 outcome existed"
   },
-  "outcome_status_at_freeze": "prelaunch correction 2: no V6 outcome existed; selecting agent used no V5 outcomes; root knew the full terminal V5 mean and per-seed curves and evidence; scientific and W&B choices remain byte-semantically identical to V1 and V2",
+  "outcome_status_at_freeze": "prelaunch correction 1: no V6 outcome existed; selecting agent used no V5 outcomes; root had seen six partial V5 seeds but no V5 aggregate or terminal result; scientific choices remain identical to V1",
   "prelaunch_correction": {
-    "path": "protocol_archive/v6_celebration_prelaunch_correction2.json",
-    "sha256": "f4b40790859bff1a614c279f9b693571b315a97294221bb3c5aebebb4639ff07"
+    "path": "protocol_archive/v6_celebration_prelaunch_correction1.json",
+    "sha256": "8d1fe785a495c5a8da689d7f80fec9c5ebcd09f9770a37a3efa5f38732a8e719"
   },
-  "protocol": "j-lens-rl-confirmatory-v6-celebration-taper-registration-v3",
+  "protocol": "j-lens-rl-confirmatory-v6-celebration-taper-registration-v2",
   "seeds": [
     176,
     177,
@@ -188,8 +173,8 @@
     "train_exclusions_manifest_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
   },
   "supersedes_registration": {
-    "path": "protocol_archive/v6_celebration_registration_v2_superseded.json",
-    "sha256": "b15aa79bb15d754ad6c8b5015736acd13f95651f9c9751dad0c59d710a8361dd"
+    "path": "protocol_archive/v6_celebration_registration_v1_superseded.json",
+    "sha256": "79f80dc0acea6c6b8410f8936ec364bcc4405eaf49ffdbc5500ec0cb103f875d"
   },
   "wandb": {
     "entity": "nilinabra-spare-time",

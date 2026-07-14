@@ -1,0 +1,58 @@
+{
+  "authorized_changes": [
+    {
+      "category": "exact predecessor evidence pins",
+      "scope": "replace self-consistent source identities with the actual V5 claim, receipt, terminal status, failed curve, curve plot, root/evidence inventories, finalizer bundle inventory, export sidecar, and archive SHA-256 values"
+    },
+    {
+      "category": "finalizer inventory cross-check",
+      "scope": "require the actual tracked evidence_bundle_inventory.json to prove curve_failed, zero sealed evaluations, empty analysis inputs, exact claim/source hashes, and no final artifacts"
+    },
+    {
+      "category": "metric alias semantics",
+      "scope": "describe every observed J-lens mean/std, named reward, and total reward alias as the weighted combined two-component score with weights 1 and 0.25 and range [-6.25, 6.25] where applicable"
+    },
+    {
+      "category": "verification and derived identities",
+      "scope": "add synthetic/mutation rejection tests and update only hashes derived from changed executable bytes"
+    }
+  ],
+  "corrected_at_utc": "2026-07-14T10:25:41Z",
+  "knowledge_boundary_at_correction": {
+    "root_operator": "root knew the full terminal V5 mean and per-seed curves and terminal evidence before correction 2",
+    "v6_outcomes": "no V6 training, curve, control, or sealed-final outcome existed",
+    "selection_agent": "the selecting agent remained blind to every V5 outcome; its scientific and W&B projection was already frozen from committed seed-167 source evidence",
+    "selection_effect": "the later V5 terminal outcomes and audit fixes did not alter the byte-semantically frozen celebration recipe, curve nodes, seeds, controls, data repartition, acceptance rules, or W&B identities"
+  },
+  "outcome_status_at_correction": "prelaunch V6 correction; no V6 outcome existed or was inspected",
+  "prohibited_changes": [
+    "any target word, J-lens layer/window/stride/calibration/sign/weight, optimizer, horizon, or curve node",
+    "any data allocation, seed, control, estimand, bootstrap, sign test, or acceptance threshold",
+    "any W&B entity, project, group, tag, prefix, or run ID",
+    "the fresh V6 Volume, one-L40S cap, or no-overlap policy"
+  ],
+  "protocol": "j-lens-rl-confirmatory-v6-celebration-taper-prelaunch-correction-v2",
+  "scientific_projection": {
+    "fields": [
+      "claim_protocol",
+      "selection_closeout",
+      "selected_recipe_lock",
+      "split",
+      "seeds",
+      "fixed_updates",
+      "curve_gate",
+      "matched_control",
+      "analysis",
+      "acceptance",
+      "final_collection",
+      "wandb"
+    ],
+    "superseded_registration_canonical_sha256": "0621bc7402187223b47f665872b4c0bdb2c53b64661b26b94dcc76492a0fe93e",
+    "required_v3_relationship": "the canonical projection over these fields must be byte-semantically identical in V1, V2, and V3"
+  },
+  "superseded_registration": {
+    "git_commit": "e089667e0520827136b6f303aa8b3766e9bfe698",
+    "path": "protocol_archive/v6_celebration_registration_v2_superseded.json",
+    "sha256": "b15aa79bb15d754ad6c8b5015736acd13f95651f9c9751dad0c59d710a8361dd"
+  }
+}

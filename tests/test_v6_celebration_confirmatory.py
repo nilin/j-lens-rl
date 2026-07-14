@@ -38,7 +38,7 @@ def _valid_registration() -> dict:
 
 
 def _valid_v5_source_payloads() -> dict[str, object]:
-    git_commit = "a" * 40
+    git_commit = v6.V5_CLAIM_GIT_COMMIT
     curve_plot_bytes = b"tracked V5 curve plot fixture\n"
     receipt = {
         "app_id": v6.V5_MODAL_APP_ID,
@@ -67,7 +67,7 @@ def _valid_v5_source_payloads() -> dict[str, object]:
             "sha256": hashlib.sha256(curve_plot_bytes).hexdigest(),
         },
     }
-    return {
+    payloads: dict[str, object] = {
         "attempt_claim": {
             "claim_id": v6.V5_CLAIM_ID,
             "git_commit": git_commit,
@@ -132,17 +132,71 @@ def _valid_v5_source_payloads() -> dict[str, object]:
                 ]
             ),
         },
-        "durable_export_receipt": {
-            "schema_version": 1,
-            "archive_relative_path": (
-                f"exports/v5_emotional_evidence_{v6.V5_CLAIM_ID}.zip"
-            ),
-            "sha256": "b" * 64,
-            "size_bytes": 123456,
-            "entry_count": 99,
-            "evidence_inventory_sha256": "c" * 64,
-        },
     }
+    def serialized_bytes(value: object) -> bytes:
+        if isinstance(value, bytes):
+            return value
+        return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
+
+    serialized_hashes = {
+        name: hashlib.sha256(serialized_bytes(value)).hexdigest()
+        for name, value in payloads.items()
+    }
+    required_files = {
+        "attempt_claim.json": serialized_hashes["attempt_claim"],
+        "attempt_status.json": serialized_hashes["attempt_status"],
+        "launch_receipt.json": serialized_hashes["launch_receipt"],
+        "evidence/curve_gate.json": serialized_hashes["curve_gate"],
+        "evidence/curve.png": serialized_hashes["curve_plot"],
+        "reproducibility/registration.json": v6.V5_REGISTRATION_SHA256,
+        "reproducibility/selected_recipe_lock.json": v6.V5_RECIPE_LOCK_SHA256,
+    }
+    files = {
+        name: {"sha256": digest, "size_bytes": 1, "role": "fixture"}
+        for name, digest in required_files.items()
+    }
+    for index in range(253 - len(files)):
+        files[f"runs/fixture_{index:03}.bin"] = {
+            "sha256": hashlib.sha256(str(index).encode()).hexdigest(),
+            "size_bytes": 1,
+            "role": "fixture",
+        }
+    last = files["runs/fixture_245.bin"]
+    last["size_bytes"] += 763400824 - sum(
+        entry["size_bytes"] for entry in files.values()
+    )
+    payloads["bundle_inventory"] = {
+        "schema_version": 1,
+        "protocol": v6.V5_PROTOCOL,
+        "git_commit": git_commit,
+        "registration_sha256": v6.V5_REGISTRATION_SHA256,
+        "recipe_lock_sha256": v6.V5_RECIPE_LOCK_SHA256,
+        "metric_schema_sha256": "d" * 64,
+        "bundle_root": ".",
+        "terminal_stage": "curve_failed",
+        "sealed_evaluation_file_count": 0,
+        "registered_sealed_evaluation_file_count": 17,
+        "interpretation": "fixture",
+        "wandb_identities": {},
+        "analysis_inputs": {"base": None, "treatments": {}, "controls": {}},
+        "file_count": 253,
+        "total_size_bytes": 763400824,
+        "files": files,
+    }
+    bundle_bytes = (
+        json.dumps(payloads["bundle_inventory"], indent=2, sort_keys=True) + "\n"
+    ).encode()
+    payloads["durable_export_receipt"] = {
+        "schema_version": 1,
+        "archive_relative_path": (
+            f"exports/v5_emotional_evidence_{v6.V5_CLAIM_ID}.zip"
+        ),
+        "sha256": v6.V5_DURABLE_ARCHIVE_SHA256,
+        "size_bytes": 763510552,
+        "entry_count": 254,
+        "evidence_inventory_sha256": hashlib.sha256(bundle_bytes).hexdigest(),
+    }
+    return payloads
 
 
 def _valid_v5_closeout(source_evidence: dict[str, dict]) -> dict:
@@ -174,6 +228,7 @@ def _install_closeout(
     *,
     closeout_mutation=None,
     source_mutation=None,
+    pin_fixture_hashes: bool = True,
 ) -> tuple[Path, dict, dict[str, Path]]:
     repo = tmp_path / "repo"
     evidence_dir = repo / "protocol_archive" / "v5_emotional_terminal_evidence"
@@ -212,6 +267,15 @@ def _install_closeout(
     monkeypatch.setattr(v6, "V5_TERMINAL_CLOSEOUT_PATH", path)
     monkeypatch.setattr(v6, "V5_TERMINAL_EVIDENCE_DIR", evidence_dir)
     monkeypatch.setattr(v6, "V5_TERMINAL_EVIDENCE_PATHS", source_paths)
+    if pin_fixture_hashes:
+        monkeypatch.setattr(
+            v6,
+            "V5_TERMINAL_EVIDENCE_SHA256",
+            {
+                name: hashlib.sha256(source_path.read_bytes()).hexdigest()
+                for name, source_path in source_paths.items()
+            },
+        )
     monkeypatch.setattr(
         v6,
         "git",
@@ -349,6 +413,36 @@ def test_conditional_v5_predicate_accepts_only_curve_failed_unopened_closeout(
     }
 
 
+def test_conditional_v5_predicate_rejects_self_consistent_synthetic_evidence(
+    tmp_path, monkeypatch
+) -> None:
+    _install_closeout(tmp_path, monkeypatch, pin_fixture_hashes=False)
+    with pytest.raises(v6.ProtocolError, match="evidence identity changed"):
+        v6.verify_v5_launch_predicate()
+
+
+@pytest.mark.parametrize("source_name", sorted(v6.V5_TERMINAL_EVIDENCE_SHA256))
+def test_conditional_v5_predicate_rejects_each_repinned_source_mutation(
+    tmp_path, monkeypatch, source_name: str
+) -> None:
+    _, closeout, source_paths = _install_closeout(tmp_path, monkeypatch)
+    path = source_paths[source_name]
+    if path.suffix == ".png":
+        path.write_bytes(path.read_bytes() + b"mutation")
+    else:
+        payload = json.loads(path.read_text())
+        payload["synthetic_mutation"] = True
+        path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    closeout["source_evidence"][source_name]["sha256"] = hashlib.sha256(
+        path.read_bytes()
+    ).hexdigest()
+    v6.V5_TERMINAL_CLOSEOUT_PATH.write_text(
+        json.dumps(closeout, indent=2, sort_keys=True) + "\n"
+    )
+    with pytest.raises(v6.ProtocolError, match="evidence identity changed"):
+        v6.verify_v5_launch_predicate()
+
+
 @pytest.mark.parametrize(
     ("field", "value"),
     [
@@ -399,6 +493,63 @@ def test_conditional_v5_predicate_cancels_on_forbidden_inventory(
 
 
 @pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda bundle: bundle.__setitem__("terminal_stage", "complete"),
+        lambda bundle: bundle.__setitem__("sealed_evaluation_file_count", 1),
+        lambda bundle: bundle.__setitem__(
+            "analysis_inputs",
+            {"base": "a" * 64, "treatments": {}, "controls": {}},
+        ),
+        lambda bundle: bundle["files"]["attempt_claim.json"].__setitem__(
+            "sha256", "0" * 64
+        ),
+    ],
+)
+def test_conditional_v5_predicate_rejects_false_finalizer_bundle_metadata(
+    tmp_path, monkeypatch, mutation
+) -> None:
+    def mutate(payloads):
+        mutation(payloads["bundle_inventory"])
+
+    _install_closeout(tmp_path, monkeypatch, source_mutation=mutate)
+    with pytest.raises(v6.ProtocolError, match="finalizer bundle inventory"):
+        v6.verify_v5_launch_predicate()
+
+
+def test_conditional_v5_predicate_rejects_final_artifact_in_bundle(
+    tmp_path, monkeypatch
+) -> None:
+    def mutate(payloads):
+        files = payloads["bundle_inventory"]["files"]
+        files["final_unlocked.json"] = files.pop("runs/fixture_000.bin")
+
+    _install_closeout(tmp_path, monkeypatch, source_mutation=mutate)
+    with pytest.raises(v6.ProtocolError, match="opened-final artifacts"):
+        v6.verify_v5_launch_predicate()
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("sha256", "0" * 64),
+        ("size_bytes", 1),
+        ("entry_count", 1),
+        ("evidence_inventory_sha256", "0" * 64),
+    ],
+)
+def test_conditional_v5_predicate_rejects_false_export_receipt(
+    tmp_path, monkeypatch, field: str, value
+) -> None:
+    def mutate(payloads):
+        payloads["durable_export_receipt"][field] = value
+
+    _install_closeout(tmp_path, monkeypatch, source_mutation=mutate)
+    with pytest.raises(v6.ProtocolError, match="durable-export receipt"):
+        v6.verify_v5_launch_predicate()
+
+
+@pytest.mark.parametrize(
     ("source_name", "mutation", "match"),
     [
         (
@@ -409,7 +560,7 @@ def test_conditional_v5_predicate_cancels_on_forbidden_inventory(
         (
             "launch_receipt",
             lambda value: value.__setitem__("app_id", "ap-wrong"),
-            "registered SHA-256|committed bytes changed",
+            "launch receipt changed",
         ),
         (
             "attempt_status",
@@ -442,7 +593,7 @@ def test_conditional_v5_predicate_rejects_fake_unbacked_hex_identity(
     v6.V5_TERMINAL_CLOSEOUT_PATH.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n"
     )
-    with pytest.raises(v6.ProtocolError, match="committed bytes changed"):
+    with pytest.raises(v6.ProtocolError, match="evidence identity changed"):
         v6.verify_v5_launch_predicate()
 
 
@@ -469,7 +620,7 @@ def test_registration_freezes_condition_nodes_controls_wandb_and_cancellation() 
         v6.CONDITIONAL_LAUNCH_PREDICATE
     )
     assert registration["operator_knowledge_boundary"] == (
-        v6.CORRECTED_OPERATOR_KNOWLEDGE_BOUNDARY
+        v6.CORRECTION2_OPERATOR_KNOWLEDGE_BOUNDARY
     )
     assert registration["wandb"]["run_ids"] == v6.WANDB_RUN_IDS
     assert len(set(registration["wandb"]["run_ids"].values())) == 16
@@ -505,29 +656,40 @@ def test_committed_registration_is_the_exact_completed_template() -> None:
     v6._validate_registration_shape(registration)
 
 
-def test_v2_correction_preserves_every_registered_scientific_and_wandb_field() -> None:
+def test_v3_correction_preserves_every_registered_scientific_and_wandb_field() -> None:
     v1_path = (
         ROOT
         / "protocol_archive"
         / "v6_celebration_registration_v1_superseded.json"
     )
-    correction_path = (
+    correction1_path = (
         ROOT / "protocol_archive" / "v6_celebration_prelaunch_correction1.json"
     )
-    v2_path = ROOT / "protocol_archive" / "v6_celebration_registration.json"
-    assert v6.sha256_file(v1_path) == v6.SUPERSEDED_REGISTRATION_SHA256
-    assert v6.sha256_file(correction_path) == v6.PRELAUNCH_CORRECTION1_SHA256
+    v2_path = (
+        ROOT / "protocol_archive" / "v6_celebration_registration_v2_superseded.json"
+    )
+    correction2_path = (
+        ROOT / "protocol_archive" / "v6_celebration_prelaunch_correction2.json"
+    )
+    v3_path = ROOT / "protocol_archive" / "v6_celebration_registration.json"
+    assert v6.sha256_file(v1_path) == v6.SUPERSEDED_V1_REGISTRATION_SHA256
+    assert v6.sha256_file(correction1_path) == v6.PRELAUNCH_CORRECTION1_SHA256
+    assert v6.sha256_file(v2_path) == v6.SUPERSEDED_V2_REGISTRATION_SHA256
+    assert v6.sha256_file(correction2_path) == v6.PRELAUNCH_CORRECTION2_SHA256
     v1 = json.loads(v1_path.read_text())
-    correction = json.loads(correction_path.read_text())
+    correction1 = json.loads(correction1_path.read_text())
     v2 = json.loads(v2_path.read_text())
-    fields = correction["scientific_projection"]["fields"]
+    correction2 = json.loads(correction2_path.read_text())
+    v3 = json.loads(v3_path.read_text())
+    fields = correction2["scientific_projection"]["fields"]
     v1_projection = {field: v1[field] for field in fields}
     v2_projection = {field: v2[field] for field in fields}
-    assert v1_projection == v2_projection
+    v3_projection = {field: v3[field] for field in fields}
+    assert v1_projection == v2_projection == v3_projection
     assert v6.canonical_sha256(v1_projection) == (
         v6.SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
     )
-    assert correction["knowledge_boundary_at_correction"] == {
+    assert correction1["knowledge_boundary_at_correction"] == {
         "root_operator": (
             "root had seen partial results for six V5 seeds before this correction"
         ),
@@ -541,6 +703,24 @@ def test_v2_correction_preserves_every_registered_scientific_and_wandb_field() -
             "the additional V5 partials did not alter the already selected "
             "celebration recipe, curve nodes, seeds, controls, data repartition, "
             "acceptance rules, or W&B identities"
+        ),
+    }
+    assert correction2["knowledge_boundary_at_correction"] == {
+        "root_operator": (
+            "root knew the full terminal V5 mean and per-seed curves and terminal "
+            "evidence before correction 2"
+        ),
+        "v6_outcomes": (
+            "no V6 training, curve, control, or sealed-final outcome existed"
+        ),
+        "selection_agent": (
+            "the selecting agent remained blind to every V5 outcome; its scientific "
+            "and W&B projection was already frozen from committed seed-167 source evidence"
+        ),
+        "selection_effect": (
+            "the later V5 terminal outcomes and audit fixes did not alter the byte-"
+            "semantically frozen celebration recipe, curve nodes, seeds, controls, "
+            "data repartition, acceptance rules, or W&B identities"
         ),
     }
 
@@ -602,6 +782,37 @@ def test_metric_schema_describes_the_weighted_combined_reward_range() -> None:
     assert "weighted" in named["unit"]
     assert "not an individual component" in named["definition"]
     assert "weighted combined" in total["definition"]
+    assert "nonnegative" not in total
+    assert schema["series"]["intrinsic_reward_std"]["nonnegative"] is True
+    assert schema["condition_weight_semantics"] == {
+        "treatment": [1.0, 0.25],
+        "signflip_control": [-1.0, -0.25],
+        "rule": (
+            "the shared schema derives aliases from each resolved run config; "
+            "both conditions combine two components clipped individually to [-5, 5]"
+        ),
+    }
+    label = "_".join(recipe["target_words"])
+    observed = schema["observed_history_scalar_series"]
+    mean_aliases = [
+        f"jlens/{label}_mean",
+        "reward",
+        f"rewards/jlens_{label}_reward/mean",
+    ]
+    std_aliases = [
+        "reward_std",
+        f"rewards/jlens_{label}_reward/std",
+    ]
+    for key in mean_aliases:
+        assert observed[key]["range"] == [-6.25, 6.25]
+        assert "weighted combined" in observed[key]["definition"]
+        assert "individual component" in observed[key]["definition"]
+        assert observed[key].get("nonnegative") is not True
+    for key in std_aliases:
+        assert "range" not in observed[key]
+        assert observed[key]["nonnegative"] is True
+        assert "weighted combined" in observed[key]["definition"]
+        assert "individual component" in observed[key]["definition"]
 
 
 def test_generated_v6_config_can_be_derived_as_a_safe_nonclaim_replay(
