@@ -1,4 +1,4 @@
-# Confirmatory protocol v1: J-lens reward and GSM8K accuracy
+# Confirmatory protocol v2: J-lens reward and GSM8K accuracy
 
 Status: **predeclared; do not edit after `./run_confirmatory.sh prepare`**.
 
@@ -55,19 +55,22 @@ entered prior training, fitting, alignment screens, or correctness monitoring:
   raw `6800:7200`; and
 - raw indices `6800:7200` themselves.
 
-The union contains 3,410 indices. The remaining 4,063 indices are ordered by
-`SHA-256("j-lens-rl-confirmatory-v1-2026-07-14:" + source_index)` and allocated
-once as:
+The union contains 3,741 indices. This includes the interrupted setup run
+`xufk8x08`, whose seed-42 selection excluded only raw `7000:7200`; v1 omitted
+that distinct selection and is invalid for freshness claims. Of the 3,732
+truly unused indices, 368 had already appeared in v1's partially observed
+400-item curve (the other 32 curve items were setup-contaminated). V2 retires
+all 400 v1 curve indices, orders the remaining 3,364 unseen indices by
+`SHA-256("j-lens-rl-confirmatory-v2-2026-07-14:" + source_index)`, and allocates:
 
 | Purpose | Count | May correctness be inspected? |
 |---|---:|---|
-| exploratory development | 200 | Only before a future protocol is frozen; unused in v1 |
-| one-shot curve gate | 400 | Yes, at fixed steps for v1 only |
-| sealed final evaluation | 3,000 | Only after the software unlock gate |
-| untouched future reserve | 463 | No in v1 |
+| new curve gate | 400 | Yes, at fixed steps for v2 only |
+| sealed final evaluation | 2,900 | Only after the software unlock gate |
+| untouched future reserve | 64 | No in v2 |
 
-All 4,063 historically unused indices are excluded from every v1 training
-run. The generated manifests contain raw source indices, not copied questions
+All truly fresh indices and every exposed v1 curve index are excluded from
+every v2 training run. The generated manifests contain raw source indices, not copied questions
 or answers. Preparation records their hashes, all config hashes, artifact
 hashes, dataset/model revisions, and the clean Git commit under the ignored
 `.confirmatory/` directory.
@@ -93,13 +96,13 @@ inspection, and training continues to step 25 whether the curve rises or not.
 This is a descriptive generalization gate, not a significance test. The gate
 writes a figure with every seed, the six-seed mean, and the highlighted fixed
 nodes; the unlock marker binds its SHA-256. If the gate fails, record a negative
-result; do not open the sealed final set or alter v1.
+result; do not open the sealed final set or alter v2.
 
 ## Final endpoint and significance
 
 The primary endpoint is the mean paired exact-match change of the six fixed
 step-25 semantic adapters versus one greedy frozen-base evaluation on the same
-3,000 items. The evaluator retains source index, prompt hash, completion,
+2,900 items. The evaluator retains source index, prompt hash, completion,
 parsed prediction, correctness, literal-target audit, model/adapter identity,
 artifact hashes, dataset/model revisions, and source provenance for each item.
 
@@ -110,16 +113,19 @@ Call the result **significant positive evidence** only when all of these hold:
    giving a two-sided exact seed sign-test `p = 0.03125`;
 3. the multi-seed mean semantic-minus-base accuracy difference is positive and
    its 95% crossed seed/item bootstrap interval excludes zero; and
-4. all run, split, artifact, and source-provenance checks pass.
+4. the semantic-minus-sign-flip difference-in-differences is positive and its
+   95% crossed seed/item bootstrap interval excludes zero; and
+5. all run, split, artifact, runtime, and source-provenance checks pass.
 
 The within-seed paired tables and exact McNemar tests are reported diagnostics;
 they are not substituted for the predeclared multi-seed endpoint. The
-semantic-minus-sign-flip difference-in-differences is the specificity check.
+semantic-minus-sign-flip difference-in-differences is the required directional
+specificity check.
 If run, the exact-match control should move positively and is a pipeline check.
 Control results are reported even if unfavorable; they are not alternative
 ways to rescue a failed primary result.
 
-No GSM8K test-set result from the exploratory history counts toward v1. The v1
+No GSM8K test-set result from the exploratory history counts toward v2. The v2
 sealed set is sampled from the raw training split, so conclusions concern
 held-out GSM8K-format examples and paired improvement over the frozen model;
 do not mislabel it as a fresh official-test benchmark score.
@@ -138,9 +144,10 @@ git status --short                 # must be empty
 ```
 
 Run the six semantic seeds and six matched sign-flipped seeds. Run
-`train-positive-control` separately if compute permits. Different GPUs or
-agents may run distinct config files concurrently, but two processes must
-never share an output directory.
+`train-positive-control` separately if compute permits. Confirmatory remote
+runs are pinned to L40S so matched conditions do not silently mix numerical
+hardware. Different agents may run distinct config files concurrently, but two
+processes must never share an output directory.
 
 The equivalent Modal route is `modal_experiments.py`. Its function-level
 `max_containers=5` enforces the requested cap, so five seeds run and one queues.
@@ -152,7 +159,7 @@ acceptance criterion.
 
 ```bash
 ./run_confirmatory.sh train-semantic
-./run_confirmatory.sh curve             # stop and report v1 if this fails
+./run_confirmatory.sh curve             # stop and report v2 if this fails
 ./run_confirmatory.sh train-controls     # six required sign-flip runs
 # Optional pipeline check:
 ./run_confirmatory.sh train-positive-control
@@ -160,9 +167,11 @@ acceptance criterion.
 ```
 
 `unlock` refuses unless all 12 required semantic/sign-flipped runs reached step
-25 with matching per-seed training indices, clean provenance, complete
-fixed-step histories, and a passing mean curve. The optional exact-match run
-does not block it. Unlock does not read the sealed outcomes.
+25 with matching per-seed training indices, one pinned runtime, clean
+provenance, complete fixed-step histories, and a passing mean curve. Unlock
+hashes every final adapter and audit artifact; later evaluation/reporting
+recomputes that manifest. The optional exact-match run does not block it.
+Unlock does not read the sealed outcomes.
 
 Evaluate semantic treatment first, then the controls, all at batch 64:
 
@@ -179,22 +188,24 @@ it also evaluates the optional exact-match adapter if present. Preserve
 `.confirmatory/` with the run; its hashes are the link between the committed
 protocol and ignored large artifacts.
 
-`report` machine-checks the predeclared curve, crossed interval, six positive
-seed effects, exact two-sided sign-test, and presence of the sign-flip
-specificity report. It writes once and refuses to overwrite its verdict.
+`report` machine-checks the predeclared curve, both crossed intervals, six
+positive seed effects, exact two-sided sign-test, and positive sign-flip
+specificity. It reloads the pinned dataset to recompute every prompt hash,
+prediction, and correctness value, then writes once and refuses to overwrite
+its verdict.
 
 ## Failure and reporting rules
 
 - A training crash is recorded as an interruption; the current guarded runner
   does not silently resume or overwrite it. Never restart a seed until a
   favorable trajectory appears. Completed final JSONLs may be reused only
-  after the runner verifies all 3,000 rows, sealed-index order, and provenance.
+  after the runner verifies all 2,900 rows, sealed-index order, and provenance.
 - Never overwrite a run directory or JSONL evaluation. Use a new protocol
   version for any substantive change.
 - Record OOMs, interruptions, curve failures, literal-target emission, length
   collapse, null controls, and negative final results.
 - A higher J score without the predeclared curve and final criteria is not
   success.
-- After any v1 result, do not tune against the sealed set. A follow-up must use
+- After any v2 result, do not tune against the sealed set. A follow-up must use
   the untouched reserve or a new external dataset with a new committed
   protocol.

@@ -27,7 +27,9 @@ from .common import (
     load_config,
     load_index_manifest,
     model_dtype,
+    require_clean_repository_provenance,
     repository_provenance,
+    resolve_repository_root,
     seed_everything,
     sha256_file,
 )
@@ -210,12 +212,16 @@ def main() -> None:
     os.environ["WANDB_PROJECT"] = cfg["wandb_project"]
     os.environ["WANDB_MODE"] = cfg["wandb_mode"]
 
+    repo_root = resolve_repository_root(__file__)
+    source_provenance = repository_provenance(repo_root)
+    if cfg.get("require_clean_repository", False):
+        require_clean_repository_provenance(source_provenance)
+
     output_dir = create_run_directory(cfg["output_dir"])
     (output_dir / "resolved_config.json").write_text(json.dumps(cfg, indent=2) + "\n")
 
-    repo_root = Path(__file__).resolve().parents[2]
     run_manifest: dict[str, Any] = {
-        **repository_provenance(repo_root),
+        **source_provenance,
         "config_path": str(Path(args.config).resolve()),
         "config_sha256": sha256_file(args.config),
         "resolved_config_sha256": sha256_file(output_dir / "resolved_config.json"),
@@ -224,6 +230,12 @@ def main() -> None:
         "dataset": "openai/gsm8k:main",
         "dataset_revision": cfg["dataset_revision"],
         "reward_type": cfg["reward_type"],
+        "runtime": {
+            "cuda_device_name": (
+                torch.cuda.get_device_name(0) if torch.cuda.is_available() else None
+            ),
+            "cuda_version": torch.version.cuda,
+        },
     }
     if cfg["reward_type"] == "jlens":
         run_manifest.update({

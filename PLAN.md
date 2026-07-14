@@ -22,11 +22,13 @@ spellings are causally masked and audited. Evaluation is unconstrained.
 
 ## Data boundaries
 
-Reconstruct and exclude every historically used raw GSM8K-train index. Hash
-order the remaining 4,063 and allocate 200 exploratory, 400 one-shot curve,
-3,000 sealed-final, and 463 future-reserve examples. Exclude all 4,063 from
-training. Pin raw source-index manifests, configs, artifacts, model/dataset
-revisions, and the clean source commit before any v1 run.
+Reconstruct and exclude all 3,741 historically used raw GSM8K-train indices,
+including interrupted setup run `xufk8x08`. Retire all 400 indices from the
+invalid, partially exposed v1 curve. Hash-order the remaining 3,364 unseen
+indices and allocate a new 400-item curve, 2,900-item sealed final set, and
+64-item reserve. Exclude every outcome and retired-curve index from training.
+Pin raw source-index manifests, configs, artifacts, model/dataset revisions,
+and the clean source commit before any v2 run.
 
 ## Curve gate
 
@@ -38,21 +40,22 @@ mean of all six semantic seeds, require:
 EM5 > EM0; EM10 >= EM5; EM15 >= EM10
 ```
 
-No other three nodes or selected seeds may satisfy the gate. If it fails, v1 is
+No other three nodes or selected seeds may satisfy the gate. If it fails, v2 is
 negative and the sealed final set remains closed.
 
 ## Final evidence
 
 After all 12 required runs and the curve gate pass, greedily evaluate the base
-once and all adapters on the same sealed 3,000 examples. Retain per-item source
+once and all adapters on the same sealed 2,900 examples. Retain per-item source
 index, prompt hash, completion, prediction, correctness, literal audit, and
 full model/adapter/artifact/source provenance.
 
 The primary success criterion is a positive mean semantic-minus-base paired
 change whose 95% crossed seed/item bootstrap interval excludes zero, with all
-six seed effects positive (two-sided exact sign-test `p=0.03125`). Report
-within-seed discordant tables/McNemar diagnostics and semantic-minus-sign-flip
-difference-in-differences. A higher internal score or old official-test result
+six seed effects positive (two-sided exact sign-test `p=0.03125`). The
+semantic-minus-sign-flip difference-in-differences must also be positive with
+its crossed 95% interval above zero. Report within-seed discordant
+tables/McNemar diagnostics. A higher internal score or old official-test result
 is not success.
 
 ## Execution

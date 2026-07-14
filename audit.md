@@ -1,12 +1,15 @@
 # Audit: does J-lens word reward alone improve GSM8K evaluation?
 
-Audit snapshot: `2026-07-14T00:32:52Z`
+Initial audit snapshot: `2026-07-14T00:32:52Z`
+Prelaunch v2 update: `2026-07-14 UTC`
 
 - Repository: `/j-lens-rl`
 - Git HEAD / `origin/main`: `79f69d717901a2f073dadd3afc6135a041584e70`
 - Scope: committed code, dirty working tree, local artifacts/runs, root scripts,
   research documentation, and the other Codex session's live experiment.
-- Verification run: `.venv/bin/pytest -q` passed `9/9` tests.
+- Initial verification: `.venv/bin/pytest -q` passed `9/9` tests.
+- Current prelaunch verification: `35/35` tests plus Python/Bash syntax and
+  `git diff --check` pass.
 
 ## Bottom line
 
@@ -346,29 +349,95 @@ it does **not** retroactively validate any old run:
   tool reports discordant pairs, exact McNemar diagnostics, deterministic
   paired bootstraps, a crossed seed/item bootstrap, the exact seed sign test,
   and semantic-versus-sign-flip difference-in-differences.
-- The frozen v1 protocol allocates historically unused GSM8K-train indices to
-  a 400-item curve set, 3,000-item sealed final set, and untouched reserve. It
+- The frozen v2 protocol excludes 3,741 historically used GSM8K-train indices,
+  permanently retires the exposed 400-item v1 curve, and allocates a new
+  400-item curve, 2,900-item sealed final set, and 64-item reserve. It
   predeclares six seeds, step-25 endpoints, and the exact curve nodes
   `0/5/10/15`: step 5 must exceed step 0, then steps 10 and 15 may not fall.
   Six semantic and six sign-flipped runs are required; a one-seed exact-match
   control is optional and cannot rescue the primary result.
 - Significant evidence is accepted only if that curve gate passes, all six
   sealed-set treatment effects are positive (two-sided exact sign-test
-  `p=0.03125`), and the 95% crossed seed/item bootstrap interval for the mean
-  treatment-minus-base effect excludes zero. A hashed curve PNG and a
-  machine-checked final acceptance report are durable outputs.
+  `p=0.03125`), and the 95% crossed seed/item bootstrap intervals for both the
+  mean treatment-minus-base effect and semantic-minus-sign-flip
+  difference-in-differences exclude zero. A hashed curve PNG, raw-evaluation
+  hashes, frozen adapter hashes, and a machine-checked final acceptance report
+  are durable outputs.
 - `modal_experiments.py` preserves this sequence on Modal and caps each GPU
-  phase at five containers, queuing the sixth. It excludes credential files
+  phase at five pinned L40S containers, queuing the sixth. It excludes credential files
   from the image and stops before controls/final evaluation when the curve gate
   fails. The first detached smoke launch was rejected before GPU dispatch by
   the clean-tree guard because Modal materialized three tracked symlinks and
   package installation left `build/` debris. The image build now restores the
   exact symlink types/targets, removes that deterministic debris, asserts a
-  clean checkout, and uses a fresh state volume for the corrected launch.
+  clean checkout, and uses a fresh state volume for each corrected launch.
 
 The regenerated `solved` calibration is bound to the pinned model revision and
 the unchanged lens transport. Historical affect/error calibrations now fail
 closed until separately regenerated; their pre-fix runs remain exploratory.
 At commit time, the research conclusion therefore remains **inconclusive**:
-the repository is ready to collect valid evidence, but no v1 outcome has yet
-been observed.
+the repository is ready to collect valid evidence, but no valid v2 outcome has
+yet been observed.
+
+## Prelaunch Modal and protocol audit (2026-07-14)
+
+The first GPU-bearing Modal attempt was manually stopped and is exploratory
+only. Five semantic seeds (142–146) had started on Volume
+`j-lens-rl-confirmatory-v1-20260714b`; seed 147 was queued. All five observed
+step-5 accuracies exceeded their common `0.355` baseline:
+`0.3725, 0.3775, 0.3650, 0.3600, 0.3650` (mean `0.3680`). Available step-10
+values were `0.3800`, `0.3600`, and `0.3725`, each non-downward from its own
+step 5. Literal `solved` use was `0%` to `0.25%`, and validation response length
+did not inflate. These values are encouraging diagnostics, not evidence: the
+runs were incomplete and invalid for the reasons below.
+
+The stop exposed two independent blockers:
+
+1. Modal executed the wheel-installed package under `site-packages`, so the
+   old fixed-parent repository lookup emitted null Git commit, dirty-state,
+   and source-tree fields in every run manifest. The pipeline would otherwise
+   have spent all 12 GPU runs before failing at unlock.
+2. Historical reconstruction omitted documented setup run `xufk8x08`. That
+   seed-42 run selected 1,000 rows after excluding only raw `7000:7200`, a
+   different pool from the already reconstructed selections. The omission
+   missed 331 used indices: 32 had entered the old curve and 250 had entered
+   the nominal 3,000-item final set. Therefore v1's data manifests cannot
+   support a freshness claim.
+
+V2 fixes both problems before any sealed outcome is opened:
+
+- source-root resolution is explicit in the Modal image and fail-closed in
+  training and evaluation; image construction verifies imports come from the
+  baked checkout;
+- the omitted setup selection is an explicit frozen reconstruction rule;
+  direct reconstruction yields 3,741 historical and 3,732 truly unused rows;
+- all 400 old curve indices are retired. Of those, 32 are now historical and
+  368 were otherwise fresh, leaving exactly 3,364 unseen rows for the new
+  `400/2,900/64` curve/final/reserve split;
+- a fresh Volume has an exclusive attempt claim and rejects stale run, eval,
+  evidence, or unlock paths; semantic runs are fully verified before controls;
+- all confirmatory training and evaluation functions are pinned to L40S and
+  record CUDA identity; mixed runtimes fail verification;
+- unlock freezes hashes of every run manifest, config, data selection,
+  history, terminal trainer state, and final adapter. Evaluation binds each
+  label to that adapter and the prepared commit;
+- final verification reloads the pinned GSM8K revision and tokenizer,
+  recomputes prompt/token hashes, parsed predictions, and correctness from the
+  saved completions, then recomputes both statistical summaries. Acceptance
+  hashes all 13 evaluation JSONLs and refuses a nonsignificant `complete`
+  status;
+- the filename mismatch (`acceptance_report.json` versus `acceptance.json`),
+  missing label binding, stale-output reuse, duplicate-launch race, and false
+  top-level success status found in the initial Modal audit are closed.
+
+The significant-evidence definition was frozen before v2 preparation: the
+requested `0/5/10/15` six-seed mean curve, six positive sealed treatment
+effects, exact two-sided sign-test `p < 0.05`, a treatment-minus-base crossed
+95% interval above zero, and a semantic-minus-sign-flip crossed 95% interval
+above zero. Neither an internal J-score increase nor the invalid v1 partial
+curve can satisfy this definition.
+
+Operational security note: a credential was exposed in internal agent tool
+output during this audit. It is excluded from Git and the Modal image, but it
+should be rotated after the active launch no longer needs it. The credential
+value is intentionally not reproduced here.

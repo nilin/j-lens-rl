@@ -72,6 +72,43 @@ def sha256_file(path: str | Path) -> str:
     return digest.hexdigest()
 
 
+def resolve_repository_root(module_file: str | Path | None = None) -> Path:
+    """Locate the checkout whose source is executing.
+
+    Wheel installs place ``__file__`` under site-packages, so deriving the
+    repository from a fixed number of parents can silently lose Git
+    provenance.  Confirmatory remote jobs set an explicit root; local source
+    runs fall back to the current Git worktree and then the module location.
+    """
+    override = os.environ.get("JLENS_REPOSITORY_ROOT")
+    candidates = [Path(override)] if override else [Path.cwd()]
+    if module_file is not None:
+        candidates.append(Path(module_file).resolve().parent)
+
+    for candidate in candidates:
+        try:
+            top_level = subprocess.check_output(
+                ["git", "rev-parse", "--show-toplevel"],
+                cwd=candidate,
+                text=True,
+                stderr=subprocess.DEVNULL,
+            ).strip()
+        except (OSError, subprocess.CalledProcessError):
+            if override:
+                raise RuntimeError(
+                    "JLENS_REPOSITORY_ROOT is not inside a Git worktree: "
+                    f"{candidate.resolve()}"
+                ) from None
+            continue
+        return Path(top_level).resolve()
+
+    if module_file is not None:
+        path = Path(module_file).resolve()
+        if len(path.parents) >= 3:
+            return path.parents[2]
+    return Path.cwd().resolve()
+
+
 def repository_provenance(root: str | Path) -> dict[str, Any]:
     """Return a content fingerprint that still identifies a dirty worktree."""
     root = Path(root).resolve()
@@ -109,6 +146,18 @@ def repository_provenance(root: str | Path) -> dict[str, Any]:
         "git_status": status,
         "source_tree_sha256": digest.hexdigest(),
     }
+
+
+def require_clean_repository_provenance(provenance: dict[str, Any]) -> None:
+    """Fail closed when a run cannot prove clean committed source identity."""
+    commit = provenance.get("git_commit")
+    source_tree = provenance.get("source_tree_sha256")
+    if not isinstance(commit, str) or len(commit) != 40:
+        raise RuntimeError("required Git commit provenance is unavailable")
+    if provenance.get("git_dirty") is not False:
+        raise RuntimeError("confirmatory execution requires a clean Git worktree")
+    if not isinstance(source_tree, str) or len(source_tree) != 64:
+        raise RuntimeError("required source-tree fingerprint is unavailable")
 
 
 def extract_answer(text: str) -> str | None:

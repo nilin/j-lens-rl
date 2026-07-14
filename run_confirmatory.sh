@@ -33,13 +33,16 @@ train_condition() {
 
 eval_if_missing() {
   local output="$1"
+  local label
+  label="$(basename "$output" .jsonl)"
   shift
   if [[ -e "$output" ]]; then
-    "${PROTOCOL[@]}" verify-eval --path "$output" >/dev/null
+    "${PROTOCOL[@]}" verify-eval --path "$output" --label "$label" >/dev/null
     echo "reusing complete, verified evaluation: $output"
     return 0
   fi
   "$EVAL" "$@" --batch-size 64 --output-jsonl "$output" --skip-jlens-metric
+  "${PROTOCOL[@]}" verify-eval --path "$output" --label "$label" >/dev/null
 }
 
 final_treatment() {

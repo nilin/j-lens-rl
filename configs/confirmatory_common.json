@@ -12,6 +12,7 @@
   "min_new_tokens": 64,
   "eval_every": 5,
   "validation_observational_only": true,
+  "require_clean_repository": true,
   "validation_steps": null,
   "early_stopping_patience": null,
   "save_every": 25,

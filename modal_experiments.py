@@ -12,6 +12,8 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -21,11 +23,12 @@ import modal
 LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = REMOTE_REPO / ".confirmatory"
-VOLUME_NAME = "j-lens-rl-confirmatory-v1-20260714b"
+VOLUME_NAME = "j-lens-rl-confirmatory-v2-20260714a"
 SEEDS = tuple(range(142, 148))
 MAX_GPU_CONTAINERS = 5
+GPU_TYPE = "L40S"
 
-app = modal.App("j-lens-rl-confirmatory-v1")
+app = modal.App("j-lens-rl-confirmatory-v2")
 state_volume = modal.Volume.from_name(
     VOLUME_NAME,
     create_if_missing=True,
@@ -70,18 +73,23 @@ repo_image = (
         copy=True,
     )
     .workdir(REMOTE_REPO)
+    .env(
+        {
+            "HF_HUB_DISABLE_TELEMETRY": "1",
+            "JLENS_REPOSITORY_ROOT": REMOTE_REPO.as_posix(),
+            "PYTHONPATH": (
+                f"{(REMOTE_REPO / 'src').as_posix()}:"
+                f"{(REMOTE_REPO / 'trl').as_posix()}"
+            ),
+            "TOKENIZERS_PARALLELISM": "false",
+            "PYTHONUNBUFFERED": "1",
+        }
+    )
     .run_commands(
         "python -m pip install --upgrade pip==26.0.1",
         "python -m pip install './trl[peft]' '.[dev]'",
         "python scripts/modal_cache_assets.py",
         "python scripts/modal_finalize_image.py",
-    )
-    .env(
-        {
-            "HF_HUB_DISABLE_TELEMETRY": "1",
-            "TOKENIZERS_PARALLELISM": "false",
-            "PYTHONUNBUFFERED": "1",
-        }
     )
 )
 
@@ -119,9 +127,79 @@ def _history_summary(condition: str, seed: int) -> dict[str, Any]:
     }
 
 
+def _verify_attempt_claim(claim_id: str) -> dict[str, Any]:
+    claim_path = REMOTE_STATE / "attempt_claim.json"
+    if not claim_path.is_file():
+        raise RuntimeError("confirmatory volume has no attempt claim")
+    claim = json.loads(claim_path.read_text())
+    if claim.get("claim_id") != claim_id:
+        raise RuntimeError("confirmatory volume is claimed by another launch")
+    return claim
+
+
+def _record_attempt_status(
+    claim_id: str,
+    stage: str,
+    **details: Any,
+) -> dict[str, Any]:
+    _verify_attempt_claim(claim_id)
+    status = {
+        "claim_id": claim_id,
+        "stage": stage,
+        "updated_at_utc": datetime.now(timezone.utc).isoformat(),
+        **details,
+    }
+    path = REMOTE_STATE / "attempt_status.json"
+    temporary = path.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(status, indent=2, sort_keys=True) + "\n")
+    temporary.replace(path)
+    return status
+
+
 @app.function(
     image=repo_image,
-    gpu=["L40S", "A100-40GB"],
+    cpu=2,
+    memory=4096,
+    timeout=10 * 60,
+    startup_timeout=60 * 60,
+    retries=0,
+    volumes={REMOTE_STATE: state_volume},
+)
+def claim_attempt(claim_id: str) -> dict[str, Any]:
+    state_volume.reload()
+    _protocol("verify")
+    forbidden = [
+        REMOTE_STATE / "runs",
+        REMOTE_STATE / "evals",
+        REMOTE_STATE / "evidence",
+        REMOTE_STATE / "final_unlocked.json",
+    ]
+    stale = [str(path) for path in forbidden if path.exists()]
+    if stale:
+        raise RuntimeError(f"confirmatory volume already contains attempt data: {stale}")
+    claim_path = REMOTE_STATE / "attempt_claim.json"
+    state = json.loads((REMOTE_STATE / "protocol_state.json").read_text())
+    claim = {
+        "claim_id": claim_id,
+        "git_commit": state["git_commit"],
+        "protocol": state["protocol"],
+    }
+    try:
+        with claim_path.open("x") as handle:
+            json.dump(claim, handle, sort_keys=True)
+            handle.write("\n")
+    except FileExistsError as error:
+        raise RuntimeError("confirmatory volume is already claimed") from error
+    _record_attempt_status(claim_id, "claimed")
+    state_volume.commit()
+    return claim
+
+
+@app.function(
+    image=repo_image,
+    gpu=GPU_TYPE,
+    cpu=4,
+    memory=32768,
     max_containers=MAX_GPU_CONTAINERS,
     timeout=4 * 60 * 60,
     startup_timeout=60 * 60,
@@ -155,7 +233,9 @@ def train_config(condition: str, seed: int) -> dict[str, Any]:
 
 @app.function(
     image=repo_image,
-    gpu=["L40S", "A100-40GB"],
+    gpu=GPU_TYPE,
+    cpu=4,
+    memory=32768,
     max_containers=MAX_GPU_CONTAINERS,
     timeout=4 * 60 * 60,
     startup_timeout=60 * 60,
@@ -175,7 +255,7 @@ def evaluate_label(label: str) -> dict[str, Any]:
     _protocol("verify-unlock")
     output = REMOTE_STATE / "evals" / f"{label}.jsonl"
     if output.exists():
-        _protocol("verify-eval", "--path", str(output))
+        _protocol("verify-eval", "--path", str(output), "--label", label)
         return {"label": label, "reused_verified_output": True}
 
     if label == "base":
@@ -211,7 +291,7 @@ def evaluate_label(label: str) -> dict[str, Any]:
                 *adapter_args,
             ]
         )
-        _protocol("verify-eval", "--path", str(output))
+        _protocol("verify-eval", "--path", str(output), "--label", label)
         return {"label": label, "reused_verified_output": False}
     finally:
         state_volume.commit()
@@ -219,17 +299,21 @@ def evaluate_label(label: str) -> dict[str, Any]:
 
 @app.function(
     image=repo_image,
+    cpu=2,
+    memory=4096,
     timeout=2 * 60 * 60,
     startup_timeout=60 * 60,
     retries=0,
     volumes={REMOTE_STATE: state_volume},
 )
 def protocol_step(command: str) -> dict[str, Any]:
-    if command not in {"curve", "unlock"}:
+    if command not in {"verify-semantic", "curve", "unlock"}:
         raise ValueError("unsupported protocol step")
     state_volume.reload()
     result = _protocol(command, check=False)
     state_volume.commit()
+    if command == "verify-semantic":
+        return {"verified": result.returncode == 0, "returncode": result.returncode}
     if command == "curve":
         path = REMOTE_STATE / "evidence/curve_gate.json"
     else:
@@ -248,6 +332,8 @@ def _comparison_args(labels: Iterable[str], option: str) -> list[str]:
 
 @app.function(
     image=repo_image,
+    cpu=4,
+    memory=16384,
     timeout=2 * 60 * 60,
     startup_timeout=60 * 60,
     retries=0,
@@ -294,7 +380,7 @@ def analyze_final(stage: str) -> dict[str, Any]:
     _run(command)
     if stage == "specificity":
         report_process = _protocol("report", check=False)
-        report_path = evidence_dir / "acceptance_report.json"
+        report_path = evidence_dir / "acceptance.json"
         report = json.loads(report_path.read_text())
         report["returncode"] = report_process.returncode
         state_volume.commit()
@@ -304,14 +390,22 @@ def analyze_final(stage: str) -> dict[str, Any]:
 
 
 def _mapped_results(function: Any, *inputs: Iterable[Any]) -> list[Any]:
+    materialized_inputs = [list(values) for values in inputs]
     results = list(
         function.map(
-            *inputs,
-            order_outputs=False,
+            *materialized_inputs,
+            order_outputs=True,
             return_exceptions=True,
         )
     )
-    failures = [result for result in results if isinstance(result, BaseException)]
+    failures = [
+        {
+            "inputs": [values[index] for values in materialized_inputs],
+            "error": repr(result),
+        }
+        for index, result in enumerate(results)
+        if isinstance(result, BaseException)
+    ]
     if failures:
         raise RuntimeError(f"{len(failures)} mapped Modal jobs failed: {failures}")
     return results
@@ -319,42 +413,75 @@ def _mapped_results(function: Any, *inputs: Iterable[Any]) -> list[Any]:
 
 @app.function(
     image=repo_image,
+    cpu=1,
+    memory=2048,
     timeout=23 * 60 * 60,
     startup_timeout=60 * 60,
     retries=0,
     volumes={REMOTE_STATE: state_volume},
 )
-def orchestrate() -> dict[str, Any]:
+def orchestrate(claim_id: str) -> dict[str, Any]:
     state_volume.reload()
+    _verify_attempt_claim(claim_id)
     _protocol("verify")
+    try:
+        _record_attempt_status(claim_id, "semantic_training")
+        state_volume.commit()
+        semantic = _mapped_results(train_config, ["jlens"] * len(SEEDS), SEEDS)
+        semantic_check = protocol_step.remote("verify-semantic")
+        if semantic_check.get("returncode") or not semantic_check.get("verified"):
+            raise RuntimeError(f"semantic run verification failed: {semantic_check}")
+        gate = protocol_step.remote("curve")
+        if gate.get("returncode") or not gate.get("passed"):
+            state_volume.reload()
+            _record_attempt_status(claim_id, "curve_failed", curve=gate)
+            state_volume.commit()
+            return {"stage": "curve_failed", "semantic": semantic, "curve": gate}
 
-    semantic = _mapped_results(train_config, ["jlens"] * len(SEEDS), SEEDS)
-    gate = protocol_step.remote("curve")
-    if gate.get("returncode") or not gate.get("passed"):
-        return {"stage": "curve_failed", "semantic": semantic, "curve": gate}
+        state_volume.reload()
+        _record_attempt_status(claim_id, "control_training", curve=gate)
+        state_volume.commit()
+        controls = _mapped_results(train_config, ["signflip"] * len(SEEDS), SEEDS)
+        unlock = protocol_step.remote("unlock")
+        if unlock.get("returncode"):
+            raise RuntimeError(f"protocol unlock failed: {unlock}")
 
-    controls = _mapped_results(train_config, ["signflip"] * len(SEEDS), SEEDS)
-    unlock = protocol_step.remote("unlock")
-    if unlock.get("returncode"):
-        raise RuntimeError(f"protocol unlock failed: {unlock}")
+        state_volume.reload()
+        _record_attempt_status(claim_id, "sealed_evaluation")
+        state_volume.commit()
+        semantic_labels = ["base", *(f"jlens_seed{seed}" for seed in SEEDS)]
+        semantic_evals = _mapped_results(evaluate_label, semantic_labels)
+        semantic_result = analyze_final.remote("semantic")
 
-    semantic_labels = ["base", *(f"jlens_seed{seed}" for seed in SEEDS)]
-    semantic_evals = _mapped_results(evaluate_label, semantic_labels)
-    semantic_result = analyze_final.remote("semantic")
-
-    control_labels = [f"signflip_seed{seed}" for seed in SEEDS]
-    control_evals = _mapped_results(evaluate_label, control_labels)
-    report = analyze_final.remote("specificity")
-    return {
-        "stage": "complete",
-        "curve": gate,
-        "semantic_training": semantic,
-        "control_training": controls,
-        "semantic_evaluations": semantic_evals,
-        "control_evaluations": control_evals,
-        "semantic_result": semantic_result,
-        "acceptance_report": report,
-    }
+        control_labels = [f"signflip_seed{seed}" for seed in SEEDS]
+        control_evals = _mapped_results(evaluate_label, control_labels)
+        report = analyze_final.remote("specificity")
+        final_stage = (
+            "complete"
+            if report.get("passed") and report.get("returncode") == 0
+            else "significance_failed"
+        )
+        state_volume.reload()
+        _record_attempt_status(claim_id, final_stage, acceptance=report)
+        state_volume.commit()
+        return {
+            "stage": final_stage,
+            "curve": gate,
+            "semantic_training": semantic,
+            "control_training": controls,
+            "semantic_evaluations": semantic_evals,
+            "control_evaluations": control_evals,
+            "semantic_result": semantic_result,
+            "acceptance_report": report,
+        }
+    except BaseException as error:
+        try:
+            state_volume.reload()
+            _record_attempt_status(claim_id, "failed", error=repr(error))
+            state_volume.commit()
+        except BaseException:
+            pass
+        raise
 
 
 def _upload_protocol_state() -> None:
@@ -365,7 +492,9 @@ def _upload_protocol_state() -> None:
     )
     paths = [LOCAL_REPO / ".confirmatory/protocol_state.json"]
     paths.extend(sorted((LOCAL_REPO / ".confirmatory/manifests").glob("*.json")))
-    with state_volume.batch_upload(force=True) as batch:
+    # Never overwrite an active attempt's prepared state. On a fresh Volume the
+    # upload succeeds once; duplicate submissions fail before reaching GPUs.
+    with state_volume.batch_upload(force=False) as batch:
         for path in paths:
             relative = path.relative_to(LOCAL_REPO / ".confirmatory")
             batch.put_file(path, f"/{relative.as_posix()}")
@@ -374,13 +503,16 @@ def _upload_protocol_state() -> None:
 @app.local_entrypoint()
 def main() -> None:
     _upload_protocol_state()
-    call = orchestrate.spawn()
+    claim_id = uuid.uuid4().hex
+    claim_attempt.remote(claim_id)
+    call = orchestrate.spawn(claim_id)
     print(
         json.dumps(
             {
                 "status": "submitted",
                 "function_call_id": call.object_id,
                 "volume": VOLUME_NAME,
+                "gpu_type": GPU_TYPE,
                 "max_parallel_gpus": MAX_GPU_CONTAINERS,
             },
             indent=2,

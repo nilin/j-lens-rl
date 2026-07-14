@@ -10,10 +10,12 @@ completed matched runs, and evaluates the one predeclared curve gate.
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -27,12 +29,15 @@ MANIFEST_DIR = STATE_DIR / "manifests"
 STATE_PATH = STATE_DIR / "protocol_state.json"
 CURVE_GATE_PATH = STATE_DIR / "evidence" / "curve_gate.json"
 CURVE_PLOT_PATH = STATE_DIR / "evidence" / "curve.png"
+COMPLETED_RUNS_PATH = STATE_DIR / "evidence" / "completed_runs.json"
 UNLOCK_PATH = STATE_DIR / "final_unlocked.json"
 ACCEPTANCE_PATH = STATE_DIR / "evidence" / "acceptance.json"
 
 MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
 DATASET_REVISION = "740312add88f781978c0658806c59bc2815b9866"
-ALLOCATION_SALT = "j-lens-rl-confirmatory-v1-2026-07-14"
+PROTOCOL = "j-lens-rl-confirmatory-v2"
+V1_ALLOCATION_SALT = "j-lens-rl-confirmatory-v1-2026-07-14"
+ALLOCATION_SALT = "j-lens-rl-confirmatory-v2-2026-07-14"
 SEEDS = tuple(range(142, 148))
 REQUIRED_CONDITIONS = ("jlens", "signflip")
 CONFIG_SEEDS = {
@@ -45,11 +50,20 @@ CURVE_STEPS = (0, 5, 10, 15)
 ALL_VALIDATION_STEPS = tuple(range(0, FIXED_UPDATES + 1, 5))
 
 SPLIT_SIZES = {
-    "exploratory_dev_indices.json": 200,
     "curve_indices.json": 400,
-    "sealed_final_indices.json": 3000,
-    "future_reserve_indices.json": 463,
+    "sealed_final_indices.json": 2900,
+    "future_reserve_indices.json": 64,
 }
+
+# Every historically documented shuffled training selection. The last rule is
+# the interrupted xufk8x08 setup run, which excluded only its dev slice.
+HISTORICAL_SHUFFLE_RULES = (
+    (42, 1150, ()),
+    (43, 1000, ()),
+    (42, 1000, ((6800, 7200),)),
+    (43, 1000, ((6800, 7200),)),
+    (42, 1000, ((7000, 7200),)),
+)
 
 class ProtocolError(RuntimeError):
     pass
@@ -159,6 +173,7 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
         "min_new_tokens": 64,
         "eval_every": 5,
         "validation_observational_only": True,
+        "require_clean_repository": True,
         "validation_steps": None,
         "early_stopping_patience": None,
         "save_every": FIXED_UPDATES,
@@ -220,7 +235,7 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
     expected_eval = {
         "evaluation_source": "train",
         "evaluation_indices_path": ".confirmatory/manifests/sealed_final_indices.json",
-        "validation_examples": 3000,
+        "validation_examples": 2900,
         "min_new_tokens": 0,
     }
     for key, expected in expected_eval.items():
@@ -230,8 +245,8 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
     if require_manifests:
         if len(load_indices(MANIFEST_DIR / "curve_indices.json")) != 400:
             raise ProtocolError("curve manifest must contain exactly 400 indices")
-        if len(load_indices(MANIFEST_DIR / "sealed_final_indices.json")) != 3000:
-            raise ProtocolError("sealed-final manifest must contain exactly 3000 indices")
+        if len(load_indices(MANIFEST_DIR / "sealed_final_indices.json")) != 2900:
+            raise ProtocolError("sealed-final manifest must contain exactly 2,900 indices")
 
     return {str(path.relative_to(REPO)): sha256_file(path) for path in all_config_paths()}
 
@@ -291,7 +306,7 @@ def validate_artifacts() -> dict[str, str]:
     return actual
 
 
-def reconstruct_historical_indices() -> tuple[list[int], int]:
+def reconstruct_historical_indices() -> tuple[list[int], list[int], int]:
     try:
         from datasets import load_dataset
     except ImportError as error:
@@ -306,18 +321,34 @@ def reconstruct_historical_indices() -> tuple[list[int], int]:
 
     historical = set(range(150))
     historical.update(range(6800, 7200))
-    for seed, count in ((42, 1150), (43, 1000)):
-        historical.update(raw.shuffle(seed=seed).select(range(count))["_source_index"])
-    clean_pool = raw.filter(lambda row: not 6800 <= row["_source_index"] < 7200)
-    for seed in (42, 43):
+    v1_historical: set[int] | None = None
+    for rule_number, (seed, count, excluded_ranges) in enumerate(
+        HISTORICAL_SHUFFLE_RULES, 1
+    ):
+        pool = raw
+        if excluded_ranges:
+            pool = raw.filter(
+                lambda row: not any(
+                    start <= row["_source_index"] < end
+                    for start, end in excluded_ranges
+                )
+            )
         historical.update(
-            clean_pool.shuffle(seed=seed).select(range(1000))["_source_index"]
+            pool.shuffle(seed=seed).select(range(count))["_source_index"]
         )
-    return sorted(int(index) for index in historical), len(raw)
+        if rule_number == len(HISTORICAL_SHUFFLE_RULES) - 1:
+            v1_historical = set(historical)
+    if v1_historical is None:
+        raise ProtocolError("could not reconstruct the retired v1 allocation")
+    return (
+        sorted(int(index) for index in historical),
+        sorted(int(index) for index in v1_historical),
+        len(raw),
+    )
 
 
-def allocation_key(index: int) -> bytes:
-    return hashlib.sha256(f"{ALLOCATION_SALT}:{index}".encode()).digest()
+def allocation_key(index: int, salt: str = ALLOCATION_SALT) -> bytes:
+    return hashlib.sha256(f"{salt}:{index}".encode()).digest()
 
 
 def prepare() -> None:
@@ -328,34 +359,56 @@ def prepare() -> None:
         )
     config_hashes = validate_configs(require_manifests=False)
     artifact_hashes = validate_artifacts()
-    historical, dataset_size = reconstruct_historical_indices()
-    fresh = sorted(set(range(dataset_size)) - set(historical), key=allocation_key)
-    if len(historical) != 3410 or len(fresh) != 4063:
+    historical, v1_historical, dataset_size = reconstruct_historical_indices()
+    fresh_set = set(range(dataset_size)) - set(historical)
+    v1_fresh = sorted(
+        set(range(dataset_size)) - set(v1_historical),
+        key=lambda index: allocation_key(index, V1_ALLOCATION_SALT),
+    )
+    retired_v1_curve = v1_fresh[200:600]
+    allocatable = sorted(fresh_set - set(retired_v1_curve), key=allocation_key)
+    if (
+        len(historical) != 3741
+        or len(fresh_set) != 3732
+        or len(retired_v1_curve) != 400
+        or len(set(retired_v1_curve) & set(historical)) != 32
+        or len(allocatable) != 3364
+    ):
         raise ProtocolError(
-            f"historical/fresh counts changed: {len(historical)}/{len(fresh)}"
+            "historical/fresh/retired allocation counts changed: "
+            f"{len(historical)}/{len(fresh_set)}/{len(retired_v1_curve)}/"
+            f"{len(allocatable)}"
         )
 
     cursor = 0
     allocations: dict[str, list[int]] = {}
     for name, size in SPLIT_SIZES.items():
-        allocations[name] = fresh[cursor : cursor + size]
+        allocations[name] = allocatable[cursor : cursor + size]
         cursor += size
-    if cursor != len(fresh):
+    if cursor != len(allocatable):
         raise ProtocolError("predeclared split sizes do not exhaust the fresh pool")
 
     MANIFEST_DIR.mkdir(parents=True)
     write_json(MANIFEST_DIR / "historical_exclusions.json", manifest_payload(historical))
+    write_json(
+        MANIFEST_DIR / "retired_v1_curve_indices.json",
+        manifest_payload(retired_v1_curve),
+    )
     for name, indices in allocations.items():
         write_json(MANIFEST_DIR / name, manifest_payload(indices))
-    # All historically fresh indices stay out of every confirmatory training run.
-    write_json(MANIFEST_DIR / "train_exclusions.json", manifest_payload(fresh))
+    # All fresh indices and every exposed v1 curve item stay out of v2 training.
+    train_exclusions = sorted(fresh_set | set(retired_v1_curve))
+    write_json(
+        MANIFEST_DIR / "train_exclusions.json",
+        manifest_payload(train_exclusions),
+    )
 
     manifest_hashes = {
         str(path.relative_to(REPO)): sha256_file(path)
         for path in sorted(MANIFEST_DIR.glob("*.json"))
     }
     state = {
-        "protocol": "j-lens-rl-confirmatory-v1",
+        "protocol": PROTOCOL,
         "prepared_at_utc": utc_now(),
         "git_commit": commit,
         "allocation_algorithm": "ascending SHA-256(salt + ':' + raw_source_index)",
@@ -364,7 +417,12 @@ def prepare() -> None:
         "dataset_revision": DATASET_REVISION,
         "dataset_train_rows": dataset_size,
         "historically_used_count": len(historical),
-        "historically_unused_count": len(fresh),
+        "historically_unused_count": len(fresh_set),
+        "retired_v1_curve_count": len(retired_v1_curve),
+        "retired_v1_curve_historical_overlap": len(
+            set(retired_v1_curve) & set(historical)
+        ),
+        "historical_shuffle_rules": HISTORICAL_SHUFFLE_RULES,
         "split_sizes": SPLIT_SIZES,
         "curve_gate_steps": list(CURVE_STEPS),
         "fixed_training_updates": FIXED_UPDATES,
@@ -382,6 +440,24 @@ def load_and_verify_state() -> dict[str, Any]:
     if not STATE_PATH.is_file():
         raise ProtocolError("protocol is not prepared; run the prepare command first")
     state = json.loads(STATE_PATH.read_text())
+    expected_state = {
+        "protocol": PROTOCOL,
+        "allocation_salt": ALLOCATION_SALT,
+        "historically_used_count": 3741,
+        "historically_unused_count": 3732,
+        "retired_v1_curve_count": 400,
+        "retired_v1_curve_historical_overlap": 32,
+        "split_sizes": SPLIT_SIZES,
+        "curve_gate_steps": list(CURVE_STEPS),
+        "fixed_training_updates": FIXED_UPDATES,
+        "seeds": list(SEEDS),
+    }
+    if any(state.get(key) != value for key, value in expected_state.items()):
+        raise ProtocolError("prepared state does not match the frozen v2 protocol")
+    if canonical_sha256(state.get("historical_shuffle_rules")) != canonical_sha256(
+        HISTORICAL_SHUFFLE_RULES
+    ):
+        raise ProtocolError("prepared historical reconstruction rules changed")
     if state.get("git_commit") != commit:
         raise ProtocolError(
             f"prepared commit {state.get('git_commit')} does not match HEAD {commit}"
@@ -405,8 +481,19 @@ def load_and_verify_state() -> dict[str, Any]:
         for right in names[index + 1 :]:
             if split_sets[left] & split_sets[right]:
                 raise ProtocolError(f"manifest overlap: {left} and {right}")
-    if sum(map(len, split_sets.values())) != 4063:
-        raise ProtocolError("fresh manifests no longer contain exactly 4,063 indices")
+    retired = set(load_indices(MANIFEST_DIR / "retired_v1_curve_indices.json"))
+    historical = set(load_indices(MANIFEST_DIR / "historical_exclusions.json"))
+    train_exclusions = set(load_indices(MANIFEST_DIR / "train_exclusions.json"))
+    if any(values & retired for values in split_sets.values()):
+        raise ProtocolError("a v2 outcome split reuses the exposed v1 curve")
+    if any(values & historical for values in split_sets.values()):
+        raise ProtocolError("a v2 outcome split contains a historically used index")
+    if sum(map(len, split_sets.values())) != 3364:
+        raise ProtocolError("v2 outcome manifests no longer contain 3,364 indices")
+    if len(historical) != 3741 or len(retired) != 400 or len(train_exclusions) != 3764:
+        raise ProtocolError("historical or retired exclusion counts changed")
+    if train_exclusions != set().union(*split_sets.values(), retired):
+        raise ProtocolError("training exclusions do not cover every v2 outcome index")
     return state
 
 
@@ -426,12 +513,76 @@ def load_history(path: Path) -> dict[int, dict[str, Any]]:
             raise ProtocolError(f"duplicate validation step {step} in {path}")
         if not isinstance(score, (int, float)) or not math.isfinite(float(score)):
             raise ProtocolError(f"invalid exact_match at {path}:{line_number}")
+        if not 0 <= float(score) <= 1:
+            raise ProtocolError(f"exact_match is outside [0,1] at {path}:{line_number}")
         rows[step] = row
     if tuple(sorted(rows)) != ALL_VALIDATION_STEPS:
         raise ProtocolError(
             f"{path} has steps {sorted(rows)}, expected {list(ALL_VALIDATION_STEPS)}"
         )
     return rows
+
+
+def training_behavior_summary(path: Path) -> dict[str, Any]:
+    """Validate and summarize the J-only rollout diagnostics for one run."""
+    if not path.is_file():
+        raise ProtocolError(f"missing training log history: {path}")
+    payload = json.loads(path.read_text())
+    if not isinstance(payload, list):
+        raise ProtocolError(f"training log history is not a list: {path}")
+    rows = [row for row in payload if isinstance(row, dict) and "reward" in row]
+    if [row.get("step") for row in rows] != list(range(1, FIXED_UPDATES + 1)):
+        raise ProtocolError(f"training log does not contain steps 1..{FIXED_UPDATES}: {path}")
+
+    literal_rates: list[float] = []
+    mean_lengths: list[float] = []
+    clipped_ratios: list[float] = []
+    rewards: list[float] = []
+    reward_stds: list[float] = []
+    for row in rows:
+        reward_keys = [
+            key for key in row if key.startswith("rewards/") and key.endswith("/mean")
+        ]
+        if len(reward_keys) != 1 or any("gsm8k" in key.lower() for key in row):
+            raise ProtocolError(f"training log is not a one-J-reward run: {path}")
+        if "jlens/solved_literal_rate" not in row:
+            raise ProtocolError(f"training log lacks the solved literal audit: {path}")
+        numeric_fields = (
+            "reward",
+            "reward_std",
+            "completions/mean_length",
+            "completions/clipped_ratio",
+            "jlens/solved_literal_rate",
+        )
+        if any(
+            not isinstance(row.get(key), (int, float))
+            or isinstance(row.get(key), bool)
+            or not math.isfinite(float(row[key]))
+            for key in numeric_fields
+        ):
+            raise ProtocolError(f"training log has a non-finite diagnostic: {path}")
+        literal_rate = float(row["jlens/solved_literal_rate"])
+        mean_length = float(row["completions/mean_length"])
+        clipped_ratio = float(row["completions/clipped_ratio"])
+        if not 0 <= literal_rate <= 1 or not 0 <= clipped_ratio <= 1:
+            raise ProtocolError(f"training log has an invalid rate: {path}")
+        if not 0 <= mean_length <= 256:
+            raise ProtocolError(f"training log has an invalid completion length: {path}")
+        literal_rates.append(literal_rate)
+        mean_lengths.append(mean_length)
+        clipped_ratios.append(clipped_ratio)
+        rewards.append(float(row["reward"]))
+        reward_stds.append(float(row["reward_std"]))
+    return {
+        "steps": len(rows),
+        "literal_target_rate_max": max(literal_rates),
+        "completion_mean_length_min": min(mean_lengths),
+        "completion_mean_length_max": max(mean_lengths),
+        "completion_clipped_ratio_max": max(clipped_ratios),
+        "reward_first": rewards[0],
+        "reward_last": rewards[-1],
+        "reward_std_min": min(reward_stds),
+    }
 
 
 def render_curve_plot(
@@ -520,13 +671,19 @@ def compute_curve_gate(write_result: bool = True) -> dict[str, Any]:
     return result
 
 
-def verify_completed_runs() -> None:
+def verify_completed_runs(
+    conditions: tuple[str, ...] = REQUIRED_CONDITIONS,
+) -> None:
     state = load_and_verify_state()
+    if not conditions or any(condition not in REQUIRED_CONDITIONS for condition in conditions):
+        raise ProtocolError(f"invalid conditions for run verification: {conditions}")
     curve_indices = load_indices(MANIFEST_DIR / "curve_indices.json")
+    curve_manifest_sha256 = sha256_file(MANIFEST_DIR / "curve_indices.json")
     excluded = set(load_indices(MANIFEST_DIR / "train_exclusions.json"))
     matched_train_indices: dict[int, list[int]] = {}
+    matched_runtime: dict[str, Any] | None = None
 
-    for condition in REQUIRED_CONDITIONS:
+    for condition in conditions:
         for seed in SEEDS:
             directory = run_dir(condition, seed)
             expected_cfg = load_config(config_path(condition, seed))
@@ -534,9 +691,35 @@ def verify_completed_runs() -> None:
             if not resolved_path.is_file() or json.loads(resolved_path.read_text()) != expected_cfg:
                 raise ProtocolError(f"resolved config mismatch for {condition} seed {seed}")
             manifest = json.loads((directory / "run_manifest.json").read_text())
-            if manifest.get("git_commit") != state["git_commit"] or manifest.get("git_dirty"):
+            if (
+                manifest.get("git_commit") != state["git_commit"]
+                or manifest.get("git_dirty") is not False
+                or not isinstance(manifest.get("source_tree_sha256"), str)
+                or len(manifest["source_tree_sha256"]) != 64
+            ):
                 raise ProtocolError(f"invalid source provenance for {condition} seed {seed}")
+            runtime = manifest.get("runtime")
+            if (
+                not isinstance(runtime, dict)
+                or "L40S" not in str(runtime.get("cuda_device_name", ""))
+                or not isinstance(runtime.get("cuda_version"), str)
+                or not runtime["cuda_version"]
+            ):
+                raise ProtocolError(f"wrong training runtime for {condition} seed {seed}")
+            if matched_runtime is None:
+                matched_runtime = runtime
+            elif runtime != matched_runtime:
+                raise ProtocolError("required runs used different numerical runtimes")
+            expected_config_path = config_path(condition, seed)
+            if manifest.get("config_sha256") != sha256_file(expected_config_path):
+                raise ProtocolError(f"config hash mismatch for {condition} seed {seed}")
+            if manifest.get("resolved_config_sha256") != sha256_file(resolved_path):
+                raise ProtocolError(f"resolved-config hash mismatch for {condition} seed {seed}")
             data = json.loads((directory / "data_indices.json").read_text())
+            if manifest.get("data_indices_sha256") != sha256_file(
+                directory / "data_indices.json"
+            ):
+                raise ProtocolError(f"data-index hash mismatch for {condition} seed {seed}")
             train_indices = [int(value) for value in data["train_source_indices"]]
             if len(train_indices) != 1000 or len(set(train_indices)) != 1000:
                 raise ProtocolError(f"invalid training indices for {condition} seed {seed}")
@@ -551,13 +734,70 @@ def verify_completed_runs() -> None:
             elif matched_train_indices[seed] != train_indices:
                 raise ProtocolError(f"training data mismatch across conditions for seed {seed}")
 
-            load_history(directory / "validation_history.jsonl")
+            history = load_history(directory / "validation_history.jsonl")
+            if any(
+                row.get("validation_source") != "train"
+                or row.get("validation_indices_sha256") != curve_manifest_sha256
+                or not isinstance(row.get("mean_length"), (int, float))
+                or not math.isfinite(float(row["mean_length"]))
+                or not 0 <= float(row["mean_length"]) <= 256
+                or not isinstance(
+                    row.get("literal_target_completion_rate"), (int, float)
+                )
+                or not math.isfinite(float(row["literal_target_completion_rate"]))
+                or not 0 <= float(row["literal_target_completion_rate"]) <= 1
+                for row in history.values()
+            ):
+                raise ProtocolError(
+                    f"validation identity mismatch for {condition} seed {seed}"
+                )
+            training_behavior_summary(directory / "log_history.json")
             trainer_state_path = directory / f"checkpoint-{FIXED_UPDATES}" / "trainer_state.json"
             trainer_state = json.loads(trainer_state_path.read_text())
             if trainer_state.get("global_step") != FIXED_UPDATES:
                 raise ProtocolError(f"wrong terminal step for {condition} seed {seed}")
             if not (directory / "final" / "adapter_model.safetensors").is_file():
                 raise ProtocolError(f"missing final adapter for {condition} seed {seed}")
+
+
+def completed_run_artifact_manifest() -> dict[str, Any]:
+    """Fingerprint every run artifact whose identity is frozen at unlock."""
+    state = load_and_verify_state()
+    runs: dict[str, Any] = {}
+    for condition in REQUIRED_CONDITIONS:
+        for seed in SEEDS:
+            directory = run_dir(condition, seed)
+            label = f"{condition}_seed{seed}"
+            audit_files = {
+                name: directory / name
+                for name in (
+                    "run_manifest.json",
+                    "resolved_config.json",
+                    "data_indices.json",
+                    "validation_history.jsonl",
+                    "log_history.json",
+                )
+            }
+            audit_files["checkpoint-25/trainer_state.json"] = (
+                directory / "checkpoint-25" / "trainer_state.json"
+            )
+            missing = [name for name, path in audit_files.items() if not path.is_file()]
+            if missing:
+                raise ProtocolError(f"missing frozen run artifacts for {label}: {missing}")
+            runs[label] = {
+                "audit_file_sha256": {
+                    name: sha256_file(path) for name, path in sorted(audit_files.items())
+                },
+                "final_adapter": _adapter_identity(directory / "final"),
+                "training_behavior": training_behavior_summary(
+                    directory / "log_history.json"
+                ),
+            }
+    return {
+        "protocol": state["protocol"],
+        "git_commit": state["git_commit"],
+        "runs": runs,
+    }
 
 
 def unlock_final() -> None:
@@ -568,10 +808,15 @@ def unlock_final() -> None:
             "the one predeclared curve gate failed; final evaluation remains sealed"
         )
     state = load_and_verify_state()
+    if COMPLETED_RUNS_PATH.exists() or UNLOCK_PATH.exists():
+        raise ProtocolError("refusing to overwrite an existing unlock chain")
+    completed_runs = completed_run_artifact_manifest()
+    write_json(COMPLETED_RUNS_PATH, completed_runs)
     marker = {
         "protocol": state["protocol"],
         "git_commit": state["git_commit"],
         "curve_gate_sha256": sha256_file(CURVE_GATE_PATH),
+        "completed_runs_sha256": sha256_file(COMPLETED_RUNS_PATH),
         "unlocked_at_utc": utc_now(),
         "reason": "all 12 matched semantic/sign-flip runs completed and the predeclared six-seed mean curve gate passed",
     }
@@ -586,6 +831,13 @@ def verify_unlock() -> None:
     marker = json.loads(UNLOCK_PATH.read_text())
     if marker.get("git_commit") != state["git_commit"]:
         raise ProtocolError("unlock marker belongs to another commit")
+    if (
+        not COMPLETED_RUNS_PATH.is_file()
+        or marker.get("completed_runs_sha256") != sha256_file(COMPLETED_RUNS_PATH)
+        or json.loads(COMPLETED_RUNS_PATH.read_text())
+        != completed_run_artifact_manifest()
+    ):
+        raise ProtocolError("a run artifact changed after sealed-evaluation unlock")
     gate = compute_curve_gate(write_result=False)
     stored_gate = json.loads(CURVE_GATE_PATH.read_text())
     gate_fields = (
@@ -601,9 +853,125 @@ def verify_unlock() -> None:
         raise ProtocolError("curve gate or unlock marker changed")
 
 
-def verify_evaluation_jsonl(path: Path) -> None:
+def _evaluation_role(label: str) -> tuple[str, int, bool]:
+    if label == "base":
+        return "jlens", SEEDS[0], True
+    match = re.fullmatch(r"(jlens|signflip|gsm8k)_seed(\d+)", label)
+    if match is None:
+        raise ProtocolError(f"invalid evaluation label: {label!r}")
+    condition, seed_text = match.groups()
+    seed = int(seed_text)
+    if seed not in CONFIG_SEEDS[condition]:
+        raise ProtocolError(f"evaluation label has an unregistered seed: {label!r}")
+    return condition, seed, False
+
+
+def _adapter_identity(path: Path) -> dict[str, Any]:
+    files = sorted(
+        {
+            *path.glob("adapter_config.json"),
+            *path.glob("adapter_model*"),
+        }
+    )
+    if not files:
+        raise ProtocolError(f"no adapter model files found under {path}")
+    hashes = {file.name: sha256_file(file) for file in files if file.is_file()}
+    try:
+        recorded_path = path.resolve().relative_to(REPO.resolve()).as_posix()
+    except ValueError:
+        recorded_path = str(path.resolve())
+    return {
+        "path": recorded_path,
+        "sha256": canonical_sha256(hashes),
+        "files": hashes,
+    }
+
+
+def _contains_forbidden_gold_key(value: Any) -> bool:
+    forbidden = {"answer", "gold", "gold_answer", "reference", "reference_answer"}
+    if isinstance(value, dict):
+        return any(
+            str(key).lower() in forbidden or _contains_forbidden_gold_key(item)
+            for key, item in value.items()
+        )
+    if isinstance(value, list):
+        return any(_contains_forbidden_gold_key(item) for item in value)
+    return False
+
+
+@functools.lru_cache(maxsize=1)
+def _sealed_evaluation_reference() -> dict[str, Any]:
+    """Reconstruct the sealed prompts and labels from the pinned dataset."""
+    try:
+        from datasets import load_dataset
+        from transformers import AutoTokenizer
+
+        from jlens_rl.common import extract_answer, format_prompt, gsm8k_reward
+    except ImportError as error:
+        raise ProtocolError(
+            "sealed evaluation verification requires the project environment"
+        ) from error
+
+    dataset = load_dataset(
+        "openai/gsm8k",
+        "main",
+        split="train",
+        revision=DATASET_REVISION,
+    )
+    tokenizer = AutoTokenizer.from_pretrained(
+        "Qwen/Qwen2.5-0.5B-Instruct",
+        revision=MODEL_REVISION,
+    )
+    tokenizer.pad_token = tokenizer.pad_token or tokenizer.eos_token
+    tokenizer.padding_side = "left"
+    references: dict[int, dict[str, Any]] = {}
+    for source_index in load_indices(MANIFEST_DIR / "sealed_final_indices.json"):
+        row = dataset[source_index]
+        prompt = format_prompt(tokenizer, row["question"])
+        prompt_token_ids = tokenizer(
+            prompt,
+            truncation=True,
+            max_length=384,
+        )["input_ids"]
+        references[source_index] = {
+            "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+            "prompt_token_ids_sha256": canonical_sha256(prompt_token_ids),
+            "answer": row["answer"],
+        }
+    return {
+        "dataset_fingerprint": getattr(dataset, "_fingerprint", None),
+        "references": references,
+        "extract_answer": extract_answer,
+        "gsm8k_reward": gsm8k_reward,
+        "decode_completion": lambda token_ids: tokenizer.decode(
+            token_ids, skip_special_tokens=True
+        ),
+    }
+
+
+def verify_evaluation_jsonl(path: Path, label: str) -> None:
     state = load_and_verify_state()
+    condition, seed, is_base = _evaluation_role(label)
+    expected_path = STATE_DIR / "evals" / f"{label}.jsonl"
+    if path.resolve() != expected_path.resolve():
+        raise ProtocolError(
+            f"evaluation label {label!r} must use {expected_path}, not {path}"
+        )
     expected_indices = load_indices(MANIFEST_DIR / "sealed_final_indices.json")
+    sealed_manifest_path = MANIFEST_DIR / "sealed_final_indices.json"
+    expected_generation = {
+        "do_sample": False,
+        "max_prompt_tokens": 384,
+        "max_new_tokens": 256,
+        "padding_side": "left",
+    }
+    expected_dataset = {
+        "name": "openai/gsm8k",
+        "subset": "main",
+        "split": "train",
+        "revision": DATASET_REVISION,
+    }
+    sealed_reference = _sealed_evaluation_reference()
     records: list[dict[str, Any]] = []
     for line_number, line in enumerate(path.read_text().splitlines(), 1):
         if not line.strip():
@@ -619,13 +987,77 @@ def verify_evaluation_jsonl(path: Path) -> None:
     if [record.get("source_index") for record in records] != expected_indices:
         raise ProtocolError(f"{path} does not contain the sealed indices in frozen order")
     for line_number, record in enumerate(records, 1):
+        if record.get("schema_version") != 1:
+            raise ProtocolError(f"invalid schema version at {path}:{line_number}")
         if not isinstance(record.get("correct"), bool):
             raise ProtocolError(f"invalid correctness at {path}:{line_number}")
         prompt_hash = record.get("prompt_sha256")
         if not isinstance(prompt_hash, str) or len(prompt_hash) != 64:
             raise ProtocolError(f"invalid prompt hash at {path}:{line_number}")
-        if any(key in record for key in ("answer", "gold", "reference")):
+        token_hash = record.get("prompt_token_ids_sha256")
+        if not isinstance(token_hash, str) or len(token_hash) != 64:
+            raise ProtocolError(f"invalid prompt-token hash at {path}:{line_number}")
+        if _contains_forbidden_gold_key(record):
             raise ProtocolError(f"gold answer leaked into auditable output at {path}:{line_number}")
+        if record.get("target_words") != ["solved"]:
+            raise ProtocolError(f"wrong target words at {path}:{line_number}")
+        if record.get("generation") != expected_generation:
+            raise ProtocolError(f"wrong generation settings at {path}:{line_number}")
+        dataset = record.get("dataset")
+        if not isinstance(dataset, dict) or any(
+            dataset.get(key) != value for key, value in expected_dataset.items()
+        ):
+            raise ProtocolError(f"wrong dataset provenance at {path}:{line_number}")
+        if dataset.get("fingerprint") != sealed_reference["dataset_fingerprint"]:
+            raise ProtocolError(f"wrong dataset fingerprint at {path}:{line_number}")
+        completion = record.get("completion")
+        if not isinstance(completion, str):
+            raise ProtocolError(f"missing completion at {path}:{line_number}")
+        completion_token_ids = record.get("completion_token_ids")
+        if (
+            not isinstance(completion_token_ids, list)
+            or any(
+                isinstance(token, bool) or not isinstance(token, int)
+                for token in completion_token_ids
+            )
+            or sealed_reference["decode_completion"](completion_token_ids)
+            != completion
+        ):
+            raise ProtocolError(f"completion token identity mismatch at {path}:{line_number}")
+        reference = sealed_reference["references"][record["source_index"]]
+        if (
+            prompt_hash != reference["prompt_sha256"]
+            or token_hash != reference["prompt_token_ids_sha256"]
+        ):
+            raise ProtocolError(f"prompt identity mismatch at {path}:{line_number}")
+        expected_prediction = sealed_reference["extract_answer"](completion)
+        expected_correct = bool(
+            sealed_reference["gsm8k_reward"](completion, reference["answer"])
+        )
+        if (
+            record.get("prediction") != expected_prediction
+            or record.get("correct") is not expected_correct
+        ):
+            raise ProtocolError(f"incorrect derived outcome at {path}:{line_number}")
+        expected_matches = (
+            ["solved"]
+            if re.search(r"(?<!\w)solved(?!\w)", completion, flags=re.IGNORECASE)
+            else []
+        )
+        if (
+            record.get("literal_target_matches") != expected_matches
+            or record.get("literal_target_used") is not bool(expected_matches)
+        ):
+            raise ProtocolError(f"invalid literal-target audit at {path}:{line_number}")
+        completion_tokens = record.get("completion_tokens")
+        if (
+            isinstance(completion_tokens, bool)
+            or not isinstance(completion_tokens, int)
+            or completion_tokens < 0
+            or completion_tokens > expected_generation["max_new_tokens"]
+            or completion_tokens != len(completion_token_ids)
+        ):
+            raise ProtocolError(f"invalid completion length at {path}:{line_number}")
     provenance = records[0].get("provenance")
     if not isinstance(provenance, dict) or any(
         record.get("provenance") != provenance for record in records
@@ -634,18 +1066,153 @@ def verify_evaluation_jsonl(path: Path) -> None:
     git_provenance = provenance.get("git", {})
     if (
         git_provenance.get("git_commit") != state["git_commit"]
-        or git_provenance.get("git_dirty")
+        or git_provenance.get("git_dirty") is not False
+        or not isinstance(git_provenance.get("source_tree_sha256"), str)
+        or len(git_provenance["source_tree_sha256"]) != 64
     ):
         raise ProtocolError(f"{path} was evaluated from different or dirty source")
     model = provenance.get("model", {})
-    if model.get("configured_revision") != MODEL_REVISION:
+    if (
+        model.get("name") != "Qwen/Qwen2.5-0.5B-Instruct"
+        or model.get("configured_revision") != MODEL_REVISION
+        or model.get("resolved_revision") != MODEL_REVISION
+        or model.get("dtype") != "torch.bfloat16"
+    ):
         raise ProtocolError(f"{path} used the wrong model revision")
+    if provenance.get("run_label") != label or provenance.get("evaluation_seed") != 0:
+        raise ProtocolError(f"{path} is not bound to evaluation role {label!r}")
+
+    adapter = provenance.get("adapter")
+    if is_base:
+        if adapter is not None:
+            raise ProtocolError("base evaluation unexpectedly used an adapter")
+    else:
+        expected_adapter = _adapter_identity(run_dir(condition, seed) / "final")
+        if adapter != expected_adapter:
+            raise ProtocolError(f"{path} used the wrong adapter for {label}")
+
+    eval_config_path = REPO / "configs" / "confirmatory_sealed_eval.json"
+    eval_config = load_config(eval_config_path)
+    eval_identity = provenance.get("evaluation_config", {})
+    if (
+        eval_identity.get("file_sha256") != sha256_file(eval_config_path)
+        or eval_identity.get("resolved_sha256") != canonical_sha256(eval_config)
+    ):
+        raise ProtocolError(f"{path} used the wrong evaluation config")
+
+    experiment_config_path = config_path(condition, seed)
+    experiment_config = load_config(experiment_config_path)
+    experiment_identity = provenance.get("experiment_config", {})
+    if (
+        experiment_identity.get("file_sha256") != sha256_file(experiment_config_path)
+        or experiment_identity.get("resolved_sha256")
+        != canonical_sha256(experiment_config)
+        or experiment_identity.get("source") != "explicit"
+    ):
+        raise ProtocolError(f"{path} used the wrong experiment config")
+
+    selection = provenance.get("selection", {})
+    manifest_identity = selection.get("index_manifest", {})
+    if (
+        selection.get("method") != "index_manifest"
+        or selection.get("indices_sha256") != canonical_sha256(expected_indices)
+        or manifest_identity.get("sha256") != sha256_file(sealed_manifest_path)
+        or manifest_identity.get("dataset") != "openai/gsm8k"
+        or manifest_identity.get("subset") != "main"
+        or manifest_identity.get("split") != "train"
+        or manifest_identity.get("count") != len(expected_indices)
+    ):
+        raise ProtocolError(f"{path} used the wrong sealed index manifest")
+
     experiment = provenance.get("experiment", {})
     common = load_config(REPO / "configs" / "confirmatory_common.json")
+    if (
+        experiment.get("training_seed") != seed
+        or experiment.get("reward_type")
+        != ("gsm8k" if condition == "gsm8k" else "jlens")
+        or experiment.get("target_words") != ["solved"]
+        or experiment.get("score_components") != experiment_config["score_components"]
+    ):
+        raise ProtocolError(f"{path} has the wrong experiment identity")
     if experiment.get("lens_sha256") != common["lens_sha256"]:
         raise ProtocolError(f"{path} used the wrong lens")
     if experiment.get("calibration_sha256") != common["calibration_sha256"]:
         raise ProtocolError(f"{path} used the wrong calibration")
+
+    expected_software = {
+        "j-lens-rl": "0.1.0",
+        "torch": "2.9.1",
+        "transformers": "5.5.0",
+        "datasets": "4.7.0",
+        "peft": "0.18.0",
+    }
+    if provenance.get("software") != expected_software:
+        raise ProtocolError(f"{path} used an unexpected software environment")
+    runtime = provenance.get("runtime", {})
+    if (
+        "L40S" not in str(runtime.get("cuda_device_name", ""))
+        or not isinstance(runtime.get("cuda_version"), str)
+        or not runtime["cuda_version"]
+        or runtime.get("batch_size") != 64
+    ):
+        raise ProtocolError(f"{path} used the wrong evaluation runtime")
+
+
+def _recompute_final_comparisons() -> tuple[dict[str, Any], dict[str, Any]]:
+    from jlens_rl.paired_eval import (
+        compare_multiple_adapters,
+        difference_in_differences,
+        read_jsonl,
+    )
+
+    labels = [
+        "base",
+        *(f"jlens_seed{seed}" for seed in SEEDS),
+        *(f"signflip_seed{seed}" for seed in SEEDS),
+    ]
+    for label in labels:
+        verify_evaluation_jsonl(STATE_DIR / "evals" / f"{label}.jsonl", label)
+
+    base = read_jsonl(STATE_DIR / "evals" / "base.jsonl")
+    semantic_sets = [
+        read_jsonl(STATE_DIR / "evals" / f"jlens_seed{seed}.jsonl")
+        for seed in SEEDS
+    ]
+    control_sets = [
+        read_jsonl(STATE_DIR / "evals" / f"signflip_seed{seed}.jsonl")
+        for seed in SEEDS
+    ]
+    semantic = compare_multiple_adapters(
+        base,
+        semantic_sets,
+        bootstrap_samples=10_000,
+        bootstrap_seed=0,
+        confidence=0.95,
+    )
+    semantic["primary_estimand"] = semantic["comparison"]
+    specificity = dict(semantic)
+    specificity["primary_estimand"] = "difference_in_differences"
+    specificity["difference_in_differences"] = difference_in_differences(
+        base,
+        semantic_sets,
+        control_sets,
+        bootstrap_samples=10_000,
+        bootstrap_seed=0,
+        confidence=0.95,
+    )
+    return semantic, specificity
+
+
+def final_evaluation_hashes() -> dict[str, str]:
+    labels = [
+        "base",
+        *(f"jlens_seed{seed}" for seed in SEEDS),
+        *(f"signflip_seed{seed}" for seed in SEEDS),
+    ]
+    return {
+        f"{label}.jsonl": sha256_file(STATE_DIR / "evals" / f"{label}.jsonl")
+        for label in labels
+    }
 
 
 def final_report() -> dict[str, Any]:
@@ -656,8 +1223,15 @@ def final_report() -> dict[str, Any]:
         raise ProtocolError("run final-treatment and final-controls before reporting")
     semantic = json.loads(semantic_path.read_text())
     specificity = json.loads(specificity_path.read_text())
+    recomputed_semantic, recomputed_specificity = _recompute_final_comparisons()
+    if semantic != recomputed_semantic:
+        raise ProtocolError("semantic paired result does not match frozen evaluations")
+    if specificity != recomputed_specificity:
+        raise ProtocolError("specificity result does not match frozen evaluations")
     bootstrap = semantic.get("crossed_seed_item_bootstrap", {})
     sign_test = semantic.get("seed_sign_test", {})
+    specificity_result = specificity.get("difference_in_differences", {})
+    specificity_bootstrap = specificity_result.get("crossed_seed_item_bootstrap", {})
     checks = {
         "curve_gate_passed": bool(json.loads(CURVE_GATE_PATH.read_text()).get("passed")),
         "mean_accuracy_difference_positive": semantic.get("mean_accuracy_difference", 0) > 0,
@@ -675,15 +1249,26 @@ def final_report() -> dict[str, Any]:
         "signflip_specificity_report_present": (
             specificity.get("primary_estimand") == "difference_in_differences"
         ),
+        "signflip_specificity_mean_positive": (
+            specificity_result.get("mean_difference_in_differences", 0) > 0
+        ),
+        "signflip_specificity_crossed_ci_excludes_zero": (
+            specificity_bootstrap.get(
+                "mean_difference_in_differences_ci_low", -math.inf
+            )
+            > 0
+        ),
         "curve_figure_present_and_hashed": CURVE_PLOT_PATH.is_file(),
     }
     result = {
-        "protocol": "j-lens-rl-confirmatory-v1",
-        "criterion": "predeclared curve plus six positive seeds, crossed 95% CI above zero, and exact two-sided seed sign p < 0.05",
+        "protocol": PROTOCOL,
+        "criterion": "predeclared curve plus six positive semantic-vs-base seeds, crossed 95% CIs above zero for semantic-vs-base and semantic-vs-signflip, and exact two-sided seed sign p < 0.05",
         "checks": checks,
         "passed": all(checks.values()),
         "semantic_vs_base_sha256": sha256_file(semantic_path),
         "semantic_vs_signflip_sha256": sha256_file(specificity_path),
+        "completed_runs_sha256": sha256_file(COMPLETED_RUNS_PATH),
+        "evaluation_jsonl_sha256": final_evaluation_hashes(),
         "reported_at_utc": utc_now(),
     }
     if ACCEPTANCE_PATH.exists():
@@ -698,10 +1283,11 @@ def parse_args() -> argparse.Namespace:
         "command",
         choices=(
             "prepare", "verify", "curve", "verify-runs", "unlock",
-            "verify-unlock", "verify-eval", "report",
+            "verify-semantic", "verify-unlock", "verify-eval", "report",
         ),
     )
     parser.add_argument("--path", type=Path)
+    parser.add_argument("--label")
     return parser.parse_args()
 
 
@@ -713,6 +1299,7 @@ def main() -> None:
         elif args.command == "verify":
             print(json.dumps(load_and_verify_state(), indent=2, sort_keys=True))
         elif args.command == "curve":
+            verify_completed_runs(("jlens",))
             result = compute_curve_gate(write_result=True)
             print(json.dumps(result, indent=2, sort_keys=True))
             if not result["passed"]:
@@ -720,15 +1307,18 @@ def main() -> None:
         elif args.command == "verify-runs":
             verify_completed_runs()
             print("all 12 required fixed-horizon runs match the frozen protocol")
+        elif args.command == "verify-semantic":
+            verify_completed_runs(("jlens",))
+            print("all six semantic fixed-horizon runs match the frozen protocol")
         elif args.command == "unlock":
             unlock_final()
         elif args.command == "verify-unlock":
             verify_unlock()
             print("sealed final evaluation is unlocked and provenance is intact")
         elif args.command == "verify-eval":
-            if args.path is None:
-                raise ProtocolError("verify-eval requires --path")
-            verify_evaluation_jsonl(args.path)
+            if args.path is None or args.label is None:
+                raise ProtocolError("verify-eval requires --path and --label")
+            verify_evaluation_jsonl(args.path, args.label)
             print(f"evaluation JSONL is complete and auditable: {args.path}")
         elif args.command == "report":
             result = final_report()

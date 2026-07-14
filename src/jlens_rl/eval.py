@@ -19,7 +19,9 @@ from .common import (
     gsm8k_reward,
     load_config,
     model_dtype,
+    require_clean_repository_provenance,
     repository_provenance,
+    resolve_repository_root,
     seed_everything,
 )
 from .paired_eval import (
@@ -120,6 +122,7 @@ def evaluate(model: Any, tokenizer: Any, rows: Any, cfg: dict[str, Any],
                         prompt_ids.tolist()
                     ),
                     "completion": text,
+                    "completion_token_ids": completion_ids.tolist(),
                     "prediction": extract_answer(text),
                     "correct": bool(item_correct),
                     "completion_tokens": int(completion_ids.numel()),
@@ -179,15 +182,20 @@ def _adapter_identity(path: str | Path) -> dict[str, Any]:
     if not files:
         raise FileNotFoundError(f"no adapter model files found under {adapter_path}")
     hashes = {file.name: file_sha256(file) for file in files if file.is_file()}
+    repository = resolve_repository_root(__file__)
+    try:
+        recorded_path = adapter_path.relative_to(repository).as_posix()
+    except ValueError:
+        recorded_path = str(adapter_path)
     return {
-        "path": str(adapter_path),
+        "path": recorded_path,
         "sha256": canonical_json_sha256(hashes),
         "files": hashes,
     }
 
 
 def _git_provenance() -> dict[str, Any]:
-    repository = Path(__file__).resolve().parents[2]
+    repository = resolve_repository_root(__file__)
     return repository_provenance(repository)
 
 
@@ -271,6 +279,11 @@ def main() -> None:
         adapter_path=args.adapter,
         auditable=args.output_jsonl is not None,
     )
+    git_provenance = _git_provenance()
+    if cfg.get("require_clean_repository", False) or experiment_cfg.get(
+        "require_clean_repository", False
+    ):
+        require_clean_repository_provenance(git_provenance)
     if experiment_cfg["model_name"] != cfg["model_name"]:
         raise ValueError("evaluation and experiment configs name different base models")
     if not experiment_cfg.get("target_words"):
@@ -393,6 +406,7 @@ def main() -> None:
             "training_seed": experiment_cfg.get("seed"),
             "reward_type": experiment_cfg.get("reward_type"),
             "target_words": list(experiment_cfg["target_words"]),
+            "score_components": experiment_cfg.get("score_components"),
             "lens_path": experiment_cfg.get("lens_path"),
             "lens_sha256": file_sha256(experiment_cfg["lens_path"]),
             "expected_lens_sha256": expected_lens_sha256,
@@ -401,8 +415,15 @@ def main() -> None:
             "expected_calibration_sha256": expected_calibration_sha256,
         },
         "selection": selection,
-        "git": _git_provenance(),
+        "git": git_provenance,
         "software": _software_versions(),
+        "runtime": {
+            "cuda_device_name": (
+                torch.cuda.get_device_name(0) if torch.cuda.is_available() else None
+            ),
+            "cuda_version": torch.version.cuda,
+            "batch_size": args.batch_size,
+        },
     }
     metrics = evaluate(
         model, tokenizer, rows, runtime_cfg, reward, args.batch_size,

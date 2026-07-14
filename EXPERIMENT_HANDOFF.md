@@ -17,7 +17,7 @@ old official-test score as success. Preserve all negative outcomes.
 
 ## Your assignment
 
-Use the fixed v1 candidate and get the predeclared evidence as quickly as
+Use the fixed v2 candidate and get the predeclared evidence as quickly as
 hardware safely allows:
 
 - six semantic `solved` J-reward runs, seeds 142–147;
@@ -25,7 +25,7 @@ hardware safely allows:
 - optionally, one seed-142 exact-match reward run as a pipeline check;
 - fixed step-25 endpoints with observational evaluations every five updates;
 - then, only after the gate, one frozen-base and all paired adapter evaluations
-  on the sealed 3,000-example manifest.
+  on the sealed 2,900-example manifest.
 
 The exact curve criterion is the six-seed mean at steps `0/5/10/15`:
 step 5 must be above baseline, followed by two non-downward steps. Do not hunt
@@ -33,9 +33,10 @@ for another triple, pick a favorable seed, stop from correctness, or select a
 checkpoint. Steps 20 and 25 are logged, and step 25 is always the endpoint.
 
 The significant-evidence criterion is separate: all six semantic sealed-set
-effects must be positive (two-sided seed sign-test `p=0.03125`) and the positive
+effects must be positive (two-sided seed sign-test `p=0.03125`), the positive
 mean paired change must have a 95% crossed seed/item bootstrap interval that
-excludes zero. Report the matched sign-flip difference-in-differences too.
+excludes zero, and the positive matched sign-flip difference-in-differences
+must also have a crossed 95% interval above zero.
 
 ## Start here
 
@@ -58,7 +59,13 @@ Preparation creates ignored `.confirmatory/manifests/` files and a state file
 that fingerprints the clean commit, pinned model/dataset revisions, configs,
 fresh split manifests, lens, and calibration. If preparation refuses, fix the
 cause rather than bypassing it. Never delete or regenerate prepared manifests
-after seeing any v1 correctness.
+after seeing any v2 correctness.
+
+V1 is retired: its historical-index reconstruction omitted setup run
+`xufk8x08`, and its partial Modal attempt exposed its curve before failing
+source-provenance validation. V2 excludes that setup run's training indices,
+retires all 400 v1 curve indices, and uses a new 400-item curve plus a still
+sealed 2,900-item final set. Do not reuse either v1 Volume.
 
 ## Fast execution order
 
@@ -93,15 +100,15 @@ conditions use training-generation `min_new_tokens=64` to prevent the observed
 five-token collapse; final greedy evaluation intentionally has no minimum.
 
 For the fastest guarded path, `modal_experiments.py` submits a durable remote
-pipeline capped at five simultaneous GPU containers. It queues the sixth seed,
+pipeline capped at five simultaneous pinned L40S containers. It queues the sixth seed,
 applies the same curve gate before controls, and parallelizes final paired
 evaluation only after unlock. Follow the credential-safe setup in `README.md`;
 never upload `modal.sh` or `.env`. The Modal Volume is the experiment archive
 until it is downloaded back into local `.confirmatory/`.
 
-Batch 64 is frozen for the curve and final evaluators on the 24 GB target GPU.
+Batch 64 is frozen for the curve and final evaluators on the pinned L40S runtime.
 If a pre-preparation memory smoke test fails, lower every condition to batch 32,
-commit, and prepare a new v1. Never change it after preparation.
+commit, and prepare a new protocol version. Never change it after preparation.
 
 ## What the guards check
 
@@ -114,6 +121,10 @@ commit, and prepare a new v1. Never change it after preparation.
 - no historically unused curve/final/reserve index entered training;
 - each history contains exactly steps `0,5,10,15,20,25`; and
 - the one predeclared mean curve passed.
+
+Unlock also freezes hashes for every final adapter and run audit file. Final
+verification reloads the pinned dataset and independently recomputes prompt
+hashes, parsed predictions, and correctness from the saved completions.
 
 Final evaluation writes auditable per-item JSONL and compares the six semantic
 seeds jointly. Evaluate treatment first; if it is negative, record that result
