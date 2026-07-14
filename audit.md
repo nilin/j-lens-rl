@@ -1946,3 +1946,15 @@ started treatment seed 208 at 16:21 UTC under the one whole-attempt GPU lock.
 At this ledger cutoff no V9 curve node or outcome had been inspected, no
 control had started, and the sealed final remained unopened. The durable
 operational identity is `protocol_archive/v9_local_launch_ledger.json`.
+
+Seed 208 then completed and passed the corrected terminal verifier, including
+the exact checkpoint/final path-plus-tree schema that failed V8. Its exposed
+curve was `.3975/.4100/.3875/.4000` at steps `0/4/10/20`, with zero literal
+`damn`/`fuck` usage throughout. It rose at the first node and finished slightly
+above baseline, but the step-10 decline means this seed alone is not monotone;
+the registered gate remains the mean across all eight seeds. The receipt-bound
+offline directory was synced and independently verified at its exact W&B ID
+while seed 209 began on the GPU without waiting. The compact reconstructable
+bundle and exact remote/payload hashes are in
+`protocol_archive/v9_local_seed208_terminal_ledger.json` and
+`protocol_archive/v9_local_live_evidence/`.
