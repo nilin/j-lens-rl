@@ -17,16 +17,20 @@ below.  A discovery merge additionally contains ``selection`` with
 negative with correctness), and ``token_ids``.  Validation is given the
 byte-pinned selection lock and scores only that selected word.
 
-Only the exposed failed-V4 curve manifest and the target-independent transport
-are copied into the image.  In particular, no train-exclusion, sealed-final,
-reserve, or retired manifest is available to these jobs.
+Only the exposed failed-V4 curve manifest, an outcome-free train-exclusion
+manifest needed to reproduce the clean Git checkout, and the target-independent
+transport are copied into the image.  The scanner never reads the exclusion
+manifest.  No sealed-final, reserve, or retired manifest is available to these
+jobs.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
+import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -38,14 +42,15 @@ import modal
 LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_OUTPUT = Path("/word_correlation")
-CANONICAL_REPO = Path("/j-lens-rl")
-LOCAL_ARTIFACTS = CANONICAL_REPO / "artifacts"
-LOCAL_MANIFESTS = CANONICAL_REPO / ".confirmatory/manifests"
+LOCAL_ARTIFACTS = LOCAL_REPO / "artifacts"
+LOCAL_MANIFESTS = LOCAL_REPO / ".confirmatory/manifests"
 
-VOLUME_NAME = "j-lens-rl-word-correlation-v1-20260714c"
+VOLUME_NAME = "j-lens-rl-word-correlation-v1-20260714d"
 GPU_TYPE = "L40S"
 NUM_SHARDS = 8
 MAX_GPU_CONTAINERS = 1
+GLOBAL_MODAL_GPU_LIMIT = 1
+GPU_EXCLUSIVE_CONFIRMATION = "confirmed-no-other-modal-gpu-app-running"
 
 MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
 GSM8K_REVISION = "740312add88f781978c0658806c59bc2815b9866"
@@ -54,15 +59,22 @@ LENS_SHA256 = "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
 CURVE_MANIFEST_SHA256 = (
     "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1"
 )
+TRAIN_EXCLUSIONS_SHA256 = (
+    "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+)
+ORIGINAL_PREREGISTRATION_SHA256 = (
+    "5e2ae9d0896edbcc7386ccfcc125f8200fa86f77b2099529028a01e54788516a"
+)
 
 LENS_RELATIVE = "artifacts/qwen25_05b_solved_lens.pt"
 CURVE_MANIFEST_RELATIVE = ".confirmatory/manifests/curve_indices.json"
+TRAIN_EXCLUSIONS_RELATIVE = ".confirmatory/manifests/train_exclusions.json"
 CONFIG_RELATIVE = "configs/word_correlation_v1.json"
 SCANNER_RELATIVE = "src/jlens_rl/word_correlation.py"
 PREREGISTRATION_RELATIVE = "protocol_archive/word_correlation_v1_preregistration.json"
+CURRENT_AMENDMENT_RELATIVE = "protocol_archive/word_correlation_v1_amendment4.json"
 
 FORBIDDEN_MANIFEST_NAMES = (
-    "train_exclusions.json",
     "sealed_final_indices.json",
     "future_reserve_indices.json",
     "retired_v3_curve_indices.json",
@@ -106,6 +118,11 @@ repo_image = (
     .add_local_file(
         LOCAL_MANIFESTS / "curve_indices.json",
         (REMOTE_REPO / CURVE_MANIFEST_RELATIVE).as_posix(),
+        copy=True,
+    )
+    .add_local_file(
+        LOCAL_MANIFESTS / "train_exclusions.json",
+        (REMOTE_REPO / TRAIN_EXCLUSIONS_RELATIVE).as_posix(),
         copy=True,
     )
     .workdir(REMOTE_REPO)
@@ -227,45 +244,56 @@ def _validate_curve_manifest(repo: Path) -> list[int]:
     return indices
 
 
-def _validate_preregistration(repo: Path) -> tuple[str, str, str, set[str]]:
+def _validate_preregistration(repo: Path) -> tuple[str, str, str, str, set[str]]:
     config_path = repo / CONFIG_RELATIVE
     scanner_path = repo / SCANNER_RELATIVE
     prereg_path = repo / PREREGISTRATION_RELATIVE
+    amendment_path = repo / CURRENT_AMENDMENT_RELATIVE
     if (
         not config_path.is_file()
         or not scanner_path.is_file()
         or not prereg_path.is_file()
+        or not amendment_path.is_file()
     ):
-        raise RuntimeError("word-correlation config, scanner, or preregistration is missing")
+        raise RuntimeError(
+            "word-correlation config, scanner, preregistration, or amendment is missing"
+        )
     config_sha256 = _sha256(config_path)
     scanner_sha256 = _sha256(scanner_path)
     launcher_sha256 = _sha256(repo / "modal_word_correlation.py")
-    launcher_script_sha256 = _sha256(repo / "run_word_correlation.sh")
+    prereg_sha256 = _sha256(prereg_path)
+    if prereg_sha256 != ORIGINAL_PREREGISTRATION_SHA256:
+        raise RuntimeError("the original word-correlation preregistration changed")
     prereg = _load_json(prereg_path)
-    expected = {
-        "protocol": "j-lens-rl-jspace-word-correlation-v1",
-        "outcome_status_at_freeze": "not launched and not inspected",
-        "model_revision": MODEL_REVISION,
-        "dataset_revision": GSM8K_REVISION,
-        "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
-        "lens_sha256": LENS_SHA256,
-        "config_sha256": config_sha256,
-        "scanner_sha256": scanner_sha256,
-        "launcher_sha256": launcher_sha256,
-        "launcher_script_sha256": launcher_script_sha256,
+    if prereg.get("config_sha256") != config_sha256:
+        raise RuntimeError("word-correlation config differs from the original freeze")
+    amendment = _load_json(amendment_path)
+    amendment3_path = repo / "protocol_archive/word_correlation_v1_amendment3.json"
+    attempt3_path = repo / "protocol_archive/word_correlation_attempt3_closeout.json"
+    if (
+        amendment.get("protocol")
+        != "j-lens-rl-jspace-word-correlation-v1-amendment4-safe-mount"
+        or amendment.get("original_preregistration_sha256") != prereg_sha256
+        or amendment.get("amendment3_sha256") != _sha256(amendment3_path)
+        or amendment.get("attempt3_closeout_sha256") != _sha256(attempt3_path)
+        or amendment.get("scientific_protocol_changed") is not False
+    ):
+        raise RuntimeError("the current word-correlation amendment chain is invalid")
+    current = amendment.get("new_attempt")
+    expected_current = {
         "volume": VOLUME_NAME,
         "gpu_type": GPU_TYPE,
-        "num_shards_per_phase": NUM_SHARDS,
         "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
-        "phase_order": ["discovery", "selection_lock", "validation"],
+        "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
+        "no_other_modal_gpu_app_may_overlap": True,
+        "scanner_sha256": scanner_sha256,
+        "launcher_sha256": launcher_sha256,
+        "safe_train_exclusions_sha256": TRAIN_EXCLUSIONS_SHA256,
     }
-    if any(prereg.get(key) != value for key, value in expected.items()):
-        changed = {
-            key: {"expected": value, "actual": prereg.get(key)}
-            for key, value in expected.items()
-            if prereg.get(key) != value
-        }
-        raise RuntimeError(f"word-correlation preregistration changed: {changed}")
+    if not isinstance(current, dict) or any(
+        current.get(key) != value for key, value in expected_current.items()
+    ):
+        raise RuntimeError("the current word-correlation launch differs from amendment 4")
     config = _load_json(config_path)
     expected_config = {
         "protocol": "j-lens-rl-jspace-word-correlation-v1",
@@ -289,14 +317,22 @@ def _validate_preregistration(repo: Path) -> tuple[str, str, str, set[str]]:
     frozen_candidates = prereg.get("emotional_candidates")
     if not isinstance(frozen_candidates, list) or set(frozen_candidates) != candidates:
         raise RuntimeError("preregistered emotional candidates differ from the config")
-    return _sha256(prereg_path), config_sha256, scanner_sha256, candidates
+    return (
+        prereg_sha256,
+        _sha256(amendment_path),
+        config_sha256,
+        scanner_sha256,
+        candidates,
+    )
 
 
 def _validate_repository_boundary(repo: Path) -> None:
     confirmatory = repo / ".confirmatory/manifests"
     present = sorted(path.name for path in confirmatory.iterdir())
-    if present != ["curve_indices.json"]:
+    if present != ["curve_indices.json", "train_exclusions.json"]:
         raise RuntimeError(f"unexpected manifest copied into scanner image: {present}")
+    if _sha256(repo / TRAIN_EXCLUSIONS_RELATIVE) != TRAIN_EXCLUSIONS_SHA256:
+        raise RuntimeError("the safe train-exclusions manifest is missing or changed")
     for name in FORBIDDEN_MANIFEST_NAMES:
         if (confirmatory / name).exists():
             raise RuntimeError(f"forbidden manifest is available to scanner: {name}")
@@ -306,7 +342,7 @@ def _validate_repository_boundary(repo: Path) -> None:
         raise RuntimeError(f"unexpected artifact copied into scanner image: {present_artifacts}")
 
 
-def _launch_manifest() -> dict[str, Any]:
+def _launch_manifest(preflight: dict[str, Any]) -> dict[str, Any]:
     status = _git("status", "--porcelain=v1", "--untracked-files=all", repo=LOCAL_REPO)
     if status:
         raise RuntimeError(f"word-correlation launch requires a clean committed tree:\n{status}")
@@ -314,7 +350,7 @@ def _launch_manifest() -> dict[str, Any]:
     lens_path = LOCAL_REPO / LENS_RELATIVE
     if not lens_path.is_file() or _sha256(lens_path) != LENS_SHA256:
         raise RuntimeError("target-independent lens transport is missing or changed")
-    prereg_sha256, config_sha256, scanner_sha256, candidates = (
+    prereg_sha256, amendment_sha256, config_sha256, scanner_sha256, candidates = (
         _validate_preregistration(LOCAL_REPO)
     )
     return {
@@ -332,13 +368,22 @@ def _launch_manifest() -> dict[str, Any]:
         "launcher_sha256": _sha256(LOCAL_REPO / "modal_word_correlation.py"),
         "launcher_script_sha256": _sha256(LOCAL_REPO / "run_word_correlation.sh"),
         "preregistration_sha256": prereg_sha256,
+        "current_amendment_sha256": amendment_sha256,
         "emotional_candidates": sorted(candidates),
         "phase_order": ["discovery", "selection_lock", "validation"],
         "num_shards_per_phase": NUM_SHARDS,
         "gpu_type": GPU_TYPE,
         "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
-        "data_boundary": "exposed failed-V4 400-item curve only",
-        "mounted_inputs": [CURVE_MANIFEST_RELATIVE, LENS_RELATIVE],
+        "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
+        "gpu_exclusive_preflight": preflight,
+        "data_boundary": (
+            "exposed failed-V4 400-item curve plus outcome-free train exclusions"
+        ),
+        "mounted_inputs": [
+            CURVE_MANIFEST_RELATIVE,
+            TRAIN_EXCLUSIONS_RELATIVE,
+            LENS_RELATIVE,
+        ],
         "unmounted_manifests": list(FORBIDDEN_MANIFEST_NAMES),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
     }
@@ -357,9 +402,19 @@ def _verify_remote_manifest(manifest: dict[str, Any]) -> None:
         raise RuntimeError("remote curve-manifest size differs from launch")
     if _sha256(REMOTE_REPO / LENS_RELATIVE) != LENS_SHA256:
         raise RuntimeError("remote target-independent lens differs from launch")
-    prereg_sha256, config_sha256, scanner_sha256, candidates = (
+    prereg_sha256, amendment_sha256, config_sha256, scanner_sha256, candidates = (
         _validate_preregistration(REMOTE_REPO)
     )
+    preflight = manifest.get("gpu_exclusive_preflight")
+    if (
+        not isinstance(preflight, dict)
+        or preflight.get("exclusive_gpu_confirmation")
+        != GPU_EXCLUSIVE_CONFIRMATION
+        or preflight.get("global_modal_gpu_limit") != GLOBAL_MODAL_GPU_LIMIT
+        or preflight.get("active_other_modal_apps") != []
+        or not isinstance(preflight.get("checked_at_utc"), str)
+    ):
+        raise RuntimeError("remote launch lacks a valid exclusive-GPU preflight")
     expected = {
         "curve_manifest_sha256": CURVE_MANIFEST_SHA256,
         "lens_sha256": LENS_SHA256,
@@ -368,11 +423,61 @@ def _verify_remote_manifest(manifest: dict[str, Any]) -> None:
         "launcher_sha256": _sha256(REMOTE_REPO / "modal_word_correlation.py"),
         "launcher_script_sha256": _sha256(REMOTE_REPO / "run_word_correlation.sh"),
         "preregistration_sha256": prereg_sha256,
+        "current_amendment_sha256": amendment_sha256,
         "emotional_candidates": sorted(candidates),
-        "mounted_inputs": [CURVE_MANIFEST_RELATIVE, LENS_RELATIVE],
+        "mounted_inputs": [
+            CURVE_MANIFEST_RELATIVE,
+            TRAIN_EXCLUSIONS_RELATIVE,
+            LENS_RELATIVE,
+        ],
+        "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
+        "gpu_type": GPU_TYPE,
+        "max_parallel_gpu_workers": MAX_GPU_CONTAINERS,
+        "num_shards_per_phase": NUM_SHARDS,
+        "phase_order": ["discovery", "selection_lock", "validation"],
+        "unmounted_manifests": list(FORBIDDEN_MANIFEST_NAMES),
     }
     if any(manifest.get(key) != value for key, value in expected.items()):
         raise RuntimeError("remote launch provenance differs from local claim")
+
+
+def _local_operational_preflight() -> dict[str, Any]:
+    confirmation = os.environ.get("JLENS_MODAL_GPU_EXCLUSIVE_CONFIRM")
+    if confirmation != GPU_EXCLUSIVE_CONFIRMATION:
+        raise RuntimeError(
+            "refusing correlation launch without an external no-overlap "
+            "confirmation; verify all other Modal apps are stopped, then set "
+            f"JLENS_MODAL_GPU_EXCLUSIVE_CONFIRM={GPU_EXCLUSIVE_CONFIRMATION}"
+        )
+    modal_cli = Path(sys.executable).parent / "modal"
+    listing_text = subprocess.check_output(
+        [str(modal_cli), "app", "list", "--json"],
+        cwd=LOCAL_REPO,
+        text=True,
+    )
+    listing = json.loads(listing_text[listing_text.index("[") :])
+    current_app_id = app.app_id
+    active_other_apps = [
+        {
+            key: item.get(key)
+            for key in ("app_id", "description", "state", "tasks", "created_at")
+        }
+        for item in listing
+        if item.get("stopped_at") is None
+        and item.get("state") != "stopped"
+        and item.get("app_id") != current_app_id
+    ]
+    if active_other_apps:
+        raise RuntimeError(
+            "refusing correlation launch while another Modal app remains active: "
+            f"{active_other_apps}"
+        )
+    return {
+        "exclusive_gpu_confirmation": confirmation,
+        "global_modal_gpu_limit": GLOBAL_MODAL_GPU_LIMIT,
+        "active_other_modal_apps": active_other_apps,
+        "checked_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
 
 
 def _set_status(claim_id: str, stage: str, **details: Any) -> None:
@@ -910,7 +1015,8 @@ def orchestrate(claim_id: str) -> dict[str, Any]:
 
 @app.local_entrypoint()
 def main() -> None:
-    manifest = _launch_manifest()
+    preflight = _local_operational_preflight()
+    manifest = _launch_manifest(preflight)
     claim_attempt.remote(manifest)
     call = orchestrate.spawn(str(manifest["claim_id"]))
     print(

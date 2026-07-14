@@ -1,0 +1,39 @@
+{
+  "amendment3_sha256": "7e9cd85a5acfb8f0cbdc132a48a6e7503e05aef88aea5f1e772562c9cd0fbbdb",
+  "attempt3_closeout_sha256": "d0c41616f1674baece50b8d377aeb2097dff92c2837b8dadd07ada1131524c27",
+  "frozen_at_utc": "2026-07-14T07:50:19Z",
+  "new_attempt": {
+    "global_modal_gpu_limit": 1,
+    "gpu_type": "L40S",
+    "launch_checkout": "complete standalone clean Git clone",
+    "launcher_sha256": "2bd35c520e0533d0c46572fa690c24c680efa0308025a74ac9960a227abb31e0",
+    "max_parallel_gpu_workers": 1,
+    "mounted_inputs": [
+      ".confirmatory/manifests/curve_indices.json",
+      ".confirmatory/manifests/train_exclusions.json",
+      "artifacts/qwen25_05b_solved_lens.pt"
+    ],
+    "no_other_modal_gpu_app_may_overlap": true,
+    "safe_train_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "scanner_sha256": "9857957ba078be68b2cb1abd1974fab383c696c40622e2a76ad4d4b0476baace",
+    "volume": "j-lens-rl-word-correlation-v1-20260714d"
+  },
+  "original_preregistration_sha256": "5e2ae9d0896edbcc7386ccfcc125f8200fa86f77b2099529028a01e54788516a",
+  "outcome_status_at_freeze": "attempt 3 failed during image build with zero files and zero GPU tasks; attempt 4 not launched and fresh Volume absent",
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-amendment4-safe-mount",
+  "reason": "Attempt 3's complete clone retained a tracked, outcome-free train-exclusions manifest while the image ignored that path, so the clean-checkout finalizer saw a deletion. Mounting the exact tracked bytes is a packaging repair only. The scanner configuration and source do not reference or read this manifest.",
+  "safe_mount": {
+    "outcome_free": true,
+    "purpose": "restore the tracked file so the Modal image can verify the committed checkout byte-for-byte",
+    "scanner_config_references_manifest": false,
+    "scanner_source_references_manifest": false,
+    "sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+  },
+  "scientific_protocol_changed": false,
+  "unchanged": [
+    "all prompts, dataset indices, rollouts, seeds, candidates, token families, calibration, scores, selection rules, statistics, validation tests, and atlas rules",
+    "fully serial one-GPU global throttle with no overlapping Modal GPU app",
+    "scanner source and configuration",
+    "sealed-final, reserve, and retired manifests remain unavailable"
+  ]
+}

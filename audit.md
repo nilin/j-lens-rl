@@ -1175,3 +1175,27 @@ field. Before this amendment was committed or launched, the user reduced the
 global ceiling again to one Modal GPU to save cost; amendment 3 therefore pins
 a fully serial one-worker launcher. All later Modal GPU work must also be
 serial and cannot overlap this scan.
+
+The standalone attempt 3 app `ap-7qMLax3fEinLrNNBGYL0xr` then failed during
+image construction, before a function call, claim, calibration, GPU task, or
+outcome. Its fresh `20260714c` Volume was rechecked after the app stopped and
+contains zero files. The image correctly contained a complete Git clone, but
+the image copy rule omitted the tracked, outcome-free
+`.confirmatory/manifests/train_exclusions.json`; the clean-tree finalizer saw
+that omission as a deletion. The immutable record is
+[`protocol_archive/word_correlation_attempt3_closeout.json`](protocol_archive/word_correlation_attempt3_closeout.json)
+(SHA-256
+`d0c41616f1674baece50b8d377aeb2097dff92c2837b8dadd07ada1131524c27`).
+
+Before another launch, amendment 4 freezes a packaging-only repair on new
+Volume `j-lens-rl-word-correlation-v1-20260714d`: mount that exact safe manifest
+with SHA-256
+`7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61`.
+Neither the scanner configuration nor scanner source references it; sealed
+final, reserve, and retired manifests remain unavailable. The scanner and all
+scientific choices are unchanged. The launcher now also refuses dispatch
+without an external exclusivity confirmation and an app-list check showing no
+other active Modal app; calibration and both shard maps are fully serial.
+[`protocol_archive/word_correlation_v1_amendment4.json`](protocol_archive/word_correlation_v1_amendment4.json)
+has SHA-256
+`6b17b616d0d73cab7181f0dbb72c8c5343f48125b1856bf8f72398bb0a9644a7`.

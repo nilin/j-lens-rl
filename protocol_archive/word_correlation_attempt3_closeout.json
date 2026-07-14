@@ -1,0 +1,32 @@
+{
+  "app_id": "ap-7qMLax3fEinLrNNBGYL0xr",
+  "closed_at_utc": "2026-07-14T07:50:19Z",
+  "created_at_utc": "2026-07-14T07:39:21Z",
+  "failure": {
+    "message": "Modal image checkout is not clean: D .confirmatory/manifests/train_exclusions.json",
+    "root_cause": "The complete standalone clone correctly retained the tracked, outcome-free train-exclusions manifest, but the Modal image ignored all .confirmatory files. The clean-repository finalizer therefore observed the tracked file as deleted.",
+    "stage": "image_build",
+    "type": "RuntimeError"
+  },
+  "function_call_id": null,
+  "gpu_tasks_started": 0,
+  "launch_commit": "c09b6bda73df452b10b43e83df3bfd261abf2aae",
+  "launcher_sha256": "c0bd328fefb09f66e91c96d37980e6b1384c7c18b96fcebbe0573cb70c6ae802",
+  "modal_stopped_at_utc": "2026-07-14T07:42:01Z",
+  "outcome_boundary": {
+    "attempt_claim_exists": false,
+    "attempt_manifest_exists": false,
+    "attempt_status_exists": false,
+    "calibration_started": false,
+    "discovery_started": false,
+    "outcome_data_exists": false,
+    "selection_or_validation_started": false
+  },
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-attempt3-build-closeout",
+  "relaunch_rule": "Mount the hash-pinned outcome-free tracked manifest needed for a clean checkout, use a new Volume, and never reuse this created Volume even though it is empty.",
+  "scientific_protocol_reached": false,
+  "volume": {
+    "file_count": 0,
+    "name": "j-lens-rl-word-correlation-v1-20260714c"
+  }
+}

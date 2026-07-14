@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 07:31 UTC
+Last reconciled with the user: 2026-07-14 07:50 UTC
 
 ## Objective
 
@@ -58,7 +58,8 @@ from confirmatory claims.
   inspect sealed outcomes before their registered gate permits it.
 - Current state: the eight-word screen is complete and mechanically selected
   positive `joy` as its sole early-curve passer; this remains adaptive evidence.
-  Its offline closeout is sealed. Correlation attempt 1 failed before selection;
-  run only the frozen amendment on its fresh Volume. Then freeze positive
-  `joy`, six updates, and `0/2/4/6` before eight-seed confirmation, matched sign
-  flips, and the gated one-shot final evaluation.
+  Its offline closeout is sealed. Correlation attempts 1--3 failed before any
+  selection; run only amendment 4 on fresh Volume D, with the one-GPU exclusive
+  preflight. Then freeze positive `joy`, six updates, and `0/2/4/6` before
+  eight-seed confirmation, matched sign flips, and the gated one-shot final
+  evaluation.
