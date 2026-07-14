@@ -572,6 +572,17 @@ def _build_image() -> modal.Image:
         copy=True,
         ignore=ignore_unregistered,
     )
+    # Modal's local-directory layer honors repository ignore rules; these two
+    # public, gitignored manifests therefore need explicit allowlisted copies.
+    for relative in (
+        ".confirmatory/manifests/curve_indices.json",
+        ".confirmatory/manifests/train_exclusions.json",
+    ):
+        image = image.add_local_file(
+            LOCAL_REPO / relative,
+            (REMOTE_REPO / relative).as_posix(),
+            copy=True,
+        )
     image = image.add_local_file(
         LOCAL_CONTRACT_PATH, REMOTE_CONTRACT_PATH.as_posix(), copy=True
     )
@@ -603,7 +614,7 @@ def _build_image() -> modal.Image:
         .run_commands(
             "find . -type d -name __pycache__ -prune -exec rm -rf {} +",
             "find . -type d -name '*.egg-info' -prune -exec rm -rf {} +",
-            "rm -rf build .git",
+            "rm -rf build trl/build .git",
         )
     )
 
