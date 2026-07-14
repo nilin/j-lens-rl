@@ -1,0 +1,68 @@
+{
+  "active_execution_files": {
+    "modal_cache_assets_sha256": "ead04f6fcc2aa5970bb2854f39cd20887c62fe2850a19bf7ecc86dd32e14888c",
+    "modal_finalize_image_sha256": "795982448d60daa798febab6e4bc3c15aafe498cc72f9a618e9ae5d9d2f62590",
+    "modal_runner_sha256": "450ea7c57f5d1243d8b2a1e5b201b6afc0f4a9aa175fbf277b7e5570128a7eee"
+  },
+  "authorized_changes": {
+    "asset_cache_authentication": {
+      "from": "no secret injected into the image-build cache step",
+      "mitigation_scope": "inject HF_TOKEN only while the V6-specific asset-cache wrapper performs the same pinned public downloads; shared historical scripts remain byte-identical and the later V6 finalizer explicitly rejects token leakage",
+      "modal_secret_name": "huggingface-token",
+      "required_key": "HF_TOKEN",
+      "to": "Modal Image.run_commands build-step secret injection"
+    },
+    "image_spec": {
+      "from": "j-lens-rl-confirmatory-v6-celebration-taper-image-v1",
+      "to": "j-lens-rl-confirmatory-v6-celebration-taper-image-v2-hf-auth"
+    },
+    "volume": {
+      "from": "j-lens-rl-confirmatory-v6-celebration-taper-20260714a",
+      "to": "j-lens-rl-confirmatory-v6-celebration-taper-20260714b"
+    }
+  },
+  "frozen_at_utc": "2026-07-14T11:04:02Z",
+  "fresh_volume_b_preflight": {
+    "checked_at_utc": "2026-07-14T11:04:02Z",
+    "file_count": 0,
+    "inventory_command": "/j-lens-rl/.venv/bin/modal volume ls j-lens-rl-confirmatory-v6-celebration-taper-20260714b / --json",
+    "name": "j-lens-rl-confirmatory-v6-celebration-taper-20260714b",
+    "root_listing": []
+  },
+  "outcome_status_at_freeze": "attempt A was stopped during image build before local entrypoint, protocol upload, claim, function call, GPU, W&B, or any V6 scientific outcome",
+  "prelaunch_attempt_a_closeout": {
+    "path": "protocol_archive/v6_celebration_prelaunch_attempt_a_closeout.json",
+    "sha256": "c55cdd5fabd757e3111c76a3b4d4ee6df79d139e03fd55989b74d5fada9583a3"
+  },
+  "prohibited_changes": [
+    "any target word, J-lens layer/window/stride/calibration/sign/weight, optimizer, horizon, or curve node",
+    "any data allocation, seed, control, estimand, bootstrap, sign test, or acceptance threshold",
+    "any W&B entity, project, group, tag, prefix, or run ID",
+    "the one-L40S global cap, no-overlap policy, terminal no-resume policy, or evidence requirements"
+  ],
+  "protocol": "j-lens-rl-confirmatory-v6-celebration-taper-infrastructure-amendment-v1",
+  "scientific_projection": {
+    "fields": [
+      "claim_protocol",
+      "selection_closeout",
+      "selected_recipe_lock",
+      "split",
+      "seeds",
+      "fixed_updates",
+      "curve_gate",
+      "matched_control",
+      "analysis",
+      "acceptance",
+      "final_collection",
+      "wandb"
+    ],
+    "required_v4_relationship": "the canonical projection over these fields must remain byte-semantically identical in V1, V2, V3, and V4",
+    "superseded_registration_canonical_sha256": "0621bc7402187223b47f665872b4c0bdb2c53b64661b26b94dcc76492a0fe93e"
+  },
+  "scientific_protocol_changed": false,
+  "superseded_registration": {
+    "deployed_git_commit": "4524e643a97d084cd2d62176075ddd9e477525e9",
+    "path": "protocol_archive/v6_celebration_registration_v3_superseded.json",
+    "sha256": "e82c9062d588bc35d0663e450fc420357b358978a3d6110be91056b8de17f8a0"
+  }
+}

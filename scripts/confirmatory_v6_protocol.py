@@ -87,6 +87,17 @@ SUPERSEDED_V2_REGISTRATION_PATH = (
 PRELAUNCH_CORRECTION2_PATH = (
     REPO / "protocol_archive" / "v6_celebration_prelaunch_correction2.json"
 )
+SUPERSEDED_V3_REGISTRATION_PATH = (
+    REPO
+    / "protocol_archive"
+    / "v6_celebration_registration_v3_superseded.json"
+)
+PRELAUNCH_ATTEMPT_A_CLOSEOUT_PATH = (
+    REPO / "protocol_archive" / "v6_celebration_prelaunch_attempt_a_closeout.json"
+)
+INFRASTRUCTURE_AMENDMENT1_PATH = (
+    REPO / "protocol_archive" / "v6_celebration_infrastructure_amendment1.json"
+)
 EMOTIONAL_DECISION_PATH = REPO / "protocol_archive" / "emotional_only_decision.json"
 V5_REGISTRATION_PATH = (
     REPO / "protocol_archive" / "v5_emotional_registration.json"
@@ -125,7 +136,7 @@ V4_RESERVE_PATH = V4_MANIFEST_DIR / "future_reserve_indices.json"
 V4_TRAIN_EXCLUSIONS_PATH = V4_MANIFEST_DIR / "train_exclusions.json"
 
 REGISTRATION_PROTOCOL = (
-    "j-lens-rl-confirmatory-v6-celebration-taper-registration-v3"
+    "j-lens-rl-confirmatory-v6-celebration-taper-registration-v4"
 )
 RECIPE_LOCK_PROTOCOL = "j-lens-rl-celebration-taper-selected-recipe-lock-v1"
 SELECTION_CLOSEOUT_PROTOCOL = "j-lens-rl-v6-celebration-selection-closeout-v1"
@@ -154,7 +165,9 @@ INFRASTRUCTURE_RETRY_POLICY = (
     "whole attempt immutably and requires a fresh registered claim/volume"
 )
 MODAL_APP_NAME = "j-lens-rl-confirmatory-v6-celebration-taper"
-VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714a"
+ORIGINAL_VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714a"
+VOLUME_NAME = "j-lens-rl-confirmatory-v6-celebration-taper-20260714b"
+MODAL_IMAGE_SPEC = "j-lens-rl-confirmatory-v6-celebration-taper-image-v2-hf-auth"
 FINAL_LABELS = (
     "base",
     *(f"jlens_seed{seed}" for seed in SEEDS),
@@ -236,6 +249,19 @@ CORRECTION2_OPERATOR_KNOWLEDGE_BOUNDARY = {
         "does not erase the adaptive seed-167 source selection"
     ),
 }
+INFRASTRUCTURE_AMENDMENT1_OPERATOR_KNOWLEDGE_BOUNDARY = {
+    **CORRECTION2_OPERATOR_KNOWLEDGE_BOUNDARY,
+    "timing": (
+        "infrastructure amendment 1 was frozen after attempt A stopped during "
+        "image build and before any V6 local entrypoint, claim, GPU task, W&B run, "
+        "or scientific outcome"
+    ),
+    "independence_scope": (
+        "the observed attempt-A build stall, fresh Volume B, and build-step HF_TOKEN "
+        "mitigation did not alter the byte-semantically frozen celebration recipe, "
+        "curve nodes, seeds, controls, repartition, acceptance rules, or W&B identities"
+    ),
+}
 
 V5_ALLOCATION_SALT = "j-lens-rl-confirmatory-v5-alternative-screen-2026-07-14"
 V6_ALLOCATION_SALT = "j-lens-rl-confirmatory-v6-celebration-taper-2026-07-14"
@@ -260,6 +286,9 @@ SUPERSEDED_V1_REGISTRATION_SHA256 = "79f80dc0acea6c6b8410f8936ec364bcc4405eaf49f
 PRELAUNCH_CORRECTION1_SHA256 = "8d1fe785a495c5a8da689d7f80fec9c5ebcd09f9770a37a3efa5f38732a8e719"
 SUPERSEDED_V2_REGISTRATION_SHA256 = "b15aa79bb15d754ad6c8b5015736acd13f95651f9c9751dad0c59d710a8361dd"
 PRELAUNCH_CORRECTION2_SHA256 = "f4b40790859bff1a614c279f9b693571b315a97294221bb3c5aebebb4639ff07"
+SUPERSEDED_V3_REGISTRATION_SHA256 = "e82c9062d588bc35d0663e450fc420357b358978a3d6110be91056b8de17f8a0"
+PRELAUNCH_ATTEMPT_A_CLOSEOUT_SHA256 = "c55cdd5fabd757e3111c76a3b4d4ee6df79d139e03fd55989b74d5fada9583a3"
+INFRASTRUCTURE_AMENDMENT1_SHA256 = "4b931daa8d5c4e8cec8ee7b3f0f14981aefcd3485c9f29c0d1be3cb03ea5d136"
 SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256 = (
     "0621bc7402187223b47f665872b4c0bdb2c53b64661b26b94dcc76492a0fe93e"
 )
@@ -295,6 +324,11 @@ V3_OUTCOME_STATUS_AT_FREEZE = (
     "prelaunch correction 2: no V6 outcome existed; selecting agent used no V5 "
     "outcomes; root knew the full terminal V5 mean and per-seed curves and evidence; "
     "scientific and W&B choices remain byte-semantically identical to V1 and V2"
+)
+V4_OUTCOME_STATUS_AT_FREEZE = (
+    "infrastructure amendment 1: attempt A stopped during image build before local "
+    "entrypoint, protocol upload, claim, function call, GPU, W&B, or any V6 outcome; "
+    "scientific and W&B choices remain byte-semantically identical to V1/V2/V3"
 )
 
 CONDITIONAL_LAUNCH_PREDICATE = {
@@ -941,8 +975,10 @@ def _expected_execution_hashes() -> dict[str, str]:
         "protocol_sha256": REPO / "scripts" / "confirmatory_v6_protocol.py",
         "modal_runner_sha256": REPO / "modal_confirmatory_v6.py",
         "shell_launcher_sha256": REPO / "run_confirmatory_v6.sh",
-        "modal_cache_assets_sha256": REPO / "scripts" / "modal_cache_assets.py",
-        "modal_finalize_image_sha256": REPO / "scripts" / "modal_finalize_image.py",
+        "modal_cache_assets_sha256": REPO / "scripts" / "modal_cache_assets_v6.py",
+        "modal_finalize_image_sha256": (
+            REPO / "scripts" / "modal_finalize_image_v6.py"
+        ),
         "pyproject_sha256": REPO / "pyproject.toml",
     }
     return {
@@ -1018,17 +1054,22 @@ def registration_template() -> dict[str, Any]:
             ),
             "v6_prelaunch_correction1_sha256": PRELAUNCH_CORRECTION1_SHA256,
             "v6_prelaunch_correction2_sha256": PRELAUNCH_CORRECTION2_SHA256,
+            "v6_infrastructure_amendment1_sha256": (
+                INFRASTRUCTURE_AMENDMENT1_SHA256
+            ),
         },
         "supersedes_registration": {
-            "path": str(SUPERSEDED_V2_REGISTRATION_PATH.relative_to(REPO)),
-            "sha256": SUPERSEDED_V2_REGISTRATION_SHA256,
+            "path": str(SUPERSEDED_V3_REGISTRATION_PATH.relative_to(REPO)),
+            "sha256": SUPERSEDED_V3_REGISTRATION_SHA256,
         },
         "prelaunch_correction": {
-            "path": str(PRELAUNCH_CORRECTION2_PATH.relative_to(REPO)),
-            "sha256": PRELAUNCH_CORRECTION2_SHA256,
+            "path": str(INFRASTRUCTURE_AMENDMENT1_PATH.relative_to(REPO)),
+            "sha256": INFRASTRUCTURE_AMENDMENT1_SHA256,
         },
         "conditional_launch_predicate": CONDITIONAL_LAUNCH_PREDICATE,
-        "operator_knowledge_boundary": CORRECTION2_OPERATOR_KNOWLEDGE_BOUNDARY,
+        "operator_knowledge_boundary": (
+            INFRASTRUCTURE_AMENDMENT1_OPERATOR_KNOWLEDGE_BOUNDARY
+        ),
         "selection_closeout": {
             "path": str(SELECTION_CLOSEOUT_PATH.relative_to(REPO)),
             "sha256": SELECTION_CLOSEOUT_SHA256,
@@ -1076,7 +1117,7 @@ def registration_template() -> dict[str, Any]:
             "infrastructure_retry_policy": INFRASTRUCTURE_RETRY_POLICY,
             **_registered_execution_hashes(),
         },
-        "outcome_status_at_freeze": V3_OUTCOME_STATUS_AT_FREEZE,
+        "outcome_status_at_freeze": V4_OUTCOME_STATUS_AT_FREEZE,
     }
 
 
@@ -1132,6 +1173,11 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
         PRELAUNCH_CORRECTION1_PATH: PRELAUNCH_CORRECTION1_SHA256,
         SUPERSEDED_V2_REGISTRATION_PATH: SUPERSEDED_V2_REGISTRATION_SHA256,
         PRELAUNCH_CORRECTION2_PATH: PRELAUNCH_CORRECTION2_SHA256,
+        SUPERSEDED_V3_REGISTRATION_PATH: SUPERSEDED_V3_REGISTRATION_SHA256,
+        PRELAUNCH_ATTEMPT_A_CLOSEOUT_PATH: (
+            PRELAUNCH_ATTEMPT_A_CLOSEOUT_SHA256
+        ),
+        INFRASTRUCTURE_AMENDMENT1_PATH: INFRASTRUCTURE_AMENDMENT1_SHA256,
     }
     for path, expected in expected_files.items():
         if not path.is_file() or sha256_file(path) != expected:
@@ -1145,6 +1191,9 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
         ),
         "v6_prelaunch_correction1_sha256": PRELAUNCH_CORRECTION1_SHA256,
         "v6_prelaunch_correction2_sha256": PRELAUNCH_CORRECTION2_SHA256,
+        "v6_infrastructure_amendment1_sha256": (
+            INFRASTRUCTURE_AMENDMENT1_SHA256
+        ),
     }
     if registration.get("lineage") != expected_lineage:
         raise ProtocolError("registration does not pin the emotional-only lineage")
@@ -1153,35 +1202,42 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
     ):
         raise ProtocolError("registration changed the conditional V5 launch predicate")
     if registration.get("operator_knowledge_boundary") != (
-        CORRECTION2_OPERATOR_KNOWLEDGE_BOUNDARY
+        INFRASTRUCTURE_AMENDMENT1_OPERATOR_KNOWLEDGE_BOUNDARY
     ):
         raise ProtocolError("registration changed the operator knowledge boundary")
     if registration.get("supersedes_registration") != {
-        "path": str(SUPERSEDED_V2_REGISTRATION_PATH.relative_to(REPO)),
-        "sha256": SUPERSEDED_V2_REGISTRATION_SHA256,
+        "path": str(SUPERSEDED_V3_REGISTRATION_PATH.relative_to(REPO)),
+        "sha256": SUPERSEDED_V3_REGISTRATION_SHA256,
     }:
-        raise ProtocolError("V3 registration changed its superseded V2 identity")
+        raise ProtocolError("V4 registration changed its superseded V3 identity")
     if registration.get("prelaunch_correction") != {
-        "path": str(PRELAUNCH_CORRECTION2_PATH.relative_to(REPO)),
-        "sha256": PRELAUNCH_CORRECTION2_SHA256,
+        "path": str(INFRASTRUCTURE_AMENDMENT1_PATH.relative_to(REPO)),
+        "sha256": INFRASTRUCTURE_AMENDMENT1_SHA256,
     }:
-        raise ProtocolError("V3 registration changed prelaunch correction 2")
+        raise ProtocolError("V4 registration changed infrastructure amendment 1")
     v1 = json.loads(SUPERSEDED_V1_REGISTRATION_PATH.read_text())
     v2 = json.loads(SUPERSEDED_V2_REGISTRATION_PATH.read_text())
+    v3 = json.loads(SUPERSEDED_V3_REGISTRATION_PATH.read_text())
     correction1 = json.loads(PRELAUNCH_CORRECTION1_PATH.read_text())
     correction2 = json.loads(PRELAUNCH_CORRECTION2_PATH.read_text())
-    projection_fields = correction2.get("scientific_projection", {}).get("fields")
+    amendment = json.loads(INFRASTRUCTURE_AMENDMENT1_PATH.read_text())
+    closeout = json.loads(PRELAUNCH_ATTEMPT_A_CLOSEOUT_PATH.read_text())
+    projection_fields = amendment.get("scientific_projection", {}).get("fields")
     if (
         not isinstance(v1, dict)
         or not isinstance(v2, dict)
+        or not isinstance(v3, dict)
         or not isinstance(projection_fields, list)
         or correction1.get("scientific_projection", {}).get("fields")
+        != projection_fields
+        or correction2.get("scientific_projection", {}).get("fields")
         != projection_fields
     ):
         raise ProtocolError("prelaunch corrections lack one scientific projection")
     v1_projection = {field: v1.get(field) for field in projection_fields}
     v2_projection = {field: v2.get(field) for field in projection_fields}
-    v3_projection = {field: registration.get(field) for field in projection_fields}
+    v3_projection = {field: v3.get(field) for field in projection_fields}
+    v4_projection = {field: registration.get(field) for field in projection_fields}
     if (
         canonical_sha256(v1_projection)
         != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
@@ -1193,10 +1249,92 @@ def _validate_archive_lineage(registration: dict[str, Any]) -> None:
             "superseded_registration_canonical_sha256"
         )
         != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
+        or amendment["scientific_projection"].get(
+            "superseded_registration_canonical_sha256"
+        )
+        != SUPERSEDED_SCIENTIFIC_PROJECTION_SHA256
         or v2_projection != v1_projection
         or v3_projection != v1_projection
+        or v4_projection != v1_projection
     ):
-        raise ProtocolError("V3 changed a prohibited scientific/W&B V1/V2 field")
+        raise ProtocolError("V4 changed a prohibited scientific/W&B V1/V2/V3 field")
+    expected_outcome_boundary = {
+        "attempt_claim_created": False,
+        "function_call_dispatched": False,
+        "gpu_task_started": False,
+        "local_entrypoint_ran": False,
+        "protocol_state_uploaded": False,
+        "scientific_outcome_exists": False,
+        "scientific_outcome_inspected": False,
+        "wandb_run_created": False,
+    }
+    if (
+        closeout.get("protocol")
+        != "j-lens-rl-confirmatory-v6-celebration-taper-prelaunch-attempt-a-closeout-v1"
+        or closeout.get("git_commit")
+        != "4524e643a97d084cd2d62176075ddd9e477525e9"
+        or closeout.get("frozen_registration")
+        != {
+            "path": str(SUPERSEDED_V3_REGISTRATION_PATH.relative_to(REPO)),
+            "sha256": SUPERSEDED_V3_REGISTRATION_SHA256,
+        }
+        or closeout.get("app", {}).get("app_id")
+        != "ap-sujvjQTDFQV2qwrVIFjNRq"
+        or closeout.get("app", {}).get("state") != "stopped"
+        or closeout.get("app", {}).get("tasks_at_closeout") != 0
+        or closeout.get("volume")
+        != {
+            "created_at_utc": "2026-07-14T10:45:00Z",
+            "file_count_at_closeout": 0,
+            "name": ORIGINAL_VOLUME_NAME,
+            "root_listing": [],
+        }
+        or closeout.get("outcome_boundary") != expected_outcome_boundary
+        or closeout.get("verification", {}).get("container_inventory") != []
+        or closeout.get("verification", {}).get("registered_wandb_run_ids_found")
+        != 0
+        or closeout.get("verification", {}).get("registered_wandb_run_ids_queried")
+        != 16
+        or closeout.get("verification", {}).get("wandb_group_run_count") != 0
+    ):
+        raise ProtocolError("attempt-A closeout crossed its build-only boundary")
+    expected_active_files = {
+        "modal_cache_assets_sha256": sha256_file(
+            REPO / "scripts" / "modal_cache_assets_v6.py"
+        ),
+        "modal_finalize_image_sha256": sha256_file(
+            REPO / "scripts" / "modal_finalize_image_v6.py"
+        ),
+        "modal_runner_sha256": sha256_file(REPO / "modal_confirmatory_v6.py"),
+    }
+    if (
+        amendment.get("protocol")
+        != "j-lens-rl-confirmatory-v6-celebration-taper-infrastructure-amendment-v1"
+        or amendment.get("scientific_protocol_changed") is not False
+        or amendment.get("superseded_registration", {}).get("sha256")
+        != SUPERSEDED_V3_REGISTRATION_SHA256
+        or amendment.get("prelaunch_attempt_a_closeout")
+        != {
+            "path": str(PRELAUNCH_ATTEMPT_A_CLOSEOUT_PATH.relative_to(REPO)),
+            "sha256": PRELAUNCH_ATTEMPT_A_CLOSEOUT_SHA256,
+        }
+        or amendment.get("authorized_changes", {}).get("volume")
+        != {"from": ORIGINAL_VOLUME_NAME, "to": VOLUME_NAME}
+        or amendment.get("authorized_changes", {}).get(
+            "asset_cache_authentication", {}
+        ).get("modal_secret_name")
+        != "huggingface-token"
+        or amendment.get("authorized_changes", {}).get(
+            "asset_cache_authentication", {}
+        ).get("required_key")
+        != "HF_TOKEN"
+        or amendment.get("fresh_volume_b_preflight", {}).get("name")
+        != VOLUME_NAME
+        or amendment.get("fresh_volume_b_preflight", {}).get("file_count") != 0
+        or amendment.get("fresh_volume_b_preflight", {}).get("root_listing") != []
+        or amendment.get("active_execution_files") != expected_active_files
+    ):
+        raise ProtocolError("V6 infrastructure amendment 1 changed or is incomplete")
     selection_identity = registration.get("selection_closeout")
     if selection_identity != registration_template()["selection_closeout"]:
         raise ProtocolError("registration changed the V6 selection closeout identity")
@@ -1267,7 +1405,7 @@ def _validate_registration_shape(registration: dict[str, Any]) -> None:
         for run_id in wandb["run_ids"].values()
     ):
         raise ProtocolError("registration W&B run ID contains unsupported characters")
-    if registration.get("outcome_status_at_freeze") != V3_OUTCOME_STATUS_AT_FREEZE:
+    if registration.get("outcome_status_at_freeze") != V4_OUTCOME_STATUS_AT_FREEZE:
         raise ProtocolError("registration must freeze before any V6 outcome inspection")
     _validate_archive_lineage(registration)
 
@@ -2883,7 +3021,7 @@ def verify_completed_runs(
                 or environment.get("image_identity", {}).get(
                     "jlens_modal_image_spec"
                 )
-                != "j-lens-rl-confirmatory-v6-celebration-taper-image-v1"
+                != MODAL_IMAGE_SPEC
             ):
                 raise ProtocolError(f"wrong training runtime for {label}")
             if matched_runtime is None:
@@ -3535,7 +3673,7 @@ def verify_evaluation_jsonl(path: Path, label: str) -> None:
         or GPU_TYPE not in " ".join(environment.get("cuda_device_names", []))
         or not environment.get("nvidia_smi_name_and_driver")
         or environment.get("image_identity", {}).get("jlens_modal_image_spec")
-        != "j-lens-rl-confirmatory-v6-celebration-taper-image-v1"
+        != MODAL_IMAGE_SPEC
     ):
         raise ProtocolError(f"{path} has an incomplete evaluation environment snapshot")
     git_provenance = provenance.get("git", {})
@@ -3693,7 +3831,7 @@ def verify_analysis_process() -> dict[str, Any]:
         not environment.get("pip_freeze_all")
         or environment["pip_freeze_all"] != sorted(environment["pip_freeze_all"])
         or environment.get("image_identity", {}).get("jlens_modal_image_spec")
-        != "j-lens-rl-confirmatory-v6-celebration-taper-image-v1"
+        != MODAL_IMAGE_SPEC
     ):
         raise ProtocolError("paired analysis environment snapshot is incomplete")
     return record
