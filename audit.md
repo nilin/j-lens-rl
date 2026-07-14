@@ -2135,3 +2135,20 @@ hash-bound by
 `yay` lease was released before the final fixed `worried` arm acquired its
 fresh sole lease; `worried` began immediately and its registered W&B run is
 online. No sealed, reserved, or word-correlation payload was accessed.
+
+To keep RL from waiting on further word search, a scientifically separate
+development probe was prospectively fixed and launched on the otherwise idle
+local RTX 4090 while the single paid Modal L40S continued `worried`. The probe
+uses the emotionally charged celebration family `yay/great/success/nice`, the
+previously motivated tail-taper score, fresh seed 193, six updates, and exposed
+nodes `0/2/4/6`; its fixed shape criterion is `M2 > M0`, `M4 >= M2`, and
+`M6 >= M4`. It is development-only and may never be pooled with the L40S
+tournament or treated as inference. The exact config and registration were
+pushed in commit `bf85a74`; training began from that clean detached commit at
+19:55:28 UTC on the exact registered 4090. The run manifest was durable before
+any curve row and records the clean commit, source-tree hash, config, artifacts,
+data identities, command, environment, and fixed W&B ID
+`dev-v10-celebration-tail-u2-h6-seed193`. Local tracking is receipt-bound
+offline and will be synced through a CPU-only Modal transport without rerunning
+optimization. Operational identity is recorded in
+`protocol_archive/development_celebration_tail_u2_h6_seed193_launch_ledger.json`.

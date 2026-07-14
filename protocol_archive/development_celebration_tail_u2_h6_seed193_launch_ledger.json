@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-rl-launch-ledger",
+  "protocol": "j-lens-rl-development-celebration-tail-u2-h6-seed193-v1",
+  "scientific_status": "development_only_on_exposed_curve_no_significance_claim",
+  "launched_at_utc": "2026-07-14T19:55:28Z",
+  "recorded_at_utc": "2026-07-14T19:56:01Z",
+  "source": {
+    "git_commit": "bf85a74e380b6d70236cb37313f18ce7ebf16cf1",
+    "origin_main_at_launch": "bf85a74e380b6d70236cb37313f18ce7ebf16cf1",
+    "git_dirty_at_launch": false,
+    "source_tree_sha256": "988322ee86d0106582d1528ed23ad4815af5551524078c6563af166a2b3835b4",
+    "detached_worktree": "/tmp/jlens-celebration-tail-bf85a74"
+  },
+  "registration": {
+    "path": "protocol_archive/development_celebration_tail_u2_h6_seed193_registration.json",
+    "sha256": "6c53994cd288b75b002791fd54020e038af36ff8e0fc3934185deb487b370262"
+  },
+  "config": {
+    "path": "configs/development_celebration_tail_u2_h6_seed193.json",
+    "sha256": "caae6bbc1c80f2b32bad1afca4d53811a5ae9ecf3d4ac1c22b32c7a4f96971a7",
+    "resolved_sha256": "22918486e2eeff17fc54a8206f991c7f1ea32d66761267a3678aaaefd3f73b53"
+  },
+  "process": {
+    "pid": 279334,
+    "python_executable": "/j-lens-rl/.venv/bin/python",
+    "argv": [
+      "scripts/v9_local_train.py",
+      "--config",
+      "configs/development_celebration_tail_u2_h6_seed193.json",
+      "--wandb-mode",
+      "offline"
+    ],
+    "cuda_visible_devices": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "wandb_dir": "/tmp/jlens-celebration-tail-state/offline_wandb"
+  },
+  "hardware": {
+    "backend": "local",
+    "device_name": "NVIDIA GeForce RTX 4090",
+    "gpu_uuid": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "driver_version": "570.195.03",
+    "memory_total_mib": 24564,
+    "torch_version": "2.9.1+cu128",
+    "cuda_version": "12.8",
+    "active_gpu_processes_after_launch": [279334]
+  },
+  "run_manifest": {
+    "path": "runs/dev_v10_celebration_tail_u2_h6_seed193/run_manifest.json",
+    "sha256_at_launch": "3bb80878574abf85c91d5f749748442315c5cced9607589d0cd208e171ecaaf7"
+  },
+  "fixed_design": {
+    "target_words": ["yay", "great", "success", "nice"],
+    "seed": 193,
+    "updates": 6,
+    "curve_steps": [0, 2, 4, 6],
+    "shape_criterion": "step2 > step0 and step4 >= step2 and step6 >= step4"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "run_id": "dev-v10-celebration-tail-u2-h6-seed193",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v10-celebration-tail-u2-h6-seed193",
+    "transport_at_launch": "offline_local_pending_receipt_bound_cpu_only_modal_sync",
+    "optimization_will_not_be_rerun_to_repair_tracking": true
+  },
+  "concurrency_boundary": {
+    "active_modal_attempt": "j-lens-rl-development-emotional-tournament-v1",
+    "modal_gpu_count": 1,
+    "local_gpu_count": 1,
+    "attempts_are_scientifically_separate": true,
+    "cross_backend_pooling_permitted": false
+  },
+  "outcome_boundary_at_ledger_cutoff": {
+    "run_manifest_present": true,
+    "curve_rows_present": false,
+    "post_baseline_outcome_inspected": false,
+    "sealed_or_reserved_or_correlation_payload_accessed": false
+  }
+}
