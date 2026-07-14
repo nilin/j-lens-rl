@@ -1,0 +1,200 @@
+{
+  "acceptance": {
+    "curve_gate": "the first registered post-baseline eight-seed mean is strictly above the registered baseline mean, and each of the next two registered means is greater than or equal to its predecessor",
+    "difference_in_differences_crossed_95pct_ci_low": "> 0",
+    "difference_in_differences_mean": "> 0",
+    "literal_provenance_environment_and_collection_audits": "all pass",
+    "treatment_vs_base_crossed_95pct_ci_low": "> 0",
+    "treatment_vs_base_exact_two_sided_sign_p": 0.0078125,
+    "treatment_vs_base_mean": "> 0",
+    "treatment_vs_base_seed_effects": "8 positive, 0 negative, 0 ties"
+  },
+  "analysis": {
+    "bootstrap_method": "crossed seed-and-item percentile bootstrap",
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 0,
+    "confidence": 0.95,
+    "primary_estimand": "paired difference-in-differences: (profanity-treatment minus base) minus (signflip-control minus base), matched by seed and sealed item",
+    "secondary_estimand": "paired profanity-treatment minus base across seeds and items",
+    "seed_sign_test": "exact two-sided sign test across eight registered seeds"
+  },
+  "claim_protocol": "j-lens-rl-confirmatory-v7-profanity-u5",
+  "conditional_launch_predicate": {
+    "allowed_terminal_stages": [
+      "curve_failed",
+      "failed_before_final"
+    ],
+    "authorization": "the closeout is intentionally unavailable at V7 freeze; prepare and every launch verification require later committed bytes and record their SHA-256",
+    "cancellation_rule": "missing or ineligible V6 closeout, any unlock/collection/evaluation, or any uncertainty about sealed-final exposure permanently cancels V7",
+    "closeout_path": "protocol_archive/v6_celebration_terminal_closeout.json",
+    "required_evals_directory_present": false,
+    "required_final_collection_present": false,
+    "required_final_evaluation_labels": [],
+    "required_final_outcomes_unopened": true,
+    "required_final_unlocked_present": false,
+    "required_protocol": "j-lens-rl-confirmatory-v6-celebration-terminal-closeout-v1",
+    "required_sealed_comparison_present": false,
+    "required_sealed_final_manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+    "required_source_evidence_paths": {
+      "attempt_claim": "protocol_archive/v6_celebration_terminal_evidence/attempt_claim.json",
+      "attempt_status": "protocol_archive/v6_celebration_terminal_evidence/attempt_status.json",
+      "bundle_inventory": "protocol_archive/v6_celebration_terminal_evidence/evidence_bundle_inventory.json",
+      "curve_gate": "protocol_archive/v6_celebration_terminal_evidence/curve_gate.json",
+      "curve_plot": "protocol_archive/v6_celebration_terminal_evidence/curve.png",
+      "durable_export_receipt": "protocol_archive/v6_celebration_terminal_evidence/durable_export_receipt.json",
+      "evidence_inventory": "protocol_archive/v6_celebration_terminal_evidence/evidence_inventory.json",
+      "launch_receipt": "protocol_archive/v6_celebration_terminal_evidence/launch_receipt.json",
+      "root_inventory": "protocol_archive/v6_celebration_terminal_evidence/root_inventory.json"
+    },
+    "required_v6_registration_sha256": "12cb17f896b117a43d9d266a53d43423ec5c5613fcc2dfda209f59bc27c507f2",
+    "source_evidence_policy": "the closeout must name each exact committed evidence path and SHA-256; the validator recomputes every digest and rejects any final/eval/analysis artifact"
+  },
+  "curve_gate": {
+    "criterion": "the first registered post-baseline eight-seed mean is strictly above the registered baseline mean, and each of the next two registered means is greater than or equal to its predecessor",
+    "steps": [
+      0,
+      4,
+      10,
+      20
+    ]
+  },
+  "execution": {
+    "backend_fallback_policy": "this registration permits one whole attempt on Modal L40S with online W&B only; never mix hardware or tracking modes within an attempt; an RTX4090/offline-W&B fallback requires a separate registration made either before any Modal outcome or after immutable closeout of a partial Modal attempt, plus fresh state/claim, preserved offline W&B directories, and the same frozen IDs and scientific inputs",
+    "global_modal_gpu_limit": 1,
+    "gpu_app_overlap_policy": "no other Modal GPU app may overlap this V7 attempt",
+    "gpu_lease": {
+      "dict_name": "j-lens-rl-global-gpu-lease-v1",
+      "environment": "main",
+      "key": "global-one-gpu",
+      "policy": "every GPU entrypoint atomically claims the named Dict key with a fresh nonce, fails closed if occupied or ambiguous, releases only its own nonce after durable publication, never steals by timeout, and permits only root-authorized forensic recovery after immutable closeout"
+    },
+    "gpu_type": "L40S",
+    "infrastructure_retry_policy": "a completed run may only retry publication of its immutable terminal W&B artifact; never overwrite or resume model optimization; any partial nonterminal run closes the whole attempt immutably and requires a fresh registered claim/volume",
+    "jlens_rl_runtime_tree_sha256": "14937bca23392634f52a3cc890d4c3723f4cf51343b18a2c29d36f1602dc3628",
+    "max_parallel_gpu_workers": 1,
+    "modal_app": "j-lens-rl-confirmatory-v7-profanity-u5",
+    "modal_cache_assets_sha256": "4c6997d776d127dfa909bea4fc8e059b6484dc40d39b81cddf47ae6d3974491e",
+    "modal_finalize_image_sha256": "06178c37674354687f44018a1feaeb84fdecd0bccf54b35f797b6393f274ca89",
+    "modal_runner_sha256": "9379fc6980c6167acb093b1189eb3ddd6a0c892251c85d11e40d61da2bb3265b",
+    "modal_volume_preflight_sha256": "a68b66f44c922e99bde9c3fa36f13f6bde9ce963eac9a67ffdd58a661a43e5a3",
+    "protocol_sha256": "f8c3c96ec0e2e4eb49b5cc27dc04e51731b3305dcb44e620e4c9a413e84c714d",
+    "pyproject_sha256": "8d61fd00ddd948627960d85f5ca2998c4ae4198104bc613afb5a324923aaa823",
+    "shell_launcher_sha256": "3ea50a7c0f2f4bfd11494cd6789ac0c5babbbfbacd3a0b0a9f1ee2485bd0603b",
+    "trl_build_metadata_sha256": "f2665076902b2b6c86a8161c57fa34ac839f7f57acf0dceadb3138006d91071c",
+    "trl_runtime_tree_sha256": "e5cf1ef7b3aaa34f55840c786c6642081f0a1beaea3dc3a68cbf9e74a4ca7b87",
+    "volume": "j-lens-rl-confirmatory-v7-profanity-u5-20260714a",
+    "volume_status": "placeholder-must-be-created-empty-after-v6-closeout-before-launch",
+    "volume_version": 2
+  },
+  "final_collection": {
+    "labels": [
+      "base",
+      "jlens_seed184",
+      "jlens_seed185",
+      "jlens_seed186",
+      "jlens_seed187",
+      "jlens_seed188",
+      "jlens_seed189",
+      "jlens_seed190",
+      "jlens_seed191",
+      "signflip_seed184",
+      "signflip_seed185",
+      "signflip_seed186",
+      "signflip_seed187",
+      "signflip_seed188",
+      "signflip_seed189",
+      "signflip_seed190",
+      "signflip_seed191"
+    ],
+    "one_immutable_collection": true,
+    "terminal_adapter_step": 20
+  },
+  "fixed_updates": 20,
+  "frozen_at_utc": "2026-07-14T12:12:39Z",
+  "lineage": {
+    "source_selection_closeout_sha256": "c8db90955f34b61d03fe510c4ef4483fd1249a1b9a5cfcd42d4f411e4e5b2d0a",
+    "v6_registration_path": "protocol_archive/v6_celebration_registration.json",
+    "v6_registration_sha256": "12cb17f896b117a43d9d266a53d43423ec5c5613fcc2dfda209f59bc27c507f2"
+  },
+  "matched_control": "negate every selected treatment score-component weight and change nothing else except condition identity",
+  "operator_knowledge_boundary": {
+    "claim_boundary": "V7 prospectively replicates its curve across new seeds on exposed development data and reserves inference for the conditionally untouched 900-item final",
+    "independence_scope": "the exact profanity recipe, 0/4/10/20 nodes, seeds, controls, and W&B identities were frozen without inspecting any additional V6 outcome",
+    "root_operator": "root may have access to ongoing V6 progress; V6 outcomes cannot alter this frozen V7 design",
+    "selection_agent": "the V7 implementer used only committed completed exploratory artifacts and did not inspect any additional V6 or sealed-final outcome"
+  },
+  "outcome_status_at_freeze": "conditional V7 frozen while V6 remained nonterminal; the V7 implementer inspected no additional V6 or sealed-final outcome and no V7 outcome exists",
+  "protocol": "j-lens-rl-confirmatory-v7-profanity-u5-registration-v1",
+  "seeds": [
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191
+  ],
+  "selected_recipe_lock": {
+    "path": "protocol_archive/v7_profanity_selected_recipe.json",
+    "sha256": "33760cfc906ed9c557eee40bc33a4bce2ce2fc32a8da23e887be8f97ad47c7f9"
+  },
+  "selection_closeout": {
+    "path": "protocol_archive/v7_profanity_selection_closeout.json",
+    "sha256": "c8db90955f34b61d03fe510c4ef4483fd1249a1b9a5cfcd42d4f411e4e5b2d0a"
+  },
+  "split": {
+    "curve": {
+      "manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+      "role": "retired and exposed development curve; never a significance set",
+      "size": 400,
+      "sorted_set_sha256": "e1a3094d557c4d59ae023d18b2203d881e6819d3f4833c5516883ae9b727e621"
+    },
+    "future_reserve": {
+      "manifest_sha256": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+      "size": 64
+    },
+    "sealed_final": {
+      "manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+      "size": 900,
+      "sorted_set_sha256": "eadcd0e2fc194b0e38bc1c9f4aa1bbf6e6b3ba1043b0015eedee59aec133637c"
+    },
+    "source_parent": {
+      "manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+      "role": "V6 sealed final, reusable only after the predicate proves it was never opened",
+      "size": 900,
+      "sorted_set_sha256": "eadcd0e2fc194b0e38bc1c9f4aa1bbf6e6b3ba1043b0015eedee59aec133637c"
+    },
+    "train_exclusions_manifest_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v7-emotional-profanity-u5-h20",
+    "project": "j-lens-rl",
+    "run_ids": {
+      "jlens_seed184": "confirm-v7-emotional-profanity-u5-h20-jlens_seed184",
+      "jlens_seed185": "confirm-v7-emotional-profanity-u5-h20-jlens_seed185",
+      "jlens_seed186": "confirm-v7-emotional-profanity-u5-h20-jlens_seed186",
+      "jlens_seed187": "confirm-v7-emotional-profanity-u5-h20-jlens_seed187",
+      "jlens_seed188": "confirm-v7-emotional-profanity-u5-h20-jlens_seed188",
+      "jlens_seed189": "confirm-v7-emotional-profanity-u5-h20-jlens_seed189",
+      "jlens_seed190": "confirm-v7-emotional-profanity-u5-h20-jlens_seed190",
+      "jlens_seed191": "confirm-v7-emotional-profanity-u5-h20-jlens_seed191",
+      "signflip_seed184": "confirm-v7-emotional-profanity-u5-h20-signflip_seed184",
+      "signflip_seed185": "confirm-v7-emotional-profanity-u5-h20-signflip_seed185",
+      "signflip_seed186": "confirm-v7-emotional-profanity-u5-h20-signflip_seed186",
+      "signflip_seed187": "confirm-v7-emotional-profanity-u5-h20-signflip_seed187",
+      "signflip_seed188": "confirm-v7-emotional-profanity-u5-h20-signflip_seed188",
+      "signflip_seed189": "confirm-v7-emotional-profanity-u5-h20-signflip_seed189",
+      "signflip_seed190": "confirm-v7-emotional-profanity-u5-h20-signflip_seed190",
+      "signflip_seed191": "confirm-v7-emotional-profanity-u5-h20-signflip_seed191"
+    },
+    "run_prefix": "confirm-v7-emotional-profanity-u5-h20",
+    "tags": [
+      "confirmatory-v7",
+      "emotional-j-lens",
+      "profanity-u5",
+      "conditional-on-v6-final-unopened"
+    ]
+  }
+}

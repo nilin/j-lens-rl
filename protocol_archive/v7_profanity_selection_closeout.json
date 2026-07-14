@@ -1,0 +1,143 @@
+{
+  "design": {
+    "calibration_sha256": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c",
+    "control_component_weights": [
+      1.0
+    ],
+    "curve_gate": {
+      "criterion": "M4 > M0, M10 >= M4, and M20 >= M10 on the eight-treatment-seed mean exact-match curve",
+      "steps": [
+        0,
+        4,
+        10,
+        20
+      ]
+    },
+    "fixed_updates": 20,
+    "learning_rate": 3e-06,
+    "matched_control_rule": "negate the sole treatment component weight and change nothing else except condition identity",
+    "score_components": [
+      {
+        "aggregation": "mean",
+        "end_fraction": 1.0,
+        "layer": 8,
+        "start_fraction": 0.5,
+        "weight": -1.0
+      }
+    ],
+    "score_stride": 5,
+    "seeds": [
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191
+    ],
+    "target_words": [
+      "damn",
+      "fuck"
+    ],
+    "treatment_component_weights": [
+      -1.0
+    ]
+  },
+  "evidence_role": "adaptive source evidence for a separately registered conditional V7; neither this closeout nor the source curve is a significance test",
+  "frozen_at_utc": "2026-07-14T12:12:39Z",
+  "inference_boundary": {
+    "curve": "V7 reuses the already exposed 400-item development curve and prospectively replicates the fixed four-node shape across new seeds; curve results are not untouched-data inference",
+    "sealed_final": "the sole significance test may use the exact 900-item V6 sealed-final manifest only after a committed V6 terminal closeout proves no final unlock, collection, evaluation, analysis, or outcome exposure occurred",
+    "single_use": "once any V7 final output is collected, the 900-item allocation is spent regardless of whether acceptance passes"
+  },
+  "operator_knowledge_boundary": {
+    "claim_boundary": "V7 prospectively replicates its curve across new seeds on exposed development data and reserves inference for the conditionally untouched 900-item final",
+    "independence_scope": "the exact profanity recipe, 0/4/10/20 nodes, seeds, controls, and W&B identities were frozen without inspecting any additional V6 outcome",
+    "root_operator": "root may have access to ongoing V6 progress; V6 outcomes cannot alter this frozen V7 design",
+    "selection_agent": "the V7 implementer used only committed completed exploratory artifacts and did not inspect any additional V6 or sealed-final outcome"
+  },
+  "protocol": "j-lens-rl-v7-profanity-selection-closeout-v1",
+  "scientific_rationale": [
+    "The target is an emotionally charged profanity family and contains neither solved nor error.",
+    "Negative intrinsic reward tests whether suppressing the internal J-space profanity readout improves GSM8K without any correctness reward.",
+    "The U5 layer-8 late-half stride-5 construction is retained as architecture; historical solved results are ineligible for target selection.",
+    "The source seed-167 profanity-U5 run had zero decoded literal-family completions at every evaluation node; V7 still masks literal target and predecessor positions and reports literal rates.",
+    "The source node subset 0/4/10/20 was selected after observing the exploratory curve, so V7 must replicate it prospectively across eight new seeds and reserve significance for untouched final data."
+  ],
+  "source_curve": {
+    "exact_match": [
+      0.3825,
+      0.3825,
+      0.3975,
+      0.3825,
+      0.4,
+      0.395,
+      0.4075,
+      0.3825
+    ],
+    "literal_target_completion_rate": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "selected_node_exact_match": [
+      0.3825,
+      0.3975,
+      0.4,
+      0.4075
+    ],
+    "steps": [
+      0,
+      2,
+      4,
+      6,
+      10,
+      15,
+      20,
+      25
+    ],
+    "validation_examples": 400,
+    "wandb_run_id": "eom9e3ht"
+  },
+  "source_evidence": {
+    "calibration": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/profanity_calibration.json",
+      "sha256": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c"
+    },
+    "calibration_manifest": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/profanity_manifest.json",
+      "sha256": "f5973e1d6d76547d1dcad2d9b7d66b852c51034938850f33b9c342c3d3295d51"
+    },
+    "log_history": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/profanity_ultradense/log_history.json",
+      "sha256": "ee850d7cdb0f8cb942547ea169e1182d5ee98ba3bb6f4c94bd6718cee194d980"
+    },
+    "resolved_config": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/profanity_ultradense/resolved_config.json",
+      "sha256": "876553a7cf97e89f65c06625d220db0942c3c9afa2f01580ffdef2b37478ca50"
+    },
+    "run_manifest": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/profanity_ultradense/run_manifest.json",
+      "sha256": "47ad15e86e2f90aabc7aba041666bbdd8fe2378297b70a9535bc705fef62b1e0"
+    },
+    "screen_result": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/profanity_ultradense/screen_result.json",
+      "sha256": "1f846dc6565061c092da31e72a34b2219bc4e4f7dbaa62bcd5de0842782a714c"
+    },
+    "validation_history": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/profanity_ultradense/validation_history.jsonl",
+      "sha256": "d3f29d34216eb8d678f94c1cbfd5f50ab6bb60d3e370bbe590608b66244e1104"
+    }
+  },
+  "v6_dependency": {
+    "registration_path": "protocol_archive/v6_celebration_registration.json",
+    "registration_sha256_at_freeze": "12cb17f896b117a43d9d266a53d43423ec5c5613fcc2dfda209f59bc27c507f2",
+    "terminal_closeout_intentionally_absent_at_v7_freeze": true
+  }
+}
