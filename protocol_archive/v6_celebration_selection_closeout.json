@@ -1,0 +1,137 @@
+{
+  "conditional_execution": {
+    "allowed_only_if": "V5 terminates curve_failed before any sealed-final unlock, collection, or evaluation",
+    "cancel_if": "V5 opens its sealed final, does not terminate curve_failed, or leaves the final exposure boundary uncertain",
+    "v5_outcomes_used_for_recipe_selection": false
+  },
+  "created_at_utc": "2026-07-14T09:27:52Z",
+  "known_caveats": [
+    "The recipe and curve nodes were selected adaptively from one exposed seed-167 development run and are not themselves confirmatory evidence.",
+    "The target is a four-word celebration family, not a single-word intervention; success is achievement-adjacent.",
+    "The source run's decoded literal-family rate was 0.0025 at every evaluation node, so V6 must mask literal target/predecessor positions and report literal rates rather than claim they are zero.",
+    "Shortening the fixed horizon from 25 to 10 preserves the constant learning-rate dynamics but is a prospective transformation, not a bitwise replay of a stored step-10 adapter."
+  ],
+  "observed_exploratory_source": {
+    "complete_curve": {
+      "exact_match": [
+        0.3825,
+        0.3825,
+        0.385,
+        0.3925,
+        0.405,
+        0.4,
+        0.41,
+        0.42
+      ],
+      "steps": [
+        0,
+        2,
+        4,
+        6,
+        10,
+        15,
+        20,
+        25
+      ]
+    },
+    "literal_target_completion_rate": 0.0025,
+    "registered_v6_nodes": {
+      "exact_match": [
+        0.3825,
+        0.385,
+        0.3925,
+        0.405
+      ],
+      "steps": [
+        0,
+        4,
+        6,
+        10
+      ]
+    },
+    "seed": 167
+  },
+  "operator_knowledge_boundary": {
+    "claim_boundary": "V6 is prospective only for its newly allocated curve/final rows and does not erase the adaptive seed-167 source selection",
+    "independence_scope": "the partial V5 result did not select or alter the celebration recipe, curve nodes, seeds, controls, or fresh V6 repartition",
+    "root_operator": "root had seen partial seed-168 V5 joy results before this V6 freeze",
+    "selection_agent": "recipe and 0/4/6/10 nodes derived only from committed seed-167 emotional-family artifacts; no V5 outcome was inspected by that agent"
+  },
+  "protocol": "j-lens-rl-v6-celebration-selection-closeout-v1",
+  "scientific_status": {
+    "confirmatory": false,
+    "evidence_role": "adaptive source evidence for a separately registered conditional V6",
+    "selection_was_outcome_informed": true,
+    "v5_aggregate_known_to_selecting_agent": false,
+    "v5_outcomes_inspected_by_selecting_agent": false
+  },
+  "selection": {
+    "curve_steps": [
+      0,
+      4,
+      6,
+      10
+    ],
+    "fixed_updates": 10,
+    "learning_rate": 3e-06,
+    "lr_scheduler_type": "constant",
+    "reward_semantics": "J-lens is the sole task reward; KL beta 0.02 remains a registered regularizer",
+    "score_components": [
+      {
+        "aggregation": "mean",
+        "end_fraction": 0.75,
+        "layer": 8,
+        "start_fraction": 0.5,
+        "weight": 1.0
+      },
+      {
+        "aggregation": "mean",
+        "end_fraction": 1.0,
+        "layer": 8,
+        "start_fraction": 0.75,
+        "weight": 0.25
+      }
+    ],
+    "score_stride": 10,
+    "target_words": [
+      "yay",
+      "great",
+      "success",
+      "nice"
+    ]
+  },
+  "source_attempt": {
+    "claim_id": "106d1a18e8ea40f3972934504ff4bc9f",
+    "git_commit": "3ad255753e8ec1f7a0dfe0d27ad69a53e048122c",
+    "modal_app_id": "ap-53QKlR6MO6mZlaG3c7SXkH",
+    "modal_function_call_id": "fc-01KXFK62RKDKGQX4D9XBTWHSMW",
+    "modal_volume": "j-lens-rl-alternative-screen-v1-20260714b",
+    "source_tree_sha256": "3af83efa12e427ed6646f42ccd6ab27a89363061f5571541e6064304e8601a21"
+  },
+  "source_evidence": {
+    "calibration": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+      "sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6"
+    },
+    "log_history": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/celebration_taper/log_history.json",
+      "sha256": "263d030f5305e90761aa845943092982761d5541c826334609926645efad1719"
+    },
+    "resolved_config": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/celebration_taper/resolved_config.json",
+      "sha256": "a5f2105f2e45f85d9d82d347d20302c0a937eb0e2c377d539ded6e9c59939fc2"
+    },
+    "run_manifest": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/celebration_taper/run_manifest.json",
+      "sha256": "40d95256a51202c82bea0d2447e29b2b14d67d40ad27ec412468d748eb298006"
+    },
+    "screen_result": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/celebration_taper/screen_result.json",
+      "sha256": "9786d6f36a2175d21e16d48f4485b6d0b8b75cccacee772f46946d14165d5718"
+    },
+    "validation_history": {
+      "path": "protocol_archive/emotional_screen_forensic_bundle/family/runs/celebration_taper/validation_history.jsonl",
+      "sha256": "b45495431ca43a1270c5ffc8c8d25e6057272130594d74429d43c1137535d6ed"
+    }
+  }
+}
