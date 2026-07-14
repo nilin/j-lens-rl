@@ -1,0 +1,8 @@
+{
+  "base": "confirmatory_common.json",
+  "reward_type": "jlens",
+  "seed": 158,
+  "validation_examples": 400,
+  "validation_indices_path": ".confirmatory/manifests/retired_v2_curve_indices.json",
+  "reserved_train_indices_path": ".confirmatory/manifests/train_exclusions.json"
+}

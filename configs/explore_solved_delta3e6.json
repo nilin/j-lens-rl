@@ -1,0 +1,22 @@
+{
+  "base": "explore_common.json",
+  "learning_rate": 3e-6,
+  "score_components": [
+    {
+      "layer": 8,
+      "start_fraction": 0.5,
+      "end_fraction": 1.0,
+      "aggregation": "mean",
+      "weight": 1.0
+    },
+    {
+      "layer": 8,
+      "start_fraction": 0.0,
+      "end_fraction": 0.5,
+      "aggregation": "mean",
+      "weight": -1.0
+    }
+  ],
+  "run_name": "explore-solved-late-minus-early-layer8-lr3e6",
+  "output_dir": "/explore/runs/solved_delta3e6"
+}
