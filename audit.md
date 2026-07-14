@@ -1485,3 +1485,41 @@ has digest `df15694eb070a2872a8c5d71ce1e3e0a`. Full curve metadata and hashes ar
 No sealed-final outcome was opened. Wave 3/8 replaced the seed-177 worker with
 seed 178 at 12:04 UTC; observed container listings never contained two
 treatment workers.
+
+### Correlation attempt-4 closeout and dormant recovery
+
+The separate emotional-word correlation app had completed all eight discovery
+shard artifact sets when Modal preempted its CPU controller. Its handler
+incorrectly terminalized the delivered `KeyboardInterrupt`; Modal's automatic
+same-input restart then rejected the failed claim. Forensic inspection was
+limited to identity/sidecar metadata: shard payload contents, discovery
+aggregation, selected word/sign, validation, and semantic outcomes remained
+unopened. Volume D is closed and none of its artifacts may be reused. The exact
+68-file inventory and boundary are in
+[`protocol_archive/word_correlation_attempt4_closeout.json`](protocol_archive/word_correlation_attempt4_closeout.json)
+(SHA-256 `1e28eb37bd1511f030b62cab950567f213634899690c545d15b0bd062e3608e0`)
+and
+[`protocol_archive/word_correlation_attempt4_forensic_inventory.json`](protocol_archive/word_correlation_attempt4_forensic_inventory.json)
+(SHA-256 `4f69fb8c9e85d65cec64759071d7d772c56ffc11bbe53eb305751452651d6420`).
+Thus the requested candidate atlas is frozen, but no measured word/correctness
+correlation is yet known.
+
+Recovery amendment 5 is committed at
+[`protocol_archive/word_correlation_v1_amendment5.json`](protocol_archive/word_correlation_v1_amendment5.json)
+(SHA-256 `6547c1e04d16e303b7f9a81cdf9a5191ca67975600314d2c935f0518c3b3cf10`).
+It replays the unchanged protocol on a fresh Volume with generation-based
+atomic publication, idempotent claim/submission recovery, and a shared named
+GPU lease. Independent review caught and fixed a source-boundary flaw before
+merge: the initial image rule could include `.git`, exposing excluded files
+through Git objects. The final image is assembled from an exact allowlist of
+15 safe source files plus three pinned artifacts, contains no Git metadata,
+and verifies a complete hash inventory before remote phases. The integrated
+code passed 136 outcome-free tests and compilation; an additional local focused
+run passed 81 tests. No Modal, W&B, protected state, or sealed outcome was
+accessed during repair.
+
+Attempt 5 remains deliberately unlaunched while the active V6 app runs. Its
+new named lease cannot atomically exclude that already-running, non-cooperating
+V6 launcher; app-list checks alone leave a launch race. Every future launcher,
+including the conditional profanity-U5 fallback, must acquire the same
+`j-lens-rl-global-gpu-lease-v1` / `global-one-gpu` slot before GPU dispatch.

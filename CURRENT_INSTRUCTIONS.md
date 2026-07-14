@@ -75,5 +75,6 @@ from confirmatory claims.
   overlapping another GPU app.
   Correlation attempt 4 stopped after all eight discovery shards when Modal
   preempted its CPU controller; aggregation/selection/validation never began
-  and outcomes remain uninspected. Its preemption-safe recovery stays behind
-  the active RL work.
+  and outcomes remain uninspected. Its preemption-safe recovery and strict
+  no-`.git` image firewall are committed, but attempt 5 stays unlaunched behind
+  active RL and cannot rely on the shared GPU lease until V6 is terminal.
