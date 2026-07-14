@@ -1,0 +1,145 @@
+{
+  "app_stop": {
+    "app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+    "container_list": [],
+    "observed_at_utc": "2026-07-14T15:10:44+00:00",
+    "state": "stopped",
+    "stopped_at_utc": "2026-07-14T14:54:50+00:00",
+    "tasks": 0
+  },
+  "current_volume": {
+    "aggregate_inventory": {
+      "directory_count": 15,
+      "entry_count": 118,
+      "file_count": 103,
+      "path_type_size_sha256": "76f1c518d74daf35c2866c0c0a9f20e0031b45897d15956f438ed2f13f2f6313",
+      "total_file_size_bytes": 396159033
+    },
+    "attempt_claim_sha256": "52db81fbd0e87005b12b826afae7a0f20a06250c0581f23faba208f63589eb38",
+    "attempt_status_sha256": "35a0a7bb2c22c1d08a32bf901ec71206dd47187c852316621828a6f024bdbf5e",
+    "launch_receipt_sha256": "c7c51eb0cabb275a6ddf60af24e1c097c26152d0816026ec31595fcbdd0e774c",
+    "run_directories": ["jlens_seed184", "jlens_seed185", "jlens_seed186"],
+    "seed186_files": {
+      "data_indices.json": {
+        "sha256": "3a1193f60164f152585aef3b28993863477ad193eee122eebc35b95b09765106",
+        "size_bytes": 13894
+      },
+      "environment_snapshot.json": {
+        "sha256": "fb0807a813be0d6d132c6deb98302fa90e3f6ef9ddd962b7ee1905c9dc8b8415",
+        "size_bytes": 3789
+      },
+      "resolved_config.json": {
+        "sha256": "8a8d3e4ddd144f00410df1bf9ac1c890477d4d5caf6bf3723dcaee61d1901483",
+        "size_bytes": 6490
+      },
+      "run_manifest.json": {
+        "sha256": "9fbb3e19a616e4d5e33f4c6330b428e7c0a1ec5cb9e079d32350255d09fca413",
+        "size_bytes": 35258
+      },
+      "validation_history.jsonl": {
+        "sha256": "5bbd33ca180da1e836a0092c6c0efbc61b3f6ce9e02cab34eaf0bb12daca315c",
+        "size_bytes": 944
+      }
+    },
+    "volume": "j-lens-rl-confirmatory-v7-profanity-u5-20260714a",
+    "volume_object_id": "vo-x35QE7lwawEvm6zayz2HQl"
+  },
+  "gpu_dispatches": {
+    "jlens_seed184": {
+      "completion_present": true,
+      "completion_sha256": "76bff40939fe15e4d0ffc851b0bc1285be3294a0515568ae55c78863e7c2a52e",
+      "intent_sha256": "49b6d49257cfef72b8c7463757857f5b2678212a82baa05690511904a852b596",
+      "nonce": "cb4e8198ed114e279fe29110565ec173"
+    },
+    "jlens_seed185": {
+      "completion_present": true,
+      "completion_sha256": "d4acb429f933c62e2fd14dba27624e8f6952565b642bd45bc5e6a1b9fd9e23b6",
+      "intent_sha256": "40d3c5424522018fbcb5ffd9fe0a784664fd2234a476a7fa0073c6f9e322c7a6",
+      "nonce": "4295a60df09c4c4ab9e623d374fac07b"
+    },
+    "jlens_seed186": {
+      "completion_present": false,
+      "intent_sha256": "8784dc1c041f60126ca22c9a1f2fedae18f58390379c2ebc3386a11dff88825c",
+      "nonce": "0bb45fb22e5941c3ac4f1210c8cd3407"
+    }
+  },
+  "incident_timeline": {
+    "app_stopped_at_utc": "2026-07-14T14:54:50+00:00",
+    "first_finalizer": {
+      "archive_finished_at_utc": "2026-07-14T14:53:31+00:00",
+      "call_id": "fc-01KXGHW2MXQKPPN3CVMA73AGFV",
+      "closeout_candidate_generated_at_utc": "2026-07-14T14:53:21.310294+00:00",
+      "container_id": "ta-01KXGHW3CKN68Y0Z69RNT5C12R",
+      "function_id": "fu-AJF06RQc1PVQKlxv9EANNZ"
+    },
+    "original_orchestrator": {
+      "container_id": "ta-01KXGFPGW6WT74JCE3JADVDVXR",
+      "function_id": "fu-FLgp531XzroQuOgZbnzTPR",
+      "keyboard_interrupt_status_at_utc": "2026-07-14T14:53:05.697308+00:00",
+      "preemption_system_log_at_utc": "2026-07-14T14:53:34+00:00",
+      "root_call_id": "fc-01KXGFPF0HBWNG0TW3BS8APCZ9"
+    },
+    "restarted_orchestrator": {
+      "container_id": "ta-01KXGHWZ81085HNWG634Z6KMRR",
+      "current_failed_status_written_at_utc": "2026-07-14T14:53:56.441830+00:00",
+      "first_protocol_log_at_utc": "2026-07-14T14:53:54+00:00",
+      "root_call_id": "fc-01KXGFPF0HBWNG0TW3BS8APCZ9",
+      "self_lease_collision_traceback_at_utc": "2026-07-14T14:54:06+00:00"
+    },
+    "second_finalizer": {
+      "call_id": "fc-01KXGHXM2JX589R7MGXBKSK9BP",
+      "failed_at_utc": "2026-07-14T14:54:06+00:00",
+      "failure": "V7 evidence bundle changed after finalization",
+      "function_id": "fu-AJF06RQc1PVQKlxv9EANNZ"
+    },
+    "seed186_gpu": {
+      "canceled_at_utc": "2026-07-14T14:54:47+00:00",
+      "call_id": "fc-01KXGH8MZ30JGK4PSBAVG9467P",
+      "container_id": "ta-01KXGH8NPGFBJ8K4MDQ7JHA3NR",
+      "function_id": "fu-PVW7KDoZlJmtE7NxVLbe0Z",
+      "optimizer_update_14_logged_at_utc": "2026-07-14T14:54:42+00:00",
+      "wandb_sync_started_at_utc": "2026-07-14T14:45:21+00:00"
+    }
+  },
+  "premature_snapshot": {
+    "archive_entry_count": 101,
+    "archive_relative_path": "exports/v7_profanity_u5_evidence_1f2756de5df846d48a30f19a307b70fb.zip",
+    "archive_sha256": "4c0b48913e86259d2f0071b7b23b96f69e916ae24331cd0f94f6a845c0a73ccf",
+    "archive_size_bytes": 198086460,
+    "archived_attempt_status_sha256": "4724a5ed2db7af6fdb57c58f41670010713b733f1a210121ec52eb9d770c13de",
+    "archived_seed186_validation_history_sha256": "f2102d58d3a1ac66487f982ced237c7784f9fc98329bac8d5eaab1279368fb8d",
+    "closeout_candidate_sha256": "1a12311bf647ee7ace89a24834f9edc9622eb63bca0599d747b4831c24b8c9c9",
+    "evidence_inventory_file_count": 100,
+    "evidence_inventory_sealed_evaluation_file_count": 0,
+    "evidence_inventory_sha256": "f30e19288293b0e65c57bf0be20b2a47b0a7cbbd3f51dae14e057d9b69ec9b02",
+    "evidence_inventory_total_size_bytes": 198035788,
+    "non_authoritative_reason": "The archive was finalized after the original orchestrator wrote KeyboardInterrupt but while seed186 was still running. It has seed186 nodes 0/4 and the earlier status, whereas the stopped Volume has nodes 0/4/10 and a later self-lease-collision status. It is immutable incident evidence, not the canonical terminal closeout.",
+    "receipt_file_sha256": "c09188cd19c5a019a2597458bd0d2e7a4d601097c156ac7c1fea66442289c073"
+  },
+  "protected_boundary": {
+    "acceptance_present": false,
+    "analysis_directory_present": false,
+    "controls_present": false,
+    "curve_gate_present": false,
+    "evals_directory_present": false,
+    "final_collection_present": false,
+    "final_evaluation_labels": [],
+    "final_outcomes_unopened": true,
+    "final_unlocked_present": false,
+    "sealed_comparison_present": false
+  },
+  "protocol": "j-lens-rl-confirmatory-v7-forensic-inventory-v1",
+  "stranded_gpu_lease": {
+    "acquired_at_utc": "2026-07-14T14:42:28.450331+00:00",
+    "canonical_full_value_sha256": "cd7029a6803155b4d61ba806873cf5885f39a75a7e160c21981caa86999077d1",
+    "claim_id": "1f2756de5df846d48a30f19a307b70fb",
+    "dict_name": "j-lens-rl-global-gpu-lease-v1",
+    "heartbeat_at_utc": "2026-07-14T14:42:28.450331+00:00",
+    "key": "global-one-gpu",
+    "nonce": "0bb45fb22e5941c3ac4f1210c8cd3407",
+    "owner": "confirmatory-v7-profanity-u5:1f2756de5df846d48a30f19a307b70fb",
+    "phase": "training",
+    "root_call_id": "fc-01KXGFPF0HBWNG0TW3BS8APCZ9",
+    "subject": "jlens_seed186"
+  }
+}

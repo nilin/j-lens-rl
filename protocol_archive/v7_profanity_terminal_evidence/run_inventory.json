@@ -1,0 +1,85 @@
+{
+  "attempt": {
+    "claim_id": "1f2756de5df846d48a30f19a307b70fb",
+    "registration_sha256": "5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569",
+    "registered_steps": [0, 4, 10, 20],
+    "registered_treatment_seeds": [184, 185, 186, 187, 188, 189, 190, 191]
+  },
+  "descriptive_terminal_only_aggregate": {
+    "correct_counts": [306, 315, 313, 308],
+    "denominator_per_step": 800,
+    "gate_status": "not evaluated; this two-seed aggregate is descriptive only",
+    "mean_exact_match": [0.3825, 0.39375, 0.39125, 0.385],
+    "steps": [0, 4, 10, 20]
+  },
+  "partial_nonterminal_runs": {
+    "186": {
+      "completed_optimizer_updates_observed_in_modal_log": 14,
+      "current_durable_curve": [0.3825, 0.3975, 0.3875],
+      "current_files": {
+        "data_indices.json": "3a1193f60164f152585aef3b28993863477ad193eee122eebc35b95b09765106",
+        "environment_snapshot.json": "fb0807a813be0d6d132c6deb98302fa90e3f6ef9ddd962b7ee1905c9dc8b8415",
+        "resolved_config.json": "8a8d3e4ddd144f00410df1bf9ac1c890477d4d5caf6bf3723dcaee61d1901483",
+        "run_manifest.json": "9fbb3e19a616e4d5e33f4c6330b428e7c0a1ec5cb9e079d32350255d09fca413",
+        "validation_history.jsonl": "5bbd33ca180da1e836a0092c6c0efbc61b3f6ce9e02cab34eaf0bb12daca315c"
+      },
+      "dispatch_completion_present": false,
+      "dispatch_intent_sha256": "8784dc1c041f60126ca22c9a1f2fedae18f58390379c2ebc3386a11dff88825c",
+      "durable_steps": [0, 4, 10],
+      "literal_target_completion_rates": [0.0, 0.0, 0.0],
+      "missing_terminal_files": [
+        "checkpoint-20/",
+        "final/",
+        "log_history.json",
+        "run_result_manifest.json",
+        "wandb_terminal_publish_receipt.json"
+      ],
+      "modal_canceled_at_utc": "2026-07-14T14:54:47+00:00",
+      "wandb_classification": "sync began at 2026-07-14T14:45:21Z, but no terminal artifact receipt exists; never pool or resume this run"
+    }
+  },
+  "protocol": "j-lens-rl-confirmatory-v7-run-inventory-v1",
+  "terminal_runs": {
+    "184": {
+      "curve": [0.3825, 0.38, 0.3875, 0.375],
+      "dispatch_completion_sha256": "76bff40939fe15e4d0ffc851b0bc1285be3294a0515568ae55c78863e7c2a52e",
+      "dispatch_intent_sha256": "49b6d49257cfef72b8c7463757857f5b2678212a82baa05690511904a852b596",
+      "final_adapter_and_tokenizer_sha256": "5314c09b948c36d005a383dc212f181bf4fe4b4fbe92e1de353c347e49788408",
+      "literal_target_completion_rates": [0.0, 0.0, 0.0, 0.0],
+      "log_history_sha256": "66e0eec88bf1cbcd99a3bf0d591c5951d5386439421f9ae8982a0f25395733b4",
+      "published_at_utc": "2026-07-14T14:25:28.840155+00:00",
+      "run_result_manifest_sha256": "b652d64ac6ce632495d0d8fdaa6b9dd93a69f59cc74f499b18cb751b6d3606b1",
+      "steps": [0, 4, 10, 20],
+      "terminal_checkpoint_sha256": "866ec8589d9074f83fb7a143b5f215106f9e80a2c24535ba7cf9006688bfcfc6",
+      "validation_history_sha256": "76932d75ff5320464ab8f5f422223ae27b6ac18c202581f7832dbb0290260bbd",
+      "wandb_artifact_digest": "9edf692ef3ac2fb97d546b1dc3e4708c",
+      "wandb_run_id": "confirm-v7-emotional-profanity-u5-h20-jlens_seed184",
+      "wandb_terminal_publish_receipt_sha256": "9797d06d37b147e3a938db83bb5e162551ff9e967823057c921c0f3c86c4490d"
+    },
+    "185": {
+      "curve": [0.3825, 0.4075, 0.395, 0.395],
+      "dispatch_completion_sha256": "d4acb429f933c62e2fd14dba27624e8f6952565b642bd45bc5e6a1b9fd9e23b6",
+      "dispatch_intent_sha256": "40d3c5424522018fbcb5ffd9fe0a784664fd2234a476a7fa0073c6f9e322c7a6",
+      "final_adapter_and_tokenizer_sha256": "a3970e5707c22673ef7c14c17778a41d6dd9cddda95fd0d5acfea85342825251",
+      "literal_target_completion_rates": [0.0, 0.0, 0.0, 0.0],
+      "log_history_sha256": "1382c90f9d53fc7af4b215e8619448232f966be382ead29e68cec213f999bff2",
+      "published_at_utc": "2026-07-14T14:42:25.816248+00:00",
+      "run_result_manifest_sha256": "32e05a18b7f8da2e277476124f71a3c8a09277bdc293d476a96ad26ed8c4dd4a",
+      "steps": [0, 4, 10, 20],
+      "terminal_checkpoint_sha256": "3a8059b9583e24dfaf34f16d3a8aefab45e151ed3b9cd049b52512e9cddd80f9",
+      "validation_history_sha256": "67831f46d950938177b53ef2764904c9d09d5b2cac7928ed75d5b3e3e6d3282f",
+      "wandb_artifact_digest": "e4f1631986d5d00b8a77394ba216af79",
+      "wandb_run_id": "confirm-v7-emotional-profanity-u5-h20-jlens_seed185",
+      "wandb_terminal_publish_receipt_sha256": "2303276a3f92cc8841ca9eb16c5b223f81531272edb2a8acdf807d574d089643"
+    }
+  },
+  "unstarted_treatment_seeds": [187, 188, 189, 190, 191],
+  "wandb_metric_semantics": {
+    "authoritative_schema_path_in_volume": "reproducibility/metric_schema.json",
+    "authoritative_schema_sha256": "c9bffc201757d7d98baced84e166636c107efdf826f31c770727d15c2a873e94",
+    "curve_metric": "train/validation/exact_match",
+    "intrinsic_reward_metric": "train/reward",
+    "literal_rate_metric": "train/jlens/damn_fuck_literal_rate",
+    "step_metric": "train/global_step"
+  }
+}

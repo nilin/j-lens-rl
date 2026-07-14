@@ -1,0 +1,49 @@
+{
+  "artifact": {
+    "digest": "e4f1631986d5d00b8a77394ba216af79",
+    "id": "QXJ0aWZhY3Q6MzEzODkzNjg1OA==",
+    "name": "confirm-v7-emotional-profanity-u5-h20-jlens_seed185-terminal-evidence:v0",
+    "qualified_name": "nilinabra-spare-time/j-lens-rl/confirm-v7-emotional-profanity-u5-h20-jlens_seed185-terminal-evidence:v0",
+    "version": "v0"
+  },
+  "observed_wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v7-emotional-profanity-u5-h20",
+    "project": "j-lens-rl",
+    "run_id": "confirm-v7-emotional-profanity-u5-h20-jlens_seed185",
+    "run_name": "confirm-v7-emotional-profanity-u5-h20-jlens_seed185",
+    "tags": [
+      "confirmatory-v7",
+      "emotional-j-lens",
+      "profanity-u5",
+      "conditional-on-v6-final-unopened"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v7-emotional-profanity-u5-h20-jlens_seed185"
+  },
+  "schema_version": 2,
+  "terminal_run_result_sha256": "32e05a18b7f8da2e277476124f71a3c8a09277bdc293d476a96ad26ed8c4dd4a",
+  "uploaded_file_sha256": {
+    "data_indices.json": "45548d77a201a2bfdd310f8a55384e945692b4fbfed1295040b20c71b37616ef",
+    "environment_snapshot.json": "fb0807a813be0d6d132c6deb98302fa90e3f6ef9ddd962b7ee1905c9dc8b8415",
+    "log_history.json": "1382c90f9d53fc7af4b215e8619448232f966be382ead29e68cec213f999bff2",
+    "resolved_config.json": "0cdb001e79e2608ea629a033caf6dd393b095778ae043bc816631daffdf487ed",
+    "run_manifest.json": "11ebacfa5992499de4974a96fb3e0d555a5bfa2c45490f67ce8bd41a171e40d1",
+    "run_result_manifest.json": "32e05a18b7f8da2e277476124f71a3c8a09277bdc293d476a96ad26ed8c4dd4a",
+    "validation_history.jsonl": "67831f46d950938177b53ef2764904c9d09d5b2cac7928ed75d5b3e3e6d3282f"
+  },
+  "wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v7-emotional-profanity-u5-h20",
+    "project": "j-lens-rl",
+    "resume": "never",
+    "run_id": "confirm-v7-emotional-profanity-u5-h20-jlens_seed185",
+    "run_name": "confirm-v7-emotional-profanity-u5-h20-jlens_seed185",
+    "tags": [
+      "confirmatory-v7",
+      "emotional-j-lens",
+      "profanity-u5",
+      "conditional-on-v6-final-unopened"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v7-emotional-profanity-u5-h20-jlens_seed185"
+  }
+}

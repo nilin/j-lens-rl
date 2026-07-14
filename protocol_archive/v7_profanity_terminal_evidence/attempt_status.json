@@ -1,0 +1,9 @@
+{
+  "claim_id": "1f2756de5df846d48a30f19a307b70fb",
+  "error": "RuntimeError(\"global GPU lease is occupied; refusing V7 GPU dispatch: {'protocol': 'j-lens-rl-global-gpu-lease-v1', 'environment_name': 'main', 'slot': 'global-one-gpu', 'owner': 'confirmatory-v7-profanity-u5:1f2756de5df846d48a30f19a307b70fb', 'workload': 'confirmatory-v7-profanity-u5', 'claim_id': '1f2756de5df846d48a30f19a307b70fb', 'global_modal_gpu_limit': 1, 'submission_preflight': {'active_other_modal_apps': [], 'checked_at_utc': '2026-07-14T14:14:28.960308+00:00', 'exclusive_gpu_confirmation': 'confirmed-no-other-modal-gpu-app-running', 'global_modal_gpu_limit': 1, 'gpu_lease_dict': 'j-lens-rl-global-gpu-lease-v1', 'gpu_lease_key': 'global-one-gpu', 'gpu_lease_owner_at_preflight': None, 'volume_name': 'j-lens-rl-confirmatory-v7-profanity-u5-20260714a', 'volume_object_id': 'vo-x35QE7lwawEvm6zayz2HQl', 'volume_version': 2}, 'submission_preflight_sha256': 'd14f22d244c998a71e401d8a6b58b2fd6cc96197912c09227b3d44f86101594f', 'acquired_at_utc': '2026-07-14T14:42:28.450331+00:00', 'heartbeat_at_utc': '2026-07-14T14:42:28.450331+00:00', 'nonce': '0bb45fb22e5941c3ac4f1210c8cd3407', 'modal_app': 'j-lens-rl-confirmatory-v7-profanity-u5', 'volume': 'j-lens-rl-confirmatory-v7-profanity-u5-20260714a', 'root_call_id': 'fc-01KXGFPF0HBWNG0TW3BS8APCZ9', 'phase': 'training', 'subject': 'jlens_seed186'}\")",
+  "failed_from_stage": "semantic_training",
+  "failure_phase": "semantic_training",
+  "launch_receipt_present": true,
+  "stage": "failed",
+  "updated_at_utc": "2026-07-14T14:53:56.441830+00:00"
+}

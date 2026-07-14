@@ -1736,3 +1736,51 @@ Any such comparison is development-only until its arms, nodes, selection rule,
 new seeds, matched sign flips, and untouched data are prospectively frozen.
 Word correlation or joint-family calibration may run between RL attempts, but
 must not keep a ready RL arm off the sole GPU for an hour.
+
+### Terminal V7 infrastructure failure after two valid seeds
+
+V7 did not produce a registered gate decision. Treatment seeds 184 and 185
+completed, durably published their dispatch completions, and published terminal
+W&B artifact receipts. Their exposed 400-row curves at steps `0/4/10/20` were
+`.3825/.3800/.3875/.3750` and `.3825/.4075/.3950/.3950`. The descriptive
+two-seed mean is `.3825/.39375/.39125/.3850`: it rises at the first node and
+then falls. This is partial development evidence only, not the preregistered
+eight-seed decision. Literal `damn`/`fuck` completion rate was zero at every
+terminal node for both seeds.
+
+Seed 186 has only durable curve nodes `0/4/10`, with
+`.3825/.3975/.3875`. Modal logs show optimizer update 14/20 at 14:54:42 UTC,
+followed by cancellation at 14:54:47. It has no dispatch completion,
+checkpoint-20, final adapter, log history, run-result manifest, or terminal W&B
+receipt. Its W&B sync began but is therefore explicitly partial and may never be
+pooled or resumed. Seeds 187--191 did not start.
+
+At 14:53:34 UTC Modal reported that the CPU orchestrator had been preempted and
+would restart the same input. The original handler had already written a
+`KeyboardInterrupt` failure and invoked the finalizer while seed 186 continued
+running. That premature export is internally hash-valid, but it contains only
+seed-186 nodes 0/4 and the earlier status. The restarted orchestrator then
+collided with its own still-held seed-186 GPU lease and overwrote the status;
+the second finalizer correctly rejected the changing bundle. The app stopped at
+14:54:50 with zero tasks and later container checks empty.
+
+Consequently V7 is closed as `infrastructure_failed/failed_before_final`. The
+registered eight-treatment curve gate was not evaluated. No control, final
+unlock, final collection, `evals/` directory, sealed comparison, analysis, or
+acceptance exists; the 900-item final remained unopened. The canonical closeout
+is
+[`protocol_archive/v7_profanity_terminal_closeout.json`](protocol_archive/v7_profanity_terminal_closeout.json)
+(SHA-256 `c2cfef2d3b24a96fbef703ef64b0f53f2c696481548300ee53154559ea3d602b`).
+Its compact evidence directory preserves exact curve histories, terminal W&B
+receipts, metric semantics, current-vs-premature state hashes, run inventory,
+incident IDs, and the retrievable 198,086,460-byte export
+(`4c0b48913e86259d2f0071b7b23b96f69e916ae24331cd0f94f6a845c0a73ccf`).
+
+The global Modal GPU lease is intentionally still stranded on seed 186 at this
+closeout commit boundary. Its full canonical value hashes to
+`cd7029a6803155b4d61ba806873cf5885f39a75a7e160c21981caa86999077d1`.
+Only after this closeout is committed and pushed may root compare-and-pop that
+exact nonce, verify absence, and commit a separate retirement receipt. The next
+RL work must be a separately registered whole RTX-4090 attempt with fresh
+seeds, isolated state, a commit-pinned runtime, and preserved offline W&B
+directories; no V7 model/run artifact may be reused.

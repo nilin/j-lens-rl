@@ -1,0 +1,166 @@
+{
+  "closed_at_utc": "2026-07-14T15:17:06+00:00",
+  "curve_gate": {
+    "evaluated": false,
+    "reason": "Only treatment seeds 184 and 185 are valid terminal runs. Seed 186 is partial nonterminal, and seeds 187-191 never started. The registered decision requires all eight treatment seeds.",
+    "registered_steps": [0, 4, 10, 20]
+  },
+  "descriptive_partial_evidence": {
+    "interpretation": "These two complete seeds are auditable development evidence only. They are not the registered V7 gate and seed186 is not pooled with them.",
+    "terminal_seed_count": 2,
+    "terminal_seed_mean_curve": [0.3825, 0.39375, 0.39125, 0.385]
+  },
+  "failure_policy": {
+    "conclusion": "The CPU orchestrator was preempted while seed186 was nonterminal. Modal restarted the same input, the restart collided with the seed186 lease, and the app was stopped. The registered retry policy therefore closes the whole V7 attempt as infrastructure_failed/failed_before_final. Seeds 184 and 185 remain auditable terminal artifacts but cannot be pooled into or used to complete a retry; seed186 must never be resumed.",
+    "fresh_attempt_requirement": "Any later RTX4090 or Modal attempt must have a separate prospective registration, new claim/state/run IDs, all treatment seeds rerun on one backend, and no V7 run artifact pooling or optimization resume.",
+    "registered_infrastructure_retry_policy": "a completed run may only retry publication of its immutable terminal W&B artifact; never overwrite or resume model optimization; any partial nonterminal run closes the whole attempt immutably and requires a fresh registered claim/volume"
+  },
+  "final_boundary": {
+    "acceptance_present": false,
+    "analysis_directory_present": false,
+    "controls_present": false,
+    "evals_directory_present": false,
+    "final_collection_present": false,
+    "final_evaluation_labels": [],
+    "final_outcomes_unopened": true,
+    "final_unlocked_present": false,
+    "sealed_comparison_present": false
+  },
+  "infrastructure_incident": {
+    "app_stop": {
+      "app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+      "post_stop_container_count": 0,
+      "post_stop_observed_at_utc": "2026-07-14T15:10:44+00:00",
+      "state": "stopped",
+      "stopped_at_utc": "2026-07-14T14:54:50+00:00",
+      "tasks": 0
+    },
+    "classification": "CPU-orchestrator preemption followed by a non-idempotent same-input restart and self-lease collision; not a scientific stopping rule",
+    "premature_finalizer": {
+      "archive_entry_count": 101,
+      "archive_relative_path": "exports/v7_profanity_u5_evidence_1f2756de5df846d48a30f19a307b70fb.zip",
+      "archive_sha256": "4c0b48913e86259d2f0071b7b23b96f69e916ae24331cd0f94f6a845c0a73ccf",
+      "archive_size_bytes": 198086460,
+      "archived_attempt_status_sha256": "4724a5ed2db7af6fdb57c58f41670010713b733f1a210121ec52eb9d770c13de",
+      "archived_seed186_validation_sha256": "f2102d58d3a1ac66487f982ced237c7784f9fc98329bac8d5eaab1279368fb8d",
+      "closeout_candidate_sha256": "1a12311bf647ee7ace89a24834f9edc9622eb63bca0599d747b4831c24b8c9c9",
+      "evidence_inventory_sha256": "f30e19288293b0e65c57bf0be20b2a47b0a7cbbd3f51dae14e057d9b69ec9b02",
+      "non_authoritative_reason": "The archive is internally hash-valid for its 14:53 snapshot, but it was made while seed186 was still running. It contains the earlier KeyboardInterrupt status and seed186 nodes 0/4; the stopped Volume contains a later self-lease-collision status and nodes 0/4/10. Preserve it as incident evidence only.",
+      "receipt_file_sha256": "c09188cd19c5a019a2597458bd0d2e7a4d601097c156ac7c1fea66442289c073",
+      "retrieval_command": "modal volume get j-lens-rl-confirmatory-v7-profanity-u5-20260714a /exports/v7_profanity_u5_evidence_1f2756de5df846d48a30f19a307b70fb.zip ./v7_profanity_u5_evidence_1f2756de5df846d48a30f19a307b70fb.zip"
+    },
+    "stranded_gpu_lease": {
+      "canonical_full_value_sha256": "cd7029a6803155b4d61ba806873cf5885f39a75a7e160c21981caa86999077d1",
+      "dict_name": "j-lens-rl-global-gpu-lease-v1",
+      "key": "global-one-gpu",
+      "nonce": "0bb45fb22e5941c3ac4f1210c8cd3407",
+      "owner": "confirmatory-v7-profanity-u5:1f2756de5df846d48a30f19a307b70fb",
+      "recovery_policy": "This closeout must be committed and pushed first. Root may then recheck the exact full value and nonce, pop it, verify byte-equivalent canonical value, verify the key is absent, and commit/push a separate lease-retirement receipt before any later GPU launch.",
+      "subject": "jlens_seed186"
+    }
+  },
+  "operational_identity": {
+    "claim_id": "1f2756de5df846d48a30f19a307b70fb",
+    "global_modal_gpu_limit": 1,
+    "gpu_type": "L40S",
+    "launch_submitted_at_utc": "2026-07-14T14:15:11.286238+00:00",
+    "max_parallel_gpu_workers": 1,
+    "modal_app": "j-lens-rl-confirmatory-v7-profanity-u5",
+    "modal_app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+    "modal_function_call_id": "fc-01KXGFPF0HBWNG0TW3BS8APCZ9",
+    "prepared_runtime_git_commit": "6d931a34cdbb93935b45220d791269faad76debd",
+    "source_git_commit": "3a9ca5cb317dea9e76160355bc8d7fa6c1f23bb8",
+    "volume": "j-lens-rl-confirmatory-v7-profanity-u5-20260714a",
+    "volume_object_id": "vo-x35QE7lwawEvm6zayz2HQl"
+  },
+  "partial_nonterminal_run": {
+    "canceled_at_utc": "2026-07-14T14:54:47+00:00",
+    "current_durable_curve": [0.3825, 0.3975, 0.3875],
+    "current_validation_history_sha256": "5bbd33ca180da1e836a0092c6c0efbc61b3f6ce9e02cab34eaf0bb12daca315c",
+    "dispatch_completion_present": false,
+    "durable_steps": [0, 4, 10],
+    "optimizer_update_14_observed_at_utc": "2026-07-14T14:54:42+00:00",
+    "seed": 186,
+    "terminal_result_present": false,
+    "wandb_terminal_receipt_present": false
+  },
+  "protocol": "j-lens-rl-confirmatory-v7-profanity-terminal-closeout-v1",
+  "registered_lineage": {
+    "launch_ledger_sha256": "297d5d6594bfd422cfbd7d533253823d0f23195c323585284c40879a1dfe24ac",
+    "recipe_lock_sha256": "33760cfc906ed9c557eee40bc33a4bce2ce2fc32a8da23e887be8f97ad47c7f9",
+    "registration_sha256": "5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569",
+    "selection_closeout_sha256": "c8db90955f34b61d03fe510c4ef4483fd1249a1b9a5cfcd42d4f411e4e5b2d0a",
+    "sealed_final_manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+    "sealed_final_sorted_set_sha256": "eadcd0e2fc194b0e38bc1c9f4aa1bbf6e6b3ba1043b0015eedee59aec133637c"
+  },
+  "source_evidence": {
+    "attempt_claim": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/attempt_claim.json",
+      "sha256": "52db81fbd0e87005b12b826afae7a0f20a06250c0581f23faba208f63589eb38"
+    },
+    "attempt_status": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/attempt_status.json",
+      "sha256": "35a0a7bb2c22c1d08a32bf901ec71206dd47187c852316621828a6f024bdbf5e"
+    },
+    "forensic_inventory": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/forensic_inventory.json",
+      "sha256": "a6011310b8845ee0d91a4b06d894527cbf59ef57ddc075013992a60a97c199b7"
+    },
+    "launch_receipt": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/launch_receipt.json",
+      "sha256": "c7c51eb0cabb275a6ddf60af24e1c097c26152d0816026ec31595fcbdd0e774c"
+    },
+    "premature_export_receipt": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/premature_export_receipt.json",
+      "sha256": "c09188cd19c5a019a2597458bd0d2e7a4d601097c156ac7c1fea66442289c073"
+    },
+    "run_inventory": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/run_inventory.json",
+      "sha256": "c76f6dc5899781dd0c3297f3e34a17fe64672d3afd79d06a385244af70aaef6e"
+    },
+    "seed184_validation_history": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/seed184_validation_history.jsonl",
+      "sha256": "76932d75ff5320464ab8f5f422223ae27b6ac18c202581f7832dbb0290260bbd"
+    },
+    "seed184_wandb_receipt": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/seed184_wandb_terminal_publish_receipt.json",
+      "sha256": "9797d06d37b147e3a938db83bb5e162551ff9e967823057c921c0f3c86c4490d"
+    },
+    "seed185_validation_history": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/seed185_validation_history.jsonl",
+      "sha256": "67831f46d950938177b53ef2764904c9d09d5b2cac7928ed75d5b3e3e6d3282f"
+    },
+    "seed185_wandb_receipt": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/seed185_wandb_terminal_publish_receipt.json",
+      "sha256": "2303276a3f92cc8841ca9eb16c5b223f81531272edb2a8acdf807d574d089643"
+    },
+    "seed186_partial_validation_history": {
+      "path": "protocol_archive/v7_profanity_terminal_evidence/seed186_partial_validation_history.jsonl",
+      "sha256": "5bbd33ca180da1e836a0092c6c0efbc61b3f6ce9e02cab34eaf0bb12daca315c"
+    }
+  },
+  "terminal_runs": {
+    "184": {
+      "curve": [0.3825, 0.38, 0.3875, 0.375],
+      "run_result_manifest_sha256": "b652d64ac6ce632495d0d8fdaa6b9dd93a69f59cc74f499b18cb751b6d3606b1",
+      "wandb_artifact_digest": "9edf692ef3ac2fb97d546b1dc3e4708c"
+    },
+    "185": {
+      "curve": [0.3825, 0.4075, 0.395, 0.395],
+      "run_result_manifest_sha256": "32e05a18b7f8da2e277476124f71a3c8a09277bdc293d476a96ad26ed8c4dd4a",
+      "wandb_artifact_digest": "e4f1631986d5d00b8a77394ba216af79"
+    }
+  },
+  "terminal_stage": "failed_before_final",
+  "v7_attempt_disposition": "infrastructure_failed",
+  "wandb_reconstruction": {
+    "group": "confirm-v7-emotional-profanity-u5-h20",
+    "metric_schema_sha256": "c9bffc201757d7d98baced84e166636c107efdf826f31c770727d15c2a873e94",
+    "project": "j-lens-rl",
+    "published_terminal_run_ids": [
+      "confirm-v7-emotional-profanity-u5-h20-jlens_seed184",
+      "confirm-v7-emotional-profanity-u5-h20-jlens_seed185"
+    ],
+    "seed186_status": "partial nonterminal sync with no terminal artifact receipt"
+  }
+}

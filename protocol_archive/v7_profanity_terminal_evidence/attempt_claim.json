@@ -1,0 +1,24 @@
+{
+  "claim_id": "1f2756de5df846d48a30f19a307b70fb",
+  "git_commit": "6d931a34cdbb93935b45220d791269faad76debd",
+  "global_modal_gpu_limit": 1,
+  "gpu_app_overlap_policy": "no other Modal GPU app may overlap this V7 attempt",
+  "gpu_lease_dict": "j-lens-rl-global-gpu-lease-v1",
+  "gpu_lease_key": "global-one-gpu",
+  "operational_preflight": {
+    "active_other_modal_apps": [],
+    "checked_at_utc": "2026-07-14T14:14:28.960308+00:00",
+    "exclusive_gpu_confirmation": "confirmed-no-other-modal-gpu-app-running",
+    "global_modal_gpu_limit": 1,
+    "gpu_lease_dict": "j-lens-rl-global-gpu-lease-v1",
+    "gpu_lease_key": "global-one-gpu",
+    "gpu_lease_owner_at_preflight": null,
+    "volume_name": "j-lens-rl-confirmatory-v7-profanity-u5-20260714a",
+    "volume_object_id": "vo-x35QE7lwawEvm6zayz2HQl",
+    "volume_version": 2
+  },
+  "protocol": "j-lens-rl-confirmatory-v7-profanity-u5",
+  "recipe_lock_sha256": "33760cfc906ed9c557eee40bc33a4bce2ce2fc32a8da23e887be8f97ad47c7f9",
+  "registration_sha256": "5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569",
+  "volume_object_id": "vo-x35QE7lwawEvm6zayz2HQl"
+}

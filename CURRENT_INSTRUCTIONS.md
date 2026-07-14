@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 14:18 UTC
+Last reconciled with the user: 2026-07-14 15:20 UTC
 
 ## Objective
 
@@ -61,14 +61,13 @@ from confirmatory claims.
 - Keep unopened curve/final/reserve manifests out of exploratory jobs. Never
   inspect sealed outcomes before their registered gate permits it.
 - Current state: V5 positive-`joy` failed its registered curve gate; V6
-  `yay/great/success/nice` ended infrastructure-failed after six valid seeds.
-  Preserve both as honest negative/partial evidence; neither opened the sealed
-  final. V7 negative-`damn/fuck` is now active, serially running treatment seeds
-  184--191 on one L40S from source commit `3a9ca5c` in Modal app
-  `ap-Vmg0kpbszpiUHHrNYcVWbd`, claim
-  `1f2756de5df846d48a30f19a307b70fb`, Volume
-  `j-lens-rl-confirmatory-v7-profanity-u5-20260714a`. Seed 184 began syncing to
-  W&B at 14:17:41 UTC. Do not start another GPU app, manually open controls or
-  final data, resume a closed attempt, or pool attempts. Correlation attempt 4
-  remains preempted after discovery with outcomes uninspected; attempt 5 stays
-  unlaunched behind V7 and must use the same global lease.
+  `yay/great/success/nice` ended infrastructure-failed after six valid seeds;
+  V7 negative-`damn/fuck` ended infrastructure-failed after two valid terminal
+  seeds and partial seed 186. Preserve all as honest negative/partial evidence.
+  V7's registered eight-seed gate was never evaluated, controls never ran, and
+  the sealed final stayed unopened. Never resume or pool V7. Commit and push its
+  closeout, retire the exact stranded Modal lease with a separate receipt, then
+  launch the separately registered whole V8 attempt on the local RTX 4090 with
+  fresh seeds and offline W&B directories. Correlation attempt 4 remains closed
+  with outcomes uninspected; word search must not delay a ready RL run by an
+  hour.

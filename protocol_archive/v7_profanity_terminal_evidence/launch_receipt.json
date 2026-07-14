@@ -1,0 +1,16 @@
+{
+  "app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+  "claim_id": "1f2756de5df846d48a30f19a307b70fb",
+  "function_call_id": "fc-01KXGFPF0HBWNG0TW3BS8APCZ9",
+  "global_modal_gpu_limit": 1,
+  "gpu_app_overlap_policy": "no other Modal GPU app may overlap this V7 attempt",
+  "gpu_lease_dict": "j-lens-rl-global-gpu-lease-v1",
+  "gpu_lease_key": "global-one-gpu",
+  "gpu_type": "L40S",
+  "max_parallel_gpu_workers": 1,
+  "modal_app": "j-lens-rl-confirmatory-v7-profanity-u5",
+  "receipt_status": "present",
+  "submitted_at_utc": "2026-07-14T14:15:11.286238+00:00",
+  "volume": "j-lens-rl-confirmatory-v7-profanity-u5-20260714a",
+  "volume_object_id": "vo-x35QE7lwawEvm6zayz2HQl"
+}
