@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-launch-ledger",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "scientific_status": "development_only_on_exposed_curve_no_significance_claim",
+  "recorded_at_utc": "2026-07-14T19:21:28Z",
+  "prepared_source": {
+    "git_commit": "7a42decb65fc954cfa345fef9fcfd7cafceed40c",
+    "git_tree": "1f867c53691609ddec98370414292459419be472",
+    "registration_sha256": "9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe",
+    "protocol_state_sha256": "c5616f3112cf3c8b24f89c388b1ca2846930565d70e8aab0662009efab56c345",
+    "source_manifest_sha256": "876d8155f1e4817939d5dc13b81233a5620758ce8fa257a3bfe6ee1acdcf92e0",
+    "source_snapshot_sha256": "e51ffb5e449d96492df2740efe76862f7997d046d5092f563d6529aa85777bf8",
+    "synthetic_runtime_git_commit": "7d4f84b7a41c409d76c6e1413f713bc846f38ce8",
+    "runtime_source_tree_sha256": "c59d30306bd67d036844bdeca64db7973800143b1d4ef14a1c15a754cf2de916",
+    "recipe_lock_sha256": "d10168e06f94a7dbf2baf9a5f75bd3cd448677f03088d3c4be004b74a21dd80d",
+    "metric_schema_sha256": "50cad76ea844f981fe19b1f08d15f861558ca97544e84792ea23a8da6fefa21d",
+    "infrastructure_amendment1_sha256": "485b19708124b264228960eca984158c1f17c76adeb493f5a7feae72760fe3e1",
+    "preclaim_attempt_a_closeout_sha256": "11386da4a37200c467a1c7e6b6bc93f04b09b28314ebf4ec73fa738620ac4eac"
+  },
+  "config_sha256": {
+    "fuck": "420d86fbd92b515c625f38dc623a46288d5b7a4ed51c5f2b6fe8bc376a239cfe",
+    "yay": "7d11307c7b8b8d110f9e3bcbd5f67eb47886e684b630f0407a3334bcbe5c01e5",
+    "worried": "9194223cb0956fd85c5a18ebe4974f2711a5605aa315e911984b6bcf24f949e3"
+  },
+  "modal": {
+    "app_id": "ap-XrW9TTTRzQZ2sV9kB8WjbS",
+    "app_name": "j-lens-rl-development-emotional-tournament-u5-h15-v1",
+    "root_function_call_id": "fc-01KXH13DR4ZGR31JSAFC7JN0KF",
+    "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+    "volume_name": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+    "volume_object_id": "vo-SU6aUsebIrmYyZFGoCOo4e",
+    "volume_version": 2,
+    "image_id": "im-xDbMYrbklywGxN1BQMnJsS",
+    "gpu_type": "NVIDIA L40S",
+    "max_parallel_gpu_workers": 1,
+    "active_other_modal_apps_at_preflight": [],
+    "gpu_lease_owner_at_preflight": null,
+    "preflight_checked_at_utc": "2026-07-14T19:19:07.727756+00:00",
+    "submitted_at_utc": "2026-07-14T19:19:23.236127+00:00",
+    "first_gpu_lease_acquired_at_utc": "2026-07-14T19:19:39.837091+00:00"
+  },
+  "immutable_remote_sha256": {
+    "attempt_claim.json": "25d947e778df6dfe0ea403c7a2c65645a30f4df284f8d6be796dc89eb0d49f63",
+    "launch_receipt.json": "a440c55134bea261ffee9e34c1ce720a3bdb1b38660cb21c3b63038f972c92ab",
+    "gpu_dispatches/training-fuck_seed192-96838170ca7547bca5182686123ef011.json": "9fadf98e5d8cf84711355545cba405ea5a04e1882a7d66569c8a6b7941714e88",
+    "runs/fuck_seed192/run_manifest.json": "92ad06a761ebf94c89a8408ab1088b65d1f2fa463c4c39e11db4fd5f02486c72"
+  },
+  "registered_execution": {
+    "arms_in_fixed_serial_order": [
+      "fuck",
+      "yay",
+      "worried"
+    ],
+    "weights": {
+      "fuck": -1.0,
+      "yay": 1.0,
+      "worried": -1.0
+    },
+    "shared_seed": 192,
+    "updates_per_arm": 15,
+    "curve_steps": [
+      0,
+      5,
+      10,
+      15
+    ],
+    "training_reward": "intrinsic_j_lens_target_word_reward_only",
+    "correctness_use": "observational_validation_only"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "dev-v8-emotional-single-u5-h15-seed192",
+    "first_arm_run_id": "dev-v8-emotional-single-u5-h15-fuck-seed192",
+    "first_arm_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v8-emotional-single-u5-h15-fuck-seed192"
+  },
+  "observed_launch_state": {
+    "stage": "training",
+    "current_arm": "fuck",
+    "serial_position": 1,
+    "serial_total": 3,
+    "run_manifest_gpu": "NVIDIA L40S",
+    "run_manifest_cuda": "12.8",
+    "run_manifest_torch": "2.9.1+cu128",
+    "outcome_curve_inspected_for_this_ledger": false,
+    "sealed_or_reserved_payload_accessed": false
+  },
+  "verification": {
+    "focused_tests": "13 passed",
+    "full_suite": "332 passed; 3 unrelated pre-existing state/template expectation failures",
+    "remote_verify_launch": true,
+    "recursive_config_dependency_closure": true,
+    "copied_preclaim_closeout_replay": true
+  }
+}

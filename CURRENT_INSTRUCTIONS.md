@@ -55,8 +55,8 @@ separate from confirmatory claims.
   on one RTX 4090; its mean `.3975/.3971875/.3971875/.3925` failed the curve
   gate. Never run V9 controls or open its final.
 - Current RL lane: development-only fixed serial `-fuck`, `+yay`, `-worried`
-  on one Modal L40S. Its first submission failed before claim/training because
-  an inherited config was absent from the strict image. Use only the committed
-  pre-outcome amendment and fresh Volume B; never reuse Volume A. This lane may
-  rank a candidate but cannot prove significance. Correlation attempt 4 remains
-  closed with outcomes uninspected.
+  on one Modal L40S. Its repaired replacement is actively training under claim
+  `1d6ea36d356c420f92e125c35a1a6aeb`; never reuse retired Volume A. Preserve
+  fixed arm order and let all three finish. This lane may rank a candidate but
+  cannot prove significance. Correlation attempt 4 remains closed with outcomes
+  uninspected.

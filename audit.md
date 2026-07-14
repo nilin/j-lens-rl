@@ -2091,3 +2091,19 @@ amendment and a copied attempt-A closeout so remote replay does not depend on
 `protocol_archive/` being present in the strict image. Thirteen focused tests,
 including a remote-like copied-closeout check, pass. This pre-outcome repair is
 not an inferential retry and supplies no evidence about any arm.
+
+Replacement preparation from clean pushed commit `7a42dec` passed locally and
+again inside the strict Modal image. Its registration is
+`9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe`;
+fresh Volume B is `vo-SU6aUsebIrmYyZFGoCOo4e`. App
+`ap-XrW9TTTRzQZ2sV9kB8WjbS` wrote claim
+`1d6ea36d356c420f92e125c35a1a6aeb` and receipt-bound root call
+`fc-01KXH13DR4ZGR31JSAFC7JN0KF`. Preflight saw no other active Modal app and an
+empty global lease. The first serial arm, negative intrinsic `fuck`, then
+acquired the sole lease and created an immutable run manifest on an NVIDIA
+L40S with CUDA 12.8 and torch 2.9.1. The manifest records `reward_type=jlens`,
+the exact registered source/config/input identities, and W&B run
+`dev-v8-emotional-single-u5-h15-fuck-seed192`. At the launch-ledger cutoff no
+curve outcome had been inspected; `yay` and `worried` had not dispatched. The
+durable reconstruction record is
+`protocol_archive/emotional_tournament_v1_launch_ledger.json`.
