@@ -54,6 +54,7 @@
         "resolved_config.json",
         "run_manifest.json"
       ],
+      "directory_present": true,
       "seed": 182,
       "valid_terminal": false,
       "validation_history_present": false,

@@ -134,7 +134,7 @@
     "evidence_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/evidence_inventory.json", "sha256": "f5137850e951ac2e30854d00ecfa0208d45c1de5521d8a0e71759da9d444a9e1"},
     "launch_receipt": {"path": "protocol_archive/v6_celebration_terminal_evidence/launch_receipt.json", "sha256": "c55b9ddcd1a5e128b7b2148488fefc22ed409acdc4a622c0c38328e56fef9d26"},
     "root_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/root_inventory.json", "sha256": "e25a7f02e2376ae2024751c6889b13a4e008c6a7f539b496f65cc472a80f32e1"},
-    "run_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/run_inventory.json", "sha256": "d054bcc640fdfa9275b9cb908baca76b05f13d556fcbd27db10176f51ab8a4e7"}
+    "run_inventory": {"path": "protocol_archive/v6_celebration_terminal_evidence/run_inventory.json", "sha256": "b68ecf6367d725324a1ad7e2ec8fe2ae780e1aca27a121adf1e7875281fa97bf"}
   },
   "terminal_stage": "failed_before_final",
   "v6_attempt_disposition": "infrastructure_failed",

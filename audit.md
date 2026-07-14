@@ -1545,3 +1545,46 @@ artifact trees, receipts, and inspection boundary are in
 [`protocol_archive/v6_celebration_halfway_ledger.json`](protocol_archive/v6_celebration_halfway_ledger.json).
 No sealed-final outcome was opened. Seed 180 began immediately afterward as
 the sole treatment worker.
+
+### Terminal V6 infrastructure failure after six valid seeds
+
+Seeds 180 and 181 completed with curves
+`.3750/.3925/.3750/.3675` and `.3750/.3925/.3975/.3575`. Across the six valid
+treatment seeds 176--181, the exact aggregate correct counts were
+`900/922/924/903` out of 2,400 at steps `0/4/6/10`, or
+`.3750 -> .3841666667 -> .3850 -> .37625`. The first two comparisons rise, but
+the terminal node falls. This is useful partial evidence only: the registered
+decision required all eight treatment seeds and was never evaluated.
+
+At 12:53:33 UTC Modal preempted the CPU orchestrator after seed 181 had
+terminalized. The failure path generated a premature, explicitly
+non-authoritative `failed` evidence archive, and Modal automatically restarted
+the same orchestration input. The restart returned the immutable terminal
+receipts for seeds 176--181 without repeating their optimization, then began
+seed 182. A transient three-container listing was one CPU finalizer, one CPU
+orchestrator, and the sole max-one GPU replay worker—not two GPUs. Nevertheless,
+the registered failure policy makes any partial nonterminal run terminal for
+the entire attempt; continuing fresh optimization after the failed closeout
+would be ineligible.
+
+The app was therefore stopped at 12:57:12 UTC. Seed 182 contains only its
+resolved config, indices, environment snapshot, and run manifest; it has no
+validation history, checkpoint, run result, terminal W&B receipt, or W&B run.
+Seed 183 never started. The final attempt status is `failed`, with zero live
+containers. No control, curve-gate output, final unlock, final collection,
+sealed evaluation, comparison, acceptance, or analysis exists. The evidence
+inventory explicitly reports zero sealed-evaluation files, so the 900-item
+final remained unopened.
+
+The canonical closeout is
+[`protocol_archive/v6_celebration_terminal_closeout.json`](protocol_archive/v6_celebration_terminal_closeout.json)
+(SHA-256 `e14022a7dd5614726d7bf7fd4c9c8a40f4eb056b1c3a5dad9dbf3c1069912081`).
+Its compact run inventory has SHA-256
+`b68ecf6367d725324a1ad7e2ec8fe2ae780e1aca27a121adf1e7875281fa97bf`.
+The premature 198-entry, 576,232,024-byte incident archive remains retrievable
+from Volume C and is bound by SHA-256
+`bddd2f4e0bca5d995aa173a17b786539c8068b50bc831f754a602b73ba9bea2d`;
+it is incident evidence, not the terminal closeout. V6 Volume C must never be
+resumed or pooled. The closeout establishes only that the separately frozen V7
+negative-`damn/fuck` attempt may inherit the still-unopened final after using a
+fresh claim and fresh empty Volume; it does not unlock that final.

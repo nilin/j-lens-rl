@@ -64,19 +64,17 @@ from confirmatory claims.
   serially and failed its curve gate: mean exact match was
   `.4100/.390625/.394375/.4003125` at `0/2/4/6`. Preserve it as honest negative
   evidence; controls and sealed-final evaluation correctly never ran. The
-  active RL lineage is a separately frozen celebration combination
-  (`yay/great/success/nice`) with tapered late-response reward, registered nodes
-  `0/4/6/10`, and seeds 176--183. It launched serially on one Modal L40S from
-  clean pushed commit `3c1666d`. Seed 176 finished with exact match
-  `.3750/.3675/.3750/.3775` and seed 177 finished
-  `.3750/.3700/.3725/.3925` at `0/4/6/10`. Both ended above baseline but dipped
-  at the first node; the registered decision remains the eight-seed mean. Seed
-  178 and 179 then completed; the four-seed running mean is
-  `.3750/.3800/.384375/.383125`, so its first two comparisons pass and its last
-  dips by `.00125`. This is not the registered eight-seed decision. Seed 180 is
-  active. Monitor without overlapping another GPU app.
+  V6 celebration attempt (`yay/great/success/nice`) ended infrastructure-failed
+  after six valid treatment seeds. Its partial mean was
+  `.3750/.384167/.3850/.37625` at `0/4/6/10`; the registered eight-seed gate was
+  never evaluated. Seeds 182--183, controls, and final evaluation did not run,
+  and the 900-item final stayed unopened. Preserve the immutable closeout and
+  never resume or pool Volume C. The next RL lineage is the already-frozen
+  conditional negative-`damn/fuck` V7 U5 replication, pending its independent
+  source/lease/predicate audit and fresh empty v2 Volume. Launch promptly once
+  those blockers pass, with no overlapping GPU app.
   Correlation attempt 4 stopped after all eight discovery shards when Modal
   preempted its CPU controller; aggregation/selection/validation never began
   and outcomes remain uninspected. Its preemption-safe recovery and strict
-  no-`.git` image firewall are committed, but attempt 5 stays unlaunched behind
-  active RL and cannot rely on the shared GPU lease until V6 is terminal.
+  no-`.git` image firewall are committed. Attempt 5 stays unlaunched behind the
+  higher-priority V7 RL work; both future launchers must use the shared lease.
