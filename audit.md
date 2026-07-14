@@ -1987,3 +1987,14 @@ synced CPU-only and its exact remote W&B identity and all seven evidence files
 verified. Its reconstructable ledger is
 `protocol_archive/v9_local_seed210_terminal_ledger.json`, with compact raw
 evidence under `protocol_archive/v9_local_live_evidence/`.
+
+Seed 211 completed with curve `.3975/.4025/.4150/.3875` and zero literal
+target-word completions. It supplied two consecutive individual rises, but its
+terminal node fell below baseline. The four-seed descriptive mean is
+`.3975/.400625/.401875/.38875`, so the aggregate now has the required first two
+rises while the last node remains lower. The remaining four treatments must
+average a `.013125` step-10-to-step-20 gain to repair that final inequality.
+This is an interim feasibility calculation, not a changed gate. Seed 212 began
+immediately, and the CPU-only seed-211 upload verified the exact W&B identity
+and all seven receipt-bound evidence files. Its reconstructable ledger is
+`protocol_archive/v9_local_seed211_terminal_ledger.json`.
