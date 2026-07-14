@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 19:00 UTC
+Last reconciled with the user: 2026-07-14 20:00 UTC
 
 ## Objective and evidence
 
@@ -54,9 +54,11 @@ separate from confirmatory claims.
   never resume or pool them. V9 completed eight negative-`damn/fuck` treatments
   on one RTX 4090; its mean `.3975/.3971875/.3971875/.3925` failed the curve
   gate. Never run V9 controls or open its final.
-- Current RL lane: development-only fixed serial `-fuck`, `+yay`, `-worried`
-  on one Modal L40S. Its repaired replacement is actively training under claim
-  `1d6ea36d356c420f92e125c35a1a6aeb`; never reuse retired Volume A. Preserve
-  fixed arm order and let all three finish. This lane may rank a candidate but
-  cannot prove significance. Correlation attempt 4 remains closed with outcomes
-  uninspected.
+- The fixed Modal tournament under claim
+  `1d6ea36d356c420f92e125c35a1a6aeb` completed `-fuck`, `+yay`, `-worried`;
+  no arm passed the full shape and the registered development ranking selected
+  `-fuck`. Preserve and close out its evidence; never resume it or reuse retired
+  Volume A. A separate development-only celebration-family tail-taper probe
+  (`yay/great/success/nice`, seed 193, nodes `0/2/4/6`) is now running on the
+  local RTX 4090 from pushed commit `bf85a74`. Never pool it with L40S results.
+  Correlation attempt 4 remains closed with outcomes uninspected.
