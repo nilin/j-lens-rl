@@ -1669,3 +1669,15 @@ before/after chain is recorded in
 A new regression test computes identities from the canonical source files
 rather than comparing two copies of constants. The corrected V7 and V5 suites
 pass 47 tests in the configured project environment.
+
+The first Modal relaunch then failed closed while building the image, before
+the local entrypoint, remote claim, GPU dispatch, or W&B initialization. The
+local TRL wheel build had generated staging copies below `trl/build/lib/`, and
+the exact-image finalizer correctly rejected them as unexpected. Modal app
+`ap-OQBZ5klbcquY8jCWtIrnhf` stopped with zero tasks; the fresh V7 Volume was
+still empty. The finalizer now removes nested directories named `build` along
+with the already-authorized packaging debris before checking the exact source
+set and hashes. It does not admit those files to the image. The failure and
+byte-pinned fix are recorded in
+`protocol_archive/v7_profanity_prelaunch_image_build_fix.json`, with a focused
+regression that recreates and removes `trl/build/lib/...`.

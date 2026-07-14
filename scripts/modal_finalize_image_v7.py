@@ -35,7 +35,9 @@ def _remove_build_debris() -> None:
     shutil.rmtree(REPO / "build", ignore_errors=True)
     for path in sorted(REPO.rglob("*"), reverse=True):
         if path.is_dir() and (
-            path.name == "__pycache__" or path.name.endswith(".egg-info")
+            path.name == "build"
+            or path.name == "__pycache__"
+            or path.name.endswith(".egg-info")
         ):
             shutil.rmtree(path, ignore_errors=True)
         elif path.is_file() and path.suffix in {".pyc", ".pyo"}:

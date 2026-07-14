@@ -85,7 +85,7 @@
     "max_parallel_gpu_workers": 1,
     "modal_app": "j-lens-rl-confirmatory-v7-profanity-u5",
     "modal_cache_assets_sha256": "4c6997d776d127dfa909bea4fc8e059b6484dc40d39b81cddf47ae6d3974491e",
-    "modal_finalize_image_sha256": "24cd3b649de70116b7c463db678da3223fef467fcffd22d72845c133ebd6d86c",
+    "modal_finalize_image_sha256": "d3452604403b0752cbe67e2a96531e6bd6baa0d24a7922abef28bf4d3b526ce2",
     "modal_runner_sha256": "ff6e24fe0b2456897055a9acec09d7b099197c74f1233a5b08f924f46403764d",
     "modal_volume_preflight_sha256": "a68b66f44c922e99bde9c3fa36f13f6bde9ce963eac9a67ffdd58a661a43e5a3",
     "protocol_sha256": "88fdd38a774b6dfa5a01b4767524108f0ff6475216227c6500c36948830c0105",
@@ -143,6 +143,10 @@
   "prelaunch_manifest_identity_correction": {
     "path": "protocol_archive/v7_profanity_prelaunch_manifest_identity_correction.json",
     "sha256": "857cb03f3b868fcd5e3ec03bbd26d57b4422aafeb3fffd5366e60bd353a9eba3"
+  },
+  "prelaunch_image_build_fix": {
+    "path": "protocol_archive/v7_profanity_prelaunch_image_build_fix.json",
+    "sha256": "0e0cb03a65792e0bd1c6b396739daa3306bdea1a718e76a6e4729e070488400a"
   },
   "protocol": "j-lens-rl-confirmatory-v7-profanity-u5-registration-v1",
   "seeds": [

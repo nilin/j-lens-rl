@@ -296,6 +296,19 @@ def test_image_inventory_rejects_hidden_extra_symlink_and_wrong_bytes(
         image_finalizer.validate_exact_image_inventory(tmp_path, expected)
 
 
+def test_image_finalizer_removes_nested_wheel_build_debris(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    generated = tmp_path / "trl" / "build" / "lib" / "trl" / "trainer.py"
+    generated.parent.mkdir(parents=True)
+    generated.write_text("generated wheel staging copy\n")
+    monkeypatch.setattr(image_finalizer, "REPO", tmp_path)
+
+    image_finalizer._remove_build_debris()
+
+    assert not (tmp_path / "trl" / "build").exists()
+
+
 def test_v6_failed_before_final_inventory_rejects_adversarial_mutations() -> None:
     evidence = ARCHIVE / "v6_celebration_terminal_evidence"
     canonical = json.loads((evidence / "run_inventory.json").read_text())
@@ -414,3 +427,25 @@ def test_registration_execution_hashes_match_current_allowlisted_code() -> None:
     }
     for key, digest in v7._expected_execution_hashes().items():
         assert execution[key] == digest
+
+
+def test_prelaunch_image_build_fix_is_pinned_before_any_attempt() -> None:
+    registration = finalized_registration()
+    identity = registration["prelaunch_image_build_fix"]
+    path = ROOT / identity["path"]
+    record = json.loads(path.read_text())
+
+    assert sha256(path) == identity["sha256"]
+    assert record["failed_build"] == {
+        "app_id": "ap-OQBZ5klbcquY8jCWtIrnhf",
+        "app_state": "stopped",
+        "app_stopped_at_utc": "2026-07-14T13:59:25Z",
+        "failure_stage": "image_build_before_local_entrypoint",
+        "unexpected_path_prefix": "trl/build/lib/",
+    }
+    assert record["remote_attempt_claim_existed_before_fix"] is False
+    assert record["remote_volume_entries_after_failure"] == []
+    assert record["v7_gpu_dispatch_occurred_before_fix"] is False
+    assert record["v7_wandb_run_existed_before_fix"] is False
+    assert record["v7_outcome_existed_before_fix"] is False
+    assert record["runtime_allowlisted_source_bytes_changed"] is False

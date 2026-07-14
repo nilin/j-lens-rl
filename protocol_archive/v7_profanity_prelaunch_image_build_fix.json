@@ -1,0 +1,25 @@
+{
+  "active_modal_finalize_image_sha256": "d3452604403b0752cbe67e2a96531e6bd6baa0d24a7922abef28bf4d3b526ce2",
+  "change": "remove nested package-wheel build staging directories before enforcing the exact runtime source inventory",
+  "failed_build": {
+    "app_id": "ap-OQBZ5klbcquY8jCWtIrnhf",
+    "app_state": "stopped",
+    "app_stopped_at_utc": "2026-07-14T13:59:25Z",
+    "failure_stage": "image_build_before_local_entrypoint",
+    "unexpected_path_prefix": "trl/build/lib/"
+  },
+  "fixed_at_utc": "2026-07-14T14:00:40Z",
+  "generated_build_debris_only": true,
+  "local_prepared_state_existed_before_fix": true,
+  "protocol": "j-lens-rl-confirmatory-v7-profanity-u5-prelaunch-image-build-fix-v1",
+  "remote_attempt_claim_existed_before_fix": false,
+  "remote_volume_entries_after_failure": [],
+  "remote_volume_name": "j-lens-rl-confirmatory-v7-profanity-u5-20260714a",
+  "runtime_allowlisted_source_bytes_changed": false,
+  "scientific_allocation_or_wandb_identity_changed": false,
+  "superseded_modal_finalize_image_sha256": "24cd3b649de70116b7c463db678da3223fef467fcffd22d72845c133ebd6d86c",
+  "superseded_registration_sha256": "6966e9ecb23c1a51952e0b05d1ab5d502cfc0e150aa77e97e827cb5f71aa52b1",
+  "v7_gpu_dispatch_occurred_before_fix": false,
+  "v7_outcome_existed_before_fix": false,
+  "v7_wandb_run_existed_before_fix": false
+}
