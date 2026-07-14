@@ -1,0 +1,101 @@
+{
+  "acceptance": {
+    "curve_gate_passed": true,
+    "difference_in_differences_crossed_95pct_ci_low": "> 0",
+    "difference_in_differences_mean": "> 0",
+    "literal_provenance_environment_and_collection_audits": "all pass",
+    "treatment_vs_base_crossed_95pct_ci_low": "> 0",
+    "treatment_vs_base_exact_two_sided_sign_p": 0.0078125,
+    "treatment_vs_base_mean": "> 0",
+    "treatment_vs_base_seed_effects": "8 positive, 0 negative, 0 ties"
+  },
+  "amendment_sha256": "cf7c9c9544e4c9f10264ea4dcaebbe6dca90307aa1d46ce5259a1648ebaba180",
+  "analysis": {
+    "bootstrap_method": "crossed seed-and-item percentile bootstrap",
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 0,
+    "confidence": 0.95,
+    "primary_estimand": "paired difference-in-differences: (profanity-treatment minus base) minus (signflip-control minus base), matched by seed and sealed item",
+    "secondary_estimand": "paired profanity-treatment minus base across seeds and items",
+    "seed_sign_test": "exact two-sided sign test across eight registered seeds"
+  },
+  "backend": {
+    "cuda_build": "12.8",
+    "driver": "570.195.03",
+    "gpu_name": "NVIDIA GeForce RTX 4090",
+    "gpu_uuid": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "kind": "one_local_gpu_serial",
+    "memory_total_mib": 24564,
+    "runtime_source": "dedicated detached clean worktree at git_commit",
+    "torch": "2.9.1+cu128",
+    "wandb_mode": "offline"
+  },
+  "code_identity": {
+    "combined_sha256": "d9b87559b9cc622334d21b489553056d5f38e42d207f1d5ab98b8eba3b644424",
+    "files": {
+      "pyproject.toml": "8d61fd00ddd948627960d85f5ca2998c4ae4198104bc613afb5a324923aaa823",
+      "run_confirmatory_v8_local.sh": "3773adefc985e3d3d453690408152db60dafd323cb184e855038eaedc2f97910",
+      "scripts/confirmatory_v8_local_protocol.py": "db74f826e94f572ab0986d7edc2c44e81f2c2c45b1b10d90e65d2cf682c3161e",
+      "scripts/confirmatory_v8_local_runner.py": "6dca641bfeff0de4c2f1fdb2dfbf4ee7280b1f434f4de1de5e5640d9071500c8",
+      "scripts/v8_local_runtime_source_allowlist.json": "3fdeb1ca523fd6b270008ca552df34a30cdafdc29a4e716efa5edcd3c78d8072",
+      "scripts/v8_local_train.py": "78a380bf608979c91484e89ed3a1390f1534f26ff4ecc5a46e9b6972e94b90e3",
+      "src/jlens_rl/common.py": "950bbbcaef8d8cd26f21e04b9606b5511a179757a1498f1376c16382492fbf2d",
+      "src/jlens_rl/eval.py": "0403e7c35f92af20f13bb471605e044cbb66079600530e4d420b42dc8a4fd578",
+      "src/jlens_rl/paired_eval.py": "53d3d0c89ebc292642900393af75ce9f228caf84cf52dbfcee3d06dfb5616ad0",
+      "src/jlens_rl/reward.py": "e3ac96cbdfc8b0611e0917720d8e5aef379dc3049bbb7cc006229a078ac8cd45",
+      "src/jlens_rl/train.py": "048ff415ce51b50e6e0dea5ae60986d5ea7e783c3c7027057196597a594d4167"
+    },
+    "files_canonical_sha256": "c51fc93896e42c752c09f419d29f481c8e42fc057139eac56686ed9c153ccf02",
+    "trl_file_count": 405,
+    "trl_tree_sha256": "e20ebe09fa713c847ed549c294b69a1be46ee1d3553d7cc159ee80133f050524"
+  },
+  "curve_exposure_caveat": "The exact 400-row curve and profanity lineage are exposed development data. The curve is an operational consistency gate, never inferential evidence; only the conditionally unopened 900-row final is inferential.",
+  "curve_steps": [
+    0,
+    4,
+    10,
+    20
+  ],
+  "document_type": "j-lens-rl-confirmatory-v8-local-profanity-registration-v1",
+  "draft_sha256": "c6cd7a7d9f3e1bd5b4cd69bff295968ed4a972038d8f00e14229fb7373431593",
+  "git_commit": "af83249ffef8e62d83f1f4e2e975670506941532",
+  "git_tree": "338643ebddb7f9f2dde9d3296b04e7a35cbf88c8",
+  "phase_order": [
+    "treatments",
+    "curve_gate",
+    "controls",
+    "sealed_final"
+  ],
+  "protocol": "j-lens-rl-confirmatory-v8-local-profanity-u5",
+  "recipe_lock_sha256": "78103d223d7bd5eddf1485f4ce508d57bb83b5e1b0866c5f251f36072e415241",
+  "retry_policy": {
+    "completed_run": "Only reconstruct a missing receipt or sync the preserved immutable offline W&B directory; never rerun or resume optimization.",
+    "partial_run": "Close the entire attempt. A retry needs a fresh registration/state/claim and must rerun the whole 16-run attempt on one backend.",
+    "sealed_collection": "Any partial or uncertain final collection spends the allocation and fails closed; never recollect a label."
+  },
+  "schema_version": 1,
+  "seeds": [
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207
+  ],
+  "source_input_sha256": {
+    ".confirmatory/manifests/curve_indices.json": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    ".confirmatory/v6/manifests/sealed_final_indices.json": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+    ".confirmatory/v6/manifests/train_exclusions.json": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "artifacts/qwen25_05b_solved_lens.pt": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/profanity_calibration.json": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c",
+    "protocol_archive/v7_profanity_authoritative_closeout.json": "cd83a08155871518baf177d5718acae1053ef4a98e171cbfc9351cd1b8db930c",
+    "protocol_archive/v7_profanity_gpu_lease_retirement_receipt.json": "3caf91c90ff5dd54170ebaab658494d643fde4eb681b7fe18ddfc26b79e82dc3",
+    "protocol_archive/v7_profanity_registration.json": "5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569",
+    "protocol_archive/v7_profanity_selected_recipe.json": "33760cfc906ed9c557eee40bc33a4bce2ce2fc32a8da23e887be8f97ad47c7f9",
+    "protocol_archive/v7_profanity_terminal_closeout.json": "c2cfef2d3b24a96fbef703ef64b0f53f2c696481548300ee53154559ea3d602b"
+  },
+  "status": "prospectively_registered_launch_enabled_by_committed_v7_closeout",
+  "v7_authoritative_closeout_sha256": "cd83a08155871518baf177d5718acae1053ef4a98e171cbfc9351cd1b8db930c"
+}

@@ -1,0 +1,11 @@
+{
+  "backend": "single-local-rtx4090",
+  "claim_id": "ff4144f0f3d14a49a669968c5c5a7a85",
+  "claimed_at_utc": "2026-07-14T15:43:02.463300+00:00",
+  "git_commit": "af83249ffef8e62d83f1f4e2e975670506941532",
+  "gpu_uuid": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+  "protocol": "j-lens-rl-confirmatory-v8-local-profanity-u5",
+  "registration_sha256": "10c1969a8f6e5f8c5caede68019b627a19ae8121daaea31ec91715525ba98090",
+  "schema_version": 1,
+  "tracking": "offline-wandb"
+}

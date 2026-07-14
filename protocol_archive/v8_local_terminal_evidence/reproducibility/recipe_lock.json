@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-confirmatory-v8-local-profanity-recipe-lock",
+  "protocol": "j-lens-rl-confirmatory-v8-local-profanity-u5",
+  "scientific_transform_from_v7": {
+    "unchanged": [
+      "target_words",
+      "treatment_and_matched_control_weights",
+      "j_lens_spatial_readout",
+      "training_hyperparameters",
+      "curve_manifest_and_nodes",
+      "eight_seed_mean_curve_gate",
+      "sealed_final_manifest",
+      "final_estimands",
+      "bootstrap_parameters",
+      "acceptance_thresholds"
+    ],
+    "changed": {
+      "backend": {"from": "Modal L40S", "to": "single local NVIDIA GeForce RTX 4090"},
+      "tracking": {"from": "online W&B", "to": "offline W&B preserved for explicit later sync"},
+      "seeds": {"from": [184, 185, 186, 187, 188, 189, 190, 191], "to": [200, 201, 202, 203, 204, 205, 206, 207]},
+      "state": {"from": ".confirmatory/v7", "to": ".confirmatory/v8_local"}
+    }
+  },
+  "lineage": {
+    "v7_selected_recipe_path": "protocol_archive/v7_profanity_selected_recipe.json",
+    "v7_selected_recipe_sha256": "33760cfc906ed9c557eee40bc33a4bce2ce2fc32a8da23e887be8f97ad47c7f9",
+    "v7_registration_path": "protocol_archive/v7_profanity_registration.json",
+    "v7_registration_sha256": "5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569",
+    "v7_active_claim_id": "1f2756de5df846d48a30f19a307b70fb",
+    "v7_active_app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd"
+  },
+  "reward": {
+    "reward_type": "jlens",
+    "correctness_reward_functions": [],
+    "target_words": ["damn", "fuck"],
+    "mask_target_tokens": true,
+    "score_stride": 5,
+    "treatment_score_components": [
+      {
+        "layer": 8,
+        "start_fraction": 0.5,
+        "end_fraction": 1.0,
+        "aggregation": "mean",
+        "weight": -1.0
+      }
+    ],
+    "matched_control_score_components": [
+      {
+        "layer": 8,
+        "start_fraction": 0.5,
+        "end_fraction": 1.0,
+        "aggregation": "mean",
+        "weight": 1.0
+      }
+    ],
+    "calibration_sha256": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c",
+    "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
+  },
+  "training": {
+    "seeds": [200, 201, 202, 203, 204, 205, 206, 207],
+    "updates": 20,
+    "train_examples": 1000,
+    "num_generations": 8,
+    "min_new_tokens": 64,
+    "max_new_tokens": 256,
+    "learning_rate": 3e-6,
+    "lr_scheduler_type": "constant",
+    "warmup_steps": 0,
+    "warmup_ratio": 0.0,
+    "kl_beta": 0.02,
+    "loss_type": "dapo",
+    "scale_rewards": "group",
+    "gradient_accumulation_steps": 1,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "save_every": 20,
+    "save_total_limit": 1,
+    "early_stopping_patience": null,
+    "validation_observational_only": true
+  },
+  "curve_gate": {
+    "role": "already_exposed_development_consistency_gate_not_inference",
+    "manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "examples": 400,
+    "steps": [0, 4, 10, 20],
+    "criterion": "M4 > M0, M10 >= M4, and M20 >= M10 on the eight-treatment-seed mean exact-match curve"
+  },
+  "curve_exposure_caveat": {
+    "known_exposure": "The exact 400-row curve and this profanity lineage have prior exploratory and partial V7 outcomes. V8-local does not treat its curve as untouched, independent, significant, or final evidence.",
+    "fixed_before_v8_outcomes": "The recipe, sign, nodes, gate, controls, seeds 200-207, final tests, and acceptance rule are frozen before any V8-local run.",
+    "inferential_boundary": "Only the conditionally still-unopened 900-row sealed final can support the registered significance claim."
+  },
+  "sealed_final": {
+    "manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+    "sorted_set_sha256": "eadcd0e2fc194b0e38bc1c9f4aa1bbf6e6b3ba1043b0015eedee59aec133637c",
+    "examples": 900,
+    "labels": [
+      "base",
+      "jlens_seed200", "jlens_seed201", "jlens_seed202", "jlens_seed203",
+      "jlens_seed204", "jlens_seed205", "jlens_seed206", "jlens_seed207",
+      "signflip_seed200", "signflip_seed201", "signflip_seed202", "signflip_seed203",
+      "signflip_seed204", "signflip_seed205", "signflip_seed206", "signflip_seed207"
+    ],
+    "single_immutable_collection": true,
+    "unlock_condition": "all eight treatment runs complete and curve gate passes, then all eight matched controls complete and validate"
+  },
+  "analysis": {
+    "primary_estimand": "paired difference-in-differences: (profanity-treatment minus base) minus (signflip-control minus base), matched by seed and sealed item",
+    "secondary_estimand": "paired profanity-treatment minus base across seeds and items",
+    "bootstrap_method": "crossed seed-and-item percentile bootstrap",
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 0,
+    "confidence": 0.95,
+    "seed_sign_test": "exact two-sided sign test across eight registered seeds"
+  },
+  "acceptance": {
+    "curve_gate_passed": true,
+    "treatment_vs_base_mean": "> 0",
+    "treatment_vs_base_crossed_95pct_ci_low": "> 0",
+    "treatment_vs_base_seed_effects": "8 positive, 0 negative, 0 ties",
+    "treatment_vs_base_exact_two_sided_sign_p": 0.0078125,
+    "difference_in_differences_mean": "> 0",
+    "difference_in_differences_crossed_95pct_ci_low": "> 0",
+    "literal_provenance_environment_and_collection_audits": "all pass"
+  },
+  "execution": {
+    "backend": "local",
+    "required_cuda_device_name": "NVIDIA GeForce RTX 4090",
+    "required_gpu_uuid": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "required_driver_version": "570.195.03",
+    "required_memory_total_mib": 24564,
+    "required_torch_version": "2.9.1+cu128",
+    "required_cuda_build": "12.8",
+    "cuda_visible_devices": "GPU-6d0c6e1c-6f44-f3f3-a0ef-f0cd2b3ad74e",
+    "max_parallel_gpu_processes": 1,
+    "runtime_source": "dedicated clean detached Git worktree pinned to the registered commit",
+    "python_executable": "/j-lens-rl/.venv/bin/python",
+    "fixed_order": "all treatment seeds ascending; curve gate; all controls ascending; sealed labels in registered order",
+    "wandb_mode": "offline",
+    "wandb_group": "confirm-v8-local-emotional-profanity-u5-h20",
+    "preserve_offline_directories": true,
+    "never_mix_backends_or_tracking_modes": true
+  },
+  "infrastructure_retry_policy": {
+    "completed_run": "Only reconstruct a missing local receipt or sync the preserved immutable offline W&B directory; never rerun or resume optimization.",
+    "partial_nonterminal_run": "Close the entire V8-local attempt immutably. Any retry requires a fresh registration, state root, claim, all 16 runs, and a whole single-backend attempt.",
+    "evaluation": "Any uncertain or partial sealed-final collection spends the allocation and fails closed; never recollect selected labels."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "claim_id": "ff4144f0f3d14a49a669968c5c5a7a85",
+  "error": "jlens_seed200 terminal result changed",
+  "error_type": "ProtocolError",
+  "protocol": "j-lens-rl-confirmatory-v8-local-profanity-u5",
+  "retry_policy": {
+    "completed_run": "Only reconstruct a missing receipt or sync the preserved immutable offline W&B directory; never rerun or resume optimization.",
+    "partial_run": "Close the entire attempt. A retry needs a fresh registration/state/claim and must rerun the whole 16-run attempt on one backend.",
+    "sealed_collection": "Any partial or uncertain final collection spends the allocation and fails closed; never recollect a label."
+  },
+  "stage": "infrastructure_failed_attempt_closed",
+  "updated_at_utc": "2026-07-14T16:01:41.297923+00:00"
+}

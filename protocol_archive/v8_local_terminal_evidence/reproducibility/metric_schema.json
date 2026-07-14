@@ -1,0 +1,566 @@
+{
+  "condition_weight_semantics": {
+    "rule": "the shared schema derives aliases from each resolved run config; the matched control negates the sole component weight and changes nothing else",
+    "signflip_control": [
+      1.0
+    ],
+    "treatment": [
+      -1.0
+    ]
+  },
+  "observed_history_scalar_series": {
+    "clip_ratio/high_max": {
+      "definition": "fraction meeting the maximum upper-clipping predicate",
+      "local_field": "clip_ratio/high_max",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction of eligible sampled tokens",
+      "wandb_metric": "train/clip_ratio/high_max",
+      "wandb_summary_key": null
+    },
+    "clip_ratio/high_mean": {
+      "definition": "fraction meeting an upper-clipping predicate, averaged over the batch",
+      "local_field": "clip_ratio/high_mean",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction of eligible sampled tokens",
+      "wandb_metric": "train/clip_ratio/high_mean",
+      "wandb_summary_key": null
+    },
+    "clip_ratio/low_mean": {
+      "definition": "fraction meeting a lower-clipping predicate, averaged over the batch",
+      "local_field": "clip_ratio/low_mean",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction of eligible sampled tokens",
+      "wandb_metric": "train/clip_ratio/low_mean",
+      "wandb_summary_key": null
+    },
+    "clip_ratio/low_min": {
+      "definition": "fraction meeting the minimum lower-clipping predicate",
+      "local_field": "clip_ratio/low_min",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction of eligible sampled tokens",
+      "wandb_metric": "train/clip_ratio/low_min",
+      "wandb_summary_key": null
+    },
+    "clip_ratio/region_mean": {
+      "definition": "fraction outside the allowed clipping region, the union of low- and high-clipped tokens",
+      "local_field": "clip_ratio/region_mean",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction of eligible sampled tokens",
+      "wandb_metric": "train/clip_ratio/region_mean",
+      "wandb_summary_key": null
+    },
+    "completions/clipped_ratio": {
+      "definition": "fraction of completions clipped at the generation limit",
+      "local_field": "completions/clipped_ratio",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction",
+      "wandb_metric": "train/completions/clipped_ratio",
+      "wandb_summary_key": null
+    },
+    "completions/max_length": {
+      "definition": "maximum sampled completion length",
+      "local_field": "completions/max_length",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "generated tokens",
+      "wandb_metric": "train/completions/max_length",
+      "wandb_summary_key": null
+    },
+    "completions/max_terminated_length": {
+      "definition": "maximum naturally terminated completion length",
+      "local_field": "completions/max_terminated_length",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "generated tokens",
+      "wandb_metric": "train/completions/max_terminated_length",
+      "wandb_summary_key": null
+    },
+    "completions/mean_length": {
+      "definition": "mean sampled completion length",
+      "local_field": "completions/mean_length",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "generated tokens",
+      "wandb_metric": "train/completions/mean_length",
+      "wandb_summary_key": null
+    },
+    "completions/mean_terminated_length": {
+      "definition": "mean naturally terminated completion length",
+      "local_field": "completions/mean_terminated_length",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "generated tokens",
+      "wandb_metric": "train/completions/mean_terminated_length",
+      "wandb_summary_key": null
+    },
+    "completions/min_length": {
+      "definition": "minimum sampled completion length",
+      "local_field": "completions/min_length",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "generated tokens",
+      "wandb_metric": "train/completions/min_length",
+      "wandb_summary_key": null
+    },
+    "completions/min_terminated_length": {
+      "definition": "minimum naturally terminated completion length",
+      "local_field": "completions/min_terminated_length",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "generated tokens",
+      "wandb_metric": "train/completions/min_terminated_length",
+      "wandb_summary_key": null
+    },
+    "entropy": {
+      "definition": "mean policy-token entropy",
+      "local_field": "entropy",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "nats per sampled token",
+      "wandb_metric": "train/entropy",
+      "wandb_summary_key": null
+    },
+    "epoch": {
+      "definition": "fractional pass through the registered training sample budget",
+      "local_field": "epoch",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "training epochs",
+      "wandb_metric": "train/epoch",
+      "wandb_summary_key": null
+    },
+    "frac_reward_zero_std": {
+      "definition": "fraction of GRPO groups with zero reward standard deviation",
+      "local_field": "frac_reward_zero_std",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction of prompt groups",
+      "wandb_metric": "train/frac_reward_zero_std",
+      "wandb_summary_key": null
+    },
+    "grad_norm": {
+      "definition": "optimizer gradient norm before the registered clipping rule",
+      "local_field": "grad_norm",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "L2 norm",
+      "wandb_metric": "train/grad_norm",
+      "wandb_summary_key": null
+    },
+    "jlens/damn_fuck_literal_rate": {
+      "definition": "fraction containing a configured literal target whose causal positions are reward-masked",
+      "local_field": "jlens/damn_fuck_literal_rate",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction of completions",
+      "wandb_metric": "train/jlens/damn_fuck_literal_rate",
+      "wandb_summary_key": null
+    },
+    "jlens/damn_fuck_mean": {
+      "component_weights_by_condition": {
+        "signflip_control": [
+          1.0
+        ],
+        "treatment": [
+          -1.0
+        ]
+      },
+      "definition": "mean weighted one-component J-lens output; the actual signed weight comes from the resolved run config (registered treatment [-1.0], matched signflip [1.0]) and the combined score range is [-5.0, 5.0]",
+      "local_field": "jlens/damn_fuck_mean",
+      "local_file": "log_history.json",
+      "range": [
+        -5.0,
+        5.0
+      ],
+      "step_axis": "optimizer_update",
+      "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+      "wandb_metric": "train/jlens/damn_fuck_mean",
+      "wandb_summary_key": null
+    },
+    "kl": {
+      "definition": "mean policy-to-reference KL estimate",
+      "local_field": "kl",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "nats per sampled token",
+      "wandb_metric": "train/kl",
+      "wandb_summary_key": null
+    },
+    "learning_rate": {
+      "definition": "registered optimizer learning rate",
+      "local_field": "learning_rate",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "optimizer coefficient",
+      "wandb_metric": "train/learning_rate",
+      "wandb_summary_key": null
+    },
+    "loss": {
+      "definition": "logged DAPO/GRPO training loss",
+      "local_field": "loss",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "dimensionless objective",
+      "wandb_metric": "train/loss",
+      "wandb_summary_key": null
+    },
+    "num_tokens": {
+      "definition": "cumulative processed token count",
+      "local_field": "num_tokens",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "tokens",
+      "wandb_metric": "train/num_tokens",
+      "wandb_summary_key": null
+    },
+    "reward": {
+      "component_weights_by_condition": {
+        "signflip_control": [
+          1.0
+        ],
+        "treatment": [
+          -1.0
+        ]
+      },
+      "definition": "mean weighted one-component J-lens output; the actual signed weight comes from the resolved run config (registered treatment [-1.0], matched signflip [1.0]) and the combined score range is [-5.0, 5.0]",
+      "local_field": "reward",
+      "local_file": "log_history.json",
+      "range": [
+        -5.0,
+        5.0
+      ],
+      "step_axis": "optimizer_update",
+      "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+      "wandb_metric": "train/reward",
+      "wandb_summary_key": null
+    },
+    "reward_std": {
+      "component_weights_by_condition": {
+        "signflip_control": [
+          1.0
+        ],
+        "treatment": [
+          -1.0
+        ]
+      },
+      "definition": "nonnegative standard deviation of the weighted one-component J-lens output; the component is clipped to [-5, 5] before applying the actual signed weight from the resolved run config",
+      "local_field": "reward_std",
+      "local_file": "log_history.json",
+      "nonnegative": true,
+      "step_axis": "optimizer_update",
+      "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+      "wandb_metric": "train/reward_std",
+      "wandb_summary_key": null
+    },
+    "rewards/jlens_damn_fuck_reward/mean": {
+      "component_weights_by_condition": {
+        "signflip_control": [
+          1.0
+        ],
+        "treatment": [
+          -1.0
+        ]
+      },
+      "definition": "mean weighted one-component J-lens output; the actual signed weight comes from the resolved run config (registered treatment [-1.0], matched signflip [1.0]) and the combined score range is [-5.0, 5.0]",
+      "local_field": "rewards/jlens_damn_fuck_reward/mean",
+      "local_file": "log_history.json",
+      "range": [
+        -5.0,
+        5.0
+      ],
+      "step_axis": "optimizer_update",
+      "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+      "wandb_metric": "train/rewards/jlens_damn_fuck_reward/mean",
+      "wandb_summary_key": null
+    },
+    "rewards/jlens_damn_fuck_reward/std": {
+      "component_weights_by_condition": {
+        "signflip_control": [
+          1.0
+        ],
+        "treatment": [
+          -1.0
+        ]
+      },
+      "definition": "nonnegative standard deviation of the weighted one-component J-lens output; the component is clipped to [-5, 5] before applying the actual signed weight from the resolved run config",
+      "local_field": "rewards/jlens_damn_fuck_reward/std",
+      "local_file": "log_history.json",
+      "nonnegative": true,
+      "step_axis": "optimizer_update",
+      "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+      "wandb_metric": "train/rewards/jlens_damn_fuck_reward/std",
+      "wandb_summary_key": null
+    },
+    "step": {
+      "definition": "completed optimizer updates",
+      "local_field": "step",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "optimizer updates",
+      "wandb_metric": "train/global_step",
+      "wandb_summary_key": null
+    },
+    "step_time": {
+      "definition": "wall-clock duration of the optimizer update",
+      "local_field": "step_time",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "seconds per optimizer update",
+      "wandb_metric": "train/step_time",
+      "wandb_summary_key": null
+    },
+    "total_flos": {
+      "definition": "trainer estimate of cumulative floating-point operations",
+      "local_field": "total_flos",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "floating-point operations",
+      "wandb_metric": null,
+      "wandb_summary_key": "total_flos"
+    },
+    "train_loss": {
+      "definition": "trainer-wide mean training loss",
+      "local_field": "train_loss",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "dimensionless objective",
+      "wandb_metric": null,
+      "wandb_summary_key": "train_loss"
+    },
+    "train_runtime": {
+      "definition": "trainer-wide training wall time",
+      "local_field": "train_runtime",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "seconds",
+      "wandb_metric": null,
+      "wandb_summary_key": "train_runtime"
+    },
+    "train_samples_per_second": {
+      "definition": "trainer-wide prompt-sample throughput",
+      "local_field": "train_samples_per_second",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "prompt samples per second",
+      "wandb_metric": null,
+      "wandb_summary_key": "train_samples_per_second"
+    },
+    "train_steps_per_second": {
+      "definition": "trainer-wide optimizer-step throughput",
+      "local_field": "train_steps_per_second",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "optimizer updates per second",
+      "wandb_metric": null,
+      "wandb_summary_key": "train_steps_per_second"
+    },
+    "validation/exact_match": {
+      "definition": "deterministic greedy GSM8K exact-answer accuracy",
+      "local_field": "validation/exact_match",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction of 400 fixed examples",
+      "wandb_metric": "train/validation/exact_match",
+      "wandb_summary_key": null
+    },
+    "validation/exact_match_ci95_high": {
+      "definition": "upper endpoint of the fixed-validation 95% binomial interval",
+      "local_field": "validation/exact_match_ci95_high",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "accuracy fraction",
+      "wandb_metric": "train/validation/exact_match_ci95_high",
+      "wandb_summary_key": null
+    },
+    "validation/exact_match_ci95_low": {
+      "definition": "lower endpoint of the fixed-validation 95% binomial interval",
+      "local_field": "validation/exact_match_ci95_low",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "accuracy fraction",
+      "wandb_metric": "train/validation/exact_match_ci95_low",
+      "wandb_summary_key": null
+    },
+    "validation/literal_target_completion_rate": {
+      "definition": "fixed-validation completions containing an emotional target literal",
+      "local_field": "validation/literal_target_completion_rate",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "fraction of completions",
+      "wandb_metric": "train/validation/literal_target_completion_rate",
+      "wandb_summary_key": null
+    },
+    "validation/mean_length": {
+      "definition": "mean fixed-validation completion length",
+      "local_field": "validation/mean_length",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "generated tokens",
+      "wandb_metric": "train/validation/mean_length",
+      "wandb_summary_key": null
+    }
+  },
+  "other_trainer_fields": {
+    "step_axis": "optimizer_update",
+    "storage": "all 38 scalar keys from the selected profanity history are explicitly mapped above and preserved verbatim in log_history.json",
+    "wandb_prefix": "train/"
+  },
+  "schema_version": 1,
+  "series": {
+    "completion_clipped_ratio": {
+      "definition": "fraction reaching the maximum generation length without termination",
+      "local_field": "completions/clipped_ratio",
+      "local_file": "log_history.json",
+      "range": [
+        0.0,
+        1.0
+      ],
+      "step_axis": "optimizer_update",
+      "unit": "fraction of sampled completions",
+      "wandb_metric": "train/completions/clipped_ratio"
+    },
+    "completion_mean_length": {
+      "definition": "mean sampled completion-token count",
+      "local_field": "completions/mean_length",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "generated tokens per completion",
+      "wandb_metric": "train/completions/mean_length"
+    },
+    "intrinsic_literal_rate": {
+      "definition": "fraction containing a tokenizer sequence for any configured literal target; those causal positions are masked from reward",
+      "local_field": "jlens/damn_fuck_literal_rate",
+      "local_file": "log_history.json",
+      "range": [
+        0.0,
+        1.0
+      ],
+      "step_axis": "optimizer_update",
+      "unit": "fraction of sampled completions",
+      "wandb_metric": "train/jlens/damn_fuck_literal_rate"
+    },
+    "intrinsic_named_weighted_reward_mean": {
+      "definition": "mean weighted combined reward across the registered spatial components with resolved run-config weights [-1.0]; this is not an individual component score",
+      "local_field": "rewards/jlens_damn_fuck_reward/mean",
+      "local_file": "log_history.json",
+      "range": [
+        -5.0,
+        5.0
+      ],
+      "step_axis": "optimizer_update",
+      "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+      "wandb_metric": "train/rewards/jlens_damn_fuck_reward/mean"
+    },
+    "intrinsic_named_weighted_reward_std": {
+      "definition": "nonnegative standard deviation of the named weighted one-component J-lens output",
+      "local_field": "rewards/jlens_damn_fuck_reward/std",
+      "local_file": "log_history.json",
+      "nonnegative": true,
+      "step_axis": "optimizer_update",
+      "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+      "wandb_metric": "train/rewards/jlens_damn_fuck_reward/std"
+    },
+    "intrinsic_reward_mean": {
+      "definition": "mean of the sole weighted combined intrinsic reward supplied to GRPO; no answer reward is present",
+      "local_field": "reward",
+      "local_file": "log_history.json",
+      "range": [
+        -5.0,
+        5.0
+      ],
+      "step_axis": "optimizer_update",
+      "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+      "wandb_metric": "train/reward"
+    },
+    "intrinsic_reward_std": {
+      "definition": "nonnegative standard deviation of the sole weighted one-component intrinsic reward in the logged rollout batch",
+      "local_field": "reward_std",
+      "local_file": "log_history.json",
+      "nonnegative": true,
+      "step_axis": "optimizer_update",
+      "unit": "weighted one-component calibration z-score; the layer-8 late-half component is clipped to [-5, 5] before applying its resolved weight",
+      "wandb_metric": "train/reward_std"
+    },
+    "learning_rate": {
+      "definition": "learning rate emitted by the registered scheduler",
+      "local_field": "learning_rate",
+      "local_file": "log_history.json",
+      "step_axis": "optimizer_update",
+      "unit": "optimizer learning-rate coefficient",
+      "wandb_metric": "train/learning_rate"
+    },
+    "sealed_correct": {
+      "definition": "GSM8K exact-answer correctness recomputed from raw completion and pinned gold row",
+      "local_field": "correct",
+      "local_file": "evals/<label>.jsonl",
+      "step_axis": "sealed_item",
+      "unit": "boolean",
+      "wandb_metric": null
+    },
+    "validation_exact_match": {
+      "definition": "mean deterministic greedy GSM8K exact-answer correctness on the registered curve manifest",
+      "local_field": "exact_match",
+      "local_file": "validation_history.jsonl",
+      "range": [
+        0.0,
+        1.0
+      ],
+      "step_axis": "optimizer_update",
+      "unit": "fraction of 400 fixed examples",
+      "wandb_metric": "train/validation/exact_match"
+    },
+    "validation_literal_target_completion_rate": {
+      "definition": "fraction containing at least one configured target as a case-insensitive whole-word literal",
+      "local_field": "literal_target_completion_rate",
+      "local_file": "validation_history.jsonl",
+      "range": [
+        0.0,
+        1.0
+      ],
+      "step_axis": "optimizer_update",
+      "unit": "fraction of completions",
+      "wandb_metric": "train/validation/literal_target_completion_rate"
+    },
+    "validation_mean_length": {
+      "definition": "arithmetic mean greedy completion-token count",
+      "local_field": "mean_length",
+      "local_file": "validation_history.jsonl",
+      "step_axis": "optimizer_update",
+      "unit": "generated tokens per completion",
+      "wandb_metric": "train/validation/mean_length"
+    }
+  },
+  "step_axes": {
+    "optimizer_update": {
+      "definition": "completed GRPO optimizer updates; validation step 0 is the unadapted initialization",
+      "domain": [
+        0,
+        20
+      ],
+      "local_field": "step",
+      "unit": "optimizer update",
+      "wandb_metric": "train/global_step"
+    },
+    "sealed_item": {
+      "definition": "one immutable sealed-final example; final evaluation is not a training time series",
+      "local_field": "source_index",
+      "unit": "GSM8K train source row",
+      "wandb_metric": null
+    }
+  },
+  "target_words": [
+    "damn",
+    "fuck"
+  ],
+  "wandb_rewrite": {
+    "rule": "Transformers prefixes trainer log keys not beginning eval_ or test_ with 'train/'",
+    "step_metric": "train/global_step",
+    "step_sync": true
+  }
+}

@@ -1861,3 +1861,44 @@ The operational ledger is
 `protocol_archive/v8_local_launch_ledger.json`. It contains no metric or curve
 outcome. W&B is intentionally offline because no local API key is configured;
 each completed directory is self-contained and must be explicitly synced later.
+
+### Terminal V8-local verifier failure after one complete seed
+
+Treatment seed 200 completed all 20 optimizer updates, all four exposed curve
+evaluations, its exact terminal checkpoint/final adapter, and W&B offline
+finish. Its curve at steps `0/4/10/20` was
+`.3975/.3875/.3550/.3975`; literal `damn`/`fuck` completion rate was zero at
+every node. This individual seed is nonqualifying, and the registered decision
+required eight treatment seeds, so the V8 curve gate was not evaluated.
+
+The post-training wrapper then raised `jlens_seed200 terminal result changed`
+before writing a dispatch completion. The mismatch is exactly two fields:
+`src/jlens_rl/train.py` writes absolute `path` fields in its terminal checkpoint
+and final-adapter tree identities, while V8's duplicate verifier helper expected
+only `sha256` and `files`. After adding those two expected paths in a read-only
+comparison, the terminal result is exactly equal. All earlier source/config,
+RTX-4090 runtime, data-firewall, curve-provenance, behavior, and checkpoint
+checks passed, and the independent offline-receipt validator binds all seven
+terminal files and the closed W&B tree. The run-result SHA-256 is
+`979b65968770982bb1f15da302c3dbc3ed407aa9d13704dd7961b2646abb4d99`;
+the receipt SHA-256 is
+`40227ffed39abe9c422900fa36c8960e2e4b13684a828cae8d1da47d0ecf31c9`;
+the offline-tree SHA-256 is
+`293d68ca2a6ff03a0a489d9fe4eb0316223be3e683ee41b4fa6c4ec26af1a8b9`.
+
+Nevertheless, the registered fail-closed policy is binding: the attempt status
+is `infrastructure_failed_attempt_closed`, no dispatch completion exists, and
+V8 may not start another run, reconstruct adoption, resume, or contribute a
+seed to a later pooled gate. Controls and sealed-final work never started, and
+the 900-item final remains unopened. The canonical closeout is
+[`protocol_archive/v8_local_terminal_closeout.json`](protocol_archive/v8_local_terminal_closeout.json),
+with 20 compact source-evidence files under
+`protocol_archive/v8_local_terminal_evidence/`. A CPU-only Modal helper can
+sync only the receipt-bound immutable offline directory to its registered W&B
+ID; it cannot run training or alter this disposition.
+
+The next GPU work must therefore be a fresh whole V9 registration with new
+state, claim, W&B IDs, and seeds, and a prospectively corrected tree-identity
+verifier. This infrastructure incident does not count as a word-search delay:
+the next RL attempt is being prepared immediately, and no correlation outcome
+is being awaited before launch.
