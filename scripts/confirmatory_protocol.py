@@ -35,24 +35,50 @@ ACCEPTANCE_PATH = STATE_DIR / "evidence" / "acceptance.json"
 
 MODEL_REVISION = "7ae557604adf67be50417f59c2c2f167def9a775"
 DATASET_REVISION = "740312add88f781978c0658806c59bc2815b9866"
-PROTOCOL = "j-lens-rl-confirmatory-v2"
+PROTOCOL = "j-lens-rl-confirmatory-v3"
 V1_ALLOCATION_SALT = "j-lens-rl-confirmatory-v1-2026-07-14"
-ALLOCATION_SALT = "j-lens-rl-confirmatory-v2-2026-07-14"
-SEEDS = tuple(range(142, 148))
+V2_ALLOCATION_SALT = "j-lens-rl-confirmatory-v2-2026-07-14"
+ALLOCATION_SALT = "j-lens-rl-confirmatory-v3-constant-lr-2026-07-14"
+ALLOCATION_ALGORITHM = (
+    "reconstruct V2 exactly, retire its curve, preserve its reserve, then "
+    "order only its unopened sealed parent by ascending "
+    "SHA-256(v3_salt + ':' + raw_source_index)"
+)
+SEEDS = tuple(range(148, 158))
 REQUIRED_CONDITIONS = ("jlens", "signflip")
 CONFIG_SEEDS = {
     "jlens": SEEDS,
     "signflip": SEEDS,
-    "gsm8k": (142,),
+    "gsm8k": (148,),
 }
 FIXED_UPDATES = 25
 CURVE_STEPS = (0, 5, 10, 15)
 ALL_VALIDATION_STEPS = tuple(range(0, FIXED_UPDATES + 1, 5))
 
 SPLIT_SIZES = {
+    "curve_indices.json": 800,
+    "sealed_final_indices.json": 2100,
+    "future_reserve_indices.json": 64,
+}
+
+# V3 is permitted only because V2 failed before its sealed outcomes were
+# opened. Reconstructing and pinning V2's exact manifest hashes makes the
+# retirement/reallocation independent of any item contents.
+V2_SPLIT_SIZES = {
     "curve_indices.json": 400,
     "sealed_final_indices.json": 2900,
     "future_reserve_indices.json": 64,
+}
+V2_MANIFEST_SHA256 = {
+    "curve_indices.json": "cb9abd0f254aed65ee7ef70fb5eae75094e8196b16472521863a8f310f6f4357",
+    "sealed_final_indices.json": "382971b6c1e568a0ca6af04104e4a2dd34c94888830ff4018a348750f11cad53",
+    "future_reserve_indices.json": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+}
+V2_SEALED_SET_SHA256 = "9b4d8f1cbc76076c3aeb3d6831eba0b9b8dcff3c08a8c958197d3cbe83cacc85"
+V3_MANIFEST_SHA256 = {
+    "curve_indices.json": "26f0e34b8422959ae0062f9b030ceb3609bc7c2ef8ba4f95dfa397594f7ecb75",
+    "sealed_final_indices.json": "84da0c0472b4442b4f35406d1b1fbd3b956803e5f19bf51fc02f6db013224f7b",
+    "future_reserve_indices.json": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
 }
 
 # Every historically documented shuffled training selection. The last rule is
@@ -145,6 +171,13 @@ def manifest_payload(indices: Iterable[int]) -> dict[str, Any]:
     }
 
 
+def manifest_sha256(indices: Iterable[int]) -> str:
+    encoded = (
+        json.dumps(manifest_payload(indices), indent=2, sort_keys=True) + "\n"
+    ).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def load_indices(path: Path) -> list[int]:
     payload = json.loads(path.read_text())
     values = payload.get("indices") if isinstance(payload, dict) else payload
@@ -166,7 +199,7 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
         "validation_source": "train",
         "validation_indices_path": ".confirmatory/manifests/curve_indices.json",
         "reserved_train_indices_path": ".confirmatory/manifests/train_exclusions.json",
-        "validation_examples": 400,
+        "validation_examples": 800,
         "validation_batch_size": 64,
         "train_examples": 1000,
         "updates": FIXED_UPDATES,
@@ -179,6 +212,9 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
         "save_every": FIXED_UPDATES,
         "save_total_limit": 1,
         "learning_rate": 3e-6,
+        "lr_scheduler_type": "constant",
+        "warmup_steps": 0,
+        "warmup_ratio": 0.0,
     }
     for key, expected in required_common.items():
         if common.get(key) != expected:
@@ -235,7 +271,7 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
     expected_eval = {
         "evaluation_source": "train",
         "evaluation_indices_path": ".confirmatory/manifests/sealed_final_indices.json",
-        "validation_examples": 2900,
+        "validation_examples": 2100,
         "min_new_tokens": 0,
     }
     for key, expected in expected_eval.items():
@@ -243,10 +279,10 @@ def validate_configs(require_manifests: bool) -> dict[str, str]:
             raise ProtocolError(f"sealed eval {key!r} is not frozen to {expected!r}")
 
     if require_manifests:
-        if len(load_indices(MANIFEST_DIR / "curve_indices.json")) != 400:
-            raise ProtocolError("curve manifest must contain exactly 400 indices")
-        if len(load_indices(MANIFEST_DIR / "sealed_final_indices.json")) != 2900:
-            raise ProtocolError("sealed-final manifest must contain exactly 2,900 indices")
+        if len(load_indices(MANIFEST_DIR / "curve_indices.json")) != 800:
+            raise ProtocolError("curve manifest must contain exactly 800 indices")
+        if len(load_indices(MANIFEST_DIR / "sealed_final_indices.json")) != 2100:
+            raise ProtocolError("sealed-final manifest must contain exactly 2,100 indices")
 
     return {str(path.relative_to(REPO)): sha256_file(path) for path in all_config_paths()}
 
@@ -351,6 +387,49 @@ def allocation_key(index: int, salt: str = ALLOCATION_SALT) -> bytes:
     return hashlib.sha256(f"{salt}:{index}".encode()).digest()
 
 
+def reallocate_v2_parent(
+    v2_allocations: dict[str, list[int]],
+) -> tuple[dict[str, list[int]], list[int]]:
+    """Verify the frozen V2 parent and split only its unopened sealed set."""
+    actual_v2_hashes = {
+        name: manifest_sha256(indices) for name, indices in v2_allocations.items()
+    }
+    v2_sealed = v2_allocations["sealed_final_indices.json"]
+    if (
+        {name: len(indices) for name, indices in v2_allocations.items()}
+        != V2_SPLIT_SIZES
+        or actual_v2_hashes != V2_MANIFEST_SHA256
+        or canonical_sha256(sorted(v2_sealed)) != V2_SEALED_SET_SHA256
+    ):
+        raise ProtocolError(
+            "reconstructed V2 manifests do not match the frozen failed attempt"
+        )
+
+    reallocated_sealed = sorted(v2_sealed, key=allocation_key)
+    v3_curve_end = SPLIT_SIZES["curve_indices.json"]
+    allocations: dict[str, list[int]] = {
+        "curve_indices.json": reallocated_sealed[:v3_curve_end],
+        "sealed_final_indices.json": reallocated_sealed[v3_curve_end:],
+        "future_reserve_indices.json": v2_allocations[
+            "future_reserve_indices.json"
+        ],
+    }
+    reallocated_parent = (
+        set(allocations["curve_indices.json"])
+        | set(allocations["sealed_final_indices.json"])
+    )
+    actual_v3_hashes = {
+        name: manifest_sha256(indices) for name, indices in allocations.items()
+    }
+    if (
+        {name: len(indices) for name, indices in allocations.items()} != SPLIT_SIZES
+        or reallocated_parent != set(v2_sealed)
+        or actual_v3_hashes != V3_MANIFEST_SHA256
+    ):
+        raise ProtocolError("predeclared V3 reallocation does not exhaust V2 sealed data")
+    return allocations, v2_allocations["curve_indices.json"]
+
+
 def prepare() -> None:
     commit = require_clean_worktree()
     if STATE_DIR.exists():
@@ -366,27 +445,34 @@ def prepare() -> None:
         key=lambda index: allocation_key(index, V1_ALLOCATION_SALT),
     )
     retired_v1_curve = v1_fresh[200:600]
-    allocatable = sorted(fresh_set - set(retired_v1_curve), key=allocation_key)
+    v2_allocatable = sorted(
+        fresh_set - set(retired_v1_curve),
+        key=lambda index: allocation_key(index, V2_ALLOCATION_SALT),
+    )
     if (
         len(historical) != 3741
         or len(fresh_set) != 3732
         or len(retired_v1_curve) != 400
         or len(set(retired_v1_curve) & set(historical)) != 32
-        or len(allocatable) != 3364
+        or len(v2_allocatable) != 3364
     ):
         raise ProtocolError(
             "historical/fresh/retired allocation counts changed: "
             f"{len(historical)}/{len(fresh_set)}/{len(retired_v1_curve)}/"
-            f"{len(allocatable)}"
+            f"{len(v2_allocatable)}"
         )
 
-    cursor = 0
-    allocations: dict[str, list[int]] = {}
-    for name, size in SPLIT_SIZES.items():
-        allocations[name] = allocatable[cursor : cursor + size]
-        cursor += size
-    if cursor != len(allocatable):
-        raise ProtocolError("predeclared split sizes do not exhaust the fresh pool")
+    v2_curve_end = V2_SPLIT_SIZES["curve_indices.json"]
+    v2_sealed_end = v2_curve_end + V2_SPLIT_SIZES["sealed_final_indices.json"]
+    retired_v2_curve = v2_allocatable[:v2_curve_end]
+    v2_sealed = v2_allocatable[v2_curve_end:v2_sealed_end]
+    v2_reserve = v2_allocatable[v2_sealed_end:]
+    v2_allocations = {
+        "curve_indices.json": retired_v2_curve,
+        "sealed_final_indices.json": v2_sealed,
+        "future_reserve_indices.json": v2_reserve,
+    }
+    allocations, retired_v2_curve = reallocate_v2_parent(v2_allocations)
 
     MANIFEST_DIR.mkdir(parents=True)
     write_json(MANIFEST_DIR / "historical_exclusions.json", manifest_payload(historical))
@@ -394,9 +480,13 @@ def prepare() -> None:
         MANIFEST_DIR / "retired_v1_curve_indices.json",
         manifest_payload(retired_v1_curve),
     )
+    write_json(
+        MANIFEST_DIR / "retired_v2_curve_indices.json",
+        manifest_payload(retired_v2_curve),
+    )
     for name, indices in allocations.items():
         write_json(MANIFEST_DIR / name, manifest_payload(indices))
-    # All fresh indices and every exposed v1 curve item stay out of v2 training.
+    # All fresh indices and both exposed curve attempts stay out of V3 training.
     train_exclusions = sorted(fresh_set | set(retired_v1_curve))
     write_json(
         MANIFEST_DIR / "train_exclusions.json",
@@ -411,8 +501,12 @@ def prepare() -> None:
         "protocol": PROTOCOL,
         "prepared_at_utc": utc_now(),
         "git_commit": commit,
-        "allocation_algorithm": "ascending SHA-256(salt + ':' + raw_source_index)",
+        "allocation_algorithm": ALLOCATION_ALGORITHM,
         "allocation_salt": ALLOCATION_SALT,
+        "v2_allocation_salt": V2_ALLOCATION_SALT,
+        "v2_parent_manifest_sha256": V2_MANIFEST_SHA256,
+        "v2_sealed_set_sha256": V2_SEALED_SET_SHA256,
+        "predeclared_v3_manifest_sha256": V3_MANIFEST_SHA256,
         "dataset": "openai/gsm8k:main",
         "dataset_revision": DATASET_REVISION,
         "dataset_train_rows": dataset_size,
@@ -422,6 +516,9 @@ def prepare() -> None:
         "retired_v1_curve_historical_overlap": len(
             set(retired_v1_curve) & set(historical)
         ),
+        "retired_v2_curve_count": len(retired_v2_curve),
+        "v2_sealed_parent_count": len(v2_sealed),
+        "v2_reserve_preserved_count": len(v2_reserve),
         "historical_shuffle_rules": HISTORICAL_SHUFFLE_RULES,
         "split_sizes": SPLIT_SIZES,
         "curve_gate_steps": list(CURVE_STEPS),
@@ -442,18 +539,26 @@ def load_and_verify_state() -> dict[str, Any]:
     state = json.loads(STATE_PATH.read_text())
     expected_state = {
         "protocol": PROTOCOL,
+        "allocation_algorithm": ALLOCATION_ALGORITHM,
         "allocation_salt": ALLOCATION_SALT,
+        "v2_allocation_salt": V2_ALLOCATION_SALT,
+        "v2_parent_manifest_sha256": V2_MANIFEST_SHA256,
+        "v2_sealed_set_sha256": V2_SEALED_SET_SHA256,
+        "predeclared_v3_manifest_sha256": V3_MANIFEST_SHA256,
         "historically_used_count": 3741,
         "historically_unused_count": 3732,
         "retired_v1_curve_count": 400,
         "retired_v1_curve_historical_overlap": 32,
+        "retired_v2_curve_count": 400,
+        "v2_sealed_parent_count": 2900,
+        "v2_reserve_preserved_count": 64,
         "split_sizes": SPLIT_SIZES,
         "curve_gate_steps": list(CURVE_STEPS),
         "fixed_training_updates": FIXED_UPDATES,
         "seeds": list(SEEDS),
     }
     if any(state.get(key) != value for key, value in expected_state.items()):
-        raise ProtocolError("prepared state does not match the frozen v2 protocol")
+        raise ProtocolError("prepared state does not match the frozen V3 protocol")
     if canonical_sha256(state.get("historical_shuffle_rules")) != canonical_sha256(
         HISTORICAL_SHUFFLE_RULES
     ):
@@ -472,6 +577,11 @@ def load_and_verify_state() -> dict[str, Any]:
     }
     if state.get("index_manifest_sha256") != actual_manifest_hashes:
         raise ProtocolError("an index manifest changed after protocol preparation")
+    if any(
+        sha256_file(MANIFEST_DIR / name) != expected_hash
+        for name, expected_hash in V3_MANIFEST_SHA256.items()
+    ):
+        raise ProtocolError("a V3 split does not match its predeclared manifest hash")
 
     split_sets = {
         name: set(load_indices(MANIFEST_DIR / name)) for name in SPLIT_SIZES
@@ -481,19 +591,44 @@ def load_and_verify_state() -> dict[str, Any]:
         for right in names[index + 1 :]:
             if split_sets[left] & split_sets[right]:
                 raise ProtocolError(f"manifest overlap: {left} and {right}")
-    retired = set(load_indices(MANIFEST_DIR / "retired_v1_curve_indices.json"))
+    retired_v1 = set(load_indices(MANIFEST_DIR / "retired_v1_curve_indices.json"))
+    retired_v2 = set(load_indices(MANIFEST_DIR / "retired_v2_curve_indices.json"))
     historical = set(load_indices(MANIFEST_DIR / "historical_exclusions.json"))
     train_exclusions = set(load_indices(MANIFEST_DIR / "train_exclusions.json"))
-    if any(values & retired for values in split_sets.values()):
-        raise ProtocolError("a v2 outcome split reuses the exposed v1 curve")
+    if any(values & retired_v1 for values in split_sets.values()):
+        raise ProtocolError("a V3 outcome split reuses the exposed V1 curve")
+    if any(values & retired_v2 for values in split_sets.values()):
+        raise ProtocolError("a V3 outcome split reuses the exposed V2 curve")
     if any(values & historical for values in split_sets.values()):
-        raise ProtocolError("a v2 outcome split contains a historically used index")
-    if sum(map(len, split_sets.values())) != 3364:
-        raise ProtocolError("v2 outcome manifests no longer contain 3,364 indices")
-    if len(historical) != 3741 or len(retired) != 400 or len(train_exclusions) != 3764:
+        raise ProtocolError("a V3 outcome split contains a historically used index")
+    if sum(map(len, split_sets.values())) != 2964:
+        raise ProtocolError("V3 outcome manifests no longer contain 2,964 indices")
+    if (
+        len(historical) != 3741
+        or len(retired_v1) != 400
+        or len(retired_v2) != 400
+        or len(train_exclusions) != 3764
+    ):
         raise ProtocolError("historical or retired exclusion counts changed")
-    if train_exclusions != set().union(*split_sets.values(), retired):
-        raise ProtocolError("training exclusions do not cover every v2 outcome index")
+    if retired_v2 & retired_v1 or retired_v2 & historical:
+        raise ProtocolError("the retired V2 curve is not a fresh, disjoint V2 split")
+    if sha256_file(MANIFEST_DIR / "retired_v2_curve_indices.json") != V2_MANIFEST_SHA256[
+        "curve_indices.json"
+    ]:
+        raise ProtocolError("the retired V2 curve does not match its frozen manifest")
+    if sha256_file(MANIFEST_DIR / "future_reserve_indices.json") != V2_MANIFEST_SHA256[
+        "future_reserve_indices.json"
+    ]:
+        raise ProtocolError("V3 changed the untouched V2 reserve")
+    v3_reallocated = (
+        split_sets["curve_indices.json"] | split_sets["sealed_final_indices.json"]
+    )
+    if canonical_sha256(sorted(v3_reallocated)) != V2_SEALED_SET_SHA256:
+        raise ProtocolError("V3 curve/final data do not exactly reallocate V2 sealed data")
+    if train_exclusions != set().union(
+        *split_sets.values(), retired_v1, retired_v2
+    ):
+        raise ProtocolError("training exclusions do not cover every V3 outcome index")
     return state
 
 
@@ -533,6 +668,21 @@ def training_behavior_summary(path: Path) -> dict[str, Any]:
     rows = [row for row in payload if isinstance(row, dict) and "reward" in row]
     if [row.get("step") for row in rows] != list(range(1, FIXED_UPDATES + 1)):
         raise ProtocolError(f"training log does not contain steps 1..{FIXED_UPDATES}: {path}")
+    scheduler_rows = [
+        row
+        for row in payload
+        if isinstance(row, dict) and "learning_rate" in row
+    ]
+    if not scheduler_rows or any(
+        not isinstance(row.get("learning_rate"), (int, float))
+        or isinstance(row.get("learning_rate"), bool)
+        or not math.isfinite(float(row["learning_rate"]))
+        or not math.isclose(
+            float(row["learning_rate"]), 3e-6, rel_tol=0.0, abs_tol=1e-15
+        )
+        for row in scheduler_rows
+    ):
+        raise ProtocolError(f"training log does not use the frozen constant LR: {path}")
 
     literal_rates: list[float] = []
     mean_lengths: list[float] = []
@@ -582,6 +732,8 @@ def training_behavior_summary(path: Path) -> dict[str, Any]:
         "reward_first": rewards[0],
         "reward_last": rewards[-1],
         "reward_std_min": min(reward_stds),
+        "learning_rate": 3e-6,
+        "learning_rate_log_rows": len(scheduler_rows),
     }
 
 
@@ -607,7 +759,7 @@ def render_curve_plot(
     ]
     axis.plot(
         ALL_VALIDATION_STEPS, mean_values, color="#1d4ed8", linewidth=2.5,
-        marker="o", label="six-seed mean",
+        marker="o", label="ten-seed mean",
     )
     gate_values = [100 * means[str(step)] for step in CURVE_STEPS]
     axis.scatter(
@@ -655,7 +807,7 @@ def compute_curve_gate(write_result: bool = True) -> dict[str, Any]:
         "criterion": "mean(step5) > mean(step0), mean(step10) >= mean(step5), mean(step15) >= mean(step10)",
         "predeclared_steps": list(CURVE_STEPS),
         "n_seeds": len(SEEDS),
-        "examples_per_seed": 400,
+        "examples_per_seed": 800,
         "per_seed_exact_match": per_seed,
         "mean_exact_match": means,
         "passed": passed,
@@ -818,7 +970,7 @@ def unlock_final() -> None:
         "curve_gate_sha256": sha256_file(CURVE_GATE_PATH),
         "completed_runs_sha256": sha256_file(COMPLETED_RUNS_PATH),
         "unlocked_at_utc": utc_now(),
-        "reason": "all 12 matched semantic/sign-flip runs completed and the predeclared six-seed mean curve gate passed",
+        "reason": "all 20 matched semantic/sign-flip runs completed and the predeclared ten-seed mean curve gate passed",
     }
     write_json(UNLOCK_PATH, marker)
     print(json.dumps(marker, indent=2, sort_keys=True))
@@ -1238,10 +1390,12 @@ def final_report() -> dict[str, Any]:
         "crossed_ci_excludes_zero": bootstrap.get(
             "mean_accuracy_difference_ci_low", -math.inf
         ) > 0,
-        "all_six_seed_effects_positive": (
-            sign_test.get("positive") == 6
-            and sign_test.get("negative") == 0
-            and sign_test.get("tied_excluded") == 0
+        "at_least_nine_of_ten_seed_effects_positive": (
+            sign_test.get("positive", 0) >= 9
+            and sign_test.get("positive", 0)
+            + sign_test.get("negative", 0)
+            + sign_test.get("tied_excluded", 0)
+            == 10
         ),
         "two_sided_seed_sign_p_below_0_05": sign_test.get(
             "exact_two_sided_p", 1.0
@@ -1262,7 +1416,7 @@ def final_report() -> dict[str, Any]:
     }
     result = {
         "protocol": PROTOCOL,
-        "criterion": "predeclared curve plus six positive semantic-vs-base seeds, crossed 95% CIs above zero for semantic-vs-base and semantic-vs-signflip, and exact two-sided seed sign p < 0.05",
+        "criterion": "predeclared curve plus at least nine of ten positive semantic-vs-base seeds, crossed 95% CIs above zero for semantic-vs-base and semantic-vs-signflip, and exact two-sided seed sign p < 0.05",
         "checks": checks,
         "passed": all(checks.values()),
         "semantic_vs_base_sha256": sha256_file(semantic_path),
@@ -1306,10 +1460,10 @@ def main() -> None:
                 raise ProtocolError("predeclared curve gate failed")
         elif args.command == "verify-runs":
             verify_completed_runs()
-            print("all 12 required fixed-horizon runs match the frozen protocol")
+            print("all 20 required fixed-horizon runs match the frozen protocol")
         elif args.command == "verify-semantic":
             verify_completed_runs(("jlens",))
-            print("all six semantic fixed-horizon runs match the frozen protocol")
+            print("all ten semantic fixed-horizon runs match the frozen protocol")
         elif args.command == "unlock":
             unlock_final()
         elif args.command == "verify-unlock":

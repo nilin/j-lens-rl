@@ -455,23 +455,45 @@ was observed before the scientific gate resolved.
 
 The fresh, previously unseen curve gave this decisive result:
 
-| Seed | Step 0 | Step 5 | Step 10 |
-|---:|---:|---:|---:|
-| 142 | 0.3750 | 0.3625 | 0.3750 |
-| 143 | 0.3750 | 0.3750 | 0.3575 |
-| 144 | 0.3750 | 0.3850 | 0.3625 |
-| 145 | 0.3750 | 0.3900 | 0.3575 |
-| 146 | 0.3750 | 0.4025 | 0.3800 |
-| 147 | 0.3750 | 0.3800 | 0.3800 |
-| **Mean** | **0.37500** | **0.38250** | **0.36875** |
+| Seed | Step 0 | Step 5 | Step 10 | Step 15 |
+|---:|---:|---:|---:|---:|
+| 142 | 0.3750 | 0.3625 | 0.3750 | 0.3500 |
+| 143 | 0.3750 | 0.3750 | 0.3575 | 0.3725 |
+| 144 | 0.3750 | 0.3850 | 0.3625 | 0.3775 |
+| 145 | 0.3750 | 0.3900 | 0.3575 | 0.3925 |
+| 146 | 0.3750 | 0.4025 | 0.3800 | 0.3800 |
+| 147 | 0.3750 | 0.3800 | 0.3800 | 0.3900 |
+| **Mean** | **0.37500** | **0.38250** | **0.36875** | **0.37708** |
 
 Thus J-only training produced the requested first rise, `+0.75` percentage
 points at step 5, but then fell `1.375` points at step 10. This violates the
 predeclared no-downward-step condition and puts step 10 `0.625` points below
-the frozen base. V2 is a valid negative curve-gate result, not significant
-evidence. The orchestrator is allowed to finish and persist the semantic
-artifacts, but it must not start sign-flip controls or open any of the 2,900
-sealed-final outcomes. The invalid v1 result is not pooled with this result.
+the frozen base. Step 15 recovered to `0.37708`, but a later recovery cannot
+erase the intervening decline. V2 is a valid negative curve-gate result, not
+significant evidence. The automatic verifier wrote `curve_gate.json` with
+`passed: false` and a curve plot SHA-256 of
+`5e7dbac3d5d6f63630008bb3fe1579428b92296a195c9a248ed747403f93261e`;
+the durable attempt stage became `curve_failed`, the app stopped at
+2026-07-14 02:44:53 UTC, no sign-flip control started, and none of the 2,900
+sealed-final outcomes was opened. The invalid v1 result is not pooled with
+this result.
+
+The completed semantic logs also reject the obvious reward-hacking
+explanations: literal `solved` emission was zero at every rollout and curve
+node, within-group reward variance never collapsed, KL stayed below 0.0015,
+the policy clip-region ratio stayed zero, and validation response length was
+stable. Training used only the one J task reward. The failure is therefore an
+accuracy-trajectory failure, not evidence that the optimizer silently saw
+correctness or learned to print the target word.
+
+One reproducibility caveat remains: PyTorch warned that Flash Attention and
+memory-efficient attention backward kernels are nondeterministic even though
+the code requests deterministic algorithms with `warn_only`. This does not
+leak labels or bias the gate, and seed-level variation is explicitly part of
+the multi-seed design, but the runs are not promised to be bitwise replayable.
+V3 keeps the same pinned L40S/CUDA/software runtime rather than silently
+changing the training kernel together with the scheduler; the warning and
+runtime identity must remain in the evidence record.
 
 The pre-gate contingency audit found one concrete recipe mismatch that best
 explains why the early rise was not sustained. The historical dense `solved`

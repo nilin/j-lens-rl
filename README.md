@@ -36,12 +36,15 @@ implementation is pinned to commit
 
 ## Confirmatory run
 
-The v2 candidate is frozen before its outcome sets are opened: WikiText-fitted
-`solved`, layer 8, late-half mean, LR `3e-6`, six seeds, and a fixed step-25
-endpoint. A matched sign-flipped J reward is the required control. One
-exact-match-reward run is an optional pipeline check. An invalid v1 Modal
-attempt exposed part of its curve before a source-provenance bug was found; v2
-retires that entire curve and does not reuse it.
+V2 was a valid negative curve-gate result: its fresh six-seed mean at steps
+`0/5/10/15` was `0.37500/0.38250/0.36875/0.37708`. It demonstrated an initial
+J-only rise but not the requested uninterrupted three-node improvement, so it
+opened no sealed-final outcome. V3 is frozen before its outcome sets are
+opened: WikiText-fitted `solved`, layer 8, late-half mean, a **constant** LR
+`3e-6` with zero warmup, ten seeds, and a fixed step-25 endpoint. The scheduler
+is the sole recipe correction; v2 had inadvertently compressed the default
+linear decay into only 25 steps. A matched sign-flipped J reward is required,
+and one exact-match-reward run is an optional pipeline check.
 
 After committing all code and artifact metadata, the worktree must be clean:
 
@@ -61,23 +64,24 @@ git status --short
 ```
 
 Preparation deterministically reconstructs 3,741 historically used raw
-GSM8K-train indices, including an interrupted setup run omitted by v1. After
-retiring all 400 exposed v1-curve indices, it allocates the remaining 3,364
-unseen examples into a new 400-item curve, 2,900-item sealed final set, and
-64-item reserve. Every outcome index stays out of confirmatory training.
+GSM8K-train indices, including an interrupted setup run omitted by v1. It
+retires both exposed 400-item v1/v2 curves, rehashes only v2's never-opened
+2,900-item final pool into a new 800-item curve and 2,100-item sealed final
+set, and preserves the separate 64-item reserve untouched. Every outcome index
+stays out of confirmatory training.
 Manifests and run outputs live in
 ignored `.confirmatory/`, with hashes tied to the clean Git commit.
 
-The curve gate is fixed before training: across the mean of all six semantic
+The curve gate is fixed before training: across the mean of all ten semantic
 seeds, step 5 must exceed step 0, step 10 must be at least step 5, and step 15
 must be at least step 10. Runs always continue to step 25. The final set remains
-locked unless all 12 semantic/sign-flip runs and this exact curve gate pass.
+locked unless all 20 semantic/sign-flip runs and this exact curve gate pass.
 The gate saves a hashed figure containing every seed and the highlighted mean
 curve at the predeclared nodes.
 
-Significant positive evidence additionally requires all six sealed-set seed
-effects to be positive (two-sided sign-test `p=0.03125`), a positive
-multi-seed mean change whose 95% crossed seed/item bootstrap interval excludes
+Significant positive evidence additionally requires at least 9/10 sealed-set
+seed effects to be strictly positive (two-sided sign-test `p=0.021484375` at
+the boundary), a positive multi-seed mean change whose 95% crossed seed/item bootstrap interval excludes
 zero, and a positive semantic-minus-sign-flip difference-in-differences whose
 crossed 95% interval also excludes zero. This directional control criterion is
 part of the frozen success definition, not a way to rescue a failed primary
@@ -105,11 +109,11 @@ Standalone evaluation writes per-example JSONL rather than only an aggregate:
 ```bash
 eval-jlens-rl \
   --config configs/confirmatory_sealed_eval.json \
-  --experiment-config configs/confirmatory_jlens_seed142.json \
-  --adapter .confirmatory/runs/jlens_seed142/final \
+  --experiment-config configs/confirmatory_jlens_seed148.json \
+  --adapter .confirmatory/runs/jlens_seed148/final \
   --indices-manifest .confirmatory/manifests/sealed_final_indices.json \
-  --output-jsonl .confirmatory/evals/jlens_seed142.jsonl \
-  --run-label jlens_seed142 \
+  --output-jsonl .confirmatory/evals/jlens_seed148.jsonl \
+  --run-label jlens_seed148 \
   --batch-size 64 --skip-jlens-metric
 ```
 
@@ -123,7 +127,7 @@ recomputes prompt hashes, predictions, and correctness from each completion.
 
 `modal_experiments.py` runs the same frozen protocol with at most five pinned
 L40S containers. It bakes the exact clean Git tree and frozen lens artifacts into
-the image, uses a v2 Volume for distinct per-seed outputs, and never copies
+the image, uses a fresh v3 Volume for distinct per-seed outputs, and never copies
 `.env` or `modal.sh`. The durable remote orchestrator runs semantic seeds,
 checks the fixed curve, runs sign-flips only on a pass, then performs the
 guarded final analysis.
@@ -140,8 +144,8 @@ unset WANDB_API_KEY
 .venv/bin/modal run --detach modal_experiments.py
 ```
 
-The launcher prints a function-call ID and uses Volume
-`j-lens-rl-confirmatory-v2-20260714a`. Monitor it with Modal's dashboard or CLI.
+The launcher prints a function-call ID and uses the v3 Volume named in
+`modal_experiments.py`. Monitor it with Modal's dashboard or CLI.
 Download and archive the Volume promptly after completion because Volume v2 is
 currently beta. See Modal's official guides for
 [GPU selection](https://modal.com/docs/guide/gpu),

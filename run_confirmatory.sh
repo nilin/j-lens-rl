@@ -8,7 +8,7 @@ TRAIN="${TRAIN:-.venv/bin/train-jlens-rl}"
 EVAL="${EVAL:-.venv/bin/eval-jlens-rl}"
 COMPARE="${COMPARE:-.venv/bin/compare-jlens-evals}"
 PROTOCOL=("$PYTHON" scripts/confirmatory_protocol.py)
-SEEDS=(142 143 144 145 146 147)
+SEEDS=(148 149 150 151 152 153 154 155 156 157)
 
 usage() {
   echo "usage: $0 {prepare|verify|train-semantic|train-controls|train-positive-control|train-all|curve|unlock|final-treatment|final-controls|report}"
@@ -51,7 +51,7 @@ final_treatment() {
   mkdir -p .confirmatory/evals .confirmatory/evidence
   eval_if_missing .confirmatory/evals/base.jsonl \
     --config configs/confirmatory_sealed_eval.json \
-    --experiment-config configs/confirmatory_jlens_seed142.json \
+    --experiment-config configs/confirmatory_jlens_seed148.json \
     --indices-manifest .confirmatory/manifests/sealed_final_indices.json \
     --run-label base
   local compare_args=(--base-jsonl .confirmatory/evals/base.jsonl)
@@ -102,14 +102,14 @@ final_controls() {
         --output ".confirmatory/evidence/semantic_vs_${condition}.json"
     fi
   done
-  if [[ -f .confirmatory/runs/gsm8k_seed142/final/adapter_model.safetensors ]]; then
-    output=".confirmatory/evals/gsm8k_seed142.jsonl"
+  if [[ -f .confirmatory/runs/gsm8k_seed148/final/adapter_model.safetensors ]]; then
+    output=".confirmatory/evals/gsm8k_seed148.jsonl"
     eval_if_missing "$output" \
       --config configs/confirmatory_sealed_eval.json \
-      --experiment-config configs/confirmatory_gsm8k_seed142.json \
+      --experiment-config configs/confirmatory_gsm8k_seed148.json \
       --indices-manifest .confirmatory/manifests/sealed_final_indices.json \
-      --adapter .confirmatory/runs/gsm8k_seed142/final \
-      --run-label gsm8k_seed142
+      --adapter .confirmatory/runs/gsm8k_seed148/final \
+      --run-label gsm8k_seed148
     if [[ ! -e .confirmatory/evidence/gsm8k_control_vs_base.json ]]; then
       "$COMPARE" \
         --base-jsonl .confirmatory/evals/base.jsonl \
@@ -137,7 +137,7 @@ case "${1:-}" in
   train-positive-control)
     "${PROTOCOL[@]}" verify >/dev/null
     load_wandb_key
-    "$TRAIN" --config configs/confirmatory_gsm8k_seed142.json --wandb-mode online
+    "$TRAIN" --config configs/confirmatory_gsm8k_seed148.json --wandb-mode online
     ;;
   train-all)
     train_condition jlens

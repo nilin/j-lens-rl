@@ -23,12 +23,12 @@ import modal
 LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = REMOTE_REPO / ".confirmatory"
-VOLUME_NAME = "j-lens-rl-confirmatory-v2-20260714a"
-SEEDS = tuple(range(142, 148))
+VOLUME_NAME = "j-lens-rl-confirmatory-v3-20260714a"
+SEEDS = tuple(range(148, 158))
 MAX_GPU_CONTAINERS = 5
 GPU_TYPE = "L40S"
 
-app = modal.App("j-lens-rl-confirmatory-v2")
+app = modal.App("j-lens-rl-confirmatory-v3")
 state_volume = modal.Volume.from_name(
     VOLUME_NAME,
     create_if_missing=True,
@@ -259,7 +259,7 @@ def evaluate_label(label: str) -> dict[str, Any]:
         return {"label": label, "reused_verified_output": True}
 
     if label == "base":
-        experiment_config = "configs/confirmatory_jlens_seed142.json"
+        experiment_config = "configs/confirmatory_jlens_seed148.json"
         adapter_args: list[str] = []
     else:
         condition, seed_text = label.rsplit("_seed", 1)

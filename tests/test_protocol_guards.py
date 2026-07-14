@@ -107,7 +107,7 @@ def test_protocol_verifies_labeled_evaluation_contract(monkeypatch, tmp_path):
     sealed_manifest = manifest_dir / "sealed_final_indices.json"
     sealed_manifest.write_text(json.dumps({"indices": [7]}))
     eval_config_path = config_dir / "confirmatory_sealed_eval.json"
-    experiment_config_path = config_dir / "confirmatory_jlens_seed142.json"
+    experiment_config_path = config_dir / "confirmatory_jlens_seed148.json"
     eval_config_path.write_text("{}")
     experiment_config_path.write_text("{}")
 
@@ -208,7 +208,7 @@ def test_protocol_verifies_labeled_evaluation_contract(monkeypatch, tmp_path):
                 "source": "explicit",
             },
             "experiment": {
-                "training_seed": 142,
+                "training_seed": 148,
                 "reward_type": "jlens",
                 "target_words": ["solved"],
                 "score_components": score_components,
@@ -279,10 +279,10 @@ def test_acceptance_report_requires_signflip_specificity(monkeypatch, tmp_path):
             "mean_accuracy_difference_ci_low": 0.001,
         },
         "seed_sign_test": {
-            "positive": 6,
-            "negative": 0,
+            "positive": 9,
+            "negative": 1,
             "tied_excluded": 0,
-            "exact_two_sided_p": 0.03125,
+            "exact_two_sided_p": 0.021484375,
         },
     }
     specificity = {
@@ -318,6 +318,23 @@ def test_acceptance_report_requires_signflip_specificity(monkeypatch, tmp_path):
     assert protocol.final_report()["passed"] is True
 
     acceptance.unlink()
+    semantic["seed_sign_test"] = {
+        "positive": 8,
+        "negative": 2,
+        "tied_excluded": 0,
+        "exact_two_sided_p": 0.109375,
+    }
+    semantic_path.write_text(json.dumps(semantic))
+    assert protocol.final_report()["passed"] is False
+
+    acceptance.unlink()
+    semantic["seed_sign_test"] = {
+        "positive": 9,
+        "negative": 1,
+        "tied_excluded": 0,
+        "exact_two_sided_p": 0.021484375,
+    }
+    semantic_path.write_text(json.dumps(semantic))
     specificity["difference_in_differences"]["crossed_seed_item_bootstrap"][
         "mean_difference_in_differences_ci_low"
     ] = -0.001
@@ -331,15 +348,100 @@ def test_acceptance_report_requires_signflip_specificity(monkeypatch, tmp_path):
     assert "batch_upload(force=True)" not in modal_source
 
 
-def test_v2_allocation_retires_setup_run_and_exposed_curve():
+def test_v3_allocation_retires_v2_curve_and_reallocates_only_sealed_parent():
     protocol = _load_protocol_module()
     assert (42, 1000, ((7000, 7200),)) in protocol.HISTORICAL_SHUFFLE_RULES
     assert protocol.SPLIT_SIZES == {
-        "curve_indices.json": 400,
-        "sealed_final_indices.json": 2900,
+        "curve_indices.json": 800,
+        "sealed_final_indices.json": 2100,
         "future_reserve_indices.json": 64,
     }
-    assert protocol.PROTOCOL == "j-lens-rl-confirmatory-v2"
+    assert protocol.SEEDS == tuple(range(148, 158))
+    assert protocol.PROTOCOL == "j-lens-rl-confirmatory-v3"
+    common = protocol.load_config(
+        Path(__file__).resolve().parents[1] / "configs/confirmatory_common.json"
+    )
+    assert common["lr_scheduler_type"] == "constant"
+    assert common["warmup_steps"] == 0
+    assert common["warmup_ratio"] == 0.0
+    assert len(protocol.validate_configs(require_manifests=False)) == 23
+    train_source = (
+        Path(__file__).resolve().parents[1] / "src/jlens_rl/train.py"
+    ).read_text()
+    assert 'lr_scheduler_type=cfg.get("lr_scheduler_type", "linear")' in train_source
+    assert 'warmup_steps=int(cfg.get("warmup_steps", 0))' in train_source
+    assert 'warmup_ratio=float(cfg.get("warmup_ratio", 0.0))' in train_source
+    assert protocol.V2_MANIFEST_SHA256 == {
+        "curve_indices.json": "cb9abd0f254aed65ee7ef70fb5eae75094e8196b16472521863a8f310f6f4357",
+        "sealed_final_indices.json": "382971b6c1e568a0ca6af04104e4a2dd34c94888830ff4018a348750f11cad53",
+        "future_reserve_indices.json": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+    }
+    assert protocol.V3_MANIFEST_SHA256 == {
+        "curve_indices.json": "26f0e34b8422959ae0062f9b030ceb3609bc7c2ef8ba4f95dfa397594f7ecb75",
+        "sealed_final_indices.json": "84da0c0472b4442b4f35406d1b1fbd3b956803e5f19bf51fc02f6db013224f7b",
+        "future_reserve_indices.json": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+    }
+
+
+def test_v3_reallocation_preserves_reserve_and_rejects_parent_tampering(monkeypatch):
+    protocol = _load_protocol_module()
+    parent = {
+        "curve_indices.json": [10, 11],
+        "sealed_final_indices.json": [20, 21, 22, 23, 24],
+        "future_reserve_indices.json": [30],
+    }
+    monkeypatch.setattr(
+        protocol,
+        "V2_SPLIT_SIZES",
+        {name: len(indices) for name, indices in parent.items()},
+    )
+    monkeypatch.setattr(
+        protocol,
+        "V2_MANIFEST_SHA256",
+        {name: protocol.manifest_sha256(indices) for name, indices in parent.items()},
+    )
+    monkeypatch.setattr(
+        protocol,
+        "V2_SEALED_SET_SHA256",
+        protocol.canonical_sha256(sorted(parent["sealed_final_indices.json"])),
+    )
+    monkeypatch.setattr(
+        protocol,
+        "SPLIT_SIZES",
+        {
+            "curve_indices.json": 2,
+            "sealed_final_indices.json": 3,
+            "future_reserve_indices.json": 1,
+        },
+    )
+    ordered = sorted(
+        parent["sealed_final_indices.json"], key=protocol.allocation_key
+    )
+    expected_allocations = {
+        "curve_indices.json": ordered[:2],
+        "sealed_final_indices.json": ordered[2:],
+        "future_reserve_indices.json": parent["future_reserve_indices.json"],
+    }
+    monkeypatch.setattr(
+        protocol,
+        "V3_MANIFEST_SHA256",
+        {
+            name: protocol.manifest_sha256(indices)
+            for name, indices in expected_allocations.items()
+        },
+    )
+
+    allocations, retired_curve = protocol.reallocate_v2_parent(parent)
+    assert retired_curve == parent["curve_indices.json"]
+    assert allocations["future_reserve_indices.json"] == [30]
+    assert (
+        set(allocations["curve_indices.json"])
+        | set(allocations["sealed_final_indices.json"])
+    ) == set(parent["sealed_final_indices.json"])
+
+    tampered = {**parent, "sealed_final_indices.json": [20, 21, 22, 23, 99]}
+    with pytest.raises(protocol.ProtocolError, match="frozen failed attempt"):
+        protocol.reallocate_v2_parent(tampered)
 
 
 def test_training_behavior_log_rejects_extrinsic_reward(monkeypatch, tmp_path):
@@ -350,6 +452,7 @@ def test_training_behavior_log_rejects_extrinsic_reward(monkeypatch, tmp_path):
         "step": 1,
         "reward": 0.0,
         "reward_std": 1.0,
+        "learning_rate": 3e-6,
         "rewards/jlens_solved_reward/mean": 0.0,
         "completions/mean_length": 128.0,
         "completions/clipped_ratio": 0.0,
@@ -363,6 +466,12 @@ def test_training_behavior_log_rejects_extrinsic_reward(monkeypatch, tmp_path):
     with pytest.raises(protocol.ProtocolError, match="one-J-reward"):
         protocol.training_behavior_summary(path)
 
+    del row["rewards/gsm8k_reward/mean"]
+    row["learning_rate"] = 2e-6
+    path.write_text(json.dumps([row]))
+    with pytest.raises(protocol.ProtocolError, match="constant LR"):
+        protocol.training_behavior_summary(path)
+
 
 def test_unlock_chain_detects_adapter_mutation(monkeypatch, tmp_path):
     protocol = _load_protocol_module()
@@ -370,7 +479,7 @@ def test_unlock_chain_detects_adapter_mutation(monkeypatch, tmp_path):
     evidence_dir = state_dir / "evidence"
     evidence_dir.mkdir(parents=True)
     monkeypatch.setattr(protocol, "STATE_DIR", state_dir)
-    monkeypatch.setattr(protocol, "SEEDS", (142,))
+    monkeypatch.setattr(protocol, "SEEDS", (148,))
     monkeypatch.setattr(protocol, "REQUIRED_CONDITIONS", ("jlens", "signflip"))
     monkeypatch.setattr(
         protocol,
@@ -379,7 +488,7 @@ def test_unlock_chain_detects_adapter_mutation(monkeypatch, tmp_path):
     )
 
     for condition in protocol.REQUIRED_CONDITIONS:
-        directory = state_dir / "runs" / f"{condition}_seed142"
+        directory = state_dir / "runs" / f"{condition}_seed148"
         for relative in (
             "run_manifest.json",
             "resolved_config.json",
@@ -398,6 +507,7 @@ def test_unlock_chain_detects_adapter_mutation(monkeypatch, tmp_path):
                         "step": step,
                         "reward": float(step),
                         "reward_std": 1.0,
+                        "learning_rate": 3e-6,
                         "rewards/jlens_solved_reward/mean": float(step),
                         "completions/mean_length": 128.0,
                         "completions/clipped_ratio": 0.0,
@@ -425,7 +535,7 @@ def test_unlock_chain_detects_adapter_mutation(monkeypatch, tmp_path):
         "criterion": "gate",
         "predeclared_steps": [0, 5, 10, 15],
         "n_seeds": 1,
-        "examples_per_seed": 400,
+        "examples_per_seed": 800,
         "per_seed_exact_match": {},
         "mean_exact_match": {},
         "passed": True,
@@ -446,7 +556,7 @@ def test_unlock_chain_detects_adapter_mutation(monkeypatch, tmp_path):
     monkeypatch.setattr(protocol, "compute_curve_gate", lambda write_result=False: gate)
     protocol.verify_unlock()
 
-    adapter = state_dir / "runs/jlens_seed142/final/adapter_model.safetensors"
+    adapter = state_dir / "runs/jlens_seed148/final/adapter_model.safetensors"
     adapter.write_text("mutated")
     with pytest.raises(protocol.ProtocolError, match="run artifact changed"):
         protocol.verify_unlock()
