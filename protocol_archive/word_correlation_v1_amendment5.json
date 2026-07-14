@@ -1,0 +1,37 @@
+{
+  "amendment4_sha256": "6b17b616d0d73cab7181f0dbb72c8c5343f48125b1856bf8f72398bb0a9644a7",
+  "attempt4_closeout_sha256": "ddddfb04317bbbd6b85b91b2b231222895f16245d39cb0ce2f565e1ec5d28d31",
+  "attempt4_forensic_inventory_sha256": "a9553ce1bd484ffbea120d7a814a16720fe565df9ce5dda6ce6143855cfe0577",
+  "frozen_at_utc": "2026-07-14T09:24:36Z",
+  "new_attempt": {
+    "controller_recovery_policy": "same-call automatic restart with a durable single-job ledger, idempotent workers, and no terminalization of controller KeyboardInterrupt",
+    "global_modal_gpu_limit": 1,
+    "gpu_type": "L40S",
+    "launcher_sha256": "3bbff5397c3684d262437b1e665330a8069c609158d089e5ca3ef24238c13253",
+    "max_parallel_gpu_workers": 1,
+    "no_attempt4_artifact_may_be_reused": true,
+    "no_other_modal_gpu_app_may_overlap": true,
+    "safe_train_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "scanner_sha256": "9857957ba078be68b2cb1abd1974fab383c696c40622e2a76ad4d4b0476baace",
+    "volume": "j-lens-rl-word-correlation-v1-20260714e"
+  },
+  "operational_changes": {
+    "atomic_artifacts": "calibration, shards, aggregates, selection lock, atlas, and result are published only as fully validated committed artifact sets",
+    "controller": "a durable one-job ledger reattaches an existing Modal call; an interrupted spawn-to-ledger window may enqueue a duplicate that serializes and returns the already-validated artifact",
+    "gpu_dispatch": "one Modal GPU function with max_containers=1 covers every GPU phase and jobs run in fixed serial order",
+    "keyboard_interrupt": "controller KeyboardInterrupt remains nonterminal so Modal same-input preemption restart can resume",
+    "workers": "GPU jobs are idempotent and never commit partial work in a finally block"
+  },
+  "original_preregistration_sha256": "5e2ae9d0896edbcc7386ccfcc125f8200fa86f77b2099529028a01e54788516a",
+  "outcome_status_at_freeze": "attempt 4 stopped after all eight discovery shard artifact sets but before discovery aggregation, selection lock, or validation; semantic outcome contents were not inspected; attempt 5 not launched and fresh Volume E absent",
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-amendment5-preemption-replay",
+  "reason": "Attempt 4's CPU controller was preempted and its non-idempotent BaseException path made Modal's automatic same-input restart impossible. This amendment changes only durable orchestration and uses a fresh Volume.",
+  "scientific_protocol_changed": false,
+  "unchanged": [
+    "all 400 source indices, discovery/validation assignments, shard assignments, rollout seeds, candidates, token families, and literal masks",
+    "model, dataset, WikiText, lens, calibration, generation, readout, candidate scoring, selection, permutation, bootstrap, validation, and atlas rules",
+    "scanner source and scanner configuration bytes",
+    "one global L40S ceiling and no overlapping Modal GPU app",
+    "sealed-final, future-reserve, and retired manifests remain unavailable"
+  ]
+}

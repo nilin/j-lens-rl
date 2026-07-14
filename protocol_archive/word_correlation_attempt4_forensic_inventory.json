@@ -1,0 +1,359 @@
+{
+  "canonical_inventory": {
+    "algorithm": "SHA-256 of UTF-8 concatenation of POSIX-relative-path + TAB + decimal-size + TAB + lowercase-file-SHA-256 + LF, sorted by path",
+    "sha256": "c9c7734dae769679e29a57d8ae557f4d8b454185052796ddb79960aee0e839dc"
+  },
+  "file_count": 68,
+  "files": [
+    {
+      "path": "artifacts/calibration.json",
+      "sha256": "6e25ffdda35947e3a6fdb3c459fa8d0954138ddf400d6029c672368de05d1b34",
+      "size_bytes": 8083
+    },
+    {
+      "path": "artifacts/calibration_manifest.json",
+      "sha256": "efa0c1b8f9577f24cb644e53b9f5f4320cb4cfb577f5f749da779f3e99e62b90",
+      "size_bytes": 132
+    },
+    {
+      "path": "attempt_manifest.json",
+      "sha256": "36d75cbedcadcfabee8250b889c351a06eb20ec1be9adb7e378d09ed9da33970",
+      "size_bytes": 2504
+    },
+    {
+      "path": "attempt_status.json",
+      "sha256": "04da09d8059713381830e1daa26fa453a84022ea00737b2a13ae4af3f9ed206c",
+      "size_bytes": 164
+    },
+    {
+      "path": "discovery/shard_manifests/shard-00.json",
+      "sha256": "3518aa81b18bd1677e13f0a308a242a3a8ced3229b35f0551f8e2f2424c13342",
+      "size_bytes": 1163
+    },
+    {
+      "path": "discovery/shard_manifests/shard-01.json",
+      "sha256": "774bc7c93bf6cfe035f1d7bfa17a7bfd1095c024c9f610ecdb1ce53862a3b5df",
+      "size_bytes": 1161
+    },
+    {
+      "path": "discovery/shard_manifests/shard-02.json",
+      "sha256": "15c023f0d8afb783609ca537958bf12cf4eca7ccfbefbba0266d7856059e04e4",
+      "size_bytes": 1163
+    },
+    {
+      "path": "discovery/shard_manifests/shard-03.json",
+      "sha256": "877597f4ec88b774a561a991bed7a65693f27d8c490d701ee69bb26511187180",
+      "size_bytes": 1160
+    },
+    {
+      "path": "discovery/shard_manifests/shard-04.json",
+      "sha256": "583118cc8c67ee16a90d133d610fa23e198ac5dd5accea9b0427d42b82caee7e",
+      "size_bytes": 1164
+    },
+    {
+      "path": "discovery/shard_manifests/shard-05.json",
+      "sha256": "6734bf30724a515b1d5fccd4705f4e22d75bb41843979406441e3a5b85388d2d",
+      "size_bytes": 1165
+    },
+    {
+      "path": "discovery/shard_manifests/shard-06.json",
+      "sha256": "4b50addaa69d9b0529cbf871bd877659839b389fd1d00e617bcb3acf7deead2d",
+      "size_bytes": 1164
+    },
+    {
+      "path": "discovery/shard_manifests/shard-07.json",
+      "sha256": "8e4c6d791c78a4a29f914d3aacdb5fadcfb24b9da0dd1642e464beb585c4efc7",
+      "size_bytes": 1167
+    },
+    {
+      "path": "discovery/shards/shard-00/atlas_numerator.npy",
+      "sha256": "5bfcba3ada82503d9cfd0415d34b78f86732dbc27ae990862ed308c586b503ec",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-00/atlas_score_ss.npy",
+      "sha256": "253252122b47a89a6280ddaacd846749d3e8cb45a49b5014558487a76ccddec9",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-00/atlas_sufficient.json",
+      "sha256": "f20d0d7676e84bc621ecb768b8f8464671afebd5caf2c14321fd2cca9586be22",
+      "size_bytes": 167
+    },
+    {
+      "path": "discovery/shards/shard-00/prompt_records.jsonl",
+      "sha256": "be50c24ebc0417f963a86b12bc2c7f73489970d62acd8a47a07f54cb1a7c34b5",
+      "size_bytes": 178001
+    },
+    {
+      "path": "discovery/shards/shard-00/provenance.json",
+      "sha256": "5a748b71b06fa4db73d0f7a48bb52779575d389fda7274ca8e8438e114f16253",
+      "size_bytes": 1942
+    },
+    {
+      "path": "discovery/shards/shard-00/rollouts.jsonl",
+      "sha256": "5622168ff8c10627062901141a8e28b886745a16987a1bd9576dff3152e438dc",
+      "size_bytes": 477341
+    },
+    {
+      "path": "discovery/shards/shard-00/summary.json",
+      "sha256": "5a748b71b06fa4db73d0f7a48bb52779575d389fda7274ca8e8438e114f16253",
+      "size_bytes": 1942
+    },
+    {
+      "path": "discovery/shards/shard-01/atlas_numerator.npy",
+      "sha256": "6093eec496942a166317b734cf92de4274166285093c561a9301f2ed18fd4329",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-01/atlas_score_ss.npy",
+      "sha256": "581afd8a5c4ce72d4627860bca3c560688723e5270d360e6aeba1757d3ca6652",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-01/atlas_sufficient.json",
+      "sha256": "c4375107bbec76467e61f66f7b2587cd1830db41b7049973d6b48cfb4a564c82",
+      "size_bytes": 168
+    },
+    {
+      "path": "discovery/shards/shard-01/prompt_records.jsonl",
+      "sha256": "413b4183343aae4f82947aab76a25884453d40887afec2576fe37ed184387c44",
+      "size_bytes": 177552
+    },
+    {
+      "path": "discovery/shards/shard-01/provenance.json",
+      "sha256": "29c49b585c277dc0a953bc2d3e6d2f61c772a6fe06cb9b54c4a481acb8683349",
+      "size_bytes": 1939
+    },
+    {
+      "path": "discovery/shards/shard-01/rollouts.jsonl",
+      "sha256": "1d22cbb50cbfbcf62d72811e830e6ad79bb44e369073c179ce67c57d598a1410",
+      "size_bytes": 481030
+    },
+    {
+      "path": "discovery/shards/shard-01/summary.json",
+      "sha256": "29c49b585c277dc0a953bc2d3e6d2f61c772a6fe06cb9b54c4a481acb8683349",
+      "size_bytes": 1939
+    },
+    {
+      "path": "discovery/shards/shard-02/atlas_numerator.npy",
+      "sha256": "d87b5a0a71705ffe18affc35d923dc1a3e843cbba1e55a6e532acdb4a1793390",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-02/atlas_score_ss.npy",
+      "sha256": "b889579b9c83def992aebfe9b73b768f2e30b3c859ffb997b8a3fbe0ac753f40",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-02/atlas_sufficient.json",
+      "sha256": "348422de14e7193b3dc58032097b2dea78bb92eaaa97eda1b1dca84c9a3c98ca",
+      "size_bytes": 168
+    },
+    {
+      "path": "discovery/shards/shard-02/prompt_records.jsonl",
+      "sha256": "ba7c36f473403c04ced0c35aaa9ec3904a526e53efd4e8a1ee32f584eef50bc9",
+      "size_bytes": 177881
+    },
+    {
+      "path": "discovery/shards/shard-02/provenance.json",
+      "sha256": "3d552e06258086b5713c8dc32668663582e57ff9f879c0c09cf41f6e6f6534a1",
+      "size_bytes": 1942
+    },
+    {
+      "path": "discovery/shards/shard-02/rollouts.jsonl",
+      "sha256": "16631e4073bfe5d0860e94d7f9b032d4b5f04814bef7e8421b58aac319a3968a",
+      "size_bytes": 475221
+    },
+    {
+      "path": "discovery/shards/shard-02/summary.json",
+      "sha256": "3d552e06258086b5713c8dc32668663582e57ff9f879c0c09cf41f6e6f6534a1",
+      "size_bytes": 1942
+    },
+    {
+      "path": "discovery/shards/shard-03/atlas_numerator.npy",
+      "sha256": "815ac152218f52f48f05cb7aa2b334a443cbb594ce7136297de16a83525e7dab",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-03/atlas_score_ss.npy",
+      "sha256": "8f538d95c0f10e4ee166cf5d1c702beefba2fac7807f8406fb3ae0d2057c27b3",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-03/atlas_sufficient.json",
+      "sha256": "bfe677108b0b1ba5af20a298b85c030f679f4d4a87e20397b24af3d11c1461b5",
+      "size_bytes": 169
+    },
+    {
+      "path": "discovery/shards/shard-03/prompt_records.jsonl",
+      "sha256": "0af5837fa82d250447e6e5142446b6d95fabf56b9ce83a204e6129c521428869",
+      "size_bytes": 178361
+    },
+    {
+      "path": "discovery/shards/shard-03/provenance.json",
+      "sha256": "f55cc9c33a19cd1df50940d2fbad64258fd00d4d3140049d611ad2ab04ed1015",
+      "size_bytes": 1939
+    },
+    {
+      "path": "discovery/shards/shard-03/rollouts.jsonl",
+      "sha256": "4a74581b8d325049ce76d0e9c4a3249bcfee2d1e733c4fad82cc6e9469aea1bf",
+      "size_bytes": 487329
+    },
+    {
+      "path": "discovery/shards/shard-03/summary.json",
+      "sha256": "f55cc9c33a19cd1df50940d2fbad64258fd00d4d3140049d611ad2ab04ed1015",
+      "size_bytes": 1939
+    },
+    {
+      "path": "discovery/shards/shard-04/atlas_numerator.npy",
+      "sha256": "696308afa9f8f6b0a81169b28108baac55e8987601fbc1b4e519b3fe46d008ad",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-04/atlas_score_ss.npy",
+      "sha256": "8206eb2b6a18a0ad0ad87cb0443812fe4cf97ec1b14488127d8616eacb496f43",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-04/atlas_sufficient.json",
+      "sha256": "b394a435e3bfe3093b79c15f06cfdc78293959da2f51badca9d81be504fc1764",
+      "size_bytes": 168
+    },
+    {
+      "path": "discovery/shards/shard-04/prompt_records.jsonl",
+      "sha256": "a71115e28b12e749cf39e18245305c92f042585312018c1d6eae6661c84eb899",
+      "size_bytes": 178399
+    },
+    {
+      "path": "discovery/shards/shard-04/provenance.json",
+      "sha256": "390bdd862d53f9ca4b6e48bd3cb0fe7b05ad1bcea5f97fdc86ef8d2e2ce93f81",
+      "size_bytes": 1943
+    },
+    {
+      "path": "discovery/shards/shard-04/rollouts.jsonl",
+      "sha256": "c423f88e529165d55dbb863ea7cccb03d107f46fc96ac768a7ed0fd08dc8f9a3",
+      "size_bytes": 476963
+    },
+    {
+      "path": "discovery/shards/shard-04/summary.json",
+      "sha256": "390bdd862d53f9ca4b6e48bd3cb0fe7b05ad1bcea5f97fdc86ef8d2e2ce93f81",
+      "size_bytes": 1943
+    },
+    {
+      "path": "discovery/shards/shard-05/atlas_numerator.npy",
+      "sha256": "6625e29ab7f815a0d1456ff576fbc688f0bfad0a5dca4abff0a6104a5d52f4e8",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-05/atlas_score_ss.npy",
+      "sha256": "77c1575e554b325d8407553f4b520392d747073a25914417f18a890e56259944",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-05/atlas_sufficient.json",
+      "sha256": "e529b3cee05440164d85e1e82100b5cf61f6c0cedbcddd2401af021a5ce9650d",
+      "size_bytes": 169
+    },
+    {
+      "path": "discovery/shards/shard-05/prompt_records.jsonl",
+      "sha256": "91d0f0a3721412d563a05a817d9105e70b9cf88b935afeb2fcb7ef6029628c4c",
+      "size_bytes": 178267
+    },
+    {
+      "path": "discovery/shards/shard-05/provenance.json",
+      "sha256": "4ccc815797b3fea892fcb6d54066642097f69c9080847622354c4f688695160a",
+      "size_bytes": 1944
+    },
+    {
+      "path": "discovery/shards/shard-05/rollouts.jsonl",
+      "sha256": "38853e7c1e78a5bcf2214d2b44d347e554fc015f03bfda7f898174a6bc6bcb1c",
+      "size_bytes": 465329
+    },
+    {
+      "path": "discovery/shards/shard-05/summary.json",
+      "sha256": "4ccc815797b3fea892fcb6d54066642097f69c9080847622354c4f688695160a",
+      "size_bytes": 1944
+    },
+    {
+      "path": "discovery/shards/shard-06/atlas_numerator.npy",
+      "sha256": "74ac29bf2ab2decf80a66a282b9c056592e3dff56a1dae5e627f28d053cb4bf4",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-06/atlas_score_ss.npy",
+      "sha256": "6670ba3e27e77c82d4bad6de71f41b8e20dc7cb9f9bd237c05bf01692673e7db",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-06/atlas_sufficient.json",
+      "sha256": "b9f8c75f4fdea52c5aec5033f1753d10392cfdbc999b7b878e7abbbde844ef0c",
+      "size_bytes": 168
+    },
+    {
+      "path": "discovery/shards/shard-06/prompt_records.jsonl",
+      "sha256": "3aa0d74e4b905ee210b4c8f0b61928a80a6c1a030bec3ff94942bb5e316d05bd",
+      "size_bytes": 178337
+    },
+    {
+      "path": "discovery/shards/shard-06/provenance.json",
+      "sha256": "72d7e5c664aa81ca342cdf855e8bae2729a62aa5cf4d070e42c14680f657f7b7",
+      "size_bytes": 1943
+    },
+    {
+      "path": "discovery/shards/shard-06/rollouts.jsonl",
+      "sha256": "d12c6085fa19e82db015978485f82b401af986d4e9ae3b5a6b3e30af82a8297d",
+      "size_bytes": 474932
+    },
+    {
+      "path": "discovery/shards/shard-06/summary.json",
+      "sha256": "72d7e5c664aa81ca342cdf855e8bae2729a62aa5cf4d070e42c14680f657f7b7",
+      "size_bytes": 1943
+    },
+    {
+      "path": "discovery/shards/shard-07/atlas_numerator.npy",
+      "sha256": "03a04f174c65488fe3fe6d1b75f6b2d01505404a90020a00b1f55a1a1e82fb91",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-07/atlas_score_ss.npy",
+      "sha256": "37eae8ed73a5b9f22a354d40619c13ce03f5fbf05bd46fbe0adbfea92dc91af3",
+      "size_bytes": 1215616
+    },
+    {
+      "path": "discovery/shards/shard-07/atlas_sufficient.json",
+      "sha256": "e5bb33e0b9b0d4acabd7dc3965a5de5eb8c907f14ffc87ad886f5b0a11cba4d5",
+      "size_bytes": 169
+    },
+    {
+      "path": "discovery/shards/shard-07/prompt_records.jsonl",
+      "sha256": "ae727ccb8d3ea219c4312cf77f086f01f4f45181473b286a298ae570be104da6",
+      "size_bytes": 178292
+    },
+    {
+      "path": "discovery/shards/shard-07/provenance.json",
+      "sha256": "93339ce34eb64cb03812cad8ede74375a8d2fe736e6955aee46ab5b763a33332",
+      "size_bytes": 1946
+    },
+    {
+      "path": "discovery/shards/shard-07/rollouts.jsonl",
+      "sha256": "c75a217c90501c3a04e974c072d2543b51a7e221bf0dfc4aba1fc06b9dda9a84",
+      "size_bytes": 456393
+    },
+    {
+      "path": "discovery/shards/shard-07/summary.json",
+      "sha256": "93339ce34eb64cb03812cad8ede74375a8d2fe736e6955aee46ab5b763a33332",
+      "size_bytes": 1946
+    }
+  ],
+  "inspection_boundary": {
+    "file_names_sizes_and_sha256_computed": true,
+    "operational_attempt_and_shard_sidecars_inspected": true,
+    "raw_calibration_or_scientific_shard_payload_contents_inspected": false
+  },
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-attempt4-forensic-inventory",
+  "source_snapshot": "/tmp/jlens-correlation-attempt4",
+  "source_volume": "j-lens-rl-word-correlation-v1-20260714d",
+  "total_size_bytes": 24722096
+}
+

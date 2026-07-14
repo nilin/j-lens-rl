@@ -13,6 +13,7 @@ AMENDMENT1_PATH = ROOT / "protocol_archive/word_correlation_v1_amendment1.json"
 AMENDMENT2_PATH = ROOT / "protocol_archive/word_correlation_v1_amendment2.json"
 AMENDMENT3_PATH = ROOT / "protocol_archive/word_correlation_v1_amendment3.json"
 AMENDMENT4_PATH = ROOT / "protocol_archive/word_correlation_v1_amendment4.json"
+AMENDMENT5_PATH = ROOT / "protocol_archive/word_correlation_v1_amendment5.json"
 ATTEMPT1_CLOSEOUT_PATH = (
     ROOT / "protocol_archive/word_correlation_attempt1_closeout.json"
 )
@@ -21,6 +22,15 @@ ATTEMPT2_CLOSEOUT_PATH = (
 )
 ATTEMPT3_CLOSEOUT_PATH = (
     ROOT / "protocol_archive/word_correlation_attempt3_closeout.json"
+)
+ATTEMPT4_CLOSEOUT_PATH = (
+    ROOT / "protocol_archive/word_correlation_attempt4_closeout.json"
+)
+ATTEMPT4_INVENTORY_PATH = (
+    ROOT / "protocol_archive/word_correlation_attempt4_forensic_inventory.json"
+)
+ATTEMPT4_LAUNCH_PATH = (
+    ROOT / "protocol_archive/word_correlation_attempt4_launch_receipt.json"
 )
 TRAIN_EXCLUSIONS_PATH = ROOT / ".confirmatory/manifests/train_exclusions.json"
 SOURCE = MODAL_PATH.read_text()
@@ -220,8 +230,29 @@ def test_preregistration_pins_the_exact_unlaunched_emotional_scanner():
         ATTEMPT3_CLOSEOUT_PATH
     )
     assert safe_mount["scientific_protocol_changed"] is False
-    current = safe_mount["new_attempt"]
-    assert current["volume"] == "j-lens-rl-word-correlation-v1-20260714d"
+    historical_attempt4 = safe_mount["new_attempt"]
+    assert historical_attempt4["volume"] == (
+        "j-lens-rl-word-correlation-v1-20260714d"
+    )
+    assert historical_attempt4["launcher_sha256"] == (
+        "2bd35c520e0533d0c46572fa690c24c680efa0308025a74ac9960a227abb31e0"
+    )
+
+    recovery = json.loads(AMENDMENT5_PATH.read_text())
+    assert recovery["protocol"] == (
+        "j-lens-rl-jspace-word-correlation-v1-amendment5-preemption-replay"
+    )
+    assert recovery["original_preregistration_sha256"] == _sha256(PREREG_PATH)
+    assert recovery["amendment4_sha256"] == _sha256(AMENDMENT4_PATH)
+    assert recovery["attempt4_closeout_sha256"] == _sha256(
+        ATTEMPT4_CLOSEOUT_PATH
+    )
+    assert recovery["attempt4_forensic_inventory_sha256"] == _sha256(
+        ATTEMPT4_INVENTORY_PATH
+    )
+    assert recovery["scientific_protocol_changed"] is False
+    current = recovery["new_attempt"]
+    assert current["volume"] == "j-lens-rl-word-correlation-v1-20260714e"
     assert current["volume"] == _assignment("VOLUME_NAME")
     assert current["gpu_type"] == _assignment("GPU_TYPE") == "L40S"
     assert current["max_parallel_gpu_workers"] == 1
@@ -235,6 +266,10 @@ def test_preregistration_pins_the_exact_unlaunched_emotional_scanner():
     assert current["no_other_modal_gpu_app_may_overlap"] is True
     assert current["scanner_sha256"] == _sha256(SCANNER_PATH)
     assert current["launcher_sha256"] == _sha256(MODAL_PATH)
+    assert current["no_attempt4_artifact_may_be_reused"] is True
+    assert current["controller_recovery_policy"] == _assignment(
+        "CONTROLLER_RECOVERY_POLICY"
+    )
     assert current["safe_train_exclusions_sha256"] == TRAIN_EXCLUSIONS_SHA256
     assert current["safe_train_exclusions_sha256"] == _sha256(
         TRAIN_EXCLUSIONS_PATH
@@ -410,11 +445,7 @@ def test_modal_runs_every_gpu_stage_under_one_global_l40s_limit():
             assert isinstance(keywords["gpu"], ast.Name)
             assert keywords["gpu"].id == "GPU_TYPE"
             gpu_functions[function.name] = decorators[0]
-    assert set(gpu_functions) == {
-        "calibrate",
-        "discovery_shard",
-        "validation_shard",
-    }
+    assert set(gpu_functions) == {"gpu_job"}
 
     preflight_source = (
         ast.get_source_segment(SOURCE, _function(TREE, "_local_operational_preflight"))
@@ -434,19 +465,23 @@ def test_modal_runs_every_gpu_stage_under_one_global_l40s_limit():
     orchestrator_source = (
         ast.get_source_segment(SOURCE, _function(TREE, "orchestrate")) or ""
     )
-    calibration_position = orchestrator_source.index("calibrate.remote()")
-    discovery_position = orchestrator_source.index("_mapped(discovery_shard")
-    validation_position = orchestrator_source.index("_mapped(validation_shard")
+    calibration_position = orchestrator_source.index('"calibration", None')
+    discovery_position = orchestrator_source.index(
+        'root_call_id, "discovery", manifest'
+    )
+    validation_position = orchestrator_source.index(
+        'root_call_id, "validation", manifest'
+    )
     assert calibration_position < discovery_position < validation_position
 
 
 def test_volume_is_fresh_and_selection_is_locked_between_phases():
-    assert _assignment("VOLUME_NAME") == "j-lens-rl-word-correlation-v1-20260714d"
+    assert _assignment("VOLUME_NAME") == "j-lens-rl-word-correlation-v1-20260714e"
     assert _assignment("PREREGISTRATION_RELATIVE") == (
         "protocol_archive/word_correlation_v1_preregistration.json"
     )
     assert _assignment("CURRENT_AMENDMENT_RELATIVE") == (
-        "protocol_archive/word_correlation_v1_amendment4.json"
+        "protocol_archive/word_correlation_v1_amendment5.json"
     )
 
     volume_calls = [
@@ -487,12 +522,128 @@ def test_volume_is_fresh_and_selection_is_locked_between_phases():
     orchestrator_source = (
         ast.get_source_segment(SOURCE, _function(TREE, "orchestrate")) or ""
     )
-    discovery_position = orchestrator_source.index("_mapped(discovery_shard")
-    lock_position = orchestrator_source.index("_lock_selection(")
-    validation_position = orchestrator_source.index("_mapped(validation_shard")
+    discovery_position = orchestrator_source.index(
+        'root_call_id, "discovery", manifest'
+    )
+    lock_position = orchestrator_source.index("_ensure_discovery_finalized(")
+    validation_position = orchestrator_source.index(
+        'root_call_id, "validation", manifest'
+    )
     assert discovery_position < lock_position < validation_position
     assert orchestrator_source.index('"selection_locked"') < validation_position
     assert "selection_lock_sha256" in orchestrator_source
+
+
+def test_attempt4_closeout_is_outcome_blind_and_volume_d_is_ineligible():
+    inventory = json.loads(ATTEMPT4_INVENTORY_PATH.read_text())
+    closeout = json.loads(ATTEMPT4_CLOSEOUT_PATH.read_text())
+    assert inventory["protocol"] == (
+        "j-lens-rl-jspace-word-correlation-v1-attempt4-forensic-inventory"
+    )
+    assert inventory["source_volume"].endswith("20260714d")
+    assert inventory["file_count"] == len(inventory["files"]) == 68
+    assert inventory["total_size_bytes"] == sum(
+        item["size_bytes"] for item in inventory["files"]
+    ) == 24722096
+    paths = [item["path"] for item in inventory["files"]]
+    assert paths == sorted(paths)
+    canonical = "".join(
+        f"{item['path']}\t{item['size_bytes']}\t{item['sha256']}\n"
+        for item in inventory["files"]
+    ).encode()
+    assert hashlib.sha256(canonical).hexdigest() == (
+        "c9c7734dae769679e29a57d8ae557f4d8b454185052796ddb79960aee0e839dc"
+    )
+    assert inventory["inspection_boundary"][
+        "raw_calibration_or_scientific_shard_payload_contents_inspected"
+    ] is False
+
+    assert closeout["protocol"] == (
+        "j-lens-rl-jspace-word-correlation-v1-attempt4-closeout"
+    )
+    assert closeout["attempt"]["launch_receipt_sha256"] == _sha256(
+        ATTEMPT4_LAUNCH_PATH
+    )
+    assert closeout["forensic_inventory"]["sha256"] == _sha256(
+        ATTEMPT4_INVENTORY_PATH
+    )
+    boundary = closeout["outcome_boundary"]
+    assert boundary["completed_discovery_shard_manifests"] == list(range(8))
+    assert boundary["discovery_aggregate_exists"] is False
+    assert boundary["selection_lock_exists"] is False
+    assert boundary["selected_word_or_sign_exists"] is False
+    assert boundary["validation_opened"] is False
+    assert boundary["semantic_outcome_contents_inspected"] is False
+    assert "immutable and ineligible" in closeout["replay_policy"]
+    assert closeout["volume"].endswith("20260714d")
+
+
+def test_controller_is_restart_safe_at_every_durable_boundary():
+    orchestrator = (
+        ast.get_source_segment(SOURCE, _function(TREE, "orchestrate")) or ""
+    )
+    durable = (
+        ast.get_source_segment(SOURCE, _function(TREE, "_durable_gpu_job")) or ""
+    )
+    calibration = (
+        ast.get_source_segment(SOURCE, _function(TREE, "_run_calibration_job"))
+        or ""
+    )
+    shard = ast.get_source_segment(SOURCE, _function(TREE, "_scan_phase")) or ""
+    assert "except BaseException" not in SOURCE
+    assert orchestrator.index("except KeyboardInterrupt:") < orchestrator.index(
+        "except Exception as error:"
+    )
+    assert 'status.get("stage") not in RESUMABLE_STAGES' in orchestrator
+    assert "modal.current_function_call_id()" in orchestrator
+    assert "_validate_resume_boundary" in orchestrator
+    assert "_ensure_discovery_finalized" in orchestrator
+    assert "_ensure_validation_finalized" in orchestrator
+    assert "_ensure_atlas" in orchestrator
+
+    intent = durable.index('state["active_job"] = {**spec, "call_id": None}')
+    intent_commit = durable.index("output_volume.commit()", intent)
+    spawn = durable.index("gpu_job.spawn", intent_commit)
+    call_id_commit = durable.index("output_volume.commit()", spawn)
+    wait = durable.index("call.get()", call_id_commit)
+    assert intent < intent_commit < spawn < call_id_commit < wait
+    assert "modal.FunctionCall.from_id" in durable
+    assert "_load_gpu_job_result" in durable
+
+    for worker in (calibration, shard):
+        assert "TemporaryDirectory" in worker
+        assert "output_volume.commit()" in worker
+        assert "finally:" not in worker
+    assert "_load_committed_calibration" in calibration
+    assert "_load_committed_shard" in shard
+    assert _assignment("RESUMABLE_STAGES") == (
+        "claimed",
+        "calibrating",
+        "discovery_running",
+        "discovery_finalizing",
+        "selection_locked",
+        "validation_running",
+        "validation_finalizing",
+        "atlas_building",
+        "finalizing",
+    )
+
+
+def test_resume_boundaries_fail_closed_instead_of_recomputing_advanced_state():
+    source = (
+        ast.get_source_segment(SOURCE, _function(TREE, "_validate_resume_boundary"))
+        or ""
+    )
+    assert "resume stage advanced past missing calibration" in source
+    assert "resume stage requires completed" in SOURCE
+    assert "resume stage advanced past missing selection lock" in source
+    assert "resume stage advanced past missing validation aggregate" in source
+    assert "resume stage advanced past missing lexical atlas" in source
+    assert "result manifest exists without terminal complete status" in SOURCE
+    assert "output and manifest are not an atomic pair" in SOURCE
+    assert "output and sidecar are not an atomic pair" in SOURCE
+    assert "aggregate is not an atomic artifact set" in SOURCE
+    assert "atlas is not an atomic artifact set" in SOURCE
 
 
 def test_modal_calls_the_frozen_scanner_api_by_keyword():

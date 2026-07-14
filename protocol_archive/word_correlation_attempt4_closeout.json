@@ -1,0 +1,86 @@
+{
+  "app": {
+    "app_id": "ap-00KK17sItEjp4v1dsBHSbR",
+    "created_at_utc": "2026-07-14T07:55:11Z",
+    "description": "j-lens-rl-word-correlation-v1",
+    "state": "stopped",
+    "stopped_at_utc": "2026-07-14T08:27:52Z"
+  },
+  "attempt": {
+    "attempt_manifest_sha256": "36d75cbedcadcfabee8250b889c351a06eb20ec1be9adb7e378d09ed9da33970",
+    "attempt_status_sha256": "04da09d8059713381830e1daa26fa453a84022ea00737b2a13ae4af3f9ed206c",
+    "claim_id": "db5787c467384c328940fa8f43f538c6",
+    "git_commit": "e0fd7682ac27c7b95bd227137548d9ea53bb8baa",
+    "launch_receipt_sha256": "77c1e1adc8416d570bddc5e404774c19708bdcc69aacccffae5eadd2d13a9b57"
+  },
+  "closed_at_utc": "2026-07-14T09:24:36Z",
+  "failure": {
+    "automatic_restart_container_id": "ta-01KXFVRC0RESZM76FEWC8GN1PR",
+    "automatic_restart_error": "RuntimeError: word-correlation claim is not available for orchestration",
+    "automatic_restart_failed_at_utc": "2026-07-14T08:26:39Z",
+    "function_call_id": "fc-01KXFT3NCM9HASKJ5E7V1Z0XGR",
+    "function_id": "fu-mJqOzzZ1AwY5jkDWzf8fRY",
+    "original_container_id": "ta-01KXFT3Q6AQTS0PJQX25JSXDVR",
+    "preemption_logged_at_utc": "2026-07-14T08:25:22Z",
+    "root_cause": "Modal preempted the CPU orchestrator. Its BaseException handler converted the delivered KeyboardInterrupt into terminal failed state, and the automatic same-input restart then rejected that state because the entry guard accepted only claimed.",
+    "status_error": "KeyboardInterrupt()",
+    "status_failed_at_utc": "2026-07-14T08:25:20.361548+00:00",
+    "type": "controller_worker_preemption"
+  },
+  "forensic_inventory": {
+    "canonical_inventory_sha256": "c9c7734dae769679e29a57d8ae557f4d8b454185052796ddb79960aee0e839dc",
+    "file_count": 68,
+    "path": "protocol_archive/word_correlation_attempt4_forensic_inventory.json",
+    "sha256": "a9553ce1bd484ffbea120d7a814a16720fe565df9ce5dda6ce6143855cfe0577",
+    "total_size_bytes": 24722096
+  },
+  "frozen_execution": {
+    "amendment4_sha256": "6b17b616d0d73cab7181f0dbb72c8c5343f48125b1856bf8f72398bb0a9644a7",
+    "calibration_manifest_sha256": "efa0c1b8f9577f24cb644e53b9f5f4320cb4cfb577f5f749da779f3e99e62b90",
+    "calibration_sha256": "6e25ffdda35947e3a6fdb3c459fa8d0954138ddf400d6029c672368de05d1b34",
+    "config_sha256": "f09595e3f4277651755947ba3002b419077f3b2861b2025c10eddf13e130fd42",
+    "launcher_script_sha256": "34d47b6827735862f4689f283cb25f93f0eab3bdd6a62c2102ef8a476c02f303",
+    "launcher_sha256": "2bd35c520e0533d0c46572fa690c24c680efa0308025a74ac9960a227abb31e0",
+    "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "preregistration_sha256": "5e2ae9d0896edbcc7386ccfcc125f8200fa86f77b2099529028a01e54788516a",
+    "scanner_sha256": "9857957ba078be68b2cb1abd1974fab383c696c40622e2a76ad4d4b0476baace"
+  },
+  "outcome_boundary": {
+    "atlas_exists": false,
+    "calibration_artifact_exists": true,
+    "completed_discovery_shard_manifests": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "discovery_aggregate_exists": false,
+    "discovery_indices_compact_json_sha256": "b8225557af99bee00a8ade6fb308d11290d33fbce361b31bf53061382a4479c0",
+    "discovery_prompt_count": 200,
+    "discovery_shard_payload_contents_inspected": false,
+    "discovery_shards_pairwise_disjoint": true,
+    "result_manifest_exists": false,
+    "selected_word_or_sign_exists": false,
+    "selection_lock_exists": false,
+    "semantic_outcome_contents_inspected": false,
+    "sidecar_metadata_inspected_for_identity_only": true,
+    "validation_opened": false
+  },
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-attempt4-closeout",
+  "replay_policy": "Volume D is immutable and ineligible for aggregation, selection, validation, or reuse. Attempt 5 must fully replay the unchanged frozen scientific protocol on fresh Volume E; no artifact from Volume D may enter Attempt 5.",
+  "shard_manifest_sha256": {
+    "0": "3518aa81b18bd1677e13f0a308a242a3a8ced3229b35f0551f8e2f2424c13342",
+    "1": "774bc7c93bf6cfe035f1d7bfa17a7bfd1095c024c9f610ecdb1ce53862a3b5df",
+    "2": "15c023f0d8afb783609ca537958bf12cf4eca7ccfbefbba0266d7856059e04e4",
+    "3": "877597f4ec88b774a561a991bed7a65693f27d8c490d701ee69bb26511187180",
+    "4": "583118cc8c67ee16a90d133d610fa23e198ac5dd5accea9b0427d42b82caee7e",
+    "5": "6734bf30724a515b1d5fccd4705f4e22d75bb41843979406441e3a5b85388d2d",
+    "6": "4b50addaa69d9b0529cbf871bd877659839b389fd1d00e617bcb3acf7deead2d",
+    "7": "8e4c6d791c78a4a29f914d3aacdb5fadcfb24b9da0dd1642e464beb585c4efc7"
+  },
+  "volume": "j-lens-rl-word-correlation-v1-20260714d"
+}
