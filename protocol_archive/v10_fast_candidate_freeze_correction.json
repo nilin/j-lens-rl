@@ -1,0 +1,32 @@
+{
+  "correction_status": "authoritative_append_only_clarification_for_future_v10_prepared_registration",
+  "corrected_at_utc": "2026-07-14T21:05:00Z",
+  "document_type": "j-lens-rl-v10-fast-candidate-freeze-correction",
+  "facts": {
+    "candidate_freeze_utc": "2026-07-14T20:55:27Z",
+    "seed198_completion_utc": "2026-07-14T20:55:26.379821Z",
+    "seed198_completion_preceded_freeze_by_seconds": 0.620179,
+    "seed198_step6_exact_match": 0.37,
+    "seed198_step6_was_inspected_before_candidate_selection": false,
+    "source_available_to_selection": "the already recorded partial history at steps 0, 2, and 4, with SHA-256 7a3525b741d43d1bfb4965f5f64a2b06f6e2a780699561a39bba4788d3f6243f",
+    "terminal_summary_was_downloaded_and_inspected_only_after_candidate_selection": true
+  },
+  "original_candidate_freeze": {
+    "path": "protocol_archive/v10_fast_candidate_freeze.json",
+    "sha256": "4909b81b54e20f66ce07d05f082e135e2de1bb9be94102bb3901c7825c3a84d3"
+  },
+  "original_registration_draft": {
+    "path": "protocol_archive/v10_fast_registration_draft.json",
+    "sha256": "17426cc963192c94ecca6907a033e2924b0f88990e3d31c622a781f5fa92a120"
+  },
+  "scientific_effect": "The selected recipe and prospective confirmation design are unchanged. Candidate selection was outcome-blind to seed198 step 6, but it was not temporally earlier than creation of that outcome. Any later registration or claim must bind this correction and use the pre-inspection wording.",
+  "schema_version": 1,
+  "terminal_summary": {
+    "local_download_used_for_correction": "/tmp/emotional-v3-summary.json",
+    "sha256": "f1682a6f2c7c985e33b4d5861068b7c8fcdff6c3740b01fcc4cb6ee7c250a5a4"
+  },
+  "wording_correction": {
+    "incorrect": "before the new negative-fuck arm's step-6 outcome existed",
+    "replacement": "before the new negative-fuck arm's step-6 outcome was inspected"
+  }
+}

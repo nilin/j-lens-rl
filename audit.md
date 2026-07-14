@@ -2226,7 +2226,8 @@ IDs before training. The exact launch identities and record hashes are in
 `protocol_archive/emotional_parallel_v3_launch_ledger.json`. No protected
 final, reserve, or correlation payload was mounted.
 
-At 20:55:27 UTC, before the new negative-`fuck` arm's step-6 outcome existed,
+At 20:55:27 UTC, before the new negative-`fuck` arm's step-6 outcome was
+inspected,
 the next confirmation candidate was frozen. The old seed-167 screen was
 `.3825/.3925/.4075` at `0/2/4`; the new seed-198 partial curve was
 `.3825/.3950/.3950`. Negative `fuck` therefore had two independent exposed
@@ -2238,6 +2239,16 @@ adaptive boundary and every competing outcome known at selection are recorded
 in `protocol_archive/v10_fast_candidate_freeze.json`; science is frozen in
 `protocol_archive/v10_fast_registration_draft.json` before launch.
 
+Append-only provenance correction: the worker completion receipt is timestamped
+20:55:26.379821 UTC, about 0.620 seconds before the freeze. The root process had
+not downloaded or inspected that terminal result; selection used the recorded
+`0/2/4` partial history, and the terminal summary was opened afterward. Thus the
+selection was pre-inspection but not pre-existence. The original pushed freeze
+is preserved, and
+`protocol_archive/v10_fast_candidate_freeze_correction.json` binds it and the
+later terminal-summary hash. Every prepared registration and claim must bind
+that correction and use only the corrected wording.
+
 The user accepts a prospectively declared `alpha=.15` for the 02:00 UTC
 deadline. With four registered seeds, the primary treatment-minus-signflip and
 secondary treatment-minus-base tests each require all four seed effects to be
@@ -2246,3 +2257,17 @@ Positive means and all provenance/collection audits are also required.
 Crossed 95% bootstrap intervals remain reported diagnostics, but requiring a
 95% lower bound above zero would silently restore an approximately .05 gate
 and is therefore not used as the alpha-.15 acceptance rule.
+
+Before any V10 GPU allocation, the complete Modal execution, generated-config,
+matched-control, protected-release, serial nine-label collection, and analysis
+path received an independent synthetic-only review. The launcher, preparer,
+protocol, final runner, and training wrapper have SHA-256 respectively
+`840459e048758b88e0b19ed767d8362c58aefa4853ea4313a59da2b053f602e0`,
+`a9d1b5ea6866818b0665887b1f0aa57ba3dd57f6bbc5c646b39470a768a05896`,
+`dec695d88e70e944dac05909f39dabdb0e7bf57df57b255a73e60abd1a8b2ae0`,
+`beb79255ab58612e9e67800331d4c2aa75a264c8595d77e0bd247a55802b2b69`,
+and `a08bc43f3894d9941ca611b30d82b94e638d7364b4ddfe98dff823d2629d7737`.
+All 43 focused protocol/Modal/paired-evaluation tests pass. The prospective
+preparer does not resolve, stat, open, copy, or hash the protected final path;
+the launcher can release it only after a passing curve, eight verified runs,
+and a durable unlock.

@@ -41,6 +41,18 @@ def runtime_environment_snapshot() -> dict[str, Any]:
         ).splitlines()
     except (OSError, subprocess.CalledProcessError):
         driver = []
+    try:
+        uuid_driver = subprocess.check_output(
+            [
+                "nvidia-smi",
+                "--query-gpu=uuid,name,driver_version",
+                "--format=csv,noheader",
+            ],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).splitlines()
+    except (OSError, subprocess.CalledProcessError):
+        uuid_driver = []
     os_release_path = Path("/etc/os-release")
     return {
         "python": {
@@ -61,6 +73,7 @@ def runtime_environment_snapshot() -> dict[str, Any]:
             "cudnn_version": torch.backends.cudnn.version(),
         },
         "nvidia_smi_name_and_driver": driver,
+        "nvidia_smi_uuid_name_and_driver": uuid_driver,
         "cuda_device_names": [
             torch.cuda.get_device_name(index) for index in range(torch.cuda.device_count())
         ],

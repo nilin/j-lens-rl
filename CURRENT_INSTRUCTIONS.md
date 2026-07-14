@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 20:53 UTC
+Last reconciled with the user: 2026-07-14 21:03 UTC
 
 ## Objective and evidence
 
@@ -69,7 +69,12 @@ separate from confirmatory claims.
   (`yay/great/success/nice`, seed 193, nodes `0/2/4/6`) ran on the local RTX
   4090 from pushed commit `bf85a74`; it completed
   `.3975/.3975/.3950/.4075`, a terminal improvement that failed the strict
-  shape. Preserve/sync it but never pool it with L40S results. The next RL lane
-  is a five-arm Modal development screen of distinct registered emotional
-  ideas (`joy`, celebration family, `excited`, `wow`, and negative `fuck`).
-  Correlation attempt 4 remains closed with outcomes uninspected.
+  shape. Preserve/sync it but never pool it with L40S results. The five-arm
+  Modal development screen of `joy`, celebration family, `excited`, `wow`, and
+  negative `fuck` is closed as development evidence. The current confirmatory
+  lane is the frozen negative-`fuck` recipe on four fresh Modal L40S treatment
+  seeds, followed only after its registered curve gate by four exact sign-flip
+  controls. Candidate selection preceded inspection (not creation) of seed
+  198's step-6 outcome; bind the append-only correction in every prepared
+  registration and claim. Correlation attempt 4 remains closed with outcomes
+  uninspected.
