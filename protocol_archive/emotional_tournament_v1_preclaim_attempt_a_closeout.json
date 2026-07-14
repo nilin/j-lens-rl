@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-preclaim-closeout",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "attempt_label": "preclaim_attempt_a",
+  "scientific_status": "infrastructure_failure_before_claim_no_outcome_data",
+  "closed_at_utc": "2026-07-14T19:00:22Z",
+  "prepared_source_commit": "ed95bfa2af1a0dd462ca75c68026eaaef9566b34",
+  "prepared_registration_sha256": "ba3c076e623f655ee1c7600f49a0d78cf44fc6dee757c116a17fdafa04552dbc",
+  "prepared_protocol_state_sha256": "f4ac9870e02c5d6acf20e18580c7a5c6686f2fa4fb56ec34cc2280c171f375ae",
+  "prepared_source_manifest_sha256": "23e65f922e7b3df76ba0855cbffdc41df3f54e8299fedc128cf9f9a78aedcb06",
+  "prepared_source_snapshot_sha256": "070f1608e22b4f90e68667e35b0de1afd48de94407c953aca4238febb4b51da9",
+  "modal": {
+    "app_id": "ap-YOyZ5SjuFDOHVtyhCF8QZr",
+    "app_name": "j-lens-rl-development-emotional-tournament-u5-h15-v1",
+    "app_state_at_closeout": "stopped",
+    "app_tasks_at_closeout": 0,
+    "created_at_utc": "2026-07-14T18:44:55Z",
+    "stopped_at_utc": "2026-07-14T18:57:32Z",
+    "volume_name": "j-lens-rl-development-emotional-tournament-u5-h15-20260714a",
+    "volume_object_id": "vo-FoPd7Y7NgprscFXEROSEza",
+    "volume_version": 2
+  },
+  "failure": {
+    "stage": "remote_verify_launch_before_attempt_claim",
+    "exception": "FileNotFoundError",
+    "missing_path": "/workspace/j-lens-rl/configs/common.json",
+    "cause": "The strict runtime allowlist included the tournament templates but omitted the common config inherited by emotional_tournament_v1_common.json.",
+    "modal_function": "claim_attempt",
+    "failed_command": [
+      "/usr/local/bin/python",
+      "scripts/emotional_tournament_v1_protocol.py",
+      "verify-launch"
+    ]
+  },
+  "outcome_boundary": {
+    "attempt_claim_written": false,
+    "orchestrator_spawned": false,
+    "gpu_training_dispatched": false,
+    "wandb_run_created": false,
+    "curve_observed": false,
+    "word_ranking_observed": false,
+    "sealed_or_reserved_payload_accessed": false,
+    "basis": [
+      "claim_attempt calls verify-launch before writing attempt_claim.json",
+      "the exception arose inside that verify-launch call",
+      "the local entrypoint spawns orchestrate only after claim_attempt returns",
+      "the stopped app reported zero tasks at closeout",
+      "the volume root contained only prepared configs, frozen_artifacts, manifests, protocol_state.json, and reproducibility"
+    ]
+  },
+  "disposition": {
+    "registration_status": "superseded_before_claim",
+    "volume_status": "retired_do_not_reuse",
+    "authorized_next_action": "Add the complete config-inheritance closure to the strict runtime allowlist, bind the change in an infrastructure-only amendment, prepare from a new clean pushed commit, and launch on a fresh v2 volume. The scientific recipe, arm order, seed, evaluation nodes, and W&B identities remain unchanged."
+  }
+}

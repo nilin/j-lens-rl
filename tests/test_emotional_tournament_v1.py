@@ -134,6 +134,7 @@ def test_shape_and_ranking_are_predeclared_and_deterministic():
 def test_runtime_allowlist_excludes_old_v7_runtime_and_outcome_payloads():
     names = tournament._runtime_allowlist()
     assert names == sorted(set(names))
+    assert "configs/common.json" in names
     assert "modal_emotional_tournament_v1.py" in names
     assert "scripts/emotional_tournament_v1_protocol.py" in names
     for forbidden in (
@@ -149,6 +150,34 @@ def test_runtime_allowlist_excludes_old_v7_runtime_and_outcome_payloads():
     assert not any(".confirmatory" in Path(name).parts for name in names)
     assert not any("sealed" in Path(name).name for name in names)
     assert not any("correlation" in Path(name).name for name in names)
+
+
+def test_infrastructure_amendment_is_pre_outcome_and_binds_fresh_volume(
+    tmp_path, monkeypatch
+):
+    amendment = tournament._validate_infrastructure_amendment(
+        tournament._read_json(tournament.INFRASTRUCTURE_AMENDMENT_SOURCE)
+    )
+    assert amendment["scientific_recipe_changed"] is False
+    assert amendment["outcome_data_observed_before_amendment"] is False
+    assert amendment["replacement_volume"] == tournament.VOLUME_NAME
+    assert amendment["added_runtime_source"] == "configs/common.json"
+    assert amendment["added_runtime_source_sha256"] == tournament.sha256_file(
+        ROOT / "configs/common.json"
+    )
+    copied_closeout = tmp_path / "preclaim_attempt_a_closeout.json"
+    copied_closeout.write_bytes(
+        (ROOT / amendment["preclaim_closeout_path"]).read_bytes()
+    )
+    remote_root = tmp_path / "remote_runtime"
+    (remote_root / "configs").mkdir(parents=True)
+    (remote_root / "configs/common.json").write_bytes(
+        (ROOT / "configs/common.json").read_bytes()
+    )
+    monkeypatch.setattr(tournament, "ROOT", remote_root)
+    assert tournament._validate_infrastructure_amendment(
+        amendment, copied_closeout=copied_closeout
+    ) == amendment
 
 
 def test_modal_runner_is_one_noncreating_l40s_in_fixed_serial_order():

@@ -38,7 +38,7 @@ SEED = 192
 CURVE_STEPS = (0, 5, 10, 15)
 GPU_TYPE = "L40S"
 MAX_GPU_CONTAINERS = 1
-VOLUME_NAME = "j-lens-rl-development-emotional-tournament-u5-h15-20260714a"
+VOLUME_NAME = "j-lens-rl-development-emotional-tournament-u5-h15-20260714b"
 APP_NAME = "j-lens-rl-development-emotional-tournament-u5-h15-v1"
 GPU_LEASE_DICT_NAME = "j-lens-rl-global-gpu-lease-v1"
 GPU_LEASE_KEY = "global-one-gpu"
@@ -134,6 +134,11 @@ AMENDMENT_TEMPLATE_SOURCE = (
     ROOT
     / "protocol_archive"
     / "emotional_tournament_v1_prelaunch_amendment_TEMPLATE.json"
+)
+INFRASTRUCTURE_AMENDMENT_SOURCE = (
+    ROOT
+    / "protocol_archive"
+    / "emotional_tournament_v1_infrastructure_amendment1.json"
 )
 RUNTIME_ALLOWLIST_SOURCE = (
     ROOT / "scripts" / "emotional_tournament_v1_runtime_source_allowlist.json"
@@ -475,6 +480,31 @@ def _runtime_allowlist() -> list[str]:
     names.difference_update(remove)
     names.update(add)
     materialized = sorted(names)
+    required_config_dependencies: set[str] = set()
+    pending = [TEMPLATE_COMMON, *TEMPLATE_PATHS.values()]
+    while pending:
+        config_path = pending.pop()
+        relative_config = config_path.relative_to(ROOT).as_posix()
+        if relative_config in required_config_dependencies:
+            continue
+        required_config_dependencies.add(relative_config)
+        config_payload = _read_json(config_path)
+        base = config_payload.get("base")
+        if base is not None:
+            if (
+                not isinstance(base, str)
+                or not base
+                or Path(base).is_absolute()
+                or ".." in Path(base).parts
+            ):
+                raise RuntimeError(f"unsafe inherited config path: {base!r}")
+            pending.append(config_path.parent / base)
+    missing_dependencies = sorted(required_config_dependencies - names)
+    if missing_dependencies:
+        raise RuntimeError(
+            "tournament runtime allowlist omits inherited config dependencies: "
+            f"{missing_dependencies}"
+        )
     for name in materialized:
         path = ROOT / name
         relative = Path(name)
@@ -584,6 +614,49 @@ def _amendment_and_closeout() -> tuple[dict[str, Any], Path | None]:
     return amendment, None
 
 
+def _validate_infrastructure_amendment(
+    value: Any, *, copied_closeout: Path | None = None
+) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise RuntimeError("infrastructure amendment is malformed")
+    closeout_relative = value.get("preclaim_closeout_path")
+    closeout_sha256 = value.get("preclaim_closeout_sha256")
+    if (
+        value.get("schema_version") != 1
+        or value.get("document_type")
+        != "j-lens-rl-development-emotional-tournament-infrastructure-amendment"
+        or value.get("protocol") != PROTOCOL
+        or value.get("amendment_number") != 1
+        or value.get("scientific_recipe_changed") is not False
+        or value.get("outcome_data_observed_before_amendment") is not False
+        or value.get("superseded_volume")
+        != "j-lens-rl-development-emotional-tournament-u5-h15-20260714a"
+        or value.get("replacement_volume") != VOLUME_NAME
+        or value.get("replacement_volume_version") != 2
+        or value.get("added_runtime_source") != "configs/common.json"
+        or value.get("added_runtime_source_sha256")
+        != sha256_file(ROOT / "configs/common.json")
+        or closeout_relative
+        != "protocol_archive/emotional_tournament_v1_preclaim_attempt_a_closeout.json"
+        or not isinstance(closeout_sha256, str)
+        or len(closeout_sha256) != 64
+    ):
+        raise RuntimeError("infrastructure amendment changed or is incomplete")
+    closeout_path = copied_closeout or (ROOT / closeout_relative)
+    if not closeout_path.is_file() or sha256_file(closeout_path) != closeout_sha256:
+        raise RuntimeError("infrastructure amendment preclaim closeout is missing or changed")
+    closeout = _read_json(closeout_path)
+    if (
+        closeout.get("scientific_status")
+        != "infrastructure_failure_before_claim_no_outcome_data"
+        or closeout.get("outcome_boundary", {}).get("attempt_claim_written") is not False
+        or closeout.get("outcome_boundary", {}).get("gpu_training_dispatched") is not False
+        or closeout.get("outcome_boundary", {}).get("curve_observed") is not False
+    ):
+        raise RuntimeError("infrastructure amendment is not supported by a pre-outcome closeout")
+    return value
+
+
 def _validate_amendment_shape(amendment: Any) -> dict[str, Any]:
     if (
         not isinstance(amendment, dict)
@@ -690,6 +763,8 @@ def prepare() -> dict[str, Any]:
         or draft.get("status")
         != "scientific_design_frozen_launch_disabled_pending_v7_terminal_amendment"
         or draft.get("launch_gate", {}).get("enabled") is not False
+        or draft.get("execution", {}).get("fresh_volume")
+        != "j-lens-rl-development-emotional-tournament-u5-h15-20260714a"
     ):
         raise RuntimeError("registration draft changed")
     if (
@@ -715,6 +790,12 @@ def prepare() -> dict[str, Any]:
     ):
         raise RuntimeError("registration draft source identities changed")
     amendment, closeout_source = _amendment_and_closeout()
+    infrastructure_amendment = _validate_infrastructure_amendment(
+        _read_json(INFRASTRUCTURE_AMENDMENT_SOURCE)
+    )
+    infrastructure_closeout_source = (
+        ROOT / infrastructure_amendment["preclaim_closeout_path"]
+    )
     enabled = amendment.get("launch_enabled") is True
 
     temporary = STATE_DIR.with_name(f".v8-preparing-{uuid.uuid4().hex}")
@@ -740,6 +821,14 @@ def prepare() -> dict[str, Any]:
             AMENDMENT_SOURCE if AMENDMENT_SOURCE.is_file() else AMENDMENT_TEMPLATE_SOURCE
         )
         shutil.copy2(selected_amendment_source, repro_dir / "prelaunch_amendment.json")
+        shutil.copy2(
+            INFRASTRUCTURE_AMENDMENT_SOURCE,
+            repro_dir / "infrastructure_amendment1.json",
+        )
+        shutil.copy2(
+            infrastructure_closeout_source,
+            repro_dir / "preclaim_attempt_a_closeout.json",
+        )
         if closeout_source is not None:
             shutil.copy2(closeout_source, repro_dir / "v7_terminal_closeout.json")
 
@@ -749,6 +838,12 @@ def prepare() -> dict[str, Any]:
 
         recipe_file_sha = sha256_file(repro_dir / "recipe_lock.json")
         amendment_sha = sha256_file(repro_dir / "prelaunch_amendment.json")
+        infrastructure_amendment_sha = sha256_file(
+            repro_dir / "infrastructure_amendment1.json"
+        )
+        infrastructure_closeout_sha = sha256_file(
+            repro_dir / "preclaim_attempt_a_closeout.json"
+        )
         source_manifest_sha = sha256_file(repro_dir / "source_manifest.json")
         source_snapshot_sha = sha256_file(repro_dir / "source_snapshot.zip")
         metric_schema_sha = sha256_file(repro_dir / "metric_schema.json")
@@ -784,6 +879,9 @@ def prepare() -> dict[str, Any]:
             ),
             "prelaunch_amendment_sha256": amendment_sha,
             "prelaunch_amendment": amendment,
+            "infrastructure_amendment1_sha256": infrastructure_amendment_sha,
+            "infrastructure_amendment1": infrastructure_amendment,
+            "preclaim_attempt_a_closeout_sha256": infrastructure_closeout_sha,
             "v7_terminal_closeout_sha256": (
                 sha256_file(repro_dir / "v7_terminal_closeout.json")
                 if closeout_source is not None
@@ -858,6 +956,8 @@ def prepare() -> dict[str, Any]:
             "registration_sha256": registration_sha,
             "recipe_lock_sha256": recipe_file_sha,
             "prelaunch_amendment_sha256": amendment_sha,
+            "infrastructure_amendment1_sha256": infrastructure_amendment_sha,
+            "preclaim_attempt_a_closeout_sha256": infrastructure_closeout_sha,
             "source_manifest_sha256": source_manifest_sha,
             "source_snapshot_sha256": source_snapshot_sha,
             "metric_schema_sha256": metric_schema_sha,
@@ -888,6 +988,10 @@ def verify(*, require_launch: bool = False) -> dict[str, Any]:
     registration = _read_json(REPRO_DIR / "registration.json")
     recipe = _validate_recipe_lock(_read_json(REPRO_DIR / "recipe_lock.json"))
     amendment = _read_json(REPRO_DIR / "prelaunch_amendment.json")
+    infrastructure_amendment = _validate_infrastructure_amendment(
+        _read_json(REPRO_DIR / "infrastructure_amendment1.json"),
+        copied_closeout=REPRO_DIR / "preclaim_attempt_a_closeout.json",
+    )
     if (
         state.get("protocol") != PROTOCOL
         or registration.get("protocol") != PROTOCOL
@@ -896,6 +1000,10 @@ def verify(*, require_launch: bool = False) -> dict[str, Any]:
         or state.get("recipe_lock_sha256") != sha256_file(REPRO_DIR / "recipe_lock.json")
         or state.get("prelaunch_amendment_sha256")
         != sha256_file(REPRO_DIR / "prelaunch_amendment.json")
+        or state.get("infrastructure_amendment1_sha256")
+        != sha256_file(REPRO_DIR / "infrastructure_amendment1.json")
+        or state.get("preclaim_attempt_a_closeout_sha256")
+        != sha256_file(REPRO_DIR / "preclaim_attempt_a_closeout.json")
         or state.get("source_manifest_sha256")
         != sha256_file(REPRO_DIR / "source_manifest.json")
         or state.get("source_snapshot_sha256")
@@ -909,6 +1017,15 @@ def verify(*, require_launch: bool = False) -> dict[str, Any]:
         raise RuntimeError("prepared tournament state identity changed")
     if registration.get("scientific_status") != "development_only_on_exposed_curve":
         raise RuntimeError("prepared registration changed scientific status")
+    if (
+        registration.get("infrastructure_amendment1_sha256")
+        != state.get("infrastructure_amendment1_sha256")
+        or registration.get("infrastructure_amendment1")
+        != infrastructure_amendment
+        or registration.get("preclaim_attempt_a_closeout_sha256")
+        != state.get("preclaim_attempt_a_closeout_sha256")
+    ):
+        raise RuntimeError("prepared registration changed infrastructure amendment")
     source_manifest = _read_json(REPRO_DIR / "source_manifest.json")
     current_hashes = runtime_source_hashes()
     registered_hashes = {

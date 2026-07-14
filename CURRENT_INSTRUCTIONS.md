@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 18:51 UTC
+Last reconciled with the user: 2026-07-14 19:00 UTC
 
 ## Objective and evidence
 
@@ -54,6 +54,9 @@ separate from confirmatory claims.
   never resume or pool them. V9 completed eight negative-`damn/fuck` treatments
   on one RTX 4090; its mean `.3975/.3971875/.3971875/.3925` failed the curve
   gate. Never run V9 controls or open its final.
-- Current RL lane: the development-only fixed serial tournament `-fuck`,
-  `+yay`, `-worried` on one Modal L40S. It may rank a candidate but cannot prove
-  significance. Correlation attempt 4 remains closed with outcomes uninspected.
+- Current RL lane: development-only fixed serial `-fuck`, `+yay`, `-worried`
+  on one Modal L40S. Its first submission failed before claim/training because
+  an inherited config was absent from the strict image. Use only the committed
+  pre-outcome amendment and fresh Volume B; never reuse Volume A. This lane may
+  rank a candidate but cannot prove significance. Correlation attempt 4 remains
+  closed with outcomes uninspected.

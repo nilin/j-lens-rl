@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-infrastructure-amendment",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "amendment_number": 1,
+  "written_at_utc": "2026-07-14T19:00:22Z",
+  "scientific_recipe_changed": false,
+  "outcome_data_observed_before_amendment": false,
+  "preclaim_closeout_path": "protocol_archive/emotional_tournament_v1_preclaim_attempt_a_closeout.json",
+  "preclaim_closeout_sha256": "11386da4a37200c467a1c7e6b6bc93f04b09b28314ebf4ec73fa738620ac4eac",
+  "superseded_registration_sha256": "ba3c076e623f655ee1c7600f49a0d78cf44fc6dee757c116a17fdafa04552dbc",
+  "superseded_protocol_state_sha256": "f4ac9870e02c5d6acf20e18580c7a5c6686f2fa4fb56ec34cc2280c171f375ae",
+  "superseded_source_manifest_sha256": "23e65f922e7b3df76ba0855cbffdc41df3f54e8299fedc128cf9f9a78aedcb06",
+  "superseded_source_snapshot_sha256": "070f1608e22b4f90e68667e35b0de1afd48de94407c953aca4238febb4b51da9",
+  "superseded_modal_app_id": "ap-YOyZ5SjuFDOHVtyhCF8QZr",
+  "superseded_volume": "j-lens-rl-development-emotional-tournament-u5-h15-20260714a",
+  "superseded_volume_object_id": "vo-FoPd7Y7NgprscFXEROSEza",
+  "replacement_volume": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+  "replacement_volume_version": 2,
+  "added_runtime_source": "configs/common.json",
+  "added_runtime_source_sha256": "c397905b4d4ac0cc64d7924d304b6aede4dc831d7d6e2a8b5622b63099266960",
+  "authorized_changes": [
+    "Add configs/common.json to the strict runtime-source allowlist because it is the inherited parent of the registered tournament templates.",
+    "Require and validate the complete recursive config-inheritance closure before image construction.",
+    "Retire the uploaded-but-unclaimed Volume A and prepare on a new noncreating v2 Volume B.",
+    "Bind this amendment and the attempt-A preclaim closeout into the replacement prepared registration."
+  ],
+  "frozen_unchanged": [
+    "three emotional target words and their reward signs",
+    "fixed serial arm order",
+    "shared seed",
+    "training recipe and intrinsic-only reward",
+    "development curve manifest and evaluation nodes",
+    "ranking rule",
+    "W&B group and run identities",
+    "one-Modal-GPU maximum",
+    "development-only scientific status"
+  ],
+  "note": "This amendment was written after the replacement need was known but before any attempt claim, GPU dispatch, W&B run, curve, ranking, or other outcome-bearing tournament data existed."
+}

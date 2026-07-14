@@ -12,6 +12,7 @@
     "src/jlens_rl/word_correlation.py"
   ],
   "add": [
+    "configs/common.json",
     "configs/emotional_tournament_v1_common.json",
     "configs/emotional_tournament_v1_fuck.json",
     "configs/emotional_tournament_v1_worried.json",

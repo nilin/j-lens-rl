@@ -2065,3 +2065,29 @@ and fresh Modal v2 volume `vo-FoPd7Y7NgprscFXEROSEza`. Modal app
 `ap-YOyZ5SjuFDOHVtyhCF8QZr` was submitted while V9's final evaluation was still
 using the local GPU; at this cutoff Modal was building the explicit allowlisted
 image and had not yet allocated its one permitted L40S task.
+
+That submission subsequently failed closed in remote `verify-launch`, before
+an attempt claim or orchestrator dispatch. The strict image included all three
+tournament templates and their tournament-common parent but omitted the
+further inherited `configs/common.json`; the remote exception was therefore a
+`FileNotFoundError` for `/workspace/j-lens-rl/configs/common.json`. App
+`ap-YOyZ5SjuFDOHVtyhCF8QZr` stopped with zero tasks. Volume A contains only the
+prepared configs, public frozen artifacts, exposed manifests, protocol state,
+and reproducibility files: `attempt_claim.json`, status/receipt, runs,
+evidence, exports, and GPU dispatches are all absent. The global GPU lease is
+empty. Code order requires `claim_attempt` to return before the orchestrator is
+spawned, so no L40S training, W&B run, curve, ranking, or target-word outcome
+existed. No sealed/final/reserve/correlation payload was uploaded or opened.
+
+The immutable forensic record is
+`protocol_archive/emotional_tournament_v1_preclaim_attempt_a_closeout.json`.
+Infrastructure amendment 1 admits exactly the missing inherited config,
+byte-pins it, adds a recursive config-dependency closure check, retires Volume
+A, and authorizes fresh noncreating v2 Volume B. It freezes the word arms,
+reward signs, shared seed, training recipe, curve nodes, ranking, W&B IDs, and
+one-GPU limit unchanged. The original scientific registration draft remains
+byte-identical; the replacement prepared registration must bind both the
+amendment and a copied attempt-A closeout so remote replay does not depend on
+`protocol_archive/` being present in the strict image. Thirteen focused tests,
+including a remote-like copied-closeout check, pass. This pre-outcome repair is
+not an inferential retry and supplies no evidence about any arm.
