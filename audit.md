@@ -1705,3 +1705,34 @@ identities. It contains no training outcome, curve value, control outcome,
 sealed-final data, or acceptance claim. The active claim must never be resumed
 or overwritten; any rerun requires a fresh registered attempt, claim, and empty
 Volume.
+
+### V7 live treatment checkpoint and nonblocking RL queue
+
+The first registered treatment run, `jlens_seed184`, completed cleanly and
+published its terminal W&B receipt. Its exposed 400-row curve was
+`0.3825 -> 0.3800 -> 0.3875 -> 0.3750` at the frozen steps `0/4/10/20`; literal
+`damn`/`fuck` completion rate was zero at every node. This individual seed does
+not have the requested monotone shape. It is one of eight preregistered seeds,
+so it neither accepts nor rejects the registered eight-seed mean gate. The
+orchestrator advanced without an idle word-search interval: `jlens_seed185`
+began syncing to its frozen W&B ID at `2026-07-14T14:28:29Z`. Controls and the
+sealed final remain unopened.
+
+Planning for post-V7 work used only already-opened committed evidence; no
+correlation-attempt payload or sealed outcome was inspected. There is still no
+valid measured word/correctness correlation, so semantic valence is not
+evidence for reward sign. The ready serial RL queue is single `-fuck`, single
+`+yay`, then single `-worried`; these have existing committed calibrations and
+therefore cannot be held up by a new word search. Broader prospective options
+cover at least five distinct candidates per family:
+
+- celebration core: `yay`, `wow`, `joy`, `proud`, `excited`, tested either
+  late-half/stride-5 or with a separately frozen tail taper;
+- distress suppression: `worried`, `afraid`, `anxious`, `panic`, `fear`;
+- the current profanity family remains `damn`, `fuck`, with a future
+  single-`fuck` isolate to test whether the union dilutes its adaptive signal.
+
+Any such comparison is development-only until its arms, nodes, selection rule,
+new seeds, matched sign flips, and untouched data are prospectively frozen.
+Word correlation or joint-family calibration may run between RL attempts, but
+must not keep a ready RL arm off the sole GPU for an hour.
