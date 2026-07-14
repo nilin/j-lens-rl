@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-emotional-tournament-arm-terminal-ledger",
+  "protocol": "j-lens-rl-development-emotional-tournament-v1",
+  "scientific_status": "development_only_on_exposed_curve_no_significance_claim",
+  "recorded_at_utc": "2026-07-14T19:48:30Z",
+  "claim_id": "1d6ea36d356c420f92e125c35a1a6aeb",
+  "arm": "yay",
+  "weight": 1.0,
+  "seed": 192,
+  "registration_sha256": "9f290b768d58f04ce6e522301b40b4abe7acc544199cb34430b8d0c8642d12fe",
+  "config_sha256": "7d11307c7b8b8d110f9e3bcbd5f67eb47886e684b630f0407a3334bcbe5c01e5",
+  "completed_updates": 15,
+  "curve": {
+    "0": 0.3825,
+    "5": 0.3775,
+    "10": 0.405,
+    "15": 0.3875
+  },
+  "curve_counts_correct_of_400": {
+    "0": 153,
+    "5": 151,
+    "10": 162,
+    "15": 155
+  },
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "5": 0.0,
+    "10": 0.0,
+    "15": 0.0
+  },
+  "shape_pass": false,
+  "shape_failure": "step5_not_above_step0_and_step15_below_step10",
+  "step15_minus_step0": 0.005,
+  "validation_source": "train",
+  "validation_indices_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+  "modal": {
+    "app_id": "ap-XrW9TTTRzQZ2sV9kB8WjbS",
+    "volume_name": "j-lens-rl-development-emotional-tournament-u5-h15-20260714b",
+    "volume_object_id": "vo-SU6aUsebIrmYyZFGoCOo4e",
+    "gpu_type": "NVIDIA L40S",
+    "dispatch_nonce": "30e5f7a86cff4f4e93e8faa5eb167616",
+    "terminal_published_at_utc": "2026-07-14T19:46:12.569448+00:00"
+  },
+  "wandb": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "run_id": "dev-v8-emotional-single-u5-h15-yay-seed192",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v8-emotional-single-u5-h15-yay-seed192",
+    "terminal_artifact": "nilinabra-spare-time/j-lens-rl/dev-v8-emotional-single-u5-h15-yay-seed192-terminal-evidence:v0",
+    "terminal_artifact_digest": "28db04136beafcf93d3fb4174cb172a0"
+  },
+  "archived_evidence_sha256": {
+    "data_indices.json": "fdef4314bd908b415e4c286b9ebbe760096ac4eccd339f70be24c9f769d5b0ff",
+    "environment_snapshot.json": "ce750352d16e929851335abe3ad72bc634fb72da6dc7532ba900146ba1c6b9ee",
+    "gpu_dispatch.complete.json": "9c0f1d447a112c583a2043a66260d8a923163d3d78550f1c3fc04de33f1c262e",
+    "gpu_dispatch.json": "55f588636fbc7eb64e6b7fcc11775e92995426284adf6931ebfd337ed2dfa9c0",
+    "log_history.json": "af0f5fe89c155f34fcc186887dab694e13e5697d6fb6d9fdf445215b02b5a390",
+    "resolved_config.json": "7d11307c7b8b8d110f9e3bcbd5f67eb47886e684b630f0407a3334bcbe5c01e5",
+    "run_manifest.json": "95be653cd4508a306be1e52e35535b0e9be615acc9a82b57424a69b79be90f11",
+    "run_result_manifest.json": "327619f4f512d88671340a0c70eab1fdd80de63ee46c02d8ca268e6033d0e4a3",
+    "validation_history.jsonl": "b99c13de6decf93428481d089d5622e0c02ef94f543726fe70ed792287a68ed1",
+    "wandb_terminal_publish_receipt.json": "3a922f08c96448dc570bc77bbe0263040fd06eca84c9206d42a123098215c4b5"
+  },
+  "continuity": {
+    "dispatch_completion_written": true,
+    "old_gpu_lease_released": true,
+    "next_registered_arm": "worried",
+    "sealed_or_reserved_payload_accessed": false
+  }
+}
