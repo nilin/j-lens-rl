@@ -1,0 +1,40 @@
+{
+  "protocol": "j-lens-rl-emotional-only-development-decision-v1",
+  "decided_at_utc": "2026-07-14T06:15:24Z",
+  "decision_source": "explicit user direction after inspecting only exposed development curves",
+  "decision": {
+    "future_rl_targets_must_be_emotionally_charged_words_or_predeclared_combinations_of_them": true,
+    "solved_is_retired_and_ineligible_for_selection_or_confirmation": true,
+    "already_running_solved_arms_may_finish_only_for_reproducible_attempt_closeout": true,
+    "already_running_solved_arms_are_historical_controls_only": true
+  },
+  "observed_exploratory_state_before_decision": {
+    "app_id": "ap-53QKlR6MO6mZlaG3c7SXkH",
+    "function_call_id": "fc-01KXFK62RKDKGQX4D9XBTWHSMW",
+    "volume": "j-lens-rl-alternative-screen-v1-20260714b",
+    "claim_id": "106d1a18e8ea40f3972934504ff4bc9f",
+    "git_commit": "3ad255753e8ec1f7a0dfe0d27ad69a53e048122c",
+    "data_boundary": "exposed failed-V4 400-item development curve only",
+    "celebration_ultradense_seen_through_step25": [0.3825, 0.4175, 0.3875, 0.385, 0.42, 0.3875, 0.4, 0.3975],
+    "profanity_ultradense_seen_through_step20": [0.3825, 0.3825, 0.3975, 0.3825, 0.4, 0.395, 0.4075],
+    "celebration_taper_seen_through_step10": [0.3825, 0.3825, 0.385, 0.3925, 0.405],
+    "profanity_taper_seen_through_step25": [0.3825, 0.3975, 0.385, 0.3825, 0.395, 0.3525, 0.3875, 0.3975],
+    "solved_u5_taper_requested_curve_seen": [0.3825, 0.385, 0.39, 0.395],
+    "note": "The solved curve met the exploratory shape, but the user explicitly chose the more compelling emotional-word research question instead of outcome-maximizing on solved."
+  },
+  "next_registered_exploration": {
+    "git_commit": "79e684c2c1e3f8f46fd5c28a6aa0dac63baa8403",
+    "protocol": "j-lens-rl-emotional-single-word-screen-v1",
+    "arms": ["yay", "wow", "joy", "proud", "excited", "damn", "fuck", "worried"],
+    "status_at_decision": "committed and pushed; not launched"
+  },
+  "fresh_confirmation_state": {
+    "matching_v5_modal_app_present": false,
+    "matching_v5_modal_volume_present": false,
+    "fresh_v5_curve_outcomes_inspected": false,
+    "fresh_v5_final_outcomes_inspected": false,
+    "old_conditional_v5_recipe_selection_is_superseded_before_outcome": true,
+    "reserved_v5_split_may_be_used_only_after_a_new_emotional_recipe_is_frozen": true
+  },
+  "inference_boundary": "All outcomes considered for this decision are adaptive development evidence. Any significance claim requires a newly frozen emotional recipe on untouched fresh data."
+}
