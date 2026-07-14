@@ -1,0 +1,74 @@
+{
+  "computed_at_utc": "2026-07-14T18:50:34.384440+00:00",
+  "criterion": "M4 > M0, M10 >= M4, and M20 >= M10 on the eight-treatment-seed mean",
+  "curve_plot_sha256": "9cd7edc70358bc616382b640eabc53e773f2e0a193dedcc610da278878070f94",
+  "data_role": "exposed_development_operational_consistency_gate_not_inference",
+  "exposure_caveat": "The exact 400-row curve and profanity lineage are exposed development data. The curve is an operational consistency gate, never inferential evidence; only the conditionally unopened 900-row final is inferential.",
+  "git_commit": "4d2f884f246b85b9215a8332632e7092a76deb80",
+  "mean_exact_match": {
+    "0": 0.3975,
+    "10": 0.3971875,
+    "20": 0.3925,
+    "4": 0.3971875
+  },
+  "passed": false,
+  "per_seed_exact_match": {
+    "208": {
+      "0": 0.3975,
+      "10": 0.3875,
+      "20": 0.4,
+      "4": 0.41
+    },
+    "209": {
+      "0": 0.3975,
+      "10": 0.415,
+      "20": 0.385,
+      "4": 0.4025
+    },
+    "210": {
+      "0": 0.3975,
+      "10": 0.39,
+      "20": 0.3825,
+      "4": 0.3875
+    },
+    "211": {
+      "0": 0.3975,
+      "10": 0.415,
+      "20": 0.3875,
+      "4": 0.4025
+    },
+    "212": {
+      "0": 0.3975,
+      "10": 0.385,
+      "20": 0.405,
+      "4": 0.3725
+    },
+    "213": {
+      "0": 0.3975,
+      "10": 0.3925,
+      "20": 0.3875,
+      "4": 0.3975
+    },
+    "214": {
+      "0": 0.3975,
+      "10": 0.3875,
+      "20": 0.4025,
+      "4": 0.4
+    },
+    "215": {
+      "0": 0.3975,
+      "10": 0.405,
+      "20": 0.39,
+      "4": 0.405
+    }
+  },
+  "protocol": "j-lens-rl-confirmatory-v9-local-profanity-u5",
+  "registration_sha256": "5c9b776c452eea645361b72f87d8cabcd1059db654430cb7975f7325499b0ce4",
+  "schema_version": 1,
+  "steps": [
+    0,
+    4,
+    10,
+    20
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-confirmatory-v9-local-terminal-closeout-v1",
+  "protocol": "j-lens-rl-confirmatory-v9-local-profanity-u5",
+  "closed_at_utc": "2026-07-14T18:50:34.784487+00:00",
+  "terminal_stage": "curve_failed_terminal",
+  "claim_id": "d6131db54b6346199d9af8d1478f3e36",
+  "registration_sha256": "5c9b776c452eea645361b72f87d8cabcd1059db654430cb7975f7325499b0ce4",
+  "source_git_commit": "4d2f884f246b85b9215a8332632e7092a76deb80",
+  "scientific_disposition": {
+    "result": "registered_exposed_curve_gate_failed",
+    "interpretation": "The intrinsic negative damn/fuck J-lens treatment produced several individual rises and an eight-seed first-node near miss, but did not satisfy the prospectively fixed aggregate consistency curve. It is negative/partial development evidence, not significance evidence.",
+    "may_resume_or_pool": false,
+    "controls_authorized": false,
+    "final_authorized": false
+  },
+  "registered_curve_gate": {
+    "criterion": "M4 > M0, M10 >= M4, and M20 >= M10 on the eight-treatment-seed mean",
+    "steps": [0, 4, 10, 20],
+    "mean_exact_match": [0.3975, 0.3971875, 0.3971875, 0.3925],
+    "successive_differences": [-0.0003125, 0.0, -0.0046875],
+    "passed": false,
+    "first_rise_shortfall_percentage_points": 0.03125,
+    "curve_gate_path": "protocol_archive/v9_local_terminal_evidence/curve_gate.json",
+    "curve_gate_sha256": "3b94cd3277870b76a7623aacf4b3d8a1b0b253675110958bd4b09dac0c4de47c",
+    "curve_plot_path": "protocol_archive/v9_local_terminal_evidence/curve.png",
+    "curve_plot_sha256": "9cd7edc70358bc616382b640eabc53e773f2e0a193dedcc610da278878070f94"
+  },
+  "treatments": {
+    "expected_labels": [
+      "jlens_seed208",
+      "jlens_seed209",
+      "jlens_seed210",
+      "jlens_seed211",
+      "jlens_seed212",
+      "jlens_seed213",
+      "jlens_seed214",
+      "jlens_seed215"
+    ],
+    "terminal_label_count": 8,
+    "literal_target_completion_rate_max": 0.0,
+    "all_registered_terminal_validators_passed": true,
+    "all_offline_runs_synced_and_exact_remote_evidence_verified": true,
+    "seed_ledger_sha256": {
+      "jlens_seed208": "a1c538f565315471f7d6a600ba3137b5ebeb90d80506497251ba8458b45c34be",
+      "jlens_seed209": "863eecc0344df6dfad795d50e3b8c76f729a8f1192489a70043da8868aa7ad1d",
+      "jlens_seed210": "6fa221614f3fa33b8494aed57e8eb697dce37d7e09c30d124e1bb8b0e7b40d8f",
+      "jlens_seed211": "ab532c6008c2ed7f006ff2166e489d6e88eef278024895746bdc3738cbbdd5f7",
+      "jlens_seed212": "9480b23dca0b413128e2fed6e696a62009cd28fa896c63439caec5f65663885d",
+      "jlens_seed213": "292b9f603418af47fdc8e4d8578e32595fdae074232458edb204deefe108a9ac",
+      "jlens_seed214": "6eda9de943f9b1be13c28c118220eadbacf7c039300a5570d666d39d5fa1d291",
+      "jlens_seed215": "ae6b8c4fd93ff0e4d8a67f521cc7c8ee8063509ef417f957aa9d0b7ba92b683e"
+    },
+    "wandb_run_ids": [
+      "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed208",
+      "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed209",
+      "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed210",
+      "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed211",
+      "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed212",
+      "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed213",
+      "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed214",
+      "confirm-v9-local-emotional-profanity-u5-h20-jlens_seed215"
+    ]
+  },
+  "safety_boundaries": {
+    "gpu_training_processes_after_closeout": 0,
+    "control_dispatch_count": 0,
+    "controls_started": false,
+    "sealed_final_started": false,
+    "sealed_final_opened": false,
+    "attempt_status_path": "protocol_archive/v9_local_terminal_evidence/attempt_status.json",
+    "attempt_status_sha256": "0e73618deff896d78350c1f6d6ff22bb7f33c3f136465a76e3345bb02eefb97b"
+  },
+  "reconstruction": {
+    "launch_ledger_path": "protocol_archive/v9_local_launch_ledger.json",
+    "per_seed_ledgers_pattern": "protocol_archive/v9_local_seedNNN_terminal_ledger.json",
+    "raw_evidence_root": "protocol_archive/v9_local_live_evidence",
+    "terminal_evidence_root": "protocol_archive/v9_local_terminal_evidence",
+    "replay_policy": "Replay only as a fresh attempt with new state, claim, seeds, and W&B IDs. Never resume, pool, or reinterpret V9 as inferential evidence."
+  }
+}

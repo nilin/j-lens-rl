@@ -2044,3 +2044,24 @@ terminal stage names but omitted V7's actual authoritative stage
 the already committed authoritative V7 closeout (including retired GPU lease).
 No tournament outcome or state existed when this correction was made; the
 tournament remains development-only and cannot support a significance claim.
+
+V9 then closed normally after seed 215 completed `.3975/.4050/.4050/.3900`.
+All eight treatment runs passed the corrected terminal validator, used zero
+literal target completions, and were synced to their exact registered W&B IDs
+with all seven embedded terminal files verified remotely. The final registered
+mean curve is `.3975/.3971875/.3971875/.3925`: step 4 misses baseline by only
+`.0003125` (0.03125 percentage points), step 10 is flat, and step 20 declines.
+The terminal stage is `curve_failed_terminal`; there are zero control
+dispatches, no final evaluation, and the sealed 900-item final remains
+unopened. This is honest near-miss/negative development evidence, not a
+significance result. The canonical closeout is
+`protocol_archive/v9_local_terminal_closeout.json`, with gate/status/plot under
+`protocol_archive/v9_local_terminal_evidence/` and per-seed raw evidence and
+ledgers preserved for reconstruction without rerunning.
+
+The next development tournament was prepared from pushed commit `ed95bfa`,
+registration `ba3c076e623f655ee1c7600f49a0d78cf44fc6dee757c116a17fdafa04552dbc`,
+and fresh Modal v2 volume `vo-FoPd7Y7NgprscFXEROSEza`. Modal app
+`ap-YOyZ5SjuFDOHVtyhCF8QZr` was submitted while V9's final evaluation was still
+using the local GPU; at this cutoff Modal was building the explicit allowlisted
+image and had not yet allocated its one permitted L40S task.

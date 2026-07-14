@@ -1,0 +1,9 @@
+{
+  "claim_id": "d6131db54b6346199d9af8d1478f3e36",
+  "controls_started": false,
+  "curve_gate_sha256": "3b94cd3277870b76a7623aacf4b3d8a1b0b253675110958bd4b09dac0c4de47c",
+  "final_started": false,
+  "protocol": "j-lens-rl-confirmatory-v9-local-profanity-u5",
+  "stage": "curve_failed_terminal",
+  "updated_at_utc": "2026-07-14T18:50:34.784487+00:00"
+}
