@@ -1,0 +1,1497 @@
+{
+  "analysis_inputs": {
+    "base": null,
+    "controls": {},
+    "treatments": {}
+  },
+  "bundle_root": ".",
+  "file_count": 253,
+  "files": {
+    "attempt_claim.json": {
+      "role": "whole-attempt operational identity, status, and Modal launch receipt",
+      "sha256": "d8f7779ba539b4e4a23d0b5cb96f3d75b6fd97f47f3917d151f42f6e6ba098ed",
+      "size_bytes": 701
+    },
+    "attempt_status.json": {
+      "role": "whole-attempt operational identity, status, and Modal launch receipt",
+      "sha256": "463d2dc01b44c837daf7cc761d6f587bce804048889e4dbe95463058e734a75e",
+      "size_bytes": 1994
+    },
+    "configs/jlens_seed168.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "3f0a530f7cdc4fbbb6160f9676ad950fc15d7823a3ef23d9d6634424723bdfcd",
+      "size_bytes": 5717
+    },
+    "configs/jlens_seed169.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "895ad46988c36fb3686a27b1e657113b9e384ad0eb3ddf61e8fb79cbc3c5392d",
+      "size_bytes": 5717
+    },
+    "configs/jlens_seed170.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "cbe3c41f845a6e79afc99df9d2d1e45ce455acd5a9d5dd0fdefe6e8d0b0e31d7",
+      "size_bytes": 5717
+    },
+    "configs/jlens_seed171.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "f7071e3a8059a4c772e3e0ddbaf8df6e845559601506f11902e20c34eed5f594",
+      "size_bytes": 5717
+    },
+    "configs/jlens_seed172.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "5ec4657b171f939824c93b8f71386b642d9effff671c9c64cf8f6610ec3466dd",
+      "size_bytes": 5717
+    },
+    "configs/jlens_seed173.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "50f6cd42e78b20ab6b8aca8b572de5265bf4487c26f17611371f4966b4d3e07d",
+      "size_bytes": 5717
+    },
+    "configs/jlens_seed174.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "a05509846c2276b8a75e0f4f5d07ab0b94e17702e89018bb2a7e2c0926b88be7",
+      "size_bytes": 5717
+    },
+    "configs/jlens_seed175.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "4846fda2b8b1e9a344148a5d7ec76c3374f31e1c176b058317e16292a4aeb420",
+      "size_bytes": 5717
+    },
+    "configs/sealed_eval.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "497af051bc260d3542d719c68c5bb711c3cdbe15ec5f9e97cc0b9487af333b14",
+      "size_bytes": 5303
+    },
+    "configs/signflip_seed168.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "72a3c699a617b994b9eae089709d2d92817e6a24a5f2a46d8a196ec20ed296ad",
+      "size_bytes": 5733
+    },
+    "configs/signflip_seed169.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "9fe24bcb71f8487364a14ec06079f3e0a534d50495a55fe6b6e3b3b2dd4ea35c",
+      "size_bytes": 5733
+    },
+    "configs/signflip_seed170.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "384326ff547d7636985405abded946cffde7524e1a1663e57bf84ad3ab912f8b",
+      "size_bytes": 5733
+    },
+    "configs/signflip_seed171.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "bb83345f9f7c63ca0b6372ec7db6608d65127320cf72f1e43eead57c8d3e4c45",
+      "size_bytes": 5733
+    },
+    "configs/signflip_seed172.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "687771505aab5d6486366022cea2845889d24538ef7c94d65dd9251a5ee88d93",
+      "size_bytes": 5733
+    },
+    "configs/signflip_seed173.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "d7ba11056b46bd87a1d01616b51c9b469267421932223278b2e8abe1f1dbddfe",
+      "size_bytes": 5733
+    },
+    "configs/signflip_seed174.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "eee05739ba380d7b9f57c67e4cf54ab8bd7a84316acab500aeaaad3a3a625670",
+      "size_bytes": 5733
+    },
+    "configs/signflip_seed175.json": {
+      "role": "fully resolved immutable run/evaluation config",
+      "sha256": "cc761005d06be5ba276a453675fd4a7734446a4714278a874040bd4991275781",
+      "size_bytes": 5733
+    },
+    "evidence/curve.png": {
+      "role": "derived gate, acceptance, plot, or completed-run evidence",
+      "sha256": "61d6c49740bb277335a0500a1842396d3328baa3f576540d7a1c78ccc659f280",
+      "size_bytes": 151104
+    },
+    "evidence/curve_gate.json": {
+      "role": "derived gate, acceptance, plot, or completed-run evidence",
+      "sha256": "09770542837464bb80c48c036099521f0ae05ec2e0c81c2440f1f06816a4eede",
+      "size_bytes": 1675
+    },
+    "evidence/durable_export_plan.json": {
+      "role": "automatic durable archive composition and retrieval instructions",
+      "sha256": "234832fe91122228e765f07b1c5465ef263fcff5eb6537ba8d048d5ab921984f",
+      "size_bytes": 793
+    },
+    "evidence/git_closeout_candidate.json": {
+      "role": "compact commit-ready scientific and operational closeout",
+      "sha256": "b0bd4d120370846262439facbd8978eadc38205caadbfcfa5e100c2b7575f5ee",
+      "size_bytes": 10590
+    },
+    "frozen_artifacts/calibration.json": {
+      "role": "byte-pinned J-lens or target calibration artifact",
+      "sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+      "size_bytes": 764
+    },
+    "frozen_artifacts/lens.pt": {
+      "role": "byte-pinned J-lens or target calibration artifact",
+      "sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "size_bytes": 4819304
+    },
+    "launch_receipt.json": {
+      "role": "whole-attempt operational identity, status, and Modal launch receipt",
+      "sha256": "5123864f59094b572304a9aaf1317f41a9082fdafa5725876b4801858ca216d8",
+      "size_bytes": 521
+    },
+    "manifests/curve_indices.json": {
+      "role": "registered data allocation or training exclusion manifest",
+      "sha256": "b01409c011012641be96c84bfc35cb0b352cea902e54304105efa272a3eac6b2",
+      "size_bytes": 4030
+    },
+    "manifests/future_reserve_indices.json": {
+      "role": "registered data allocation or training exclusion manifest",
+      "sha256": "cfbac5a2f4cf3cc94e1882bf412cdfc4af9c84347647fa9843dc09967f8a03a6",
+      "size_bytes": 720
+    },
+    "manifests/sealed_final_indices.json": {
+      "role": "registered data allocation or training exclusion manifest",
+      "sha256": "6298b8e3d15b11985cf9febcd243dafd409ef07f22091388fa0793b6ebfe4228",
+      "size_bytes": 12885
+    },
+    "manifests/train_exclusions.json": {
+      "role": "registered data allocation or training exclusion manifest",
+      "sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+      "size_bytes": 37143
+    },
+    "protocol_state.json": {
+      "role": "protocol state or immutable collection marker",
+      "sha256": "ce41b8a773a7163b455c8574017c21106c46351f628cb6824a50a412d1425e5d",
+      "size_bytes": 16185
+    },
+    "reproducibility/launch_plan.json": {
+      "role": "registration, metric semantics, replay command, or source snapshot",
+      "sha256": "f925cb954f8b322794d753bd850ebb448c0a917296ac8879e4e4544aa1eaedee",
+      "size_bytes": 20196
+    },
+    "reproducibility/metric_schema.json": {
+      "role": "registration, metric semantics, replay command, or source snapshot",
+      "sha256": "3f3ded71641456b2544184f97a7cd777bcfbdfb0ddf420495833a97e13810b14",
+      "size_bytes": 18672
+    },
+    "reproducibility/registration.json": {
+      "role": "registration, metric semantics, replay command, or source snapshot",
+      "sha256": "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527",
+      "size_bytes": 6832
+    },
+    "reproducibility/selected_recipe_lock.json": {
+      "role": "registration, metric semantics, replay command, or source snapshot",
+      "sha256": "006bd685f045a385889d1e418e76437140a404177f0d1148d308226390a2a547",
+      "size_bytes": 5029
+    },
+    "reproducibility/source_manifest.json": {
+      "role": "registration, metric semantics, replay command, or source snapshot",
+      "sha256": "86ebf53f9b94ac8fbc2e39793925520b6cdbe35dc9286d2b9eefa16e376199d4",
+      "size_bytes": 125254
+    },
+    "reproducibility/source_snapshot.zip": {
+      "role": "registration, metric semantics, replay command, or source snapshot",
+      "sha256": "96742bbacf68db948ff44f31fe2c8d71a829877ea7bbe210e7745ee3f8c3b13e",
+      "size_bytes": 8007780
+    },
+    "runs/jlens_seed168/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "bb34d1a1900c91dd8d1d0291efd9d21f68cbfe963c2d8843ab86caedd98e6ede",
+      "size_bytes": 2196
+    },
+    "runs/jlens_seed168/checkpoint-6/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed168/checkpoint-6/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed168/checkpoint-6/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "0486f65ac03449087b33f1551eb7ad90bcbc2fa75c2c2aca57a60db36535b458",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed168/checkpoint-6/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed168/checkpoint-6/optimizer.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2c2efe02e84159eb932f6aef557527c235b1f2a3cb8f34aaae4fbca4cc088170",
+      "size_bytes": 35479763
+    },
+    "runs/jlens_seed168/checkpoint-6/rng_state.pth": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "ae92e68d67a7ebc50677d2ca363867cac510c76406a050e4b4cfec581328dbcb",
+      "size_bytes": 14645
+    },
+    "runs/jlens_seed168/checkpoint-6/scheduler.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e4ee163e9f0417a76c382ece010d9a70d11f00fe6459186bd032f98f9c6b9cbd",
+      "size_bytes": 1465
+    },
+    "runs/jlens_seed168/checkpoint-6/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed168/checkpoint-6/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed168/checkpoint-6/trainer_state.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "60fd30162cfc8960c8ad81aa1abc834cac24aa7a94f80adcd912998842cc9b5c",
+      "size_bytes": 7784
+    },
+    "runs/jlens_seed168/checkpoint-6/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f6107f2f1caf930b6325d5912a97695e9d001ce4c366daaa98ca47c43d1d4801",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed168/data_indices.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2fd70ff4f03422e08a1156df86b9580839446f82e2fca0c70991208223e0c18d",
+      "size_bytes": 13901
+    },
+    "runs/jlens_seed168/environment_snapshot.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f71024abaef1768de46cad8771799ceef80292dffec1a4f192e9497bf35fa358",
+      "size_bytes": 3711
+    },
+    "runs/jlens_seed168/final/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed168/final/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed168/final/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "0486f65ac03449087b33f1551eb7ad90bcbc2fa75c2c2aca57a60db36535b458",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed168/final/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed168/final/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed168/final/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed168/final/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f6107f2f1caf930b6325d5912a97695e9d001ce4c366daaa98ca47c43d1d4801",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed168/log_history.json": {
+      "role": "complete optimizer-step training history and W&B source series",
+      "sha256": "3f2d16fe96ecb99d80f62e48496efbeb4ce6211813bf5265d5bbef3d36e695f9",
+      "size_bytes": 6876
+    },
+    "runs/jlens_seed168/resolved_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "3f0a530f7cdc4fbbb6160f9676ad950fc15d7823a3ef23d9d6634424723bdfcd",
+      "size_bytes": 5717
+    },
+    "runs/jlens_seed168/run_manifest.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "44c958d2227861768565457f02094d5cf83b4d7fc605c70ac8777e14470d11d3",
+      "size_bytes": 30411
+    },
+    "runs/jlens_seed168/run_result_manifest.json": {
+      "role": "terminal run replay, runtime, checkpoint, adapter, and history manifest",
+      "sha256": "5aca0a5765b915448cbf7542a6119db75823bc5ecf90cfe6ea46cb5c9dd14970",
+      "size_bytes": 30109
+    },
+    "runs/jlens_seed168/validation_history.jsonl": {
+      "role": "complete fixed-curve validation history",
+      "sha256": "850041e9c4e32f55e2a0784197657dcd245a804f2d0db014656ba621a2ccbab6",
+      "size_bytes": 1259
+    },
+    "runs/jlens_seed168/wandb_terminal_publish_receipt.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "00569abb2f67f7e3e1ee98fbf1334ebef15890403cf7d284527de2d90c5646f9",
+      "size_bytes": 1674
+    },
+    "runs/jlens_seed169/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "0d9b1f4ade4d458be24ad7e244a8d551e9de9cb341bbc0ee59031b9d662ea7aa",
+      "size_bytes": 2196
+    },
+    "runs/jlens_seed169/checkpoint-6/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed169/checkpoint-6/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed169/checkpoint-6/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "0571370885622b0b9da5810fc550b8bd849a419aee3a996ba52d1fb5408bf7ac",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed169/checkpoint-6/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed169/checkpoint-6/optimizer.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "d5cff0c2cd7f9e2dbef8a811ab6fd70844fcf89a84a61a8c841eb8e795149baf",
+      "size_bytes": 35479763
+    },
+    "runs/jlens_seed169/checkpoint-6/rng_state.pth": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f386445683c5754ba112699217bd41466ca4a84e64b111d651d4eda60ee213fa",
+      "size_bytes": 14645
+    },
+    "runs/jlens_seed169/checkpoint-6/scheduler.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e4ee163e9f0417a76c382ece010d9a70d11f00fe6459186bd032f98f9c6b9cbd",
+      "size_bytes": 1465
+    },
+    "runs/jlens_seed169/checkpoint-6/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed169/checkpoint-6/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed169/checkpoint-6/trainer_state.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "b77fe579cb88492c2b66ca851fadb5ee5b5b063b81f7e463b474e6323062c196",
+      "size_bytes": 7735
+    },
+    "runs/jlens_seed169/checkpoint-6/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "ccf838d08fee00f2381123d92ddc427667f93fee650b5656fc6d7b47e68f5338",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed169/data_indices.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "53d81d8ddfd6586eb048cd4b4fd60960b48430b6a712748a31d34b90ea553962",
+      "size_bytes": 13913
+    },
+    "runs/jlens_seed169/environment_snapshot.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f71024abaef1768de46cad8771799ceef80292dffec1a4f192e9497bf35fa358",
+      "size_bytes": 3711
+    },
+    "runs/jlens_seed169/final/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed169/final/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed169/final/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "0571370885622b0b9da5810fc550b8bd849a419aee3a996ba52d1fb5408bf7ac",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed169/final/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed169/final/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed169/final/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed169/final/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "ccf838d08fee00f2381123d92ddc427667f93fee650b5656fc6d7b47e68f5338",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed169/log_history.json": {
+      "role": "complete optimizer-step training history and W&B source series",
+      "sha256": "482ed1cc506372825353b1d10236938ad9c18e4c435cb818db6a378276c2ede5",
+      "size_bytes": 6827
+    },
+    "runs/jlens_seed169/resolved_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "895ad46988c36fb3686a27b1e657113b9e384ad0eb3ddf61e8fb79cbc3c5392d",
+      "size_bytes": 5717
+    },
+    "runs/jlens_seed169/run_manifest.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "df2880f61b3b7e51142277ad4adac3a100a77ecd8b417858766d06611a483f8d",
+      "size_bytes": 30411
+    },
+    "runs/jlens_seed169/run_result_manifest.json": {
+      "role": "terminal run replay, runtime, checkpoint, adapter, and history manifest",
+      "sha256": "db8f4c3092a6c67299ceda285b2d07d762231da7573fe820893fad28d1f87d2b",
+      "size_bytes": 30109
+    },
+    "runs/jlens_seed169/validation_history.jsonl": {
+      "role": "complete fixed-curve validation history",
+      "sha256": "16daa8a83fc63e3b9e711e75c89b7b980aaf0ab473befa6b4ffbabb5c1f5c7b3",
+      "size_bytes": 1256
+    },
+    "runs/jlens_seed169/wandb_terminal_publish_receipt.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "7330ed0db1381126f75789907b703a0bbcde96ec05686b0c289051ea1b760b11",
+      "size_bytes": 1674
+    },
+    "runs/jlens_seed170/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "a4d9a275bffc7c4626eb5fa1bc28af976a637b17770cfa446c05246572d08f5d",
+      "size_bytes": 2196
+    },
+    "runs/jlens_seed170/checkpoint-6/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed170/checkpoint-6/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed170/checkpoint-6/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "c0dd1e6fde7f658b21e8e0454d3cdc3e886b552994c4a0ed4670f567d727b39d",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed170/checkpoint-6/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed170/checkpoint-6/optimizer.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "c86fc7ee1321bcb0ea04f2761b1dd5c8002ae98205dbf63019c1f630d25fa305",
+      "size_bytes": 35479763
+    },
+    "runs/jlens_seed170/checkpoint-6/rng_state.pth": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "860abe43deb3ba010bbda4de3e853af030146a8901a2d955c321febba4c24850",
+      "size_bytes": 14645
+    },
+    "runs/jlens_seed170/checkpoint-6/scheduler.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e4ee163e9f0417a76c382ece010d9a70d11f00fe6459186bd032f98f9c6b9cbd",
+      "size_bytes": 1465
+    },
+    "runs/jlens_seed170/checkpoint-6/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed170/checkpoint-6/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed170/checkpoint-6/trainer_state.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "89c1fe865484560c8c5f6cd19d594b2b5911d5731386704ccb1cf10128f42475",
+      "size_bytes": 7746
+    },
+    "runs/jlens_seed170/checkpoint-6/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "d1260580068384587bfd4ea6b0499e9b845070e14e72a2bf2895e0dd3c3556f8",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed170/data_indices.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "086626c49444bc66eb3a13a334d34b42162180c5fc9fcda73d0f47cc72bfc7f5",
+      "size_bytes": 13893
+    },
+    "runs/jlens_seed170/environment_snapshot.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f71024abaef1768de46cad8771799ceef80292dffec1a4f192e9497bf35fa358",
+      "size_bytes": 3711
+    },
+    "runs/jlens_seed170/final/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed170/final/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed170/final/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "c0dd1e6fde7f658b21e8e0454d3cdc3e886b552994c4a0ed4670f567d727b39d",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed170/final/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed170/final/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed170/final/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed170/final/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "d1260580068384587bfd4ea6b0499e9b845070e14e72a2bf2895e0dd3c3556f8",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed170/log_history.json": {
+      "role": "complete optimizer-step training history and W&B source series",
+      "sha256": "336ea59e94c852c1384ece07845851a9369733b96399d8a06ad6ae194de4525d",
+      "size_bytes": 6837
+    },
+    "runs/jlens_seed170/resolved_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cbe3c41f845a6e79afc99df9d2d1e45ce455acd5a9d5dd0fdefe6e8d0b0e31d7",
+      "size_bytes": 5717
+    },
+    "runs/jlens_seed170/run_manifest.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "1d25ca8bd8b8cb1872890a9df2063df2a8aa41e5f1f5329e6f7e9555e2382d62",
+      "size_bytes": 30411
+    },
+    "runs/jlens_seed170/run_result_manifest.json": {
+      "role": "terminal run replay, runtime, checkpoint, adapter, and history manifest",
+      "sha256": "28c7fa1652bc6473cdf9744c87d1b229054b3f1ae67eb7c9f8eab4afa853f6eb",
+      "size_bytes": 30109
+    },
+    "runs/jlens_seed170/validation_history.jsonl": {
+      "role": "complete fixed-curve validation history",
+      "sha256": "d4007c91723a0c3df342809373e35a955c41ba8553f3410da07d8a001b7a6b12",
+      "size_bytes": 1255
+    },
+    "runs/jlens_seed170/wandb_terminal_publish_receipt.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "1379d0a370ec9cb0f08b4fa3b1cb512ca29747ca1a56b1433455279d44685979",
+      "size_bytes": 1674
+    },
+    "runs/jlens_seed171/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "3a711dacb27bc2c8ab5abd5a3373f857eb0bad4f0b3600d79776aef594423bb5",
+      "size_bytes": 2196
+    },
+    "runs/jlens_seed171/checkpoint-6/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed171/checkpoint-6/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed171/checkpoint-6/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "82542721647dc417e27869c98dc742519e4801e22b6ae26c846716b9ecec349d",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed171/checkpoint-6/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed171/checkpoint-6/optimizer.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "02d940aecdbc384ba4e4a545832e75f07ad86b8d4f6be426a8b07b29231b37af",
+      "size_bytes": 35479763
+    },
+    "runs/jlens_seed171/checkpoint-6/rng_state.pth": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "253cae0b5810bffcd964f05d8a9bdbfd00c89c3765a34e56acae4658bbacf7b7",
+      "size_bytes": 14645
+    },
+    "runs/jlens_seed171/checkpoint-6/scheduler.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e4ee163e9f0417a76c382ece010d9a70d11f00fe6459186bd032f98f9c6b9cbd",
+      "size_bytes": 1465
+    },
+    "runs/jlens_seed171/checkpoint-6/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed171/checkpoint-6/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed171/checkpoint-6/trainer_state.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "855995499e81f94357564a1ca3b01484b016b6f1254624313caba8d83f17db10",
+      "size_bytes": 7771
+    },
+    "runs/jlens_seed171/checkpoint-6/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "51b49572eb26507e6b37b489b9b3a3bdab4e77fbbcafb52a4ad8d80459a0884d",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed171/data_indices.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e32e7236f39e9951f5d7266e6a141435f08d529a17eb6ffaf5b9cb736cf10ee9",
+      "size_bytes": 13886
+    },
+    "runs/jlens_seed171/environment_snapshot.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f71024abaef1768de46cad8771799ceef80292dffec1a4f192e9497bf35fa358",
+      "size_bytes": 3711
+    },
+    "runs/jlens_seed171/final/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed171/final/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed171/final/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "82542721647dc417e27869c98dc742519e4801e22b6ae26c846716b9ecec349d",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed171/final/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed171/final/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed171/final/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed171/final/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "51b49572eb26507e6b37b489b9b3a3bdab4e77fbbcafb52a4ad8d80459a0884d",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed171/log_history.json": {
+      "role": "complete optimizer-step training history and W&B source series",
+      "sha256": "30424e05cc98f7d099bd3966404f156fdaf65719d8e086f3ba3abef787a341af",
+      "size_bytes": 6863
+    },
+    "runs/jlens_seed171/resolved_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f7071e3a8059a4c772e3e0ddbaf8df6e845559601506f11902e20c34eed5f594",
+      "size_bytes": 5717
+    },
+    "runs/jlens_seed171/run_manifest.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "75de33b766816b0c30a3c5412217457d36a1f874ec8d1e8a89aae99e58688763",
+      "size_bytes": 30411
+    },
+    "runs/jlens_seed171/run_result_manifest.json": {
+      "role": "terminal run replay, runtime, checkpoint, adapter, and history manifest",
+      "sha256": "211500fa086cabca2a47b081b7ec23e572ca8c24062fc5d752271c93c6399270",
+      "size_bytes": 30109
+    },
+    "runs/jlens_seed171/validation_history.jsonl": {
+      "role": "complete fixed-curve validation history",
+      "sha256": "ddee2d398f8ebf70d179143d5a5897373275c2d5a1b399420f2d3378aa5b2dc8",
+      "size_bytes": 1255
+    },
+    "runs/jlens_seed171/wandb_terminal_publish_receipt.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "b2e1022b10b3047a7aee8e7f866aa2691ea866f94d297bef613d762620710d41",
+      "size_bytes": 1674
+    },
+    "runs/jlens_seed172/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "6cbd687f017b0ab7652e6653c7ca8ec62b4bdeba1a9912ef35cdd13dc1d5ae64",
+      "size_bytes": 2196
+    },
+    "runs/jlens_seed172/checkpoint-6/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed172/checkpoint-6/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed172/checkpoint-6/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "26c91765bb02f5d17049b87299d264a8af814c8ae5d4215214335c0d4dd2f509",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed172/checkpoint-6/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed172/checkpoint-6/optimizer.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e1d3251f0964ebeeb2edad062015bf7784026fc0daf151ef46dea9b002528699",
+      "size_bytes": 35479763
+    },
+    "runs/jlens_seed172/checkpoint-6/rng_state.pth": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "35698c27354c962511e2d8b618fe1ad1e0be9412454eb03eec21e8d90cb0ed51",
+      "size_bytes": 14645
+    },
+    "runs/jlens_seed172/checkpoint-6/scheduler.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e4ee163e9f0417a76c382ece010d9a70d11f00fe6459186bd032f98f9c6b9cbd",
+      "size_bytes": 1465
+    },
+    "runs/jlens_seed172/checkpoint-6/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed172/checkpoint-6/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed172/checkpoint-6/trainer_state.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "8b135f631dc61b7984f90db4d0b4e6ab806486c884e006055d3e1e98c19bdf27",
+      "size_bytes": 7750
+    },
+    "runs/jlens_seed172/checkpoint-6/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "36dee06eaaa82e6f25f13d15376e0c9b833b5e32ddd327667b5986d6e56f44c8",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed172/data_indices.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f4584d5860199d05167acf9148048eaa72ebf0d0c6b5621b4da3763bab1d1e19",
+      "size_bytes": 13907
+    },
+    "runs/jlens_seed172/environment_snapshot.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f71024abaef1768de46cad8771799ceef80292dffec1a4f192e9497bf35fa358",
+      "size_bytes": 3711
+    },
+    "runs/jlens_seed172/final/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed172/final/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed172/final/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "26c91765bb02f5d17049b87299d264a8af814c8ae5d4215214335c0d4dd2f509",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed172/final/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed172/final/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed172/final/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed172/final/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "36dee06eaaa82e6f25f13d15376e0c9b833b5e32ddd327667b5986d6e56f44c8",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed172/log_history.json": {
+      "role": "complete optimizer-step training history and W&B source series",
+      "sha256": "dab89663f31f410e09225fed01181fddb6704eab68b9cf0b311353bb3a94d045",
+      "size_bytes": 6842
+    },
+    "runs/jlens_seed172/resolved_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5ec4657b171f939824c93b8f71386b642d9effff671c9c64cf8f6610ec3466dd",
+      "size_bytes": 5717
+    },
+    "runs/jlens_seed172/run_manifest.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "833bb342b3caa02e1f44e6d2241b08dd05cf142a67c354483a49f0fd5344be7f",
+      "size_bytes": 30411
+    },
+    "runs/jlens_seed172/run_result_manifest.json": {
+      "role": "terminal run replay, runtime, checkpoint, adapter, and history manifest",
+      "sha256": "f737ad7547a36fa97f351b398300003f08fee208060e1fb19e04e76cc74150c0",
+      "size_bytes": 30109
+    },
+    "runs/jlens_seed172/validation_history.jsonl": {
+      "role": "complete fixed-curve validation history",
+      "sha256": "85d95129c193b6c18c36bd7415426b9d5216a8945703e960b8b2b68fc35e8d94",
+      "size_bytes": 1254
+    },
+    "runs/jlens_seed172/wandb_terminal_publish_receipt.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2685e66d6697d854e0e38a66a0351ae0a7283bb87c9d3a8db28b2aa337f58368",
+      "size_bytes": 1674
+    },
+    "runs/jlens_seed173/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "ee8c8f6c8510e610d119d367da49794b6294065bbaa961fce345a58c7e14437b",
+      "size_bytes": 2196
+    },
+    "runs/jlens_seed173/checkpoint-6/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed173/checkpoint-6/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed173/checkpoint-6/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "c0d89d7cd20dcf4c8feec1738dd5741c2b957424ce599d2d388a4ca192a5cf42",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed173/checkpoint-6/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed173/checkpoint-6/optimizer.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "78973f61a2e9a266bfc5c84aeea96694a62d0eff4d015d03832f9cc9de29db6d",
+      "size_bytes": 35479763
+    },
+    "runs/jlens_seed173/checkpoint-6/rng_state.pth": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "d1a8e006bd5a8d27c3f2782ddc8542e2b3422bbb5da677a4a6d93a64505e141a",
+      "size_bytes": 14709
+    },
+    "runs/jlens_seed173/checkpoint-6/scheduler.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e4ee163e9f0417a76c382ece010d9a70d11f00fe6459186bd032f98f9c6b9cbd",
+      "size_bytes": 1465
+    },
+    "runs/jlens_seed173/checkpoint-6/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed173/checkpoint-6/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed173/checkpoint-6/trainer_state.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5e02e0327e28ce31769e00ccef22ff20d07915a8882219116537760ede20692d",
+      "size_bytes": 7771
+    },
+    "runs/jlens_seed173/checkpoint-6/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "1a889f1367509f755f79ddbf83626230581f54369ce85af734d1f7ced151146f",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed173/data_indices.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "05e1dcfe744b0b10709ae5f2c380a956e1cf195280ce07272f776d7cc2f0ef1f",
+      "size_bytes": 13905
+    },
+    "runs/jlens_seed173/environment_snapshot.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f71024abaef1768de46cad8771799ceef80292dffec1a4f192e9497bf35fa358",
+      "size_bytes": 3711
+    },
+    "runs/jlens_seed173/final/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed173/final/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed173/final/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "c0d89d7cd20dcf4c8feec1738dd5741c2b957424ce599d2d388a4ca192a5cf42",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed173/final/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed173/final/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed173/final/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed173/final/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "1a889f1367509f755f79ddbf83626230581f54369ce85af734d1f7ced151146f",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed173/log_history.json": {
+      "role": "complete optimizer-step training history and W&B source series",
+      "sha256": "d42d643097fa864d43f8cf12807084688618a97cc4418fa8ad13b1485d5f5ab8",
+      "size_bytes": 6862
+    },
+    "runs/jlens_seed173/resolved_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "50f6cd42e78b20ab6b8aca8b572de5265bf4487c26f17611371f4966b4d3e07d",
+      "size_bytes": 5717
+    },
+    "runs/jlens_seed173/run_manifest.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "8686a7c3e3853546303340175e4a12768b67684b2c088210ed15aebae547dd36",
+      "size_bytes": 30411
+    },
+    "runs/jlens_seed173/run_result_manifest.json": {
+      "role": "terminal run replay, runtime, checkpoint, adapter, and history manifest",
+      "sha256": "0871ca91892ef3d5402f183cf3ddcbc189d13cb637c71144ea9dbd9116f1a215",
+      "size_bytes": 30109
+    },
+    "runs/jlens_seed173/validation_history.jsonl": {
+      "role": "complete fixed-curve validation history",
+      "sha256": "7d8d93a73581bff805cb58d519058156a900e3c0d2823d7512492c05d0157b94",
+      "size_bytes": 1257
+    },
+    "runs/jlens_seed173/wandb_terminal_publish_receipt.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5588187f54fcb457d2fd92fbf498fbf36fe46d668edc2ad921f093dfae2e55e7",
+      "size_bytes": 1674
+    },
+    "runs/jlens_seed174/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2c2f8e07111c2bee887ef851ab6ab355320c53d947700e92b37102d82461889a",
+      "size_bytes": 2196
+    },
+    "runs/jlens_seed174/checkpoint-6/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed174/checkpoint-6/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed174/checkpoint-6/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "619836fcdf834c7db4531a6bd2c84386ed2be6c1291ae5520b603b5a136cc8f5",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed174/checkpoint-6/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed174/checkpoint-6/optimizer.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "758602d6764f2ca516b914abae81b4a89be83ea3be264e8281d059c90ece3eb1",
+      "size_bytes": 35479763
+    },
+    "runs/jlens_seed174/checkpoint-6/rng_state.pth": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "1346233ffda8fcfb0588188a34d0880b34768be1a915db5469bf425b08c8b0df",
+      "size_bytes": 14709
+    },
+    "runs/jlens_seed174/checkpoint-6/scheduler.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e4ee163e9f0417a76c382ece010d9a70d11f00fe6459186bd032f98f9c6b9cbd",
+      "size_bytes": 1465
+    },
+    "runs/jlens_seed174/checkpoint-6/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed174/checkpoint-6/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed174/checkpoint-6/trainer_state.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "a5ce13eb680246582402d496f17b3f67cfdf8d2c2790ec2450c5060db9b5ada0",
+      "size_bytes": 7781
+    },
+    "runs/jlens_seed174/checkpoint-6/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "3dae515766dcbb66fa71ce92bace0e269a8e974a8c9bf9f1bf67d414b04540e4",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed174/data_indices.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "666aa458b2fe16bf0f1fae617a910bdc6353b09d68716cbc61a857ac5c0f90d2",
+      "size_bytes": 13896
+    },
+    "runs/jlens_seed174/environment_snapshot.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f71024abaef1768de46cad8771799ceef80292dffec1a4f192e9497bf35fa358",
+      "size_bytes": 3711
+    },
+    "runs/jlens_seed174/final/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed174/final/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed174/final/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "619836fcdf834c7db4531a6bd2c84386ed2be6c1291ae5520b603b5a136cc8f5",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed174/final/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed174/final/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed174/final/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed174/final/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "3dae515766dcbb66fa71ce92bace0e269a8e974a8c9bf9f1bf67d414b04540e4",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed174/log_history.json": {
+      "role": "complete optimizer-step training history and W&B source series",
+      "sha256": "afcfd1c5123c9fefbfa9a52f70f806e2677bdbbbd665bc8ff9128338a7ae50c5",
+      "size_bytes": 6873
+    },
+    "runs/jlens_seed174/resolved_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "a05509846c2276b8a75e0f4f5d07ab0b94e17702e89018bb2a7e2c0926b88be7",
+      "size_bytes": 5717
+    },
+    "runs/jlens_seed174/run_manifest.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f3198b4796f8a442a6e1c10de189731d04bc1d527364f571dbfc7dabf3a35ef0",
+      "size_bytes": 30411
+    },
+    "runs/jlens_seed174/run_result_manifest.json": {
+      "role": "terminal run replay, runtime, checkpoint, adapter, and history manifest",
+      "sha256": "7576da89fe8dfc52ce708daa216e70ab457a12090ba6a2b0e4d9f7b26e74431f",
+      "size_bytes": 30109
+    },
+    "runs/jlens_seed174/validation_history.jsonl": {
+      "role": "complete fixed-curve validation history",
+      "sha256": "0a8d6403095d4e50f4761814bd12fa5eb4b916aa452a09f0c70cf012a970d82d",
+      "size_bytes": 1259
+    },
+    "runs/jlens_seed174/wandb_terminal_publish_receipt.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "a913b8876fc747cb35524055e0d98ff353725adc1d5cf905b885b87bede9fc42",
+      "size_bytes": 1674
+    },
+    "runs/jlens_seed175/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "c10dd352cf0a44ad43ed9e83910b1b97afb36de7263ca65094052bd772ad08ab",
+      "size_bytes": 2196
+    },
+    "runs/jlens_seed175/checkpoint-6/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed175/checkpoint-6/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed175/checkpoint-6/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e8f61611d9f7f11f91287c9aed07a81824496c8384c2071cbf766539828c496f",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed175/checkpoint-6/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed175/checkpoint-6/optimizer.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "c65de1e76b21be77ff0808c75d119c912b72be44e4eb88c5cf740c149fd0edbf",
+      "size_bytes": 35479763
+    },
+    "runs/jlens_seed175/checkpoint-6/rng_state.pth": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e4b39f78567562f8328b5cae01b34d782b6f46ad37946207a3a6a8c6988c084b",
+      "size_bytes": 14645
+    },
+    "runs/jlens_seed175/checkpoint-6/scheduler.pt": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e4ee163e9f0417a76c382ece010d9a70d11f00fe6459186bd032f98f9c6b9cbd",
+      "size_bytes": 1465
+    },
+    "runs/jlens_seed175/checkpoint-6/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed175/checkpoint-6/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed175/checkpoint-6/trainer_state.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cb2b8153583a27141c5c8274c48457f48a6ce0adf37a5bcdc11c1dfcea390a3e",
+      "size_bytes": 7785
+    },
+    "runs/jlens_seed175/checkpoint-6/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "b242ed67e2d60fd583d767f09507938259839acc6e4f7d20d7634995cf3fe002",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed175/data_indices.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5983847562a391085ad70ab9e8eef0553b4b73a5796c7936db3438b4737a5410",
+      "size_bytes": 13910
+    },
+    "runs/jlens_seed175/environment_snapshot.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "f71024abaef1768de46cad8771799ceef80292dffec1a4f192e9497bf35fa358",
+      "size_bytes": 3711
+    },
+    "runs/jlens_seed175/final/README.md": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "size_bytes": 5219
+    },
+    "runs/jlens_seed175/final/adapter_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "size_bytes": 1055
+    },
+    "runs/jlens_seed175/final/adapter_model.safetensors": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "e8f61611d9f7f11f91287c9aed07a81824496c8384c2071cbf766539828c496f",
+      "size_bytes": 17640136
+    },
+    "runs/jlens_seed175/final/chat_template.jinja": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "size_bytes": 2507
+    },
+    "runs/jlens_seed175/final/tokenizer.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "size_bytes": 11422157
+    },
+    "runs/jlens_seed175/final/tokenizer_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "size_bytes": 665
+    },
+    "runs/jlens_seed175/final/training_args.bin": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "b242ed67e2d60fd583d767f09507938259839acc6e4f7d20d7634995cf3fe002",
+      "size_bytes": 7377
+    },
+    "runs/jlens_seed175/log_history.json": {
+      "role": "complete optimizer-step training history and W&B source series",
+      "sha256": "0068d96e2250d09c167c67b306eeaf007c1d75411f70b63cab352c47dc746465",
+      "size_bytes": 6878
+    },
+    "runs/jlens_seed175/resolved_config.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "4846fda2b8b1e9a344148a5d7ec76c3374f31e1c176b058317e16292a4aeb420",
+      "size_bytes": 5717
+    },
+    "runs/jlens_seed175/run_manifest.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "16d06f649e36dbe8d72d8e429efc43e47db2dcafd2cfe37e5987897cc9524aa0",
+      "size_bytes": 30411
+    },
+    "runs/jlens_seed175/run_result_manifest.json": {
+      "role": "terminal run replay, runtime, checkpoint, adapter, and history manifest",
+      "sha256": "b4165f433668428ab80c9814fccc36941d853d5bee9a7013ebed404b902bdc7a",
+      "size_bytes": 30109
+    },
+    "runs/jlens_seed175/validation_history.jsonl": {
+      "role": "complete fixed-curve validation history",
+      "sha256": "6bcf7fe0d2022477dded1ea5e44c1ea00fa8bd4a7d75e768bbf67b7ca85fff4b",
+      "size_bytes": 1250
+    },
+    "runs/jlens_seed175/wandb_terminal_publish_receipt.json": {
+      "role": "training artifact or auditable run provenance",
+      "sha256": "0d86065f8731510652b49b75a158904f24d1a5d6bc928a1c267d49a65e1fdbd0",
+      "size_bytes": 1674
+    }
+  },
+  "git_commit": "252a2319dc0ada5e99ddeecf507d7246590531d7",
+  "interpretation": "The automatic durable archive contains this entire finalized V5 state. The inventory excludes only itself and the derived exports directory; claim/status/launch receipt, raw histories, 0 sealed-evaluation JSONL files present at this terminal stage, analysis inputs/outputs, artifacts, source, commands, and metric definitions are all included.",
+  "metric_schema_sha256": "3f3ded71641456b2544184f97a7cd777bcfbdfb0ddf420495833a97e13810b14",
+  "protocol": "j-lens-rl-confirmatory-v5-emotional",
+  "recipe_lock_sha256": "006bd685f045a385889d1e418e76437140a404177f0d1148d308226390a2a547",
+  "registered_sealed_evaluation_file_count": 17,
+  "registration_sha256": "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527",
+  "schema_version": 1,
+  "sealed_evaluation_file_count": 0,
+  "terminal_stage": "curve_failed",
+  "total_size_bytes": 763400824,
+  "wandb_identities": {
+    "jlens_seed168": {
+      "run_name": "confirm-v5-emotional-joy-h6-jlens_seed168",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed168"
+    },
+    "jlens_seed169": {
+      "run_name": "confirm-v5-emotional-joy-h6-jlens_seed169",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed169",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed169"
+    },
+    "jlens_seed170": {
+      "run_name": "confirm-v5-emotional-joy-h6-jlens_seed170",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed170",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed170"
+    },
+    "jlens_seed171": {
+      "run_name": "confirm-v5-emotional-joy-h6-jlens_seed171",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed171",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed171"
+    },
+    "jlens_seed172": {
+      "run_name": "confirm-v5-emotional-joy-h6-jlens_seed172",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed172",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed172"
+    },
+    "jlens_seed173": {
+      "run_name": "confirm-v5-emotional-joy-h6-jlens_seed173",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed173",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed173"
+    },
+    "jlens_seed174": {
+      "run_name": "confirm-v5-emotional-joy-h6-jlens_seed174",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed174",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed174"
+    },
+    "jlens_seed175": {
+      "run_name": "confirm-v5-emotional-joy-h6-jlens_seed175",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed175",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed175"
+    },
+    "signflip_seed168": {
+      "run_name": "confirm-v5-emotional-joy-h6-signflip_seed168",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed168",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed168"
+    },
+    "signflip_seed169": {
+      "run_name": "confirm-v5-emotional-joy-h6-signflip_seed169",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed169",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed169"
+    },
+    "signflip_seed170": {
+      "run_name": "confirm-v5-emotional-joy-h6-signflip_seed170",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed170",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed170"
+    },
+    "signflip_seed171": {
+      "run_name": "confirm-v5-emotional-joy-h6-signflip_seed171",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed171",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed171"
+    },
+    "signflip_seed172": {
+      "run_name": "confirm-v5-emotional-joy-h6-signflip_seed172",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed172",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed172"
+    },
+    "signflip_seed173": {
+      "run_name": "confirm-v5-emotional-joy-h6-signflip_seed173",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed173",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed173"
+    },
+    "signflip_seed174": {
+      "run_name": "confirm-v5-emotional-joy-h6-signflip_seed174",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed174",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed174"
+    },
+    "signflip_seed175": {
+      "run_name": "confirm-v5-emotional-joy-h6-signflip_seed175",
+      "wandb_entity": "nilinabra-spare-time",
+      "wandb_group": "confirm-v5-emotional-joy-h6",
+      "wandb_project": "j-lens-rl",
+      "wandb_resume": "never",
+      "wandb_run_id": "confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed175",
+      "wandb_tags": [
+        "confirmatory-v5",
+        "emotional-j-lens"
+      ],
+      "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-signflip_seed175"
+    }
+  }
+}

@@ -26,6 +26,10 @@
       "path": "protocol_archive/v5_emotional_terminal_evidence/attempt_status.json",
       "sha256": "463d2dc01b44c837daf7cc761d6f587bce804048889e4dbe95463058e734a75e"
     },
+    "bundle_inventory": {
+      "path": "protocol_archive/v5_emotional_terminal_evidence/evidence_bundle_inventory.json",
+      "sha256": "f098574bbbf97f645c4f66b4e33ce96c8ef8694bc6d37a721fc37f2a7f0976c2"
+    },
     "curve_gate": {
       "path": "protocol_archive/v5_emotional_terminal_evidence/curve_gate.json",
       "sha256": "09770542837464bb80c48c036099521f0ae05ec2e0c81c2440f1f06816a4eede"
