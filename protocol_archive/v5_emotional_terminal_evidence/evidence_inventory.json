@@ -1,0 +1,13 @@
+{
+  "claim_id": "c2d9ed29ebba46649f1ea182d7d50014",
+  "entries": [
+    "curve.png",
+    "curve_gate.json",
+    "durable_export_plan.json",
+    "evidence_bundle_inventory.json",
+    "git_closeout_candidate.json"
+  ],
+  "protocol": "j-lens-rl-confirmatory-v5-emotional-terminal-inventory-v1",
+  "scope": "evidence_directory",
+  "volume": "j-lens-rl-confirmatory-v5-emotional-20260714b"
+}

@@ -1,0 +1,13 @@
+{
+  "app_id": "ap-2o4XOP7jhqcrHyqkGN55wL",
+  "claim_id": "c2d9ed29ebba46649f1ea182d7d50014",
+  "function_call_id": "fc-01KXFXCF23D6DRB5VNXCVJB8TN",
+  "global_modal_gpu_limit": 1,
+  "gpu_app_overlap_policy": "no other Modal GPU app may overlap this V5 attempt",
+  "gpu_type": "L40S",
+  "max_parallel_gpu_workers": 1,
+  "modal_app": "j-lens-rl-confirmatory-v5-emotional",
+  "receipt_status": "present",
+  "submitted_at_utc": "2026-07-14T08:55:08.732683+00:00",
+  "volume": "j-lens-rl-confirmatory-v5-emotional-20260714b"
+}

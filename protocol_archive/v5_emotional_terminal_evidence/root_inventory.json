@@ -1,0 +1,19 @@
+{
+  "claim_id": "c2d9ed29ebba46649f1ea182d7d50014",
+  "entries": [
+    "attempt_claim.json",
+    "attempt_status.json",
+    "configs",
+    "evidence",
+    "exports",
+    "frozen_artifacts",
+    "launch_receipt.json",
+    "manifests",
+    "protocol_state.json",
+    "reproducibility",
+    "runs"
+  ],
+  "protocol": "j-lens-rl-confirmatory-v5-emotional-terminal-inventory-v1",
+  "scope": "volume_root",
+  "volume": "j-lens-rl-confirmatory-v5-emotional-20260714b"
+}

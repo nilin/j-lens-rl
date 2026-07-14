@@ -1,0 +1,82 @@
+{
+  "claim_id": "c2d9ed29ebba46649f1ea182d7d50014",
+  "curve": {
+    "computed_at_utc": "2026-07-14T10:11:05.088802+00:00",
+    "criterion": "the first registered post-baseline eight-seed mean is strictly above the registered baseline mean, and each of the next two registered means is greater than or equal to its predecessor",
+    "curve_plot": {
+      "path": "/__modal/volumes/vo-IRHTu7BhZfWcrGsjoL9DHI/evidence/curve.png",
+      "sha256": "61d6c49740bb277335a0500a1842396d3328baa3f576540d7a1c78ccc659f280"
+    },
+    "examples_per_seed": 400,
+    "git_commit": "252a2319dc0ada5e99ddeecf507d7246590531d7",
+    "mean_exact_match": {
+      "0": 0.41000000000000003,
+      "2": 0.39062500000000006,
+      "4": 0.39437500000000003,
+      "6": 0.40031250000000007
+    },
+    "n_seeds": 8,
+    "passed": false,
+    "per_seed_exact_match": {
+      "168": {
+        "0": 0.41,
+        "2": 0.405,
+        "4": 0.385,
+        "6": 0.395
+      },
+      "169": {
+        "0": 0.41,
+        "2": 0.375,
+        "4": 0.38,
+        "6": 0.405
+      },
+      "170": {
+        "0": 0.41,
+        "2": 0.3925,
+        "4": 0.405,
+        "6": 0.38
+      },
+      "171": {
+        "0": 0.41,
+        "2": 0.3925,
+        "4": 0.4025,
+        "6": 0.425
+      },
+      "172": {
+        "0": 0.41,
+        "2": 0.3925,
+        "4": 0.4175,
+        "6": 0.4225
+      },
+      "173": {
+        "0": 0.41,
+        "2": 0.3975,
+        "4": 0.38,
+        "6": 0.3925
+      },
+      "174": {
+        "0": 0.41,
+        "2": 0.38,
+        "4": 0.3875,
+        "6": 0.3925
+      },
+      "175": {
+        "0": 0.41,
+        "2": 0.39,
+        "4": 0.3975,
+        "6": 0.39
+      }
+    },
+    "predeclared_steps": [
+      0,
+      2,
+      4,
+      6
+    ],
+    "protocol": "j-lens-rl-confirmatory-v5-emotional",
+    "registration_sha256": "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527",
+    "returncode": 2
+  },
+  "stage": "curve_failed",
+  "updated_at_utc": "2026-07-14T10:11:07.852433+00:00"
+}

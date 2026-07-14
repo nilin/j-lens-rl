@@ -1,0 +1,15 @@
+{
+  "claim_id": "c2d9ed29ebba46649f1ea182d7d50014",
+  "git_commit": "252a2319dc0ada5e99ddeecf507d7246590531d7",
+  "global_modal_gpu_limit": 1,
+  "gpu_app_overlap_policy": "no other Modal GPU app may overlap this V5 attempt",
+  "operational_preflight": {
+    "active_other_modal_apps": [],
+    "checked_at_utc": "2026-07-14T08:54:38.718552+00:00",
+    "exclusive_gpu_confirmation": "confirmed-no-other-modal-gpu-app-running",
+    "global_modal_gpu_limit": 1
+  },
+  "protocol": "j-lens-rl-confirmatory-v5-emotional",
+  "recipe_lock_sha256": "006bd685f045a385889d1e418e76437140a404177f0d1148d308226390a2a547",
+  "registration_sha256": "b2c49eaad02169e0da818a7893205f5ff7084fc41da1db6441ea7226a562d527"
+}
