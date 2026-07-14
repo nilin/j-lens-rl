@@ -1,0 +1,45 @@
+{
+  "calibration_sha256": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.4,
+    "15": 0.395,
+    "2": 0.3825,
+    "20": 0.4075,
+    "25": 0.3825,
+    "4": 0.3975,
+    "6": 0.3825
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "label": "profanity_ultradense",
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "requested_curve_pattern": false,
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": -1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "damn",
+    "fuck"
+  ]
+}

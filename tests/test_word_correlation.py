@@ -13,6 +13,7 @@ from jlens_rl.word_correlation import (
     FullVocabularyReadout,
     LexicalCandidate,
     aggregate_associations,
+    atlas_prompt_sufficient,
     dense_response_positions,
     deterministic_prompt_seed,
     deterministic_prompt_split,
@@ -229,6 +230,24 @@ def test_candidate_specific_masking_maps_into_one_dense_logits_matrix():
     assert [dense[row] for row in rows] == selected
     with pytest.raises(ValueError, match="not materialized"):
         position_rows(dense, [10_000])
+
+
+def test_descriptive_atlas_skips_prompt_with_a_positionless_rollout():
+    scores = [
+        np.array([-3.0, -2.0]),
+        None,
+        np.array([-1.0, -4.0]),
+    ]
+    assert atlas_prompt_sufficient(scores, [0, 1, 0]) is None
+
+    complete = atlas_prompt_sufficient(
+        [np.array([1.0, 4.0]), np.array([3.0, 2.0])], [0, 1]
+    )
+    assert complete is not None
+    numerator, score_ss, label_ss = complete
+    np.testing.assert_allclose(numerator, [1.0, -1.0])
+    np.testing.assert_allclose(score_ss, [2.0, 2.0])
+    assert label_ss == 0.5
 
 
 def test_prompt_centering_and_cluster_aggregation_match_direct_calculation():

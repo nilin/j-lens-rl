@@ -1,0 +1,45 @@
+{
+  "mean": -12.17310148701326,
+  "std": 3.6423049553625706,
+  "token_ids": [
+    2244,
+    2393,
+    5630,
+    6419,
+    7188,
+    8513,
+    13047,
+    21396,
+    28859,
+    33941,
+    39308,
+    44978,
+    46891,
+    52796,
+    60993,
+    97559,
+    138496
+  ],
+  "target_words": [
+    "yay",
+    "great",
+    "success",
+    "nice"
+  ],
+  "layers": [
+    8,
+    14,
+    20
+  ],
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "adapter": null,
+  "corpus": "wikitext",
+  "dataset": "Salesforce/wikitext",
+  "dataset_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+  "lens_path": "artifacts/qwen25_05b_solved_lens.pt",
+  "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+  "lens_input": "artifacts/qwen25_05b_solved_lens.pt",
+  "lens_input_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+  "rollout_offset": null
+}

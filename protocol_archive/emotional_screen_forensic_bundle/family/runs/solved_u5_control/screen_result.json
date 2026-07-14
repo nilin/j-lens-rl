@@ -1,0 +1,44 @@
+{
+  "calibration_sha256": "3607ad225cd60bed58a4dc53f78346f9e6c3f4968e8e6f6679a3565923309418",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.3825,
+    "15": 0.3975,
+    "2": 0.3925,
+    "20": 0.385,
+    "25": 0.4025,
+    "4": 0.39,
+    "6": 0.405
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "label": "solved_u5_control",
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "requested_curve_pattern": false,
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": 1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "solved"
+  ]
+}

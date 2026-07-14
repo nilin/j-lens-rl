@@ -1,0 +1,37 @@
+{
+  "amendment": {
+    "atlas_behavior_after": "If any rollout for a prompt has no common sampled readout position, omit that entire prompt from the descriptive atlas, record both missing-rollout and skipped-mixed-prompt counts, and leave the frozen emotional-candidate analysis unchanged.",
+    "atlas_behavior_before": "A rollout with no common sampled readout position raised ValueError and aborted its discovery shard.",
+    "code_scope": [
+      "src/jlens_rl/word_correlation.py:atlas_prompt_sufficient",
+      "src/jlens_rl/word_correlation.py:run_shard",
+      "src/jlens_rl/word_correlation.py:build_atlas"
+    ],
+    "descriptive_atlas_can_alter_selected_word_or_sign": false,
+    "primary_candidate_scores_changed": false,
+    "primary_selection_or_inference_changed": false,
+    "reason": "Attempt 1 failed during discovery because an optional descriptive-atlas edge case incorrectly aborted the primary frozen-candidate scan. No selected word/sign existed and validation had not opened."
+  },
+  "attempt1_closeout_sha256": "5521f307d43345b6d23b34995bfac1d1bd24e60608c9dc7137622c056c86dcb5",
+  "frozen_at_utc": "2026-07-14T07:18:30Z",
+  "new_attempt": {
+    "launcher_sha256": "a45f70c298ba02cc86f6d7de5df84e0ebe5f2de5afe9991463c4b88e9c5ea51a",
+    "max_parallel_gpu_workers": 8,
+    "scanner_sha256": "9857957ba078be68b2cb1abd1974fab383c696c40622e2a76ad4d4b0476baace",
+    "volume": "j-lens-rl-word-correlation-v1-20260714b"
+  },
+  "outcome_status_at_freeze": "attempt 1 failed before selection; partial discovery outputs were not inspected; corrected attempt not launched",
+  "original_preregistration_sha256": "5e2ae9d0896edbcc7386ccfcc125f8200fa86f77b2099529028a01e54788516a",
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-amendment1",
+  "unchanged_frozen_fields": {
+    "calibration_rule": true,
+    "candidate_inventory_and_order": true,
+    "config_sha256": "f09595e3f4277651755947ba3002b419077f3b2861b2025c10eddf13e130fd42",
+    "data_manifest_and_discovery_validation_split": true,
+    "generation_and_rollout_seeds": true,
+    "lens_and_model_revisions": true,
+    "primary_point_biserial_and_permutation_statistics": true,
+    "selection_and_sign_rule": true,
+    "validation_test_and_bootstrap": true
+  }
+}

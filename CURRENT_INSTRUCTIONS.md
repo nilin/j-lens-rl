@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 07:10 UTC
+Last reconciled with the user: 2026-07-14 07:20 UTC
 
 ## Objective
 
@@ -57,7 +57,8 @@ from confirmatory claims.
   inspect sealed outcomes before their registered gate permits it.
 - Current state: the eight-word screen is complete and mechanically selected
   positive `joy` as its sole early-curve passer; this remains adaptive evidence.
-  The frozen correlation scan is running. Seal both forensic closeouts, then
-  freeze an emotional-only recipe and exact curve nodes before running the
-  eight-seed confirmation, matched sign flips, and one-shot final evaluation
-  if its curve gate passes.
+  Its offline forensic closeout is sealed. Correlation attempt 1 failed before
+  selection in a descriptive-atlas edge case; relaunch only the frozen amended
+  scanner on its fresh Volume. In parallel, freeze the positive-`joy`, six-step
+  recipe and exact `0/2/4/6` curve nodes before running eight-seed confirmation,
+  matched sign flips, and one-shot final evaluation if its curve gate passes.

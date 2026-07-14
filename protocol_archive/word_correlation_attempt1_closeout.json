@@ -1,0 +1,40 @@
+{
+  "app_id": "ap-6OJz03no1TZXCh2CXCy37V",
+  "claim_id": "ad2c296ab38145da902d161d85a9ea56",
+  "closed_at_utc": "2026-07-14T07:18:04Z",
+  "created_at_utc": "2026-07-14T07:02:53Z",
+  "failure": {
+    "failed_shards": [1, 2],
+    "message": "discovery atlas produced no common score positions",
+    "root_cause": "A rollout with no sampled common readout position caused the optional descriptive individual-token atlas to raise instead of omitting that prompt. Frozen emotional-candidate scores already define the calibrated neutral value for this case, so the atlas failure was outside the primary selection statistic.",
+    "stage": "discovery_running",
+    "type": "ValueError"
+  },
+  "function_call_id": "fc-01KXFQ44P10B4J358MX3QS0ERC",
+  "gpu_type": "L40S",
+  "manifest": {
+    "config_sha256": "f09595e3f4277651755947ba3002b419077f3b2861b2025c10eddf13e130fd42",
+    "git_commit": "79e102bbba90133c7d32d813f0a7c50bd34c611f",
+    "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+    "preregistration_sha256": "5e2ae9d0896edbcc7386ccfcc125f8200fa86f77b2099529028a01e54788516a",
+    "scanner_sha256": "d35f05fc9e8b365ce777b55227fdc45f57ef45031ee739be728252e184b0e4a7"
+  },
+  "outcome_boundary": {
+    "completed_discovery_shard_manifests": [0, 3, 4, 5, 6, 7],
+    "partial_discovery_outputs_inspected": false,
+    "primary_discovery_complete": false,
+    "selected_word_or_sign_exists": false,
+    "selection_lock_exists": false,
+    "validation_opened": false
+  },
+  "protocol": "j-lens-rl-jspace-word-correlation-v1-attempt1-closeout",
+  "replay_policy": "The failed Volume is immutable and ineligible for reuse. The corrected attempt must start on a fresh Volume with the same frozen prompts, candidates, rollout seeds, calibrations, and primary statistic.",
+  "status": {
+    "attempt_manifest_sha256": "eff4143136da4513b993cb8596615372460929b9d831ac87658d77781b51abea",
+    "attempt_status_sha256": "4c6947ab71fdd1e1121e1160ce1b63eb3ea9bf89dd76164c97b61b703b1680c",
+    "failed_at_utc": "2026-07-14T07:14:03.427685Z",
+    "modal_stopped_at_utc": "2026-07-14T07:14:06Z",
+    "stage": "failed"
+  },
+  "volume": "j-lens-rl-word-correlation-v1-20260714a"
+}

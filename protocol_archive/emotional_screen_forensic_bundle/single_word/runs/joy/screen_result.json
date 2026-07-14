@@ -1,0 +1,62 @@
+{
+  "calibration_sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.3925,
+    "15": 0.4,
+    "2": 0.39,
+    "20": 0.395,
+    "25": 0.395,
+    "4": 0.39,
+    "6": 0.41
+  },
+  "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+  "final_adapter": {
+    "files": {
+      "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "adapter_model.safetensors": "cd4debe61f6d5f8b7baabb1973442865c806d11690be5a485664a50248ab0980",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "training_args.bin": "f4819ad0d5e8896b33ee6279ab86ebfd876d7053a70b4badb132497f889822df"
+    },
+    "sha256": "3b6847a0c5720df381edd023769b81e89390941b3cb244c60b88cdb5a8989e55"
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "log_history_sha256": "4fb3ec710a5967252336b3c5e8e710e1d87edb9c8742c9f9d86d659aa40808fa",
+  "requested_curve_pattern": true,
+  "resolved_config_sha256": "1f676febead8b43216f18ca0a6415ab36f3b67d9624c94d1524def000671f885",
+  "reward_weight": 1.0,
+  "run_manifest_sha256": "e30a6cf323f9875b69cd91debc10fe02b9817016f4141b3a40a22b7e99f55657",
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": 1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "joy"
+  ],
+  "validation_history_sha256": "c49d90a6449bbe4f132337fef478f7a228a18aec83bfb07c8b0faa2281016cec",
+  "word": "joy"
+}

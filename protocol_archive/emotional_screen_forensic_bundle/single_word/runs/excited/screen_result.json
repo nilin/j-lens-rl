@@ -1,0 +1,62 @@
+{
+  "calibration_sha256": "a09bcdbdf4c18c5680f2c73af35ec435b2659790f67f4fe2d415ba5d4720d2b0",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.4,
+    "15": 0.4025,
+    "2": 0.405,
+    "20": 0.3875,
+    "25": 0.395,
+    "4": 0.39,
+    "6": 0.38
+  },
+  "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+  "final_adapter": {
+    "files": {
+      "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "adapter_model.safetensors": "d57555208a4719aafeaa5350ac4ad061dc026f9b449b21ea4e45019605e9e450",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "training_args.bin": "9290db412273550a9596f8f7fd3155e7e21b203f1949e41fc5f72781907b3259"
+    },
+    "sha256": "a99de44f8e55981f76465a79ee660215195b75860c134a4c86ce4c19f6942980"
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "log_history_sha256": "633c340edd0f477167e941efda14193d45f6aeda292e8fb1e7eb4843b16f6c85",
+  "requested_curve_pattern": false,
+  "resolved_config_sha256": "c56bd98ed7a3620809ded0d550031d1b75fc2b770b5b63684863e53a16bffb26",
+  "reward_weight": 1.0,
+  "run_manifest_sha256": "8814c74f09cc7caecbcc63b6196db0ffb3bd5e238dda273bbf6ab3f81736c818",
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": 1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "excited"
+  ],
+  "validation_history_sha256": "ab930acc04bd78554e23488c142e2ad98c7d0d900b7785239cab9e03c9cbd351",
+  "word": "excited"
+}

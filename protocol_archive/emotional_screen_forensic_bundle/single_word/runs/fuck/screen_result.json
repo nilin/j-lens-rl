@@ -1,0 +1,62 @@
+{
+  "calibration_sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.3825,
+    "15": 0.4075,
+    "2": 0.3925,
+    "20": 0.4025,
+    "25": 0.3925,
+    "4": 0.4075,
+    "6": 0.3825
+  },
+  "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+  "final_adapter": {
+    "files": {
+      "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "adapter_model.safetensors": "daf24da24c61aeaf321374da7c546ddaf9d09e8aa4e52bfcd5bac71b6c940e0b",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "training_args.bin": "1f3677cb210ac09c4589db9bcbf50e359b23ae1d4e9db807d3b1c76279273db9"
+    },
+    "sha256": "1d5448e581aabe138588d36e3b58f285b2c738159d2335b1aaa7ed75446446bb"
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "log_history_sha256": "acf99cd9a6fe5d12c4ef52fc69cf15ff4c7db0f205f560007ff9ba07c4151ffc",
+  "requested_curve_pattern": false,
+  "resolved_config_sha256": "dae6f504f91b2b32b0ec38f0cc476ad6c97b7e0b3674047b999b71ad36c817bf",
+  "reward_weight": -1.0,
+  "run_manifest_sha256": "9f1bc4497bd1982d74800ca9f73f39ec33956328e2ff7bddd62e7d6d71f01989",
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": -1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "fuck"
+  ],
+  "validation_history_sha256": "9100c0aa586f13a46bad61ab32a8add4108bfbcaad700d28a09590a085c28fb9",
+  "word": "fuck"
+}

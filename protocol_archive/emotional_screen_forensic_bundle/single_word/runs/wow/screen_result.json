@@ -1,0 +1,62 @@
+{
+  "calibration_sha256": "7dd8f37e51eb74dff050e86a74d2bdd807bb5d066657e1124ec3e98a967cd2b6",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.375,
+    "15": 0.4075,
+    "2": 0.3975,
+    "20": 0.3975,
+    "25": 0.395,
+    "4": 0.3825,
+    "6": 0.3925
+  },
+  "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+  "final_adapter": {
+    "files": {
+      "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "adapter_model.safetensors": "8f486b76faa9bffa2996543990881af77791128d7e81960aed9253ba3324c21a",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "training_args.bin": "37044c905c5a7be0a5c1b6cf560d8a6c5982987fb534667a4bb3a36d60e20300"
+    },
+    "sha256": "600b58fe67b1e154d55dd86faf60f38ef0c286f26e45dc6c0d15a908bf50009a"
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "log_history_sha256": "8afb26d2bbbbda3f97b4e0055fc4fd2afe317ed620afa54d60360a8a6fc48570",
+  "requested_curve_pattern": false,
+  "resolved_config_sha256": "69cdc7bd7641be99bf881f2ae5e7370e848a152eaa28f2f68b10ce7f80810ae3",
+  "reward_weight": 1.0,
+  "run_manifest_sha256": "12627dca76ac344118e6f6b8ec4a7b4c882dc9f6df8a310ce21b917871656bf7",
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": 1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "wow"
+  ],
+  "validation_history_sha256": "c9e8751854fb945c581fb855aaca8f9c357d465be6b6f365934bd8649749cb29",
+  "word": "wow"
+}

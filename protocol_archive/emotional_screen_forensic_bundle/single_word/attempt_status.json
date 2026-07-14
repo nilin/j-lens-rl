@@ -1,0 +1,637 @@
+{
+  "calibrations": [
+    {
+      "calibration_sha256": "1fa6a65a94c7b682adca7029847d38257958e442034269a1cbe5524cffc66da2",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -17.336723002150602,
+      "std": 3.984989598783078,
+      "target_words": [
+        "yay"
+      ],
+      "token_ids": [
+        97559,
+        138496
+      ],
+      "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "word": "yay"
+    },
+    {
+      "calibration_sha256": "7dd8f37e51eb74dff050e86a74d2bdd807bb5d066657e1124ec3e98a967cd2b6",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -15.851612211494315,
+      "std": 4.21913673196489,
+      "target_words": [
+        "wow"
+      ],
+      "token_ids": [
+        35665,
+        35881,
+        45717,
+        57454,
+        61300
+      ],
+      "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "word": "wow"
+    },
+    {
+      "calibration_sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -14.785764407786086,
+      "std": 3.9604324741106915,
+      "target_words": [
+        "joy"
+      ],
+      "token_ids": [
+        4123,
+        15888,
+        27138,
+        79771
+      ],
+      "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "word": "joy"
+    },
+    {
+      "calibration_sha256": "0abecb2803d7f75920831c0bac6524b695b9c0385ec80d9dc4d253bd8d1f53bf",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -15.900111573819279,
+      "std": 4.2250895205584,
+      "target_words": [
+        "proud"
+      ],
+      "token_ids": [
+        12409,
+        83249
+      ],
+      "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "word": "proud"
+    },
+    {
+      "calibration_sha256": "a09bcdbdf4c18c5680f2c73af35ec435b2659790f67f4fe2d415ba5d4720d2b0",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -18.385946181582646,
+      "std": 3.8214734765515486,
+      "target_words": [
+        "excited"
+      ],
+      "token_ids": [
+        12035
+      ],
+      "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "word": "excited"
+    },
+    {
+      "calibration_sha256": "1e7b1b17cb2ffa13cb66155949714ac37d1dfbf38b219491d66d5fb277d100d2",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -16.06164461489559,
+      "std": 4.2389888007850365,
+      "target_words": [
+        "damn"
+      ],
+      "token_ids": [
+        26762,
+        82415,
+        88619,
+        95614
+      ],
+      "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "word": "damn"
+    },
+    {
+      "calibration_sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -16.681174814226413,
+      "std": 4.413453088930441,
+      "target_words": [
+        "fuck"
+      ],
+      "token_ids": [
+        7820,
+        25090,
+        70474,
+        75021,
+        76374
+      ],
+      "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "word": "fuck"
+    },
+    {
+      "calibration_sha256": "69cb69a85e455668a4948c62d2bc80271cde247d70d9479ad3e8e61a6105b65c",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -18.201232850483795,
+      "std": 4.199724220940388,
+      "target_words": [
+        "worried"
+      ],
+      "token_ids": [
+        17811
+      ],
+      "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "word": "worried"
+    }
+  ],
+  "claim_id": "b7bdcb13747b4de18336edefb084bb63",
+  "passing_arms": [
+    "joy"
+  ],
+  "results": [
+    {
+      "calibration_sha256": "1fa6a65a94c7b682adca7029847d38257958e442034269a1cbe5524cffc66da2",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.4025,
+        "15": 0.3875,
+        "2": 0.3975,
+        "20": 0.39,
+        "25": 0.405,
+        "4": 0.4,
+        "6": 0.3825
+      },
+      "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+      "final_adapter": {
+        "files": {
+          "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+          "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+          "adapter_model.safetensors": "ae32bb4f5837e8b05793b60d9cd8cf9b2d6cd6727ff2dd0156df7644e0edc929",
+          "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+          "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+          "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+          "training_args.bin": "f1460d0a4969ad90cbf688f7d1d849b6539b675aadf41f8fe66c8f9920f31fdd"
+        },
+        "sha256": "ba8a067665f4e5b75bbfabdf1887a94f3f51d981fed23c13b1d96202cd967e23"
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "log_history_sha256": "cfcbc04fe6a1eae4d9814fc2155c1b2a2f933a9f67e63400d729dce114ef5687",
+      "requested_curve_pattern": false,
+      "resolved_config_sha256": "68d773937c50d4c34f15b81b42a9f26d641c3b58c67eb3d105e0fc3c4c099efd",
+      "reward_weight": 1.0,
+      "run_manifest_sha256": "cd94bdcb3f49735726122d3128d8d82890bf82b683fc2eb16cbc6cad7ff6ca38",
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "yay"
+      ],
+      "validation_history_sha256": "efb1dab663f8c878cf10049b74e0d943fce250d9158ebb0778d90defd49808ce",
+      "word": "yay"
+    },
+    {
+      "calibration_sha256": "7dd8f37e51eb74dff050e86a74d2bdd807bb5d066657e1124ec3e98a967cd2b6",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.375,
+        "15": 0.4075,
+        "2": 0.3975,
+        "20": 0.3975,
+        "25": 0.395,
+        "4": 0.3825,
+        "6": 0.3925
+      },
+      "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+      "final_adapter": {
+        "files": {
+          "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+          "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+          "adapter_model.safetensors": "8f486b76faa9bffa2996543990881af77791128d7e81960aed9253ba3324c21a",
+          "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+          "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+          "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+          "training_args.bin": "37044c905c5a7be0a5c1b6cf560d8a6c5982987fb534667a4bb3a36d60e20300"
+        },
+        "sha256": "600b58fe67b1e154d55dd86faf60f38ef0c286f26e45dc6c0d15a908bf50009a"
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "log_history_sha256": "8afb26d2bbbbda3f97b4e0055fc4fd2afe317ed620afa54d60360a8a6fc48570",
+      "requested_curve_pattern": false,
+      "resolved_config_sha256": "69cdc7bd7641be99bf881f2ae5e7370e848a152eaa28f2f68b10ce7f80810ae3",
+      "reward_weight": 1.0,
+      "run_manifest_sha256": "12627dca76ac344118e6f6b8ec4a7b4c882dc9f6df8a310ce21b917871656bf7",
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "wow"
+      ],
+      "validation_history_sha256": "c9e8751854fb945c581fb855aaca8f9c357d465be6b6f365934bd8649749cb29",
+      "word": "wow"
+    },
+    {
+      "calibration_sha256": "71979e2c36b10d759fc92d5b16e780ef699a34f1b7ea890a8c5f00257c8e2021",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.3925,
+        "15": 0.4,
+        "2": 0.39,
+        "20": 0.395,
+        "25": 0.395,
+        "4": 0.39,
+        "6": 0.41
+      },
+      "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+      "final_adapter": {
+        "files": {
+          "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+          "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+          "adapter_model.safetensors": "cd4debe61f6d5f8b7baabb1973442865c806d11690be5a485664a50248ab0980",
+          "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+          "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+          "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+          "training_args.bin": "f4819ad0d5e8896b33ee6279ab86ebfd876d7053a70b4badb132497f889822df"
+        },
+        "sha256": "3b6847a0c5720df381edd023769b81e89390941b3cb244c60b88cdb5a8989e55"
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "log_history_sha256": "4fb3ec710a5967252336b3c5e8e710e1d87edb9c8742c9f9d86d659aa40808fa",
+      "requested_curve_pattern": true,
+      "resolved_config_sha256": "1f676febead8b43216f18ca0a6415ab36f3b67d9624c94d1524def000671f885",
+      "reward_weight": 1.0,
+      "run_manifest_sha256": "e30a6cf323f9875b69cd91debc10fe02b9817016f4141b3a40a22b7e99f55657",
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "joy"
+      ],
+      "validation_history_sha256": "c49d90a6449bbe4f132337fef478f7a228a18aec83bfb07c8b0faa2281016cec",
+      "word": "joy"
+    },
+    {
+      "calibration_sha256": "0abecb2803d7f75920831c0bac6524b695b9c0385ec80d9dc4d253bd8d1f53bf",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.3825,
+        "15": 0.4025,
+        "2": 0.3975,
+        "20": 0.405,
+        "25": 0.395,
+        "4": 0.375,
+        "6": 0.4025
+      },
+      "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+      "final_adapter": {
+        "files": {
+          "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+          "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+          "adapter_model.safetensors": "cd84854a2d28d8095cc9ca6564e85cd33c1dad6dc1199d57cf097abca6eda0c5",
+          "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+          "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+          "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+          "training_args.bin": "61e4a9a27c266e5f42d0ab7542a964e4cdb0e88dd21361741da217eab3c1d71a"
+        },
+        "sha256": "8ad37ebeb39f7f735df70bb119e5ffe05c49741090d2e3c6bf66778e656ccc2c"
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "log_history_sha256": "611579f495d7c7bb390d5f04dd188ea9ceb5ae003e119793cd6bead11a36af32",
+      "requested_curve_pattern": false,
+      "resolved_config_sha256": "6781e5633e19bc8a433dd0a8c91ca045f899c8b80654ce9bf6c52d94f7234ad0",
+      "reward_weight": 1.0,
+      "run_manifest_sha256": "24c613639b5797b2737cae58e324672a101dba2f998ae8583e0be49745d59597",
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "proud"
+      ],
+      "validation_history_sha256": "92bebe9254106348fb37ff77bf829f32489c119e712b6dafdb0542c02f8c0189",
+      "word": "proud"
+    },
+    {
+      "calibration_sha256": "a09bcdbdf4c18c5680f2c73af35ec435b2659790f67f4fe2d415ba5d4720d2b0",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.4,
+        "15": 0.4025,
+        "2": 0.405,
+        "20": 0.3875,
+        "25": 0.395,
+        "4": 0.39,
+        "6": 0.38
+      },
+      "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+      "final_adapter": {
+        "files": {
+          "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+          "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+          "adapter_model.safetensors": "d57555208a4719aafeaa5350ac4ad061dc026f9b449b21ea4e45019605e9e450",
+          "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+          "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+          "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+          "training_args.bin": "9290db412273550a9596f8f7fd3155e7e21b203f1949e41fc5f72781907b3259"
+        },
+        "sha256": "a99de44f8e55981f76465a79ee660215195b75860c134a4c86ce4c19f6942980"
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "log_history_sha256": "633c340edd0f477167e941efda14193d45f6aeda292e8fb1e7eb4843b16f6c85",
+      "requested_curve_pattern": false,
+      "resolved_config_sha256": "c56bd98ed7a3620809ded0d550031d1b75fc2b770b5b63684863e53a16bffb26",
+      "reward_weight": 1.0,
+      "run_manifest_sha256": "8814c74f09cc7caecbcc63b6196db0ffb3bd5e238dda273bbf6ab3f81736c818",
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "excited"
+      ],
+      "validation_history_sha256": "ab930acc04bd78554e23488c142e2ad98c7d0d900b7785239cab9e03c9cbd351",
+      "word": "excited"
+    },
+    {
+      "calibration_sha256": "1e7b1b17cb2ffa13cb66155949714ac37d1dfbf38b219491d66d5fb277d100d2",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.385,
+        "15": 0.4,
+        "2": 0.3975,
+        "20": 0.405,
+        "25": 0.39,
+        "4": 0.3775,
+        "6": 0.4175
+      },
+      "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+      "final_adapter": {
+        "files": {
+          "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+          "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+          "adapter_model.safetensors": "c76f0902b033f6e1cc2cef78b094bb49080fc69a92f89f75aa745436fefd9f51",
+          "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+          "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+          "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+          "training_args.bin": "f21c3be9e878fac5e5c6230e1ed144a76349f29feaa1a315f36566c2f866073f"
+        },
+        "sha256": "ee63469645ada4581cb6aa8864eef9a533fbcd11c5a3e6f75b66eb7e8086e6bc"
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "log_history_sha256": "873afd74b8f1ce4eb827365f871b1fca26cd3ac2700e30e364e8cc12005116bc",
+      "requested_curve_pattern": false,
+      "resolved_config_sha256": "ae0f0c8f98d24097965c128d5703b0ddcf3bfec134787560e260aced1d4ff5e1",
+      "reward_weight": -1.0,
+      "run_manifest_sha256": "e9a82fdeee9e09cd3024d3c77344461385ceb9059baedea5534111c8411d1569",
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": -1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "damn"
+      ],
+      "validation_history_sha256": "3be827051556e3ac47b55ae3b8c3df54e20a58d946161c23fe56640f05f0c57d",
+      "word": "damn"
+    },
+    {
+      "calibration_sha256": "f53ab990d2061f34ccf62f0bcafdc83304aab3747b3d189d279528125f67dc8d",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.3825,
+        "15": 0.4075,
+        "2": 0.3925,
+        "20": 0.4025,
+        "25": 0.3925,
+        "4": 0.4075,
+        "6": 0.3825
+      },
+      "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+      "final_adapter": {
+        "files": {
+          "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+          "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+          "adapter_model.safetensors": "daf24da24c61aeaf321374da7c546ddaf9d09e8aa4e52bfcd5bac71b6c940e0b",
+          "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+          "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+          "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+          "training_args.bin": "1f3677cb210ac09c4589db9bcbf50e359b23ae1d4e9db807d3b1c76279273db9"
+        },
+        "sha256": "1d5448e581aabe138588d36e3b58f285b2c738159d2335b1aaa7ed75446446bb"
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "log_history_sha256": "acf99cd9a6fe5d12c4ef52fc69cf15ff4c7db0f205f560007ff9ba07c4151ffc",
+      "requested_curve_pattern": false,
+      "resolved_config_sha256": "dae6f504f91b2b32b0ec38f0cc476ad6c97b7e0b3674047b999b71ad36c817bf",
+      "reward_weight": -1.0,
+      "run_manifest_sha256": "9f1bc4497bd1982d74800ca9f73f39ec33956328e2ff7bddd62e7d6d71f01989",
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": -1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "fuck"
+      ],
+      "validation_history_sha256": "9100c0aa586f13a46bad61ab32a8add4108bfbcaad700d28a09590a085c28fb9",
+      "word": "fuck"
+    },
+    {
+      "calibration_sha256": "69cb69a85e455668a4948c62d2bc80271cde247d70d9479ad3e8e61a6105b65c",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.405,
+        "15": 0.3825,
+        "2": 0.38,
+        "20": 0.395,
+        "25": 0.375,
+        "4": 0.38,
+        "6": 0.4
+      },
+      "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+      "final_adapter": {
+        "files": {
+          "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+          "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+          "adapter_model.safetensors": "af34aa60a2a6139278e4caf82377d79c44bdc2535b502d95b645557a02e3918e",
+          "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+          "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+          "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+          "training_args.bin": "4e9e1b90820449dec8765d76b289d2c18b65cf1c5cf80ba2b0113893584b7b37"
+        },
+        "sha256": "bfd67a407f50099af274c3bbeae32ee740fa1b4d3406c1937d8926739ecd2304"
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "log_history_sha256": "0c120cf96247d9607d75e4e4e3dcb60d49f81931145e4c0148fd1d19eee5bc12",
+      "requested_curve_pattern": false,
+      "resolved_config_sha256": "03de4863b345d0125553aa79645594a4ea84e1ee93da04be5f97dd9e30de0cee",
+      "reward_weight": -1.0,
+      "run_manifest_sha256": "7142ef8e9d9947ebc133ff0582e53457a902cf0e9e72b226659ff3ef3e2fb199",
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": -1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "worried"
+      ],
+      "validation_history_sha256": "f21ae432ae19df28946ef595b9a023b20c86c16ff20bc7af8f0310144260fbaf",
+      "word": "worried"
+    }
+  ],
+  "selected_first_passing_arm_order": "joy",
+  "stage": "complete",
+  "updated_at_utc": "2026-07-14T07:03:34.687195+00:00"
+}

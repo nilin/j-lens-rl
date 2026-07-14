@@ -1,0 +1,62 @@
+{
+  "calibration_sha256": "1fa6a65a94c7b682adca7029847d38257958e442034269a1cbe5524cffc66da2",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.4025,
+    "15": 0.3875,
+    "2": 0.3975,
+    "20": 0.39,
+    "25": 0.405,
+    "4": 0.4,
+    "6": 0.3825
+  },
+  "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+  "final_adapter": {
+    "files": {
+      "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "adapter_model.safetensors": "ae32bb4f5837e8b05793b60d9cd8cf9b2d6cd6727ff2dd0156df7644e0edc929",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "training_args.bin": "f1460d0a4969ad90cbf688f7d1d849b6539b675aadf41f8fe66c8f9920f31fdd"
+    },
+    "sha256": "ba8a067665f4e5b75bbfabdf1887a94f3f51d981fed23c13b1d96202cd967e23"
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "log_history_sha256": "cfcbc04fe6a1eae4d9814fc2155c1b2a2f933a9f67e63400d729dce114ef5687",
+  "requested_curve_pattern": false,
+  "resolved_config_sha256": "68d773937c50d4c34f15b81b42a9f26d641c3b58c67eb3d105e0fc3c4c099efd",
+  "reward_weight": 1.0,
+  "run_manifest_sha256": "cd94bdcb3f49735726122d3128d8d82890bf82b683fc2eb16cbc6cad7ff6ca38",
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": 1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "yay"
+  ],
+  "validation_history_sha256": "efb1dab663f8c878cf10049b74e0d943fce250d9158ebb0778d90defd49808ce",
+  "word": "yay"
+}

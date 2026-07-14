@@ -1,0 +1,17 @@
+{
+  "calibration_sha256": "1e7b1b17cb2ffa13cb66155949714ac37d1dfbf38b219491d66d5fb277d100d2",
+  "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+  "mean": -16.06164461489559,
+  "std": 4.2389888007850365,
+  "target_words": [
+    "damn"
+  ],
+  "token_ids": [
+    26762,
+    82415,
+    88619,
+    95614
+  ],
+  "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+  "word": "damn"
+}

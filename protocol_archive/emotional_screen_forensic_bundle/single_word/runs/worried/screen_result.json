@@ -1,0 +1,62 @@
+{
+  "calibration_sha256": "69cb69a85e455668a4948c62d2bc80271cde247d70d9479ad3e8e61a6105b65c",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.405,
+    "15": 0.3825,
+    "2": 0.38,
+    "20": 0.395,
+    "25": 0.375,
+    "4": 0.38,
+    "6": 0.4
+  },
+  "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+  "final_adapter": {
+    "files": {
+      "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "adapter_model.safetensors": "af34aa60a2a6139278e4caf82377d79c44bdc2535b502d95b645557a02e3918e",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "training_args.bin": "4e9e1b90820449dec8765d76b289d2c18b65cf1c5cf80ba2b0113893584b7b37"
+    },
+    "sha256": "bfd67a407f50099af274c3bbeae32ee740fa1b4d3406c1937d8926739ecd2304"
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "log_history_sha256": "0c120cf96247d9607d75e4e4e3dcb60d49f81931145e4c0148fd1d19eee5bc12",
+  "requested_curve_pattern": false,
+  "resolved_config_sha256": "03de4863b345d0125553aa79645594a4ea84e1ee93da04be5f97dd9e30de0cee",
+  "reward_weight": -1.0,
+  "run_manifest_sha256": "7142ef8e9d9947ebc133ff0582e53457a902cf0e9e72b226659ff3ef3e2fb199",
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": -1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "worried"
+  ],
+  "validation_history_sha256": "f21ae432ae19df28946ef595b9a023b20c86c16ff20bc7af8f0310144260fbaf",
+  "word": "worried"
+}

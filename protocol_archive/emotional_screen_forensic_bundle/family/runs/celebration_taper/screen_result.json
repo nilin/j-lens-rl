@@ -1,0 +1,54 @@
+{
+  "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.405,
+    "15": 0.4,
+    "2": 0.3825,
+    "20": 0.41,
+    "25": 0.42,
+    "4": 0.385,
+    "6": 0.3925
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "label": "celebration_taper",
+  "literal_target_completion_rate": {
+    "0": 0.0025,
+    "10": 0.0025,
+    "15": 0.0025,
+    "2": 0.0025,
+    "20": 0.0025,
+    "25": 0.0025,
+    "4": 0.0025,
+    "6": 0.0025
+  },
+  "requested_curve_pattern": false,
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 0.75,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": 1.0
+    },
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.75,
+      "weight": 0.25
+    }
+  ],
+  "score_stride": 10,
+  "target_words": [
+    "yay",
+    "great",
+    "success",
+    "nice"
+  ]
+}

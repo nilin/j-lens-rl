@@ -1,0 +1,23 @@
+{
+  "git_commit": "27d598c4a800fbcc130bee8c559f94e4bee65730",
+  "git_dirty": false,
+  "git_status": [],
+  "source_tree_sha256": "234b1ac2b9bc150e7d7ead82a68a11d4e76db96509af750d92c3ce36935bb40b",
+  "config_path": "/__modal/volumes/vo-PCQnYWVdIFrMowon1mrYYQ/resolved_configs/wow.json",
+  "config_sha256": "69cdc7bd7641be99bf881f2ae5e7370e848a152eaa28f2f68b10ce7f80810ae3",
+  "resolved_config_sha256": "69cdc7bd7641be99bf881f2ae5e7370e848a152eaa28f2f68b10ce7f80810ae3",
+  "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "dataset": "openai/gsm8k:main",
+  "dataset_revision": "740312add88f781978c0658806c59bc2815b9866",
+  "reward_type": "jlens",
+  "runtime": {
+    "cuda_device_name": "NVIDIA L40S",
+    "cuda_version": "12.8"
+  },
+  "lens_path": "/workspace/j-lens-rl/artifacts/qwen25_05b_solved_lens.pt",
+  "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+  "calibration_path": "/__modal/volumes/vo-PCQnYWVdIFrMowon1mrYYQ/artifacts/wow_calibration.json",
+  "calibration_sha256": "7dd8f37e51eb74dff050e86a74d2bdd807bb5d066657e1124ec3e98a967cd2b6",
+  "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87"
+}

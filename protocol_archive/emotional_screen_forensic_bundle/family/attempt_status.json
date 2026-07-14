@@ -1,0 +1,452 @@
+{
+  "calibrations": [
+    {
+      "calibration_sha256": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c",
+      "family": "profanity",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -15.264432885405418,
+      "std": 4.216857061747076,
+      "target_words": [
+        "damn",
+        "fuck"
+      ],
+      "token_ids": [
+        7820,
+        25090,
+        26762,
+        70474,
+        75021,
+        76374,
+        82415,
+        88619,
+        95614
+      ]
+    },
+    {
+      "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+      "family": "celebration",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+      "mean": -12.17310148701326,
+      "std": 3.6423049553625706,
+      "target_words": [
+        "yay",
+        "great",
+        "success",
+        "nice"
+      ],
+      "token_ids": [
+        2244,
+        2393,
+        5630,
+        6419,
+        7188,
+        8513,
+        13047,
+        21396,
+        28859,
+        33941,
+        39308,
+        44978,
+        46891,
+        52796,
+        60993,
+        97559,
+        138496
+      ]
+    }
+  ],
+  "claim_id": "106d1a18e8ea40f3972934504ff4bc9f",
+  "results": [
+    {
+      "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.42,
+        "15": 0.3875,
+        "2": 0.4175,
+        "20": 0.4,
+        "25": 0.3975,
+        "4": 0.3875,
+        "6": 0.385
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "label": "celebration_ultradense",
+      "literal_target_completion_rate": {
+        "0": 0.0025,
+        "10": 0.0025,
+        "15": 0.0025,
+        "2": 0.0025,
+        "20": 0.0025,
+        "25": 0.0025,
+        "4": 0.0025,
+        "6": 0.0025
+      },
+      "requested_curve_pattern": false,
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "yay",
+        "great",
+        "success",
+        "nice"
+      ]
+    },
+    {
+      "calibration_sha256": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.4,
+        "15": 0.395,
+        "2": 0.3825,
+        "20": 0.4075,
+        "25": 0.3825,
+        "4": 0.3975,
+        "6": 0.3825
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "label": "profanity_ultradense",
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "requested_curve_pattern": false,
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": -1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "damn",
+        "fuck"
+      ]
+    },
+    {
+      "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.405,
+        "15": 0.4,
+        "2": 0.3825,
+        "20": 0.41,
+        "25": 0.42,
+        "4": 0.385,
+        "6": 0.3925
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "label": "celebration_taper",
+      "literal_target_completion_rate": {
+        "0": 0.0025,
+        "10": 0.0025,
+        "15": 0.0025,
+        "2": 0.0025,
+        "20": 0.0025,
+        "25": 0.0025,
+        "4": 0.0025,
+        "6": 0.0025
+      },
+      "requested_curve_pattern": false,
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 0.75,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        },
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.75,
+          "weight": 0.25
+        }
+      ],
+      "score_stride": 10,
+      "target_words": [
+        "yay",
+        "great",
+        "success",
+        "nice"
+      ]
+    },
+    {
+      "calibration_sha256": "5293ba1aa2499ce04390c457f85eae02ac074a5b334f4a59beb61547a2dc956c",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.395,
+        "15": 0.3525,
+        "2": 0.3975,
+        "20": 0.3875,
+        "25": 0.3975,
+        "4": 0.385,
+        "6": 0.3825
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "label": "profanity_taper",
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "requested_curve_pattern": false,
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 0.75,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": -1.0
+        },
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.75,
+          "weight": -0.25
+        }
+      ],
+      "score_stride": 10,
+      "target_words": [
+        "damn",
+        "fuck"
+      ]
+    },
+    {
+      "calibration_sha256": "3607ad225cd60bed58a4dc53f78346f9e6c3f4968e8e6f6679a3565923309418",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.3825,
+        "15": 0.3975,
+        "2": 0.3925,
+        "20": 0.385,
+        "25": 0.4025,
+        "4": 0.39,
+        "6": 0.405
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "label": "solved_u5_control",
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "requested_curve_pattern": false,
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "solved"
+      ]
+    },
+    {
+      "calibration_sha256": "3607ad225cd60bed58a4dc53f78346f9e6c3f4968e8e6f6679a3565923309418",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.39,
+        "15": 0.39,
+        "2": 0.415,
+        "20": 0.38,
+        "25": 0.3875,
+        "4": 0.3875,
+        "6": 0.385
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "label": "solved_u5_low_lr",
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "requested_curve_pattern": false,
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "solved"
+      ]
+    },
+    {
+      "calibration_sha256": "3607ad225cd60bed58a4dc53f78346f9e6c3f4968e8e6f6679a3565923309418",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.4075,
+        "15": 0.3775,
+        "2": 0.385,
+        "20": 0.385,
+        "25": 0.3925,
+        "4": 0.39,
+        "6": 0.395
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "label": "solved_u5_taper",
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "requested_curve_pattern": true,
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 0.75,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        },
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.75,
+          "weight": 0.25
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "solved"
+      ]
+    },
+    {
+      "calibration_sha256": "3607ad225cd60bed58a4dc53f78346f9e6c3f4968e8e6f6679a3565923309418",
+      "curve": {
+        "0": 0.3825,
+        "10": 0.3875,
+        "15": 0.4,
+        "2": 0.38,
+        "20": 0.385,
+        "25": 0.3675,
+        "4": 0.395,
+        "6": 0.3975
+      },
+      "gate_steps": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "label": "solved_u5_taper_low_lr",
+      "literal_target_completion_rate": {
+        "0": 0.0,
+        "10": 0.0,
+        "15": 0.0,
+        "2": 0.0,
+        "20": 0.0,
+        "25": 0.0,
+        "4": 0.0,
+        "6": 0.0
+      },
+      "requested_curve_pattern": false,
+      "score_components": [
+        {
+          "aggregation": "mean",
+          "end_fraction": 0.75,
+          "layer": 8,
+          "start_fraction": 0.5,
+          "weight": 1.0
+        },
+        {
+          "aggregation": "mean",
+          "end_fraction": 1.0,
+          "layer": 8,
+          "start_fraction": 0.75,
+          "weight": 0.25
+        }
+      ],
+      "score_stride": 5,
+      "target_words": [
+        "solved"
+      ]
+    }
+  ],
+  "selected_first_passing_priority": "solved_u5_taper",
+  "stage": "complete",
+  "updated_at_utc": "2026-07-14T06:27:42.397863+00:00"
+}

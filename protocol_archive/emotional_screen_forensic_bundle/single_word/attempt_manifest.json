@@ -1,0 +1,134 @@
+{
+  "arm_order": [
+    "yay",
+    "wow",
+    "joy",
+    "proud",
+    "excited",
+    "damn",
+    "fuck",
+    "worried"
+  ],
+  "calibration_max_parallel_gpu_workers": 8,
+  "claim_id": "b7bdcb13747b4de18336edefb084bb63",
+  "config_sha256": {
+    "configs/single_word_screen_common.json": "6fa88bdef0607a84c71a64df446a7f56302c38a04d0c811743769053fec6efc2",
+    "configs/single_word_screen_damn.json": "54de017e350ae16522146dca21ee3f9a2a42a715a1bcfa6befc046efa4735a37",
+    "configs/single_word_screen_excited.json": "53b85bc6bd096f3f4dc8b4e97d1a6e05378b0c176bb7da0d854265d7e1c0d32f",
+    "configs/single_word_screen_fuck.json": "81f6e988c3e449600fc61619b106e1f28e24906aecbef0ef9c9723f7e30ded88",
+    "configs/single_word_screen_joy.json": "73a8f64c32687fbdd3125e2c7e3c1fe8e7be61b8f66b55df8bd7302f41cd23ae",
+    "configs/single_word_screen_proud.json": "955a5157c3384d6747ff74e780a76b0b4e740a20699db505713d3932e9e436c6",
+    "configs/single_word_screen_worried.json": "f4d7650c29d4e933bcc250b40350a051a512161e465ba024f22cfd873e70baa2",
+    "configs/single_word_screen_wow.json": "4316b4c2b1f65cde9c52cbca10136d07358ffbcbc611abaf2cd54b6279d4730d",
+    "configs/single_word_screen_yay.json": "c6bbc69b7f2b4fbcb4ed4225e1fa4c838eeb7a403f415eda8a9b03f9e65f6fdf"
+  },
+  "created_at_utc": "2026-07-14T06:31:24.314450+00:00",
+  "data_boundary": "exposed failed-V4 400-item development curve only",
+  "dataset_revision": "740312add88f781978c0658806c59bc2815b9866",
+  "expected_steps": [
+    0,
+    2,
+    4,
+    6,
+    10,
+    15,
+    20,
+    25
+  ],
+  "expected_token_ids": {
+    "damn": [
+      26762,
+      82415,
+      88619,
+      95614
+    ],
+    "excited": [
+      12035
+    ],
+    "fuck": [
+      7820,
+      25090,
+      70474,
+      75021,
+      76374
+    ],
+    "joy": [
+      4123,
+      15888,
+      27138,
+      79771
+    ],
+    "proud": [
+      12409,
+      83249
+    ],
+    "worried": [
+      17811
+    ],
+    "wow": [
+      35665,
+      35881,
+      45717,
+      57454,
+      61300
+    ],
+    "yay": [
+      97559,
+      138496
+    ]
+  },
+  "exposed_manifest_sha256": {
+    "curve_indices.json": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions.json": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+  },
+  "gate_criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "git_commit": "27d598c4a800fbcc130bee8c559f94e4bee65730",
+  "git_status": "",
+  "git_tree": "04e84ae5d11306942a8bcfacc88f2ef6b42b9864",
+  "gpu_type": "L40S",
+  "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+  "max_parallel_gpu_workers": 8,
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "protocol": "j-lens-rl-emotional-single-word-screen-v1",
+  "reward_weights": {
+    "damn": -1.0,
+    "excited": 1.0,
+    "fuck": -1.0,
+    "joy": 1.0,
+    "proud": 1.0,
+    "worried": -1.0,
+    "wow": 1.0,
+    "yay": 1.0
+  },
+  "seed": 167,
+  "source_sha256": {
+    "modal_single_word_screen.py": "a52f7455f5e7a2cc839b72bdb4b8c7bcad1210246ce3ea848f3f7c3125e457f9",
+    "run_single_word_screen.sh": "05414d1a061fb549e89eaa17bdf16ce88dd1e7a67d1eb5f7386678ca2cf2f0fc",
+    "src/jlens_rl/fit_lens.py": "d5088ce2759c4f98972ee8a0ae7c3eed2feb32a60249d6874f37e8baee860651",
+    "src/jlens_rl/reward.py": "e3ac96cbdfc8b0611e0917720d8e5aef379dc3049bbb7cc006229a078ac8cd45",
+    "src/jlens_rl/train.py": "056cdbbb37504baa8458a290d9e4a7bdb03765b655f135230f21434025406a33"
+  },
+  "unmounted_manifests": [
+    "sealed_final_indices.json",
+    "future_reserve_indices.json",
+    "retired_v3_curve_indices.json"
+  ],
+  "v4_closeout_sha256": "aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35",
+  "variants": {
+    "damn": "configs/single_word_screen_damn.json",
+    "excited": "configs/single_word_screen_excited.json",
+    "fuck": "configs/single_word_screen_fuck.json",
+    "joy": "configs/single_word_screen_joy.json",
+    "proud": "configs/single_word_screen_proud.json",
+    "worried": "configs/single_word_screen_worried.json",
+    "wow": "configs/single_word_screen_wow.json",
+    "yay": "configs/single_word_screen_yay.json"
+  },
+  "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3"
+}

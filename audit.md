@@ -1086,5 +1086,69 @@ on app `ap-YkWhLmkYmv3jlX3MnfDrmX`, call
 `fc-01KXFN5JWFWS216WBCVXSK2D0K`, and fresh Volume
 `j-lens-rl-emotional-single-word-screen-v1-20260714a`. Its eight targets are
 `yay`, `wow`, `joy`, `proud`, `excited`, negative `damn`, negative `fuck`, and
-negative `worried`; it was in the pre-outcome calibration phase when this
-entry was written.
+negative `worried`. The app stopped normally at 07:03:38 UTC after every arm
+reached all eight fixed nodes. Curves below are ordered
+`0/2/4/6/10/15/20/25`:
+
+| Target and sign | Curve | W&B run |
+|---|---|---|
+| positive `yay` | `.3825/.3975/.4000/.3825/.4025/.3875/.3900/.4050` | `bhrqs7p0` |
+| positive `wow` | `.3825/.3975/.3825/.3925/.3750/.4075/.3975/.3950` | `hrbuu8vs` |
+| positive `joy` | `.3825/.3900/.3900/.4100/.3925/.4000/.3950/.3950` | `5m3mwx9h` |
+| positive `proud` | `.3825/.3975/.3750/.4025/.3825/.4025/.4050/.3950` | `kq58g4fd` |
+| positive `excited` | `.3825/.4050/.3900/.3800/.4000/.4025/.3875/.3950` | `twl58xg4` |
+| negative `damn` | `.3825/.3975/.3775/.4175/.3850/.4000/.4050/.3900` | `ewc9d07r` |
+| negative `fuck` | `.3825/.3925/.4075/.3825/.3825/.4075/.4025/.3925` | `9yxxt2rg` |
+| negative `worried` | `.3825/.3800/.3800/.4000/.4050/.3825/.3950/.3750` | `hxx9kyva` |
+
+`joy` was the only arm satisfying the screen's already-fixed early rule:
+`.3825 -> .3900 -> .3900 -> .4100`, so the frozen priority mechanically
+selects positive `joy`. No greedy validation completion at any joy node
+literally contained `joy`. This remains adaptive single-seed evidence, not a
+significance result. The screen saved only checkpoint 25: step 6 was evaluated
+but its adapter bytes were not retained. A six-update confirmation is therefore
+a dynamics-matched prospective recipe (constant scheduler, zero warmup), not a
+bitwise replay of a stored step-6 adapter.
+
+### Offline reconstruction independent of W&B
+
+[`protocol_archive/emotional_screen_forensic_bundle/README.md`](protocol_archive/emotional_screen_forensic_bundle/README.md)
+and its 154 checksum-pinned raw files preserve both completed eight-arm screens.
+The bundle contains every resolved config, calibration and data manifest, raw
+trainer history, validation history, screen result, checkpoint trainer state,
+W&B identity/URL, and the exact meanings of reward, J-score, optimization, KL,
+entropy, rollout, and evaluation metrics. Thus every experimental scalar curve
+can be reconstructed if W&B disappears, while the same frozen inputs permit a
+rerun. The bundle deliberately excludes W&B-owned wall-clock/system telemetry
+and full adapter weights; those exclusions and the nondeterministic attention
+warning are explicit in the README. `CHECKSUMS.sha256` has SHA-256
+`8b2765bab2ae55d0c517d165961b39815b814c787880b0b818894a2720273d17`,
+and all 154 entries verify.
+
+### Correlation attempt 1 failure and frozen amendment
+
+The separate correlation scan launched on app
+`ap-6OJz03no1TZXCh2CXCy37V`, call
+`fc-01KXFQ44P10B4J358MX3QS0ERC`, claim
+`ad2c296ab38145da902d161d85a9ea56`, and fresh Volume
+`j-lens-rl-word-correlation-v1-20260714a`. Calibration completed, but discovery
+stopped at 07:14:03 UTC: shards 1 and 2 encountered a rollout with no common
+sampled readout position, and the optional descriptive atlas incorrectly
+raised `ValueError` instead of omitting that prompt. Six other shard manifests
+exist, but their partial outcomes were not inspected; discovery never
+completed, no word/sign was selected or locked, and validation never opened.
+
+The immutable failure record is
+[`protocol_archive/word_correlation_attempt1_closeout.json`](protocol_archive/word_correlation_attempt1_closeout.json)
+(SHA-256
+`5521f307d43345b6d23b34995bfac1d1bd24e60608c9dc7137622c056c86dcb5`).
+The pre-relaunch amendment is
+[`protocol_archive/word_correlation_v1_amendment1.json`](protocol_archive/word_correlation_v1_amendment1.json)
+(SHA-256
+`3a84d9acaa0bda46edd038738ffa2f39ebf8a168ffae25a1e2789cf751a615c9`).
+It leaves every prompt, rollout seed, candidate, calibration, primary score,
+selection rule, statistic, and validation test unchanged. It changes only the
+descriptive atlas: a prompt with a positionless rollout is conservatively
+omitted from that atlas and counted. The corrected attempt must use fresh
+Volume `j-lens-rl-word-correlation-v1-20260714b`; failed partial outputs are
+ineligible for reuse.

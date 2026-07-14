@@ -1,0 +1,62 @@
+{
+  "calibration_sha256": "0abecb2803d7f75920831c0bac6524b695b9c0385ec80d9dc4d253bd8d1f53bf",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.3825,
+    "15": 0.4025,
+    "2": 0.3975,
+    "20": 0.405,
+    "25": 0.395,
+    "4": 0.375,
+    "6": 0.4025
+  },
+  "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+  "final_adapter": {
+    "files": {
+      "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "adapter_model.safetensors": "cd84854a2d28d8095cc9ca6564e85cd33c1dad6dc1199d57cf097abca6eda0c5",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "training_args.bin": "61e4a9a27c266e5f42d0ab7542a964e4cdb0e88dd21361741da217eab3c1d71a"
+    },
+    "sha256": "8ad37ebeb39f7f735df70bb119e5ffe05c49741090d2e3c6bf66778e656ccc2c"
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "log_history_sha256": "611579f495d7c7bb390d5f04dd188ea9ceb5ae003e119793cd6bead11a36af32",
+  "requested_curve_pattern": false,
+  "resolved_config_sha256": "6781e5633e19bc8a433dd0a8c91ca045f899c8b80654ce9bf6c52d94f7234ad0",
+  "reward_weight": 1.0,
+  "run_manifest_sha256": "24c613639b5797b2737cae58e324672a101dba2f998ae8583e0be49745d59597",
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": 1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "proud"
+  ],
+  "validation_history_sha256": "92bebe9254106348fb37ff77bf829f32489c119e712b6dafdb0542c02f8c0189",
+  "word": "proud"
+}

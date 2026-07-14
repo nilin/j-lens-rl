@@ -148,8 +148,22 @@ def test_preregistration_pins_the_exact_unlaunched_emotional_scanner():
     )
     assert "solved" not in prereg["emotional_candidates"]
     assert prereg["config_sha256"] == _sha256(CONFIG_PATH)
-    assert prereg["scanner_sha256"] == _sha256(SCANNER_PATH)
-    assert prereg["launcher_sha256"] == _sha256(MODAL_PATH)
+    assert prereg["scanner_sha256"] == (
+        "d35f05fc9e8b365ce777b55227fdc45f57ef45031ee739be728252e184b0e4a7"
+    )
+    assert prereg["launcher_sha256"] == (
+        "4a21f2b9e594bd8a10258f2dddb22581c48eaffb93250645e94b92f13f2b2dc7"
+    )
+    amendment = json.loads(
+        (ROOT / "protocol_archive" / "word_correlation_v1_amendment1.json").read_text()
+    )
+    closeout = ROOT / "protocol_archive" / "word_correlation_attempt1_closeout.json"
+    assert amendment["attempt1_closeout_sha256"] == _sha256(closeout)
+    assert amendment["original_preregistration_sha256"] == _sha256(PREREG_PATH)
+    assert amendment["new_attempt"]["launcher_sha256"] == _sha256(MODAL_PATH)
+    assert amendment["new_attempt"]["scanner_sha256"] == _sha256(SCANNER_PATH)
+    assert amendment["new_attempt"]["volume"] == _assignment("VOLUME_NAME")
+    assert amendment["amendment"]["primary_selection_or_inference_changed"] is False
     assert prereg["launcher_script_sha256"] == _sha256(
         ROOT / "run_word_correlation.sh"
     )
@@ -240,7 +254,7 @@ def test_modal_caps_each_correlation_phase_at_eight_l40s_workers():
 
 
 def test_volume_is_fresh_and_selection_is_locked_between_phases():
-    assert _assignment("VOLUME_NAME") == "j-lens-rl-word-correlation-v1-20260714a"
+    assert _assignment("VOLUME_NAME") == "j-lens-rl-word-correlation-v1-20260714b"
     assert _assignment("PREREGISTRATION_RELATIVE") == (
         "protocol_archive/word_correlation_v1_preregistration.json"
     )

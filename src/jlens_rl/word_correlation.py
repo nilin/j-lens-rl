@@ -432,6 +432,43 @@ def position_rows(
         ) from None
 
 
+def atlas_prompt_sufficient(
+    rollout_token_scores: Sequence[np.ndarray | None],
+    correctness: Sequence[bool | int | float],
+) -> tuple[np.ndarray, np.ndarray, float] | None:
+    """Return descriptive atlas sufficients, or skip an unusable prompt.
+
+    The atlas is explicitly descriptive and cannot select the emotional word.
+    A rollout can have no sampled readout position (for example, an immediate
+    special-token termination).  Candidate scoring already gives such a
+    rollout its calibrated neutral score, so the descriptive atlas must not
+    abort the primary frozen-candidate analysis.  We conservatively omit the
+    whole prompt from the atlas rather than impute a vocabulary-wide vector.
+    """
+
+    if not rollout_token_scores or len(rollout_token_scores) != len(correctness):
+        raise ValueError("atlas scores and correctness must have equal non-zero length")
+    labels = np.asarray(correctness, dtype=np.float64)
+    if labels.ndim != 1 or not np.isfinite(labels).all() or not np.isin(labels, [0, 1]).all():
+        raise ValueError("atlas correctness labels must be finite binary values")
+    if any(values is None for values in rollout_token_scores):
+        return None
+    values = np.stack(
+        [np.asarray(item, dtype=np.float64) for item in rollout_token_scores], axis=0
+    )
+    if values.ndim != 2 or not np.isfinite(values).all():
+        raise ValueError("atlas rollout scores must be finite equal-length vectors")
+    if labels.min() == labels.max():
+        return None
+    centered_values = values - values.mean(axis=0)
+    centered_labels = labels - labels.mean()
+    return (
+        (centered_values * centered_labels[:, np.newaxis]).sum(axis=0),
+        np.square(centered_values).sum(axis=0),
+        float(np.square(centered_labels).sum()),
+    )
+
+
 def _select_position_rows(
     values: torch.Tensor, position_rows: Sequence[int] | None
 ) -> torch.Tensor:
@@ -1492,6 +1529,8 @@ def run_shard(
     atlas_score_ss: np.ndarray | None = None
     atlas_label_ss = 0.0
     atlas_mixed_prompts = 0
+    atlas_skipped_mixed_prompts = 0
+    atlas_rollouts_without_positions = 0
     if phase == "discovery":
         atlas_numerator = np.zeros(head.weight.shape[0], dtype=np.float64)
         atlas_score_ss = np.zeros(head.weight.shape[0], dtype=np.float64)
@@ -1570,7 +1609,7 @@ def run_shard(
             use_cache=False,
         ).hidden_states
         candidate_scores = np.empty((rollout_count, len(candidates)), dtype=np.float64)
-        atlas_scores: list[np.ndarray] = []
+        atlas_scores: list[np.ndarray | None] = []
         for rollout_index in range(rollout_count):
             sequence_end = int(attention_mask[rollout_index].sum().item())
             live_ids = padded_ids[rollout_index, :sequence_end]
@@ -1641,31 +1680,33 @@ def run_shard(
                 )
             if phase == "discovery":
                 if vocabulary_readout is None or not common_positions:
-                    raise ValueError("discovery atlas produced no common score positions")
-                common_rows = position_rows(materialized, common_positions)
-                atlas_scores.append(
-                    vocabulary_readout.aggregate_token_log_probs(
-                        common_rows,
-                        aggregation=str(readout_config["aggregation"]),
+                    atlas_scores.append(None)
+                    atlas_rollouts_without_positions += 1
+                else:
+                    common_rows = position_rows(materialized, common_positions)
+                    atlas_scores.append(
+                        vocabulary_readout.aggregate_token_log_probs(
+                            common_rows,
+                            aggregation=str(readout_config["aggregation"]),
+                        )
+                        .detach()
+                        .cpu()
+                        .numpy()
                     )
-                    .detach()
-                    .cpu()
-                    .numpy()
-                )
 
         labels = np.asarray(correctness, dtype=np.float64)
         mixed = bool(labels.min() != labels.max())
-        if phase == "discovery" and mixed:
-            values = np.stack(atlas_scores).astype(np.float64)
-            centered_values = values - values.mean(axis=0)
-            centered_labels = labels - labels.mean()
-            assert atlas_numerator is not None and atlas_score_ss is not None
-            atlas_numerator += (
-                centered_values * centered_labels[:, np.newaxis]
-            ).sum(axis=0)
-            atlas_score_ss += np.square(centered_values).sum(axis=0)
-            atlas_label_ss += float(np.square(centered_labels).sum())
-            atlas_mixed_prompts += 1
+        if phase == "discovery":
+            sufficient = atlas_prompt_sufficient(atlas_scores, labels)
+            if sufficient is not None:
+                numerator, score_ss, label_ss = sufficient
+                assert atlas_numerator is not None and atlas_score_ss is not None
+                atlas_numerator += numerator
+                atlas_score_ss += score_ss
+                atlas_label_ss += label_ss
+                atlas_mixed_prompts += 1
+            elif mixed and any(values is None for values in atlas_scores):
+                atlas_skipped_mixed_prompts += 1
 
         literal_counts = {
             candidate.canonical_word: sum(
@@ -1710,6 +1751,12 @@ def run_shard(
             {
                 "label_ss": atlas_label_ss,
                 "mixed_prompts": atlas_mixed_prompts,
+                "skipped_mixed_prompts_no_common_positions": (
+                    atlas_skipped_mixed_prompts
+                ),
+                "rollouts_without_common_positions": (
+                    atlas_rollouts_without_positions
+                ),
                 "vocabulary_size": int(len(atlas_numerator)),
             },
         )
@@ -2104,6 +2151,8 @@ def build_atlas(config_path, shard_dirs, calibration_path, output_dir):
     score_ss: np.ndarray | None = None
     label_ss = 0.0
     mixed_prompts = 0
+    skipped_mixed_prompts = 0
+    rollouts_without_positions = 0
     for raw_directory in shard_dirs:
         directory = Path(raw_directory)
         shard_numerator = np.load(
@@ -2132,6 +2181,12 @@ def build_atlas(config_path, shard_dirs, calibration_path, output_dir):
         score_ss += shard_score_ss
         label_ss += float(metadata["label_ss"])
         mixed_prompts += int(metadata["mixed_prompts"])
+        skipped_mixed_prompts += int(
+            metadata.get("skipped_mixed_prompts_no_common_positions", 0)
+        )
+        rollouts_without_positions += int(
+            metadata.get("rollouts_without_common_positions", 0)
+        )
     if numerator is None or score_ss is None or label_ss <= 0.0:
         raise ValueError("atlas has no mixed-prompt sufficient statistics")
     correlations = _safe_correlations(numerator, score_ss, label_ss)
@@ -2198,6 +2253,8 @@ def build_atlas(config_path, shard_dirs, calibration_path, output_dir):
         "phase": "discovery",
         "source_indices": [int(index) for index in expected_indices],
         "mixed_prompt_count": mixed_prompts,
+        "skipped_mixed_prompt_count_no_common_positions": skipped_mixed_prompts,
+        "rollout_count_without_common_positions": rollouts_without_positions,
         "role": atlas_config["role"],
         "unit": atlas_config["unit"],
         "lexical_regex": atlas_config["lexical_regex"],

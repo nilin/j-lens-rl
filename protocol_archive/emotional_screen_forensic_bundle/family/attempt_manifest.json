@@ -1,0 +1,87 @@
+{
+  "claim_id": "106d1a18e8ea40f3972934504ff4bc9f",
+  "config_sha256": {
+    "configs/word_explore_celebration_taper.json": "e42bd0e3221fe03553ddec27bed3a91bf582e1e8ed775618536c7205ec2dfa34",
+    "configs/word_explore_celebration_ultradense.json": "2d1dc228da1eba0399cbe681fee0260919be29b7e85cc02a0b98d39f037e42fe",
+    "configs/word_explore_common.json": "6fa88bdef0607a84c71a64df446a7f56302c38a04d0c811743769053fec6efc2",
+    "configs/word_explore_profanity_taper.json": "5482bd4cf38b1b3b4c2b0ef46146c6fa23cd3691cb4565802f2fff7a0e204375",
+    "configs/word_explore_profanity_ultradense.json": "7cba2e1437148c99d2d9d5b436767611fc0eaf5274270723cae87edf4c2b6cda",
+    "configs/word_explore_solved_u5_control.json": "a66e7ac3059dbce23b3d9eb955aa40842204567b0b6ed6073a4229422c773353",
+    "configs/word_explore_solved_u5_low_lr.json": "7f7a522668c7d7256c3edd1303026b27bcc63ed0b1a5b34e1571dff70ff3a225",
+    "configs/word_explore_solved_u5_taper.json": "cc5ce54c2a9dce174cda8cd2dde68714e0493bf08d39b518d43a0b3caa037ac9",
+    "configs/word_explore_solved_u5_taper_low_lr.json": "725fe3cd061d6cdc0a2285e525fa471b558be7f155fa3f2e06e4096cb8a38997"
+  },
+  "created_at_utc": "2026-07-14T05:56:44.542707+00:00",
+  "data_boundary": "exposed failed-V4 400-item development curve only",
+  "expected_steps": [
+    0,
+    2,
+    4,
+    6,
+    10,
+    15,
+    20,
+    25
+  ],
+  "exposed_manifest_sha256": {
+    "curve_indices.json": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions.json": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+  },
+  "failed_screen_attempt_closeout_sha256": "399559f0607bded85048633179b39a33da25d2de9fcdb4e448725770a30b90c7",
+  "families": {
+    "celebration": [
+      "yay",
+      "great",
+      "success",
+      "nice"
+    ],
+    "profanity": [
+      "damn",
+      "fuck"
+    ]
+  },
+  "gate_criterion": "step2 > step0 and step4 >= step2 and step6 >= step4",
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "git_commit": "3ad255753e8ec1f7a0dfe0d27ad69a53e048122c",
+  "git_status": "",
+  "gpu_type": "L40S",
+  "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc",
+  "max_parallel_gpus": 8,
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "priority": [
+    "celebration_ultradense",
+    "profanity_ultradense",
+    "celebration_taper",
+    "profanity_taper",
+    "solved_u5_control",
+    "solved_u5_low_lr",
+    "solved_u5_taper",
+    "solved_u5_taper_low_lr"
+  ],
+  "protocol": "j-lens-rl-alternative-screen-v1",
+  "seed": 167,
+  "solved_calibration_sha256": "3607ad225cd60bed58a4dc53f78346f9e6c3f4968e8e6f6679a3565923309418",
+  "unmounted_current_confirmatory_manifests": [
+    "sealed_final_indices.json",
+    "future_reserve_indices.json",
+    "retired_v3_curve_indices.json"
+  ],
+  "v4_closeout_sha256": "aaf4bcde9a9cacc482c7f3dde94218cf02a6aa60be81e43cae5cde3086d17e35",
+  "v5_preregistration_sha256": "08dac96773ada5845815304bc256eebf6e7fb54b7a2b2cc95396851f690f0f99",
+  "variants": {
+    "celebration_taper": "configs/word_explore_celebration_taper.json",
+    "celebration_ultradense": "configs/word_explore_celebration_ultradense.json",
+    "profanity_taper": "configs/word_explore_profanity_taper.json",
+    "profanity_ultradense": "configs/word_explore_profanity_ultradense.json",
+    "solved_u5_control": "configs/word_explore_solved_u5_control.json",
+    "solved_u5_low_lr": "configs/word_explore_solved_u5_low_lr.json",
+    "solved_u5_taper": "configs/word_explore_solved_u5_taper.json",
+    "solved_u5_taper_low_lr": "configs/word_explore_solved_u5_taper_low_lr.json"
+  },
+  "wikitext_revision": "b08601e04326c79dfdd32d625aee71d232d685c3"
+}

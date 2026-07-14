@@ -42,7 +42,7 @@ CANONICAL_REPO = Path("/j-lens-rl")
 LOCAL_ARTIFACTS = CANONICAL_REPO / "artifacts"
 LOCAL_MANIFESTS = CANONICAL_REPO / ".confirmatory/manifests"
 
-VOLUME_NAME = "j-lens-rl-word-correlation-v1-20260714a"
+VOLUME_NAME = "j-lens-rl-word-correlation-v1-20260714b"
 GPU_TYPE = "L40S"
 NUM_SHARDS = 8
 MAX_GPU_CONTAINERS = 8

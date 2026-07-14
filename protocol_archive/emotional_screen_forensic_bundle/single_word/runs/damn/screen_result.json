@@ -1,0 +1,62 @@
+{
+  "calibration_sha256": "1e7b1b17cb2ffa13cb66155949714ac37d1dfbf38b219491d66d5fb277d100d2",
+  "curve": {
+    "0": 0.3825,
+    "10": 0.385,
+    "15": 0.4,
+    "2": 0.3975,
+    "20": 0.405,
+    "25": 0.39,
+    "4": 0.3775,
+    "6": 0.4175
+  },
+  "data_indices_sha256": "52df7f67cef08f96e239440c1883cea96746751cacb8b916afcfa66f142c9c87",
+  "final_adapter": {
+    "files": {
+      "README.md": "be7e3be6115af28c5595e5c302f3b93ac905d7a830334b7a2597b701b840df18",
+      "adapter_config.json": "2cc7cd40135a2c1433184fadb2bcbdf7bd83a666484aba1c0866aa0a9c4e1350",
+      "adapter_model.safetensors": "c76f0902b033f6e1cc2cef78b094bb49080fc69a92f89f75aa745436fefd9f51",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "tokenizer.json": "5736bd64e7c0b0f47d8e2750ef4969bfa1c72a148a594dcb4de7734cdbee7fb6",
+      "tokenizer_config.json": "47bfa3e7727312946b29ac10d6dd0672d63cf7815b2a160b9523872040d2e536",
+      "training_args.bin": "f21c3be9e878fac5e5c6230e1ed144a76349f29feaa1a315f36566c2f866073f"
+    },
+    "sha256": "ee63469645ada4581cb6aa8864eef9a533fbcd11c5a3e6f75b66eb7e8086e6bc"
+  },
+  "gate_steps": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "literal_target_completion_rate": {
+    "0": 0.0,
+    "10": 0.0,
+    "15": 0.0,
+    "2": 0.0,
+    "20": 0.0,
+    "25": 0.0,
+    "4": 0.0,
+    "6": 0.0
+  },
+  "log_history_sha256": "873afd74b8f1ce4eb827365f871b1fca26cd3ac2700e30e364e8cc12005116bc",
+  "requested_curve_pattern": false,
+  "resolved_config_sha256": "ae0f0c8f98d24097965c128d5703b0ddcf3bfec134787560e260aced1d4ff5e1",
+  "reward_weight": -1.0,
+  "run_manifest_sha256": "e9a82fdeee9e09cd3024d3c77344461385ceb9059baedea5534111c8411d1569",
+  "score_components": [
+    {
+      "aggregation": "mean",
+      "end_fraction": 1.0,
+      "layer": 8,
+      "start_fraction": 0.5,
+      "weight": -1.0
+    }
+  ],
+  "score_stride": 5,
+  "target_words": [
+    "damn"
+  ],
+  "validation_history_sha256": "3be827051556e3ac47b55ae3b8c3df54e20a58d946161c23fe56640f05f0c57d",
+  "word": "damn"
+}
