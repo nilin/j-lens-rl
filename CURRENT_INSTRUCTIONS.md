@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled with the user: 2026-07-14 09:00 UTC
+Last reconciled with the user: 2026-07-14 10:20 UTC
 
 ## Objective
 
@@ -60,17 +60,14 @@ from confirmatory claims.
   summaries and raw-artifact inventories in `audit.md` and `protocol_archive/`.
 - Keep unopened curve/final/reserve manifests out of exploratory jobs. Never
   inspect sealed outcomes before their registered gate permits it.
-- Current state: the eight-word screen is complete and mechanically selected
-  positive `joy` as its sole early-curve passer; this remains adaptive evidence.
-  Its offline closeout is sealed. Correlation attempt 4 stopped after all eight
-  discovery shards when Modal preempted its CPU controller; aggregation,
-  selection, and validation never began and candidate outcomes remain
-  uninspected. Volume D is immutable and a later replay must use a fresh
-  registered Volume with preemption-safe control flow. The positive-`joy`,
-  six-update, `0/2/4/6`, eight-seed V5 registration remains frozen independently.
-  Its first Modal app built successfully but was rejected before entrypoint,
-  claim, GPU, or W&B because a 20 GiB disk request was below the workspace
-  minimum. Preserve that empty attempt. Its byte-identical scientific
-  registration is now running on fresh Volume B under infrastructure amendment
-  1: seed 168 entered training and its registered W&B run began syncing at
-  08:58 UTC. Keep the correlation replay queued behind this active RL attempt.
+- Current state: the registered eight-seed positive-`joy` V5 attempt completed
+  serially and failed its curve gate: mean exact match was
+  `.4100/.390625/.394375/.4003125` at `0/2/4/6`. Preserve it as honest negative
+  evidence; controls and sealed-final evaluation correctly never ran. The next
+  ready RL lineage is a separately frozen celebration combination
+  (`yay/great/success/nice`) with tapered late-response reward, registered nodes
+  `0/4/6/10`, and seeds 176--183. Launch it as soon as its corrected package,
+  V5 terminal closeout, tests, clean commit, and push all verify. Correlation
+  attempt 4 stopped after all eight discovery shards when Modal preempted its
+  CPU controller; aggregation/selection/validation never began and outcomes
+  remain uninspected. Its preemption-safe recovery stays behind ready RL work.

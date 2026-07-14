@@ -1335,3 +1335,52 @@ intervals, file hashes, W&B identity, and inspection boundary are mirrored in
 No sealed-final outcome was opened. Wave 2/8 then dispatched seed 169 alone;
 its registered [W&B run](https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed169)
 began syncing at 09:09 UTC while seed 168's GPU container was already gone.
+
+### Terminal V5 result: honest curve failure
+
+The V5 app finished normally at 10:12:21 UTC after running all eight treatment
+seeds serially on one L40S. Every treatment run synced online under the frozen
+W&B IDs
+`confirm-v5-emotional-joy-h6-b2c49eaad021-jlens_seed{168..175}`. No sign-flip
+control ran: the preregistered curve gate failed first, so the protocol returned
+before control dispatch, final unlock, collection, or sealed-final evaluation.
+
+The complete per-seed exact-match curves at registered steps `0/2/4/6` are:
+
+| Seed | Registered curve |
+| ---: | --- |
+| 168 | `.4100/.4050/.3850/.3950` |
+| 169 | `.4100/.3750/.3800/.4050` |
+| 170 | `.4100/.3925/.4050/.3800` |
+| 171 | `.4100/.3925/.4025/.4250` |
+| 172 | `.4100/.3925/.4175/.4225` |
+| 173 | `.4100/.3975/.3800/.3925` |
+| 174 | `.4100/.3800/.3875/.3925` |
+| 175 | `.4100/.3900/.3975/.3900` |
+
+Their registered mean is
+`.410000 -> .390625 -> .394375 -> .4003125`. The three gate comparisons were
+`false/true/true`: the last two nodes rose, but the first post-baseline node was
+below baseline. Therefore this attempt is negative evidence for the requested
+curve, not a success. Literal `joy` completion rate was zero at every curve
+evaluation, so the accuracy movement cannot be described as literal word
+emission.
+
+The immutable claim is `c2d9ed29ebba46649f1ea182d7d50014`; Modal app
+`ap-2o4XOP7jhqcrHyqkGN55wL` and orchestration call
+`fc-01KXFXCF23D6DRB5VNXCVJB8TN` used Volume
+`j-lens-rl-confirmatory-v5-emotional-20260714b`. The curve-gate JSON SHA-256 is
+`09770542837464bb80c48c036099521f0ae05ec2e0c81c2440f1f06816a4eede`,
+terminal-status SHA-256 is
+`463d2dc01b44c837daf7cc761d6f587bce804048889e4dbe95463058e734a75e`, and
+curve-plot SHA-256 is
+`61d6c49740bb277335a0500a1842396d3328baa3f576540d7a1c78ccc659f280`.
+The durable 254-entry evidence ZIP is 763,510,552 bytes with SHA-256
+`8710288864aac8bde570beff50ccc9835b1b0d98e2470a7a3bab897bcf620b17`;
+its complete 253-file inventory has SHA-256
+`f098574bbbf97f645c4f66b4e33ce96c8ef8694bc6d37a721fc37f2a7f0976c2`.
+That inventory reports zero sealed-evaluation files and no final unlock,
+collection, comparison, acceptance, or control-run result. The archive remains
+retrievable with `modal volume get j-lens-rl-confirmatory-v5-emotional-20260714b
+/exports/v5_emotional_evidence_c2d9ed29ebba46649f1ea182d7d50014.zip
+./v5_emotional_evidence_c2d9ed29ebba46649f1ea182d7d50014.zip`.
