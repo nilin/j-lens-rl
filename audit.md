@@ -1998,3 +1998,14 @@ This is an interim feasibility calculation, not a changed gate. Seed 212 began
 immediately, and the CPU-only seed-211 upload verified the exact W&B identity
 and all seven receipt-bound evidence files. Its reconstructable ledger is
 `protocol_archive/v9_local_seed211_terminal_ledger.json`.
+
+Seed 212 completed with curve `.3975/.3725/.3850/.4050` and zero literal
+target-word completions. Its first node fell, but both later nodes recovered
+and the terminal node finished above baseline. The five-seed descriptive mean
+is `.3975/.3950/.3985/.3920`. With three treatments remaining, their mean
+step-4-minus-baseline difference must exceed `.004167`, and their mean
+step-20-minus-step-10 difference must be at least `.010833`; the middle
+inequality currently has positive margin. Seed 213 began immediately. The
+CPU-only seed-212 upload verified exact W&B identity and all seven evidence
+files; its reconstructable ledger is
+`protocol_archive/v9_local_seed212_terminal_ledger.json`.
