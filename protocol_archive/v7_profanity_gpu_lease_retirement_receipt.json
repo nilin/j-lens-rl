@@ -1,0 +1,25 @@
+{
+  "app_check": {
+    "app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+    "containers_after_stop": [],
+    "state": "stopped",
+    "stopped_at_utc": "2026-07-14 14:54:50+00:00",
+    "tasks": 0
+  },
+  "closeout": {
+    "commit": "9de5aae3c0739333c5634ed0ce5f88199333a20d",
+    "path": "protocol_archive/v7_profanity_terminal_closeout.json",
+    "sha256": "c2cfef2d3b24a96fbef703ef64b0f53f2c696481548300ee53154559ea3d602b",
+    "verified_present_on_origin_main": true
+  },
+  "dict_name": "j-lens-rl-global-gpu-lease-v1",
+  "key": "global-one-gpu",
+  "key_absent_after_pop": true,
+  "nonce": "0bb45fb22e5941c3ac4f1210c8cd3407",
+  "observed_full_value_sha256": "cd7029a6803155b4d61ba806873cf5885f39a75a7e160c21981caa86999077d1",
+  "owner": "confirmatory-v7-profanity-u5:1f2756de5df846d48a30f19a307b70fb",
+  "popped_equal_to_observed": true,
+  "popped_full_value_sha256": "cd7029a6803155b4d61ba806873cf5885f39a75a7e160c21981caa86999077d1",
+  "protocol": "j-lens-rl-v7-orphaned-gpu-lease-retirement-v1",
+  "retired_at_utc": "2026-07-14T15:24:21.734411+00:00"
+}

@@ -1,0 +1,60 @@
+{
+  "app_id": "ap-Vmg0kpbszpiUHHrNYcVWbd",
+  "claim_id": "1f2756de5df846d48a30f19a307b70fb",
+  "document_type": "j-lens-rl-confirmatory-v7-profanity-terminal-closeout-v1",
+  "evals_directory_present": false,
+  "final_collection_present": false,
+  "final_evaluation_labels": [],
+  "final_outcomes_unopened": true,
+  "final_unlocked_present": false,
+  "global_gpu_lease_resolved": true,
+  "lease_retirement": {
+    "dict_name": "j-lens-rl-global-gpu-lease-v1",
+    "key": "global-one-gpu",
+    "key_absent_after_pop": true,
+    "nonce": "0bb45fb22e5941c3ac4f1210c8cd3407",
+    "popped_full_value_sha256": "cd7029a6803155b4d61ba806873cf5885f39a75a7e160c21981caa86999077d1",
+    "receipt_path": "protocol_archive/v7_profanity_gpu_lease_retirement_receipt.json",
+    "receipt_sha256": "3caf91c90ff5dd54170ebaab658494d643fde4eb681b7fe18ddfc26b79e82dc3",
+    "retired_at_utc": "2026-07-14T15:24:21.734411+00:00"
+  },
+  "modal_app_stopped": true,
+  "pre_recovery_closeout": {
+    "commit": "9de5aae3c0739333c5634ed0ce5f88199333a20d",
+    "path": "protocol_archive/v7_profanity_terminal_closeout.json",
+    "sha256": "c2cfef2d3b24a96fbef703ef64b0f53f2c696481548300ee53154559ea3d602b"
+  },
+  "protocol": "j-lens-rl-confirmatory-v7-profanity-u5",
+  "registration_sha256": "5b6a39818ec5e281d95edf89cabec26499e5813cbb18741dbd4b54c099dc5569",
+  "sealed_comparison_present": false,
+  "sealed_final_manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+  "source_evidence_paths": {
+    "attempt_claim": "protocol_archive/v7_profanity_terminal_evidence/attempt_claim.json",
+    "attempt_status": "protocol_archive/v7_profanity_terminal_evidence/attempt_status.json",
+    "forensic_inventory": "protocol_archive/v7_profanity_terminal_evidence/forensic_inventory.json",
+    "gpu_lease_retirement_receipt": "protocol_archive/v7_profanity_gpu_lease_retirement_receipt.json",
+    "launch_receipt": "protocol_archive/v7_profanity_terminal_evidence/launch_receipt.json",
+    "premature_export_receipt": "protocol_archive/v7_profanity_terminal_evidence/premature_export_receipt.json",
+    "run_inventory": "protocol_archive/v7_profanity_terminal_evidence/run_inventory.json",
+    "seed184_validation_history": "protocol_archive/v7_profanity_terminal_evidence/seed184_validation_history.jsonl",
+    "seed184_wandb_receipt": "protocol_archive/v7_profanity_terminal_evidence/seed184_wandb_terminal_publish_receipt.json",
+    "seed185_validation_history": "protocol_archive/v7_profanity_terminal_evidence/seed185_validation_history.jsonl",
+    "seed185_wandb_receipt": "protocol_archive/v7_profanity_terminal_evidence/seed185_wandb_terminal_publish_receipt.json",
+    "seed186_partial_validation_history": "protocol_archive/v7_profanity_terminal_evidence/seed186_partial_validation_history.jsonl"
+  },
+  "source_evidence_sha256": {
+    "attempt_claim": "52db81fbd0e87005b12b826afae7a0f20a06250c0581f23faba208f63589eb38",
+    "attempt_status": "35a0a7bb2c22c1d08a32bf901ec71206dd47187c852316621828a6f024bdbf5e",
+    "forensic_inventory": "a6011310b8845ee0d91a4b06d894527cbf59ef57ddc075013992a60a97c199b7",
+    "gpu_lease_retirement_receipt": "3caf91c90ff5dd54170ebaab658494d643fde4eb681b7fe18ddfc26b79e82dc3",
+    "launch_receipt": "c7c51eb0cabb275a6ddf60af24e1c097c26152d0816026ec31595fcbdd0e774c",
+    "premature_export_receipt": "c09188cd19c5a019a2597458bd0d2e7a4d601097c156ac7c1fea66442289c073",
+    "run_inventory": "c76f6dc5899781dd0c3297f3e34a17fe64672d3afd79d06a385244af70aaef6e",
+    "seed184_validation_history": "76932d75ff5320464ab8f5f422223ae27b6ac18c202581f7832dbb0290260bbd",
+    "seed184_wandb_receipt": "9797d06d37b147e3a938db83bb5e162551ff9e967823057c921c0f3c86c4490d",
+    "seed185_validation_history": "67831f46d950938177b53ef2764904c9d09d5b2cac7928ed75d5b3e3e6d3282f",
+    "seed185_wandb_receipt": "2303276a3f92cc8841ca9eb16c5b223f81531272edb2a8acdf807d574d089643",
+    "seed186_partial_validation_history": "5bbd33ca180da1e836a0092c6c0efbc61b3f6ce9e02cab34eaf0bb12daca315c"
+  },
+  "terminal_stage": "failed_before_final"
+}

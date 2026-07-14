@@ -65,9 +65,9 @@ from confirmatory claims.
   V7 negative-`damn/fuck` ended infrastructure-failed after two valid terminal
   seeds and partial seed 186. Preserve all as honest negative/partial evidence.
   V7's registered eight-seed gate was never evaluated, controls never ran, and
-  the sealed final stayed unopened. Never resume or pool V7. Commit and push its
-  closeout, retire the exact stranded Modal lease with a separate receipt, then
-  launch the separately registered whole V8 attempt on the local RTX 4090 with
-  fresh seeds and offline W&B directories. Correlation attempt 4 remains closed
-  with outcomes uninspected; word search must not delay a ready RL run by an
-  hour.
+  the sealed final stayed unopened. Never resume or pool V7. Its exact stranded
+  Modal lease was forensically retired and the Dict is empty. Commit/push the
+  retirement receipt and authoritative wrapper, then launch the separately
+  registered whole V8 attempt on the local RTX 4090 with fresh seeds and offline
+  W&B directories. Correlation attempt 4 remains closed with outcomes
+  uninspected; word search must not delay a ready RL run by an hour.

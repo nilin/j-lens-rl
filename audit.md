@@ -1776,11 +1776,20 @@ receipts, metric semantics, current-vs-premature state hashes, run inventory,
 incident IDs, and the retrievable 198,086,460-byte export
 (`4c0b48913e86259d2f0071b7b23b96f69e916ae24331cd0f94f6a845c0a73ccf`).
 
-The global Modal GPU lease is intentionally still stranded on seed 186 at this
-closeout commit boundary. Its full canonical value hashes to
-`cd7029a6803155b4d61ba806873cf5885f39a75a7e160c21981caa86999077d1`.
-Only after this closeout is committed and pushed may root compare-and-pop that
-exact nonce, verify absence, and commit a separate retirement receipt. The next
-RL work must be a separately registered whole RTX-4090 attempt with fresh
-seeds, isolated state, a commit-pinned runtime, and preserved offline W&B
-directories; no V7 model/run artifact may be reused.
+The global Modal GPU lease was intentionally still stranded on seed 186 at the
+first closeout commit boundary. After that exact closeout was pushed at commit
+`9de5aae3c0739333c5634ed0ce5f88199333a20d`, the recovery script rechecked the
+stopped app and empty container list, matched the full canonical lease value
+`cd7029a6803155b4d61ba806873cf5885f39a75a7e160c21981caa86999077d1`
+and nonce, popped it, proved the popped value identical, and proved the Dict key
+absent. The receipt is
+[`protocol_archive/v7_profanity_gpu_lease_retirement_receipt.json`](protocol_archive/v7_profanity_gpu_lease_retirement_receipt.json)
+(SHA-256 `3caf91c90ff5dd54170ebaab658494d643fde4eb681b7fe18ddfc26b79e82dc3`).
+The post-recovery predicate is
+[`protocol_archive/v7_profanity_authoritative_closeout.json`](protocol_archive/v7_profanity_authoritative_closeout.json)
+(SHA-256 `cd83a08155871518baf177d5718acae1053ef4a98e171cbfc9351cd1b8db930c`).
+
+The next RL work must be a separately registered whole RTX-4090 attempt with
+fresh seeds, isolated state, a commit-pinned runtime, and preserved offline W&B
+directories; no V7 model/run artifact may be reused. This operational recovery
+does not turn V7 into a scientific result and does not itself unlock the final.

@@ -61,3 +61,12 @@ and compact raw evidence are in
 is bound there as incident evidence only because seed 186 continued changing
 after it was made. A later attempt requires a fresh registration, claim, state,
 seeds, and whole-backend rerun.
+
+After the pre-recovery closeout was committed and pushed at `9de5aae`, root
+rechecked the stopped app, empty container list, exact full lease hash and nonce,
+popped that value, proved the popped value identical, and proved the Dict key
+absent. The immutable receipt is
+`protocol_archive/v7_profanity_gpu_lease_retirement_receipt.json`; the compact
+post-recovery predicate for a separately registered successor is
+`protocol_archive/v7_profanity_authoritative_closeout.json`. Neither document
+reopens V7 or authorizes access to the sealed final by itself.
