@@ -2,20 +2,23 @@
 
 Initial audit snapshot: `2026-07-14T00:32:52Z`
 Prelaunch v2 update: `2026-07-14 UTC`
-Current evidence update: `2026-07-15T03:25:00Z`
+Current evidence update: `2026-07-15T04:38:00Z`
 
 - Repository: `/j-lens-rl`
 - V16 launch source commit / `origin/main` at launch:
   `e11f4fbe02fcd2b1cf279a5c651f5b6adf3f5b0f`.
 - Current scope: pushed source/configs/contracts, archived public run evidence,
   W&B receipts, V14 terminal evidence, V15's infrastructure-failure closeout,
-  and the active V16 experiment.
+  and the completed V16 plus V16R 16-pair experiment.
 - Initial verification: `.venv/bin/pytest -q` passed `9/9` tests.
 - Current V14/V15/V15B/V16 verification: `31/31` focused tests, Python compilation,
   byte-pinned runtime inputs, and `git diff --check` pass. The V13 archive has
   `100/100` verified checksums and an independent curve/statistics review.
 - The V16R infrastructure-replacement protocol and launcher additionally pass
   `12/12` focused V16/V16R tests before commit or launch.
+- The terminal combined archive builder and V16/V16R integrity suite pass
+  `15/15` tests; its independent second recomputation matches every curve mean,
+  effect, sign count, p-value, and gate decision.
 
 ## Bottom line
 
@@ -26,29 +29,31 @@ The configured KL term (`beta=.02`) remains part of the RL objective, so
 "intrinsic reward alone" means J-only task reward apart from that fixed
 regularizer.
 
-**PARTIAL PASS at the explicitly adaptive development-evidence level:** V14's
-four positive-celebration seeds all finished above their common initial eval.
-The mean terminal gain was `+.01125` and the prospectively specified secondary
-exact two-sided seed sign test was `p=.125`, meeting the user's nominal
-`alpha=.15`. Its dense means also contain the requested nondecreasing segment
-`M0/M3/M4/M5 = .3825/.3875/.3875/.4025`, with the first selected post-baseline
-node above the initial eval.
+**PASS for significant learning relative to each seed's initial eval at the
+explicitly adaptive development-evidence level:** across 16 complete treatment
+seeds, the mean improvement averaged over every post-baseline node was
+`+.01021875`; all 16 effects were positive, giving exact two-sided sign
+`p=.00003052`. Terminal-only treatment improvement was `+.0090625`, with
+13 positive, two negative, and one tied seed (`p=.007385`). All six fixed nodes
+`0/2/4/6/8/10` are retained for every included seed.
 
-**INCONCLUSIVE for a reliable causal or independent-confirmation claim:** the
-V14 matched treatment-minus-signflip contrast was only `+.005` with effects
-`[-.010,+.005,+.005,+.020]` and `p=.625`. The prospectively fixed V11-style
-shape gate failed because `M6=.39375 < M5=.4025`; the favorable `0/3/4/5`
-segment is a disclosed dense-node description, not that registered gate.
-Candidate and horizon selection were adaptive across many visible runs, the
-400-row curve is exposed development data, and no familywise correction makes
-`p=.125` an independent confirmatory result.
+**FAIL for a causal reward-sign claim and for the requested aggregate shape:**
+the sign-flip arm also improved from baseline in 15/16 seeds, mean `+.01153125`
+and `p=.0005188`. The integrated treatment-minus-signflip contrast was
+`-.0013125`, with five treatment wins, nine losses, and two ties
+(`p=.42395`). Treatment means at `0/2/4/6` were
+`.3825/.39453125/.39359375/.3896875`: the first node is above initial, but the
+next two transitions decline. Treatment seed 251 individually has three strict
+rises, but controls 251 and 258 do too; this is disclosed descriptive evidence,
+not a treatment-specific result. Candidate and analysis selection were adaptive
+across visible runs, and the 400-row curve is exposed development data.
 
 The accurate current conclusion is:
 
-> There is now reproducible nominal evidence that positive emotional J-lens
-> reward can improve the exposed GSM8K development eval across four fresh
-> training seeds. It is promising adaptive evidence, not yet clean proof that
-> the reward beats a matched intrinsic control or generalizes independently.
+> There is strong, reproducible adaptive evidence that the V14 RL recipe learns
+> above its initial exposed GSM8K eval across 16 positive-celebration runs. The
+> equally strong sign-flip improvement and null matched contrast mean these data
+> do not establish that positive emotional J-lens reward caused that learning.
 
 ## Current V14 finding and V15/V16 follow-up
 
@@ -126,12 +131,32 @@ ten-update horizon, and full `0/2/4/6/8/10` grid are unchanged. Registration
 `protocol_archive/v16r_seed264_preemption_replacement_registration.json`
 has SHA-256
 `34cb51a1c748af00fe90ba4cc79e8a218d969ffea8d2551425cd225a7ea13fb6`.
-The replacement runner trains on ephemeral storage, publishes only a fully
+The replacement runner trained on ephemeral storage, published only a fully
 verified terminal curve to its fresh evidence Volume, and assigns every
 infrastructure restart a new disclosed W&B attempt ID. It refuses to launch
 while another J-lens development app is active, so it cannot raise total Modal
 GPU concurrency above four. The partial seed-256 result remains public and is
 not silently repaired, resumed, or pooled.
+
+V16 drained all 32 calls and stopped at `2026-07-15T04:10:47Z`: 31 calls had
+complete terminal manifests and W&B receipts, while the sole failed call was
+the preempted `jlens_seed256`. V16R launched only after V16 stopped, from pushed
+commit `e7ff8b32147428b8f04d53e1448f3e3a8a3a27e0`, on app
+`ap-Tjk30HlzV9ug7iJcLJmTaU`, claim
+`c72b1500666c4da4be9cee3840c86e7b`; its treatment/control calls were
+`fc-01KXHZQ26ZPBEC02B90VYNZ31B` and
+`fc-01KXHZQ2BFJC04AGBE06D508QS`. Both seed-264 runs completed all nodes and
+terminal W&B publication without a retry. Combining 30 eligible original runs
+with these two replacements gives the 16 complete pairs summarized above.
+
+The compact reconstruction bundle is
+`protocol_archive/v16_combined_public_evidence/`. It contains every included
+individual curve, config, log, manifest, completion and W&B receipt; original
+and recovery claims/dispatches; the excluded seed-256 partial history; exact
+per-seed and aggregate CSV/JSON; sample SD/SEM at every node; and the complete
+SVG curve. It excludes checkpoints, adapters, optimizer state, weights,
+credentials, and protected-final data. `scripts/build_v16_combined_public_evidence.py`
+re-verifies and rebuilds the statistics and plot from the archived raw bytes.
 
 The detailed sections below preserve the chronological audit trail. Earlier
 "current" statements describe their dated snapshots; this current summary and

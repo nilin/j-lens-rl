@@ -1,0 +1,170 @@
+{
+  "claim_id": "906eefc5089c4e928a7e6f165ff07108",
+  "every_spawned_call_drained": true,
+  "outcomes": {
+    "jlens_seed248": {
+      "completion_sha256": "56f18dbd93c8f23b2b3ef1b9f33cdd91fe174f0e8f7bbf2815bf8ad67a6528b3",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS19S957VJ4W0HSWGVN13J"
+    },
+    "jlens_seed249": {
+      "completion_sha256": "1c07ab9e9e729491b340aaa5b025dea6f480998770723197729041df522dc53c",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS19XD15ERQTNB948GE2G2"
+    },
+    "jlens_seed250": {
+      "completion_sha256": "c331de4822682dba6f8d280764019bff05b4cfa77d17ffe6146f6f7b9a65d705",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1A125AWFVWD9XFJ7NV7D"
+    },
+    "jlens_seed251": {
+      "completion_sha256": "72d60bbca2c40113fa335612666e846c818fde8b83ab505cad2361b4f2f0a343",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1A5ADGSF6X4CAA854ED8"
+    },
+    "jlens_seed252": {
+      "completion_sha256": "49befff005985a6581289002a4b15bdc19d7fb732172d911b588c735e8799a22",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1A9VG8SMD2M493WWQ57W"
+    },
+    "jlens_seed253": {
+      "completion_sha256": "e35e1fd839bd9d00a9e7ff83a637d6370549418396c90ebebbbdb97d630fdfcb",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1AEMCZ8WZY06EB4V356R"
+    },
+    "jlens_seed254": {
+      "completion_sha256": "e3d07314bf02d286f92d546a575286a2cf022e351f0f263b99b3beb847d73d9a",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1AJPJW79NGCC6BKVRQPH"
+    },
+    "jlens_seed255": {
+      "completion_sha256": "58012bd72825028177a70520cae9a2879aa779b0774c8feb88d0ec3de174ba35",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1AQ8BRWVM8E70FR4H0HB"
+    },
+    "jlens_seed256": {
+      "error": "jlens_seed256 already has output; resume/retry is forbidden",
+      "error_type": "RuntimeError",
+      "status": "failure",
+      "worker_call_id": "fc-01KXHS1AVCTQH0MVB504H1DGJ5"
+    },
+    "jlens_seed257": {
+      "completion_sha256": "36b51b1ec958a282c72da8d40024cf56008d760fcd4da67fb7e60b3f2bb8834a",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1AZ63R612Y8RX1BS3N7V"
+    },
+    "jlens_seed258": {
+      "completion_sha256": "5a1bcbb3a9976f6cdb748428ead551ba7547591e4fc57497e82f0952f5e48bbb",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1B49PWA05HBKTJYCKVEG"
+    },
+    "jlens_seed259": {
+      "completion_sha256": "82bcd180984bc9fe59f48ade2bd980bdd65bd5d17374c232f843bcb88c3a59fc",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1B97SA3K6YK4ZQDWNGA8"
+    },
+    "jlens_seed260": {
+      "completion_sha256": "fc9bcb971ed256dd78dc42bf350433ac094bfb0d7483591ce60e364cccab8253",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1BD4JHH9B0HX6YHE6D5K"
+    },
+    "jlens_seed261": {
+      "completion_sha256": "cdd73ff4595e57132bfa639c013fdf421311104dcf0b8c6cbe339872467810fe",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1BJ1NVK61D3GDSN3G8QE"
+    },
+    "jlens_seed262": {
+      "completion_sha256": "7c6322570e3e136c7b41f160724625432f544fd201c91159d31042e11af75fd6",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1BQ3NAM9W1KGYJXEB517"
+    },
+    "jlens_seed263": {
+      "completion_sha256": "4d3765581428114a215fee7084646cf27840dbe2971ceba207811d1e4d85c189",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1BWK1ER5PEWYYAVN26H0"
+    },
+    "signflip_seed248": {
+      "completion_sha256": "05e35499950fd0e11c7e7eb153a4b925e17d2cd23d0da7862b042c941a4f13d5",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS19V09DDQATCMXYH64SPM"
+    },
+    "signflip_seed249": {
+      "completion_sha256": "ca6c3da27838965afa932a3678af7fc4789adaf2393c4afee1f5117057cda3b0",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS19ZAEPADCJ70RMTSY06S"
+    },
+    "signflip_seed250": {
+      "completion_sha256": "64f12897ccc5522b3fe5f75e67ab52c61bb5f792efb03ee7a235811c00d0b9c6",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1A3813Y8G9B1J00X7JXF"
+    },
+    "signflip_seed251": {
+      "completion_sha256": "c7f2eb47daab89401a5cdb9047ae9b6b64a9684984868911de84506eaa482a2d",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1A7RS62PB6CT34FBFNFR"
+    },
+    "signflip_seed252": {
+      "completion_sha256": "572de3220502e88b6915c8539495bc4b574886d286bdefdde5bcac68b1ac2f4d",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1ACA6PS1P5471CQGPVNJ"
+    },
+    "signflip_seed253": {
+      "completion_sha256": "1573f4680dfc07947c9704b6ebc7db7aa1880e4e07707f5d816849e4b893564f",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1AGDDRW18YYW0XRXN1GP"
+    },
+    "signflip_seed254": {
+      "completion_sha256": "6a3ee13e9c39541996a766d7d41597f1d8f85a7bae3d2d7fef2cbe15a1007761",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1AMYN1X5V78SMWKVH0JE"
+    },
+    "signflip_seed255": {
+      "completion_sha256": "e91ef7c2913154f517b9a3b6243aeb7775db3a0194ef9f87f65ad7d94325b84c",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1AS8SA54Z0NR4DFGB8Z8"
+    },
+    "signflip_seed256": {
+      "completion_sha256": "614be77a76b234f4ac16a10787f1923b1163a57ac17be0b5fa2d1f0753560f5e",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1AXEGFVBZC0M8NEXB7QN"
+    },
+    "signflip_seed257": {
+      "completion_sha256": "fc4793485db56a7caf61df45c4500fe0e5e8983a646faeca1e46a3eedc667ff4",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1B1M1MWXEXJRWSTKK66B"
+    },
+    "signflip_seed258": {
+      "completion_sha256": "c302c72d3398f3591b6c539f560947a738f3ab27fb6b0f3db8c49cca173f0780",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1B6TA58GP6RPWRH7QT06"
+    },
+    "signflip_seed259": {
+      "completion_sha256": "15d0a02cc0b568f2f24aab13ab594f5774e87866c05842eeb05ee37c01be7bf8",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1BBJ3G60K66H5N5X0HEZ"
+    },
+    "signflip_seed260": {
+      "completion_sha256": "f56c168ba66ba6d55d63e003f0fc59c8c65ebdbbd4ce0aa10988886729a7b775",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1BFGFJCS5CMJY25ANVPF"
+    },
+    "signflip_seed261": {
+      "completion_sha256": "74a2a70ac205602fea205d88ca38b0c930e4ad28a058aadc22e8b230b2a4d014",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1BMXPFR4XYAEQMNN30S7"
+    },
+    "signflip_seed262": {
+      "completion_sha256": "ff0c5370a6e038ecab83b02e532644f20d1989936e70d55d0cc02e48470ac2c3",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1BT0MXVYQF48NQ0E205A"
+    },
+    "signflip_seed263": {
+      "completion_sha256": "773a3ef641cca950ba5d4f8c081e642bad0f32c61c9a650d074197aa17208319",
+      "status": "success",
+      "worker_call_id": "fc-01KXHS1BYV0T4XQ5X44KSVJZ06"
+    }
+  },
+  "protocol": "j-lens-rl-development-v16-v14-celebration-n16-u2-h10",
+  "recorded_at_utc": "2026-07-15T04:10:45.753331+00:00",
+  "schema_version": 1
+}

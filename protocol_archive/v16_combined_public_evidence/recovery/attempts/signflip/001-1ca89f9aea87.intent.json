@@ -1,0 +1,14 @@
+{
+  "attempt_number": 1,
+  "attempt_token": "1ca89f9aea87",
+  "base_config_sha256": "9444ce61bc1003aafe43b2e276a983056d9abc247f4fa49c145fc58cf5155dc2",
+  "claim_id": "c72b1500666c4da4be9cee3840c86e7b",
+  "condition": "signflip",
+  "created_at_utc": "2026-07-15T04:16:10.346219+00:00",
+  "protocol": "j-lens-rl-development-v16r-v14-celebration-seed264-replacement-u2-h10",
+  "runtime_config_sha256": "1cb8727c4cbe5297e43287bffd6783ce08fd4e09ee4667066b2c977f8f77eab4",
+  "schema_version": 1,
+  "seed": 264,
+  "status": "written_before_training",
+  "wandb_run_id": "dev-v16r-v14-celebration-signflip-seed264-a1-1ca89f9aea87"
+}

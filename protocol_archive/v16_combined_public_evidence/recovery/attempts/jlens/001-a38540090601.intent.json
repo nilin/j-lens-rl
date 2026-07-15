@@ -1,0 +1,14 @@
+{
+  "attempt_number": 1,
+  "attempt_token": "a38540090601",
+  "base_config_sha256": "a32c2f9bee991e4d391c295bfaffb914a885f1b56c4d0cadde06c2ff8a513ebc",
+  "claim_id": "c72b1500666c4da4be9cee3840c86e7b",
+  "condition": "jlens",
+  "created_at_utc": "2026-07-15T04:15:46.061308+00:00",
+  "protocol": "j-lens-rl-development-v16r-v14-celebration-seed264-replacement-u2-h10",
+  "runtime_config_sha256": "9842e7ce5df6c6c7f38f11d8d00ecddc26ff3d813569fc55e322896343d088f8",
+  "schema_version": 1,
+  "seed": 264,
+  "status": "written_before_training",
+  "wandb_run_id": "dev-v16r-v14-celebration-jlens-seed264-a1-a38540090601"
+}

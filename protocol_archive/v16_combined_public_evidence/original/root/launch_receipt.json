@@ -1,0 +1,11 @@
+{
+  "app_id": "ap-jZvqIF8u5dMi8dteypxVBs",
+  "claim_id": "906eefc5089c4e928a7e6f165ff07108",
+  "gpu_type": "L40S",
+  "max_parallel_gpus": 4,
+  "protocol": "j-lens-rl-development-v16-v14-celebration-n16-u2-h10",
+  "recorded_at_utc": "2026-07-15T02:17:29.458888+00:00",
+  "root_call_id": "fc-01KXHS11WNJ0VPYCXR86X8C5H9",
+  "schema_version": 1,
+  "wandb_group": "dev-v16-v14-celebration-n16-u2-h10"
+}

@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled: 2026-07-15 03:25 UTC. This is the current operating brief;
+Last reconciled: 2026-07-15 04:38 UTC. This is the current operating brief;
 older chat instructions and historical closeouts do not override it.
 
 ## Objective and evidence standard
@@ -10,14 +10,16 @@ emotionally charged words, apart from the fixed KL regularizer, improves GSM8K.
 Do not launch new `solved` experiments. Spend at least half of experiment/GPU
 time on RL, and never block ready RL on word search for more than one hour.
 
-The current experiment is V16, a development-only, adaptively selected
+The completed current experiment is V16 plus V16R, a development-only, adaptively selected
 many-seed extension of V14's celebration result:
 `yay/great/success/nice`, calibration SHA `93d05caf...8ee6`, layer 8, stride
 10, weights `+1` on response fraction `.50-.75` and `+.25` on `.75-1.0`.
 Training is ten fixed updates, LR `3e-6`, DAPO, LoRA r8/alpha16, eight
 generations, J reward plus KL beta `.02`, and no correctness reward or
-accuracy-based stopping. Sixteen treatments and sixteen exact seed-matched
-sign-flip controls are fixed on fresh seeds 248--263. Eval is greedy on the
+accuracy-based stopping. Sixteen complete treatment/control pairs are seeds
+`248--255,257--264`; seed 256 is excluded pairwise after infrastructure
+preempted its treatment, and seed 264 is the preregistered next-unused
+replacement. Eval is greedy on the
 exposed 400-row curve at exactly global steps `0,2,4,6,8,10`. Every measured
 node must remain in every run history, aggregate JSON/CSV, W&B aggregate, and
 plot; never selectively omit a node. The early shape gate uses consecutive
@@ -46,11 +48,18 @@ Modal infrastructure preempted treatment seed 256 after public nodes
 `0/2/4/6` and before nodes 8/10 or terminal verification. Keep that partial
 history disclosed but excluded; do not resume, splice, or count it. Exclude
 the entire matched seed-256 pair from complete-pair analysis even though its
-control completed. The preregistered mechanical replacement is the next unused
-pair, seed 264, giving 16 complete analysis pairs `248--255,257--264`.
-V16R must preserve the identical V14 science and full `0/2/4/6/8/10` grid.
-Launch it only after the active V16 app drains, from a clean pushed commit, and
-retain every terminal or partial W&B attempt identity.
+control completed. V16R seed 264 completed the identical V14 science and full
+grid from pushed commit `e7ff8b3`, app `ap-Tjk30HlzV9ug7iJcLJmTaU`, claim
+`c72b1500666c4da4be9cee3840c86e7b`. No Modal GPU app is active.
+
+Final registered integrated results: treatment vs baseline mean `+.01021875`,
+16/16 positive, exact two-sided `p=.00003052`; sign-flip vs baseline mean
+`+.01153125`, 15/16 positive, `p=.0005188`; treatment minus sign-flip mean
+`-.0013125`, 5 wins/9 losses/2 ties, `p=.42395`. Aggregate treatment means at
+`0/2/4/6` are `.3825/.39453125/.39359375/.3896875`, so the first eval rises
+but the no-downward shape gate fails. Never present this as evidence that the
+positive reward sign beat its matched control. Always disclose adaptive
+selection, exposed development eval, and multiplicity.
 
 ## Execution and continuity
 

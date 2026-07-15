@@ -1,0 +1,321 @@
+{
+  "all_nodes_retained": true,
+  "claim_ids": {
+    "v16": "906eefc5089c4e928a7e6f165ff07108",
+    "v16r": "c72b1500666c4da4be9cee3840c86e7b"
+  },
+  "classification": "adaptive_development_evidence_not_independent_or_familywise_corrected",
+  "curve_summary": {
+    "jlens": {
+      "0": {
+        "mean": 0.3825,
+        "sample_sd": 0.0,
+        "sem": 0.0
+      },
+      "10": {
+        "mean": 0.39156250000000004,
+        "sample_sd": 0.009168560410446133,
+        "sem": 0.0022921401026115332
+      },
+      "2": {
+        "mean": 0.39453125,
+        "sample_sd": 0.008718693996235906,
+        "sem": 0.0021796734990589765
+      },
+      "4": {
+        "mean": 0.39359375,
+        "sample_sd": 0.00912728281947407,
+        "sem": 0.0022818207048685177
+      },
+      "6": {
+        "mean": 0.3896875,
+        "sample_sd": 0.009525185912446364,
+        "sem": 0.002381296478111591
+      },
+      "8": {
+        "mean": 0.39421875,
+        "sample_sd": 0.00815060069360944,
+        "sem": 0.00203765017340236
+      }
+    },
+    "signflip": {
+      "0": {
+        "mean": 0.3825,
+        "sample_sd": 0.0,
+        "sem": 0.0
+      },
+      "10": {
+        "mean": 0.3909375,
+        "sample_sd": 0.010562315087138808,
+        "sem": 0.002640578771784702
+      },
+      "2": {
+        "mean": 0.39953125,
+        "sample_sd": 0.009841186835607437,
+        "sem": 0.0024602967089018594
+      },
+      "4": {
+        "mean": 0.39484375,
+        "sample_sd": 0.009375,
+        "sem": 0.00234375
+      },
+      "6": {
+        "mean": 0.39078125,
+        "sample_sd": 0.010828925385281775,
+        "sem": 0.0027072313463204437
+      },
+      "8": {
+        "mean": 0.3940625,
+        "sample_sd": 0.01437228235180481,
+        "sem": 0.0035930705879512023
+      }
+    }
+  },
+  "early_shape": {
+    "pass": false,
+    "requires": "M2>M0 and M4>=M2 and M6>=M4",
+    "steps": [
+      0,
+      2,
+      4,
+      6
+    ],
+    "treatment_means": [
+      0.3825,
+      0.39453125,
+      0.39359375,
+      0.3896875
+    ]
+  },
+  "excluded_pair": {
+    "partial_treatment_curve": {
+      "0": 0.3825,
+      "2": 0.3925,
+      "4": 0.395,
+      "6": 0.4125
+    },
+    "reason": "treatment infrastructure-preempted after step6; pair excluded wholesale",
+    "seed": 256
+  },
+  "included_complete_pair_seeds": [
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264
+  ],
+  "individual_three_strict_rise_seeds": {
+    "jlens": [
+      251
+    ],
+    "signflip": [
+      251,
+      258
+    ]
+  },
+  "n_pairs": 16,
+  "per_seed": [
+    {
+      "control_integrated_vs_baseline": 0.0115,
+      "seed": 248,
+      "treatment_integrated_vs_baseline": 0.019000000000000006,
+      "treatment_minus_control_integrated": 0.007500000000000007,
+      "treatment_minus_control_terminal": 0.012500000000000011,
+      "treatment_terminal_vs_baseline": 0.020000000000000018
+    },
+    {
+      "control_integrated_vs_baseline": 0.012500000000000011,
+      "seed": 249,
+      "treatment_integrated_vs_baseline": 0.012500000000000011,
+      "treatment_minus_control_integrated": 0.0,
+      "treatment_minus_control_terminal": -0.0025000000000000022,
+      "treatment_terminal_vs_baseline": 0.015000000000000013
+    },
+    {
+      "control_integrated_vs_baseline": 0.009500000000000008,
+      "seed": 250,
+      "treatment_integrated_vs_baseline": 0.01499999999999999,
+      "treatment_minus_control_integrated": 0.005499999999999982,
+      "treatment_minus_control_terminal": -0.0025000000000000022,
+      "treatment_terminal_vs_baseline": -0.0050000000000000044
+    },
+    {
+      "control_integrated_vs_baseline": 0.020499999999999997,
+      "seed": 251,
+      "treatment_integrated_vs_baseline": 0.006500000000000006,
+      "treatment_minus_control_integrated": -0.01399999999999999,
+      "treatment_minus_control_terminal": -0.0025000000000000022,
+      "treatment_terminal_vs_baseline": 0.0
+    },
+    {
+      "control_integrated_vs_baseline": 0.011,
+      "seed": 252,
+      "treatment_integrated_vs_baseline": 0.01100000000000001,
+      "treatment_minus_control_integrated": 1.1102230246251566e-17,
+      "treatment_minus_control_terminal": 0.0,
+      "treatment_terminal_vs_baseline": 0.0025000000000000022
+    },
+    {
+      "control_integrated_vs_baseline": -0.0005000000000000004,
+      "seed": 253,
+      "treatment_integrated_vs_baseline": 0.005500000000000005,
+      "treatment_minus_control_integrated": 0.006000000000000005,
+      "treatment_minus_control_terminal": 0.02250000000000002,
+      "treatment_terminal_vs_baseline": 0.007500000000000007
+    },
+    {
+      "control_integrated_vs_baseline": 0.022,
+      "seed": 254,
+      "treatment_integrated_vs_baseline": 0.015000000000000003,
+      "treatment_minus_control_integrated": -0.006999999999999995,
+      "treatment_minus_control_terminal": -0.015000000000000013,
+      "treatment_terminal_vs_baseline": 0.007500000000000007
+    },
+    {
+      "control_integrated_vs_baseline": 0.014500000000000013,
+      "seed": 255,
+      "treatment_integrated_vs_baseline": 0.006000000000000005,
+      "treatment_minus_control_integrated": -0.008500000000000008,
+      "treatment_minus_control_terminal": -0.015000000000000013,
+      "treatment_terminal_vs_baseline": 0.0025000000000000022
+    },
+    {
+      "control_integrated_vs_baseline": 0.01050000000000001,
+      "seed": 257,
+      "treatment_integrated_vs_baseline": 0.004500000000000004,
+      "treatment_minus_control_integrated": -0.006000000000000005,
+      "treatment_minus_control_terminal": 0.007500000000000007,
+      "treatment_terminal_vs_baseline": 0.020000000000000018
+    },
+    {
+      "control_integrated_vs_baseline": 0.0030000000000000027,
+      "seed": 258,
+      "treatment_integrated_vs_baseline": 0.009500000000000008,
+      "treatment_minus_control_integrated": 0.006500000000000006,
+      "treatment_minus_control_terminal": 0.0050000000000000044,
+      "treatment_terminal_vs_baseline": 0.010000000000000009
+    },
+    {
+      "control_integrated_vs_baseline": 0.0125,
+      "seed": 259,
+      "treatment_integrated_vs_baseline": 0.008999999999999998,
+      "treatment_minus_control_integrated": -0.003500000000000003,
+      "treatment_minus_control_terminal": -0.030000000000000027,
+      "treatment_terminal_vs_baseline": -0.010000000000000009
+    },
+    {
+      "control_integrated_vs_baseline": 0.014000000000000002,
+      "seed": 260,
+      "treatment_integrated_vs_baseline": 0.01200000000000001,
+      "treatment_minus_control_integrated": -0.0019999999999999905,
+      "treatment_minus_control_terminal": -0.007499999999999951,
+      "treatment_terminal_vs_baseline": 0.017500000000000016
+    },
+    {
+      "control_integrated_vs_baseline": 0.007500000000000007,
+      "seed": 261,
+      "treatment_integrated_vs_baseline": 0.0030000000000000027,
+      "treatment_minus_control_integrated": -0.004500000000000004,
+      "treatment_minus_control_terminal": 0.010000000000000009,
+      "treatment_terminal_vs_baseline": 0.015000000000000013
+    },
+    {
+      "control_integrated_vs_baseline": 0.0115,
+      "seed": 262,
+      "treatment_integrated_vs_baseline": 0.008500000000000008,
+      "treatment_minus_control_integrated": -0.0029999999999999914,
+      "treatment_minus_control_terminal": 0.0050000000000000044,
+      "treatment_terminal_vs_baseline": 0.007500000000000007
+    },
+    {
+      "control_integrated_vs_baseline": 0.01100000000000001,
+      "seed": 263,
+      "treatment_integrated_vs_baseline": 0.013500000000000012,
+      "treatment_minus_control_integrated": 0.0025000000000000022,
+      "treatment_minus_control_terminal": 0.017500000000000016,
+      "treatment_terminal_vs_baseline": 0.017500000000000016
+    },
+    {
+      "control_integrated_vs_baseline": 0.013500000000000002,
+      "seed": 264,
+      "treatment_integrated_vs_baseline": 0.013000000000000012,
+      "treatment_minus_control_integrated": -0.0004999999999999894,
+      "treatment_minus_control_terminal": 0.0050000000000000044,
+      "treatment_terminal_vs_baseline": 0.017500000000000016
+    }
+  ],
+  "protected_final_payloads_accessed": false,
+  "protocol": "j-lens-rl-development-v16-plus-v16r-combined-complete-pairs",
+  "registration_sha256": "34cb51a1c748af00fe90ba4cc79e8a218d969ffea8d2551425cd225a7ea13fb6",
+  "schema_version": 1,
+  "source_commits": {
+    "v16_launch": "e11f4fbe02fcd2b1cf279a5c651f5b6adf3f5b0f",
+    "v16r_launch": "e7ff8b32147428b8f04d53e1448f3e3a8a3a27e0"
+  },
+  "steps": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "tests": {
+    "control_integrated_vs_baseline": {
+      "mean": 0.011531250000000003,
+      "n_nonzero": 16,
+      "n_total": 16,
+      "negative": 1,
+      "p_two_sided_exact": 0.000518798828125,
+      "positive": 15,
+      "ties": 0
+    },
+    "matched_terminal_treatment_minus_signflip": {
+      "mean": 0.000625000000000004,
+      "n_nonzero": 15,
+      "n_total": 16,
+      "negative": 7,
+      "p_two_sided_exact": 1.0,
+      "positive": 8,
+      "ties": 1
+    },
+    "matched_treatment_minus_signflip_integrated": {
+      "mean": -0.0013124999999999977,
+      "n_nonzero": 14,
+      "n_total": 16,
+      "negative": 9,
+      "p_two_sided_exact": 0.4239501953125,
+      "positive": 5,
+      "ties": 2
+    },
+    "primary_treatment_integrated_vs_baseline": {
+      "mean": 0.010218750000000006,
+      "n_nonzero": 16,
+      "n_total": 16,
+      "negative": 0,
+      "p_two_sided_exact": 3.0517578125e-05,
+      "positive": 16,
+      "ties": 0
+    },
+    "treatment_terminal_vs_baseline": {
+      "mean": 0.009062500000000008,
+      "n_nonzero": 15,
+      "n_total": 16,
+      "negative": 2,
+      "p_two_sided_exact": 0.00738525390625,
+      "positive": 13,
+      "ties": 1
+    }
+  }
+}

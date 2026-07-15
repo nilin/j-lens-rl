@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,sans-serif;fill:#222}.axis{stroke:#333;stroke-width:1.3}.grid{stroke:#ddd;stroke-width:1}.curve{fill:none;stroke-width:3}.err{stroke-width:1.5}</style>
+<text x="450" y="28" text-anchor="middle" font-size="19" font-weight="bold">V14 recipe: complete 16-seed eval curves (mean ± SEM)</text>
+<line class="grid" x1="85" y1="465.00" x2="865" y2="465.00"/>
+<text x="73" y="470.00" text-anchor="end" font-size="13">0.36</text>
+<line class="grid" x1="85" y1="390.45" x2="865" y2="390.45"/>
+<text x="73" y="395.45" text-anchor="end" font-size="13">0.37</text>
+<line class="grid" x1="85" y1="315.91" x2="865" y2="315.91"/>
+<text x="73" y="320.91" text-anchor="end" font-size="13">0.38</text>
+<line class="grid" x1="85" y1="241.36" x2="865" y2="241.36"/>
+<text x="73" y="246.36" text-anchor="end" font-size="13">0.39</text>
+<line class="grid" x1="85" y1="166.82" x2="865" y2="166.82"/>
+<text x="73" y="171.82" text-anchor="end" font-size="13">0.40</text>
+<line class="grid" x1="85" y1="92.27" x2="865" y2="92.27"/>
+<text x="73" y="97.27" text-anchor="end" font-size="13">0.41</text>
+<line class="grid" x1="85.00" y1="55" x2="85.00" y2="465"/>
+<text x="85.00" y="490" text-anchor="middle" font-size="13">0</text>
+<line class="grid" x1="241.00" y1="55" x2="241.00" y2="465"/>
+<text x="241.00" y="490" text-anchor="middle" font-size="13">2</text>
+<line class="grid" x1="397.00" y1="55" x2="397.00" y2="465"/>
+<text x="397.00" y="490" text-anchor="middle" font-size="13">4</text>
+<line class="grid" x1="553.00" y1="55" x2="553.00" y2="465"/>
+<text x="553.00" y="490" text-anchor="middle" font-size="13">6</text>
+<line class="grid" x1="709.00" y1="55" x2="709.00" y2="465"/>
+<text x="709.00" y="490" text-anchor="middle" font-size="13">8</text>
+<line class="grid" x1="865.00" y1="55" x2="865.00" y2="465"/>
+<text x="865.00" y="490" text-anchor="middle" font-size="13">10</text>
+<line class="axis" x1="85" y1="55" x2="85" y2="465"/>
+<line class="axis" x1="85" y1="465" x2="865" y2="465"/>
+<text x="475.00" y="522" text-anchor="middle" font-size="15">global optimizer step</text>
+<text x="20" y="260.00" text-anchor="middle" font-size="15" transform="rotate(-90 20 260.00)">GSM8K exact match</text>
+<polyline class="curve" stroke="#e45756" points="85.00,297.27 241.00,207.59 397.00,214.57 553.00,243.69 709.00,209.91 865.00,229.72"/>
+<line class="err" stroke="#e45756" x1="85.00" y1="297.27" x2="85.00" y2="297.27"/>
+<line class="err" stroke="#e45756" x1="80.00" y1="297.27" x2="90.00" y2="297.27"/>
+<line class="err" stroke="#e45756" x1="80.00" y1="297.27" x2="90.00" y2="297.27"/>
+<circle cx="85.00" cy="297.27" r="4" fill="white" stroke="#e45756" stroke-width="2.5"/>
+<line class="err" stroke="#e45756" x1="241.00" y1="223.83" x2="241.00" y2="191.34"/>
+<line class="err" stroke="#e45756" x1="236.00" y1="223.83" x2="246.00" y2="223.83"/>
+<line class="err" stroke="#e45756" x1="236.00" y1="191.34" x2="246.00" y2="191.34"/>
+<circle cx="241.00" cy="207.59" r="4" fill="white" stroke="#e45756" stroke-width="2.5"/>
+<line class="err" stroke="#e45756" x1="397.00" y1="231.58" x2="397.00" y2="197.56"/>
+<line class="err" stroke="#e45756" x1="392.00" y1="231.58" x2="402.00" y2="231.58"/>
+<line class="err" stroke="#e45756" x1="392.00" y1="197.56" x2="402.00" y2="197.56"/>
+<circle cx="397.00" cy="214.57" r="4" fill="white" stroke="#e45756" stroke-width="2.5"/>
+<line class="err" stroke="#e45756" x1="553.00" y1="261.44" x2="553.00" y2="225.94"/>
+<line class="err" stroke="#e45756" x1="548.00" y1="261.44" x2="558.00" y2="261.44"/>
+<line class="err" stroke="#e45756" x1="548.00" y1="225.94" x2="558.00" y2="225.94"/>
+<circle cx="553.00" cy="243.69" r="4" fill="white" stroke="#e45756" stroke-width="2.5"/>
+<line class="err" stroke="#e45756" x1="709.00" y1="225.10" x2="709.00" y2="194.73"/>
+<line class="err" stroke="#e45756" x1="704.00" y1="225.10" x2="714.00" y2="225.10"/>
+<line class="err" stroke="#e45756" x1="704.00" y1="194.73" x2="714.00" y2="194.73"/>
+<circle cx="709.00" cy="209.91" r="4" fill="white" stroke="#e45756" stroke-width="2.5"/>
+<line class="err" stroke="#e45756" x1="865.00" y1="246.80" x2="865.00" y2="212.63"/>
+<line class="err" stroke="#e45756" x1="860.00" y1="246.80" x2="870.00" y2="246.80"/>
+<line class="err" stroke="#e45756" x1="860.00" y1="212.63" x2="870.00" y2="212.63"/>
+<circle cx="865.00" cy="229.72" r="4" fill="white" stroke="#e45756" stroke-width="2.5"/>
+<line x1="510" y1="55" x2="542" y2="55" stroke="#e45756" stroke-width="3"/>
+<text x="550" y="60" font-size="13">Positive celebration J reward</text>
+<polyline class="curve" stroke="#4c78a8" points="85.00,297.27 241.00,170.31 397.00,205.26 553.00,235.54 709.00,211.08 865.00,234.37"/>
+<line class="err" stroke="#4c78a8" x1="85.00" y1="297.27" x2="85.00" y2="297.27"/>
+<line class="err" stroke="#4c78a8" x1="80.00" y1="297.27" x2="90.00" y2="297.27"/>
+<line class="err" stroke="#4c78a8" x1="80.00" y1="297.27" x2="90.00" y2="297.27"/>
+<circle cx="85.00" cy="297.27" r="4" fill="white" stroke="#4c78a8" stroke-width="2.5"/>
+<line class="err" stroke="#4c78a8" x1="241.00" y1="188.65" x2="241.00" y2="151.97"/>
+<line class="err" stroke="#4c78a8" x1="236.00" y1="188.65" x2="246.00" y2="188.65"/>
+<line class="err" stroke="#4c78a8" x1="236.00" y1="151.97" x2="246.00" y2="151.97"/>
+<circle cx="241.00" cy="170.31" r="4" fill="white" stroke="#4c78a8" stroke-width="2.5"/>
+<line class="err" stroke="#4c78a8" x1="397.00" y1="222.73" x2="397.00" y2="187.78"/>
+<line class="err" stroke="#4c78a8" x1="392.00" y1="222.73" x2="402.00" y2="222.73"/>
+<line class="err" stroke="#4c78a8" x1="392.00" y1="187.78" x2="402.00" y2="187.78"/>
+<circle cx="397.00" cy="205.26" r="4" fill="white" stroke="#4c78a8" stroke-width="2.5"/>
+<line class="err" stroke="#4c78a8" x1="553.00" y1="255.72" x2="553.00" y2="215.36"/>
+<line class="err" stroke="#4c78a8" x1="548.00" y1="255.72" x2="558.00" y2="255.72"/>
+<line class="err" stroke="#4c78a8" x1="548.00" y1="215.36" x2="558.00" y2="215.36"/>
+<circle cx="553.00" cy="235.54" r="4" fill="white" stroke="#4c78a8" stroke-width="2.5"/>
+<line class="err" stroke="#4c78a8" x1="709.00" y1="237.86" x2="709.00" y2="184.29"/>
+<line class="err" stroke="#4c78a8" x1="704.00" y1="237.86" x2="714.00" y2="237.86"/>
+<line class="err" stroke="#4c78a8" x1="704.00" y1="184.29" x2="714.00" y2="184.29"/>
+<circle cx="709.00" cy="211.08" r="4" fill="white" stroke="#4c78a8" stroke-width="2.5"/>
+<line class="err" stroke="#4c78a8" x1="865.00" y1="254.06" x2="865.00" y2="214.69"/>
+<line class="err" stroke="#4c78a8" x1="860.00" y1="254.06" x2="870.00" y2="254.06"/>
+<line class="err" stroke="#4c78a8" x1="860.00" y1="214.69" x2="870.00" y2="214.69"/>
+<circle cx="865.00" cy="234.37" r="4" fill="white" stroke="#4c78a8" stroke-width="2.5"/>
+<line x1="510" y1="80" x2="542" y2="80" stroke="#4c78a8" stroke-width="3"/>
+<text x="550" y="85" font-size="13">Sign-flip control</text>
+</svg>

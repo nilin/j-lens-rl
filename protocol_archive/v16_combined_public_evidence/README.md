@@ -1,0 +1,7 @@
+# V16 + V16R compact public evidence
+
+This archive reconstructs 16 complete V14-recipe celebration/sign-flip seed pairs at every fixed eval node `0,2,4,6,8,10`. Included seeds are `248,249,250,251,252,253,254,255,257,258,259,260,261,262,263,264`. Seed 256 is excluded pairwise because its treatment was Modal-preempted after step 6; its partial history remains under `original/runs/jlens_seed256`. Seed 264 was preregistered as the next-unused infrastructure replacement before launch.
+
+Treatment integrated improvement over its own baseline is positive for 16/16 seeds, mean `0.01021875`, exact two-sided sign `p=3.0517578e-05`. The matched treatment-minus-signflip integrated contrast has 5 positive, 9 negative, and 2 tied seeds, mean `-0.00131250`, exact two-sided sign `p=0.4239502`. Thus there is strong nominal adaptive evidence of learning relative to initial eval, but no evidence that positive celebration reward outperforms the matched sign-flip control. The registered aggregate early-shape gate is `False`.
+
+`evidence/curve_rows.csv` contains every individual node; `aggregate_curve.csv` contains mean, sample SD, and SEM at every node; `per_seed_effects.csv` contains all registered effects; `aggregate_curve.svg` is the complete plot. `original` and `recovery` contain byte-preserved public Modal artifacts. Checkpoints, adapters, optimizer state, model weights, credentials, and protected-final data are intentionally excluded.

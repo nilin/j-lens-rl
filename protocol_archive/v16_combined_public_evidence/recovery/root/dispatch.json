@@ -1,0 +1,11 @@
+{
+  "claim_id": "c72b1500666c4da4be9cee3840c86e7b",
+  "created_at_utc": "2026-07-15T04:14:17.078856+00:00",
+  "protocol": "j-lens-rl-development-v16r-v14-celebration-seed264-replacement-u2-h10",
+  "recorded_before_gather": true,
+  "schema_version": 1,
+  "worker_call_ids": {
+    "jlens": "fc-01KXHZQ26ZPBEC02B90VYNZ31B",
+    "signflip": "fc-01KXHZQ2BFJC04AGBE06D508QS"
+  }
+}
