@@ -1,0 +1,19 @@
+{
+  "base": "emotional_parallel_v3_common.json",
+  "updates": 6,
+  "eval_every": 1,
+  "validation_steps": [1, 2, 3, 4, 5, 6],
+  "validation_observational_only": true,
+  "early_stopping_patience": null,
+  "save_every": 6,
+  "save_total_limit": 1,
+  "curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+  "train_exclusions_manifest_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+  "registration_sha256": "b1cb72b0502f3e0fadb85043756b9d6778a83372a65ff5e12102625aee5d5719",
+  "metric_schema_path": "protocol_archive/v14_v11style_celebration_metric_schema.json",
+  "metric_schema_sha256": "4d5784a27b83804a83281fe95cba21f1093c39e934e8e1ffa7a9323a716a97f0",
+  "evidence_eligibility": "development_only_posthoc_v11_style_no_protected_final",
+  "wandb_group": "dev-v14-v11style-celebration-u1-h6",
+  "wandb_mode": "online",
+  "wandb_resume": "never"
+}

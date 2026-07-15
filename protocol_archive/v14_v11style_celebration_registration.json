@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-v14-v11style-celebration-registration",
+  "protocol": "j-lens-rl-development-v14-v11style-celebration-u1-h6",
+  "registered_at_utc": "2026-07-15T00:13:02Z",
+  "status": "prospective_before_any_v14_gpu_dispatch_wandb_run_or_outcome",
+  "purpose": "Run a fresh, dense, six-update replication of the V11 celebration recipe with four treatment seeds and four exactly seed-matched sign-flip controls.",
+  "scientific_status": {
+    "classification": "development_only_posthoc_v11_style_replication",
+    "untouched_independent_confirmation": false,
+    "reason": "The motivating seed195 curve and V11/V12/V13 outcomes were public before this registration, the V13 outcome informed the disclosed choice to retain positive celebration as treatment, and dense intermediate validation is an explicit new descriptive addition.",
+    "closed_protocols_mutated_or_reopened": false,
+    "protected_final_access_authorized": false,
+    "nominal_p_values_permitted_with_caveat": true
+  },
+  "bound_public_predecessors": {
+    "v11_candidate_freeze": {
+      "path": "protocol_archive/v11_celebration_candidate_freeze.json",
+      "sha256": "dbdc67346906664d8768271ed93830e73de713b3e06326170a5586d8ef17d6f9"
+    },
+    "v11_registration": {
+      "path": "protocol_archive/v11_celebration_registration_draft.json",
+      "sha256": "38f3317229d5f07e67ef1daed6740a87453d741bccef50c2733a844b04fad8b1"
+    },
+    "v11_closeout": {
+      "path": "protocol_archive/v11_celebration_infrastructure_closeout.json",
+      "sha256": "cbc4c78dcac153675e460e4aff344c12a44a55e34c71de300da3195f44d9c806"
+    },
+    "v12_registration": {
+      "path": "protocol_archive/v12_celebration_infrastructure_replacement_registration.json",
+      "sha256": "f58f35419549de5905c7d873a71f67edda73289585025f9084901b61be4a9749"
+    },
+    "v13_candidate_freeze": {
+      "path": "protocol_archive/v13_celebration_long_candidate_freeze.json",
+      "sha256": "5aec5b806dc947886e8778256224fc7e994e94050132d0fa055254e89b931b0c"
+    },
+    "v13_registration": {
+      "path": "protocol_archive/v13_celebration_long_registration.json",
+      "sha256": "d7d5d51a8bcdec8d364793181975e5ae47d5dd7e7b848b9d8a5dfeceb04d725e"
+    },
+    "seed195_resolved_config": {
+      "path": "protocol_archive/seed195_public_evidence/terminal/resolved_config.json",
+      "sha256": "f290ceded76e5d5cc174ba53f67d9c6d709cf6626f20e4c8fa7179cf9ce5456a"
+    }
+  },
+  "v13_public_outcome_known_before_v14_registration": {
+    "selection_timing": "V13 app ap-AffsuHrmJkl2drAttKYaZ0 stopped at 2026-07-14T23:48:15Z; this final V14 registration was frozen at 2026-07-15T00:13:02Z after the complete public curves were available and before any V14 GPU dispatch, W&B run, or outcome.",
+    "source_volume": "j-lens-rl-confirmatory-v13-celebration-long-20260714a",
+    "curve_steps": [0, 4, 10, 20],
+    "treatment_by_seed": {
+      "228": [0.3825, 0.3875, 0.375, 0.3925],
+      "229": [0.3825, 0.37, 0.395, 0.3925],
+      "230": [0.3825, 0.385, 0.3925, 0.4025],
+      "231": [0.3825, 0.3975, 0.375, 0.3775]
+    },
+    "treatment_validation_history_sha256": {
+      "228": "8cafec92edc2f20ddcbc423402e8ae2ecafb27d15a9e7accc1dd5c12d6ec49d2",
+      "229": "f481799e8616adaba4e0f1252ab0784d3e88bdacea43512e3324024a42538649",
+      "230": "f2f99572244d341b9dc1be9346b05cd56cc0f747ea314db4ed2c3263b7c1533f",
+      "231": "f4616c15e9dd35b44cfcdb8dffd18ac026e22b22ea8f915c4d66fea522550c75"
+    },
+    "treatment_mean": [0.3825, 0.385, 0.384375, 0.39125],
+    "treatment_registered_monotone_gate_passed": false,
+    "signflip_by_seed": {
+      "228": [0.3825, 0.3975, 0.4, 0.39],
+      "229": [0.3825, 0.38, 0.39, 0.385],
+      "230": [0.3825, 0.39, 0.3875, 0.3975],
+      "231": [0.3825, 0.375, 0.3875, 0.4]
+    },
+    "signflip_validation_history_sha256": {
+      "228": "adadf37bdb1ea9246b359643668a29e0f9accad280b092293cf5e9b18c18fb76",
+      "229": "4192c5cece316aebd8d6242a3061046c852b19ec1c3b5dc87f16cc18ab646cf4",
+      "230": "6fc2d8e9e9e0be9b9d6ed42de5dd4e72bc22d14ec3c2d494cc37d15293047bed",
+      "231": "5139200fbc1637bdbf32c75f799ca42430b9d6a0f18691408a522cf5401ff6fd"
+    },
+    "signflip_mean": [0.3825, 0.385625, 0.39125, 0.393125],
+    "signflip_aggregate_monotone": true,
+    "terminal_signflip_minus_treatment_by_seed": {
+      "228": -0.0025,
+      "229": -0.0075,
+      "230": -0.005,
+      "231": 0.0225
+    },
+    "terminal_signflip_minus_treatment_positive_negative_ties": [1, 3, 0],
+    "selection_rationale": "Retain positive celebration as the V14 treatment despite the V13 signflip mean's monotonicity: the negative-minus-positive terminal effect was positive for only one of four matched seeds, while the positive recipe produced an aggregate step-4 rise in each fresh V11, V12, and V13 treatment cohort. Continue to run the exact signflip as the matched control and classify all V14 inference as adaptive development evidence.",
+    "repeated_positive_step4_means": {
+      "v11_steps_0_4": [0.3825, 0.3925],
+      "v12_steps_0_4": [0.3825, 0.393125],
+      "v13_steps_0_4": [0.3825, 0.385]
+    }
+  },
+  "candidate": {
+    "target_words": ["yay", "great", "success", "nice"],
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "score_stride": 10,
+    "treatment_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+    ],
+    "matched_signflip_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": -1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.25}
+    ],
+    "control_difference_from_treatment": "Only the two component-weight signs change; seed, data selection, optimizer, model, calibration, target words, horizon, and evaluation schedule are matched.",
+    "correctness_reward": false,
+    "kl_beta": 0.02
+  },
+  "training": {
+    "updates": 6,
+    "learning_rate": 0.000003,
+    "lr_scheduler_type": "constant",
+    "warmup_steps": 0,
+    "warmup_ratio": 0.0,
+    "loss_type": "dapo",
+    "scale_rewards": "group",
+    "gradient_accumulation_steps": 1,
+    "num_generations": 8,
+    "num_generations_eval": 1,
+    "max_prompt_tokens": 384,
+    "max_new_tokens": 256,
+    "min_new_tokens": 64,
+    "temperature": 1.0,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "mask_target_tokens": true,
+    "score_include_final": false,
+    "vocab_chunk_size": 16384,
+    "train_examples": 1000,
+    "save_every": 6,
+    "save_total_limit": 1
+  },
+  "observational_evaluation": {
+    "validation_source": "train",
+    "validation_examples": 400,
+    "validation_batch_size": 64,
+    "curve_manifest_path": ".confirmatory/manifests/curve_indices.json",
+    "curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions_path": ".confirmatory/manifests/train_exclusions.json",
+    "train_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "baseline_step": 0,
+    "post_baseline_steps": [1, 2, 3, 4, 5, 6],
+    "decoding": "greedy_do_sample_false",
+    "observational_only": true,
+    "early_stopping_patience": null,
+    "training_rng_consumed": false,
+    "dense_addition_relative_to_v11": "Steps 1,2,3 are additional exposed descriptive nodes; the fixed V11 shape gate remains steps 0,4,5,6."
+  },
+  "fresh_runs": {
+    "seeds": [236, 237, 238, 239],
+    "conditions": ["jlens", "signflip"],
+    "labels": [
+      "jlens_seed236", "jlens_seed237", "jlens_seed238", "jlens_seed239",
+      "signflip_seed236", "signflip_seed237", "signflip_seed238", "signflip_seed239"
+    ],
+    "reuse_resume_retry_or_warm_start": false,
+    "all_eight_are_fresh_training_runs": true,
+    "configs": {
+      "common": "configs/v14_v11style_celebration_common.json",
+      "run_template": "configs/v14_v11style_celebration_{condition}_seed{seed}.json"
+    }
+  },
+  "predeclared_analysis": {
+    "v11_shape_gate": {
+      "steps": [0, 4, 5, 6],
+      "criterion": "M4 > M0, M5 >= M4, and M6 >= M5 on the four-treatment-seed mean",
+      "first_step_above_initial": "M4 > M0",
+      "three_post_baseline_nodes_without_a_downward_transition": [4, 5, 6]
+    },
+    "terminal_step": 6,
+    "primary_development_test": {
+      "contrast": "treatment_minus_seed_matched_signflip",
+      "test": "exact_two_sided_sign_test",
+      "success": "all four effects strictly positive with no ties and positive mean",
+      "nominal_p_if_success": 0.125,
+      "alpha": 0.15
+    },
+    "secondary_development_test": {
+      "contrast": "treatment_minus_own_baseline",
+      "test": "exact_two_sided_sign_test",
+      "success": "all four effects strictly positive with no ties and positive mean",
+      "nominal_p_if_success": 0.125,
+      "alpha": 0.15
+    },
+    "report_regardless_of_result": [
+      "all individual curves",
+      "condition means and sample standard errors",
+      "all paired effects and ties",
+      "exact p-values",
+      "V11 shape-gate pass or failure",
+      "plot and machine-readable JSON/CSV"
+    ],
+    "multiplicity_caveat": "These are nominal tests in an adaptively selected development program and are not corrected across earlier candidates, seeds, horizons, or visible outcomes."
+  },
+  "corrected_terminal_verifier": {
+    "authoritative_curve": "validation_history.jsonl must contain exactly steps 0,1,2,3,4,5,6 in order.",
+    "trainer_validation_rows": "log_history.json must contain exactly callback-emitted post-training validation steps 1,2,3,4,5,6; the pre-train step-0 baseline is intentionally absent.",
+    "learning_rate_rule": "A reward-bearing row may omit learning_rate only when it is validation-merged. Whenever present it must be finite and equal 3e-6 within absolute tolerance 1e-15; every non-validation reward row must contain it.",
+    "reward_rule": "Exactly one named J-lens reward is present at every optimizer step and no correctness or GSM8K reward metric appears.",
+    "duplicate_reward_std_rule": "The generic reward_std and the same J-lens reward's named std are independently reduced float32 summaries. They must be nonnegative and within four binary32 ULPs; this accepts the observed valid two-ULP reduction-order difference while still rejecting material disagreement.",
+    "collector_rule": "All eight spawned calls are drained and every success or exception is recorded before an aggregate failure is raised.",
+    "regression_tests_required": true
+  },
+  "tracking": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "dev-v14-v11style-celebration-u1-h6",
+    "run_id_template": "dev-v14-v11style-celebration-{condition}-seed{seed}",
+    "aggregate_run_id": "dev-v14-v11style-celebration-aggregate",
+    "resume": "never",
+    "online_required": true,
+    "canonical_x_axis": "train/global_step for training runs; global_step for aggregate run",
+    "wandb_internal_step_is_optimizer_step": false
+  },
+  "execution": {
+    "backend": "Modal",
+    "app_name": "j-lens-rl-development-v14-v11style-celebration",
+    "fresh_volume": "j-lens-rl-development-v14-v11style-celebration-20260714a",
+    "volume_version": 2,
+    "gpu_type": "L40S",
+    "one_gpu_per_worker": true,
+    "function_max_containers": 8,
+    "workspace_gpu_limit": 8,
+    "all_eight_intents_committed_before_any_spawn": true,
+    "all_eight_calls_spawned_before_serial_get": true,
+    "capacity_policy": "Inputs beyond currently available workspace GPU capacity remain queued until capacity is released.",
+    "closed_v13_state_modified": false
+  },
+  "metric_schema": {
+    "path": "protocol_archive/v14_v11style_celebration_metric_schema.json",
+    "sha256": "4d5784a27b83804a83281fe95cba21f1093c39e934e8e1ffa7a9323a716a97f0"
+  },
+  "outputs": {
+    "per_run_terminal_wandb_artifact": true,
+    "aggregate_json": true,
+    "aggregate_csv": true,
+    "aggregate_png": true,
+    "aggregate_wandb_run_and_artifact": true,
+    "durable_attempt_claim_launch_receipt_intents_logs_completions_and_summary": true
+  },
+  "firewall": {
+    "protected_final_payloads_mounted_or_accessed": false,
+    "prohibited_payload_names": [
+      "sealed_final_indices.json",
+      "future_reserve_indices.json",
+      "retired_v3_curve_indices.json"
+    ],
+    "closed_v11_v12_v13_volumes_mounted": false,
+    "closed_v11_v12_v13_runs_resumed_retried_or_pooled": false,
+    "inference_exclusion": "No V14 row, model, aggregate, p-value, or checkpoint may alter or enter any closed V11/V12/V13 decision or protected-final analysis."
+  }
+}

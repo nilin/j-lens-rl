@@ -1,0 +1,18 @@
+{
+  "base": "v14_v11style_celebration_common.json",
+  "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+  "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+  "expected_calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+  "target_words": ["yay", "great", "success", "nice"],
+  "score_stride": 10,
+  "score_components": [
+    {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+    {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+  ],
+  "seed": 238,
+  "run_name": "dev-v14-v11style-celebration-jlens-seed238",
+  "wandb_run_id": "dev-v14-v11style-celebration-jlens-seed238",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v14-v11style-celebration-jlens-seed238",
+  "wandb_tags": ["development-only", "posthoc-v11-style", "celebration-family", "tail-taper", "dense-u1-h6", "jlens-treatment", "seed238"],
+  "output_dir": "/state/runs/jlens_seed238"
+}
