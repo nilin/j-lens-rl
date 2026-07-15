@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-development-v16r-v14-celebration-seed264-replacement-u2-h10",
+  "registered_at_utc": "2026-07-15T03:22:00Z",
+  "reason": "Modal infrastructure preempted the original jlens seed256 worker after public eval nodes 0,2,4,6 and before a terminal manifest; the V16 fail-closed policy forbids resuming or counting that partial run.",
+  "incident": {
+    "v16_claim_id": "906eefc5089c4e928a7e6f165ff07108",
+    "v16_app_id": "ap-jZvqIF8u5dMi8dteypxVBs",
+    "preempted_label": "jlens_seed256",
+    "preempted_worker_call_id": "fc-01KXHS1AVCTQH0MVB504H1DGJ5",
+    "partial_nodes_must_remain_disclosed": [0, 2, 4, 6],
+    "partial_run_evidence_eligible": false
+  },
+  "replacement_rule": {
+    "trigger": "first V16 treatment run lacking a verified terminal completion solely because of infrastructure preemption",
+    "exclude_pair": 256,
+    "replacement_seed": 264,
+    "replacement_conditions": ["jlens", "signflip"],
+    "rule_fixed_before_seed264_launch": true,
+    "no_result_based_seed_choice": true
+  },
+  "combined_complete_pair_cohort": [248, 249, 250, 251, 252, 253, 254, 255, 257, 258, 259, 260, 261, 262, 263, 264],
+  "frozen_science": {
+    "source": "V14/V16 celebration tail-taper recipe",
+    "target_words": ["yay", "great", "success", "nice"],
+    "reward_type": "jlens",
+    "correctness_reward": false,
+    "layer": 8,
+    "score_stride": 10,
+    "treatment_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+    ],
+    "control_difference": "negate only the two component weights",
+    "learning_rate": 0.000003,
+    "kl_beta": 0.02,
+    "loss_type": "dapo",
+    "updates": 10,
+    "eval_steps": [0, 2, 4, 6, 8, 10],
+    "all_eval_nodes_required": true,
+    "validation_examples": 400
+  },
+  "analysis": {
+    "primary_treatment_vs_initial_effect_per_seed": "mean over steps 2,4,6,8,10 of treatment exact_match minus that seed's step-0 exact_match",
+    "primary_test": "two-sided exact sign test across the 16 complete treatment seeds",
+    "matched_effect_per_seed": "mean over steps 2,4,6,8,10 of treatment exact_match minus matched signflip exact_match",
+    "matched_test": "two-sided exact sign test across the 16 complete pairs",
+    "success_p_threshold": 0.15,
+    "missing_or_preempted_runs": "fail closed and do not count; apply the next-unused-seed replacement rule without inspecting replacement outcomes"
+  },
+  "concurrency": {
+    "maximum_modal_gpu_workers_across_all_active_apps": 4,
+    "v16r_must_not_launch_until_at_least_two_slots_are_free": true
+  },
+  "protected_final_payloads_accessed": false
+}

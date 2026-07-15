@@ -2,7 +2,7 @@
 
 Initial audit snapshot: `2026-07-14T00:32:52Z`
 Prelaunch v2 update: `2026-07-14 UTC`
-Current evidence update: `2026-07-15T02:18:00Z`
+Current evidence update: `2026-07-15T03:25:00Z`
 
 - Repository: `/j-lens-rl`
 - V16 launch source commit / `origin/main` at launch:
@@ -14,6 +14,8 @@ Current evidence update: `2026-07-15T02:18:00Z`
 - Current V14/V15/V15B/V16 verification: `31/31` focused tests, Python compilation,
   byte-pinned runtime inputs, and `git diff --check` pass. The V13 archive has
   `100/100` verified checksums and an independent curve/statistics review.
+- The V16R infrastructure-replacement protocol and launcher additionally pass
+  `12/12` focused V16/V16R tests before commit or launch.
 
 ## Bottom line
 
@@ -104,8 +106,32 @@ V16 launched at `2026-07-15T02:17Z` on app
 `j-lens-rl-development-v16-v14-celebration-n16-20260715a`. The durable status
 records all 32 unique worker call IDs before any result, `max_parallel_gpus=4`,
 and a seed-major pair-interleaved first wave. At this audit timestamp exactly
-four run directories (seeds 248 and 249, both conditions) existed and the
-remaining fixed calls were queued; no result had been used to alter dispatch.
+18 runs were terminal with W&B receipts and the remaining fixed calls were
+queued or active; no result had been used to alter dispatch.
+
+At `2026-07-15T03:16:56Z`, Modal infrastructure preempted the
+`jlens_seed256` worker call `fc-01KXHS1AVCTQH0MVB504H1DGJ5`. Its public
+partial curve is `.3825/.3925/.3950/.4125` at steps `0/2/4/6`; it has no
+step-8/10 nodes, terminal manifest, W&B terminal receipt, or completion
+dispatch and is ineligible. The V16 worker's fail-closed no-resume rule means
+the automatic same-input restart must reject the durable partial directory.
+The matched `signflip_seed256` run completed, but the entire pair is excluded
+from the complete-pair analysis rather than selectively retaining its control.
+
+Before launching any replacement, V16R prospectively fixed a mechanical
+infrastructure rule: use the next unused seed, 264, in both celebration and
+sign-flip conditions. The combined 16-pair cohort is therefore
+248--255 and 257--264. The words, calibration, reward windows/signs, optimizer,
+ten-update horizon, and full `0/2/4/6/8/10` grid are unchanged. Registration
+`protocol_archive/v16r_seed264_preemption_replacement_registration.json`
+has SHA-256
+`34cb51a1c748af00fe90ba4cc79e8a218d969ffea8d2551425cd225a7ea13fb6`.
+The replacement runner trains on ephemeral storage, publishes only a fully
+verified terminal curve to its fresh evidence Volume, and assigns every
+infrastructure restart a new disclosed W&B attempt ID. It refuses to launch
+while another J-lens development app is active, so it cannot raise total Modal
+GPU concurrency above four. The partial seed-256 result remains public and is
+not silently repaired, resumed, or pooled.
 
 The detailed sections below preserve the chronological audit trail. Earlier
 "current" statements describe their dated snapshots; this current summary and

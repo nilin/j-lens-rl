@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled: 2026-07-15 02:10 UTC. This is the current operating brief;
+Last reconciled: 2026-07-15 03:25 UTC. This is the current operating brief;
 older chat instructions and historical closeouts do not override it.
 
 ## Objective and evidence standard
@@ -41,6 +41,16 @@ preemption-safe orchestration. V16 launched from pushed commit
 manifest contains exactly 32 fixed worker call IDs; four pair-interleaved
 workers run at a time and the remaining calls queue without outcome
 conditioning.
+
+Modal infrastructure preempted treatment seed 256 after public nodes
+`0/2/4/6` and before nodes 8/10 or terminal verification. Keep that partial
+history disclosed but excluded; do not resume, splice, or count it. Exclude
+the entire matched seed-256 pair from complete-pair analysis even though its
+control completed. The preregistered mechanical replacement is the next unused
+pair, seed 264, giving 16 complete analysis pairs `248--255,257--264`.
+V16R must preserve the identical V14 science and full `0/2/4/6/8/10` grid.
+Launch it only after the active V16 app drains, from a clean pushed commit, and
+retain every terminal or partial W&B attempt identity.
 
 ## Execution and continuity
 

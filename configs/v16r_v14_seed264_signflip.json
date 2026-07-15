@@ -1,0 +1,9 @@
+{
+  "base": "v16r_v14_seed264_signflip_template.json",
+  "seed": 264,
+  "run_name": "dev-v16r-v14-celebration-signflip-seed264",
+  "wandb_run_id": "dev-v16r-v14-celebration-signflip-seed264",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v16r-v14-celebration-signflip-seed264",
+  "wandb_tags": ["development-only", "v16-preemption-replacement", "celebration-family", "tail-taper", "complete-u2-h10", "matched-signflip", "seed264"],
+  "output_dir": "/state/runs/signflip_seed264"
+}
