@@ -1,0 +1,43 @@
+{
+  "base": "v15_celebration_h5_common.json",
+  "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+  "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+  "expected_calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+  "target_words": [
+    "yay",
+    "great",
+    "success",
+    "nice"
+  ],
+  "score_stride": 10,
+  "score_components": [
+    {
+      "layer": 8,
+      "start_fraction": 0.5,
+      "end_fraction": 0.75,
+      "aggregation": "mean",
+      "weight": -1
+    },
+    {
+      "layer": 8,
+      "start_fraction": 0.75,
+      "end_fraction": 1,
+      "aggregation": "mean",
+      "weight": -0.25
+    }
+  ],
+  "seed": 243,
+  "run_name": "dev-v15-celebration-signflip-seed243",
+  "wandb_run_id": "dev-v15-celebration-signflip-seed243",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v15-celebration-signflip-seed243",
+  "wandb_tags": [
+    "development-only",
+    "adaptive-v14-horizon",
+    "celebration-family",
+    "tail-taper",
+    "dense-u1-h5",
+    "matched-signflip",
+    "seed243"
+  ],
+  "output_dir": "/state/runs/signflip_seed243"
+}

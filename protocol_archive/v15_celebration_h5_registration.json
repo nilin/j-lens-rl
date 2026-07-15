@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-v15-celebration-h5-registration",
+  "protocol": "j-lens-rl-development-v15-celebration-h5",
+  "registered_at_utc": "2026-07-15T01:18:30Z",
+  "status": "materializes_the_already_pushed_candidate_freeze_before_any_v15_gpu_wandb_run_or_outcome",
+  "purpose": "Replicate the V14-selected five-update positive celebration result with fresh seeds, uniform dense evaluation, and prospectively fixed matched sign-flip controls.",
+  "scientific_status": {
+    "classification": "development_only_adaptive_v14_horizon_replication",
+    "untouched_independent_confirmation": false,
+    "nominal_p_values_permitted_with_caveat": true,
+    "reason": "V14 treatment curves selected the five-update horizon and 0/3/4/5 display gate. That complete selection was committed and pushed before any complete V14 control curve or terminal treatment-control comparison.",
+    "protected_final_access_authorized": false
+  },
+  "bound_selection": {
+    "candidate_freeze": {
+      "path": "protocol_archive/v15_celebration_h5_candidate_freeze.json",
+      "sha256": "0e7d3fcb461687d8b7682709f271337b641936a4209099b19ad462729c3a5888",
+      "pushed_commit": "90020fa"
+    },
+    "v14_registration": {
+      "path": "protocol_archive/v14_v11style_celebration_registration.json",
+      "sha256": "d08e06cf6994247ba30c102391f731a3456c0fd0079533ee6e0302718992715f"
+    },
+    "v14_source_commit": "5ee921ff317f6d96eb2780d2e0b45ea19ff9b4d4",
+    "selection_lock": "No V14 control outcome, V15 outcome, word search, or later checkpoint may alter the candidate, seeds, horizon, nodes, tests, or W&B identities below."
+  },
+  "candidate": {
+    "target_words": ["yay", "great", "success", "nice"],
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "score_stride": 10,
+    "treatment_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+    ],
+    "matched_signflip_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": -1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.25}
+    ],
+    "control_difference_from_treatment": "Only the two component-weight signs change.",
+    "correctness_reward": false,
+    "kl_beta": 0.02
+  },
+  "training": {
+    "updates": 5,
+    "learning_rate": 0.000003,
+    "lr_scheduler_type": "constant",
+    "warmup_steps": 0,
+    "warmup_ratio": 0.0,
+    "loss_type": "dapo",
+    "scale_rewards": "group",
+    "gradient_accumulation_steps": 1,
+    "num_generations": 8,
+    "num_generations_eval": 1,
+    "max_prompt_tokens": 384,
+    "max_new_tokens": 256,
+    "min_new_tokens": 64,
+    "temperature": 1.0,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "mask_target_tokens": true,
+    "score_include_final": false,
+    "vocab_chunk_size": 16384,
+    "train_examples": 1000,
+    "save_every": 5,
+    "save_total_limit": 1
+  },
+  "observational_evaluation": {
+    "validation_source": "train",
+    "validation_examples": 400,
+    "validation_batch_size": 64,
+    "curve_manifest_path": ".confirmatory/manifests/curve_indices.json",
+    "curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions_path": ".confirmatory/manifests/train_exclusions.json",
+    "train_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "steps": [0, 1, 2, 3, 4, 5],
+    "decoding": "greedy_do_sample_false",
+    "observational_only": true,
+    "early_stopping_patience": null,
+    "training_rng_consumed": false
+  },
+  "fresh_runs": {
+    "seeds": [240, 241, 242, 243],
+    "conditions": ["jlens", "signflip"],
+    "labels": [
+      "jlens_seed240", "jlens_seed241", "jlens_seed242", "jlens_seed243",
+      "signflip_seed240", "signflip_seed241", "signflip_seed242", "signflip_seed243"
+    ],
+    "reuse_resume_retry_or_warm_start": false,
+    "configs": {
+      "common": "configs/v15_celebration_h5_common.json",
+      "run_template": "configs/v15_celebration_h5_{condition}_seed{seed}.json"
+    }
+  },
+  "predeclared_analysis": {
+    "display_shape_gate": {
+      "steps": [0, 3, 4, 5],
+      "criterion": "M3 > M0, M4 >= M3, and M5 >= M4 on the four-treatment-seed mean"
+    },
+    "terminal_step": 5,
+    "primary": {
+      "contrast": "treatment_minus_seed_matched_signflip",
+      "test": "exact_two_sided_sign_test",
+      "success": "all four effects strictly positive, no ties, positive mean",
+      "nominal_p_if_success": 0.125,
+      "alpha": 0.15
+    },
+    "secondary": {
+      "contrast": "treatment_minus_own_baseline",
+      "test": "exact_two_sided_sign_test",
+      "success": "all four effects strictly positive, no ties, positive mean",
+      "nominal_p_if_success": 0.125,
+      "alpha": 0.15
+    },
+    "report_regardless_of_result": [
+      "all individual dense curves",
+      "condition means and sample standard errors",
+      "all paired effects and ties",
+      "exact p-values",
+      "display-gate pass or failure",
+      "machine-readable JSON/CSV and plot"
+    ],
+    "multiplicity_caveat": "Nominal adaptive development evidence only; not familywise-error-corrected."
+  },
+  "terminal_verifier": {
+    "authoritative_curve": "validation_history.jsonl must contain exactly steps 0,1,2,3,4,5 in order.",
+    "trainer_validation_rows": "log_history.json must contain exactly callback-emitted steps 1,2,3,4,5; baseline is absent.",
+    "learning_rate_rule": "Missing LR is allowed only on validation-merged rows; present LR must equal 3e-6 within 1e-15.",
+    "reward_rule": "Exactly one named J-lens reward and no correctness/GSM8K reward at every optimizer step.",
+    "duplicate_reward_std_rule": "Generic and named float32 reward std values must be within four binary32 ULPs.",
+    "collector_rule": "Drain and record every spawned call before aggregate failure."
+  },
+  "tracking": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "dev-v15-celebration-u1-h5",
+    "run_id_template": "dev-v15-celebration-{condition}-seed{seed}",
+    "aggregate_run_id": "dev-v15-celebration-aggregate",
+    "resume": "never",
+    "online_required": true,
+    "canonical_x_axis": "train/global_step for training; global_step for aggregate",
+    "wandb_internal_step_is_optimizer_step": false
+  },
+  "execution": {
+    "backend": "Modal",
+    "app_name": "j-lens-rl-development-v15-celebration-h5-20260715a",
+    "fresh_volume": "j-lens-rl-development-v15-celebration-h5-20260715a",
+    "volume_version": 2,
+    "gpu_type": "L40S",
+    "one_gpu_per_worker": true,
+    "function_max_containers": 4,
+    "workspace_gpu_limit": 4,
+    "all_eight_intents_committed_before_any_spawn": true,
+    "all_eight_calls_spawned_without_outcome_conditioning": true,
+    "local_entrypoint_waits_for_terminal_orchestrator_result": true
+  },
+  "metric_schema": {
+    "path": "protocol_archive/v15_celebration_h5_metric_schema.json",
+    "sha256": "f869f4e64eea3dd772bb9c7b24495227d7b5764e6597097be12c40d1afd8df1b"
+  },
+  "firewall": {
+    "protected_final_payloads_mounted_or_accessed": false,
+    "prohibited_payload_names": [
+      "sealed_final_indices.json", "future_reserve_indices.json", "retired_v3_curve_indices.json"
+    ],
+    "closed_attempt_volumes_mounted": false,
+    "closed_runs_resumed_retried_or_pooled": false
+  }
+}
