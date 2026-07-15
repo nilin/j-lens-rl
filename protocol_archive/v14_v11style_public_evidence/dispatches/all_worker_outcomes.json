@@ -1,0 +1,49 @@
+{
+  "claim_id": "e0657eca40da49b78830f5e7a1e47a14",
+  "every_spawned_call_drained": true,
+  "outcomes": {
+    "jlens_seed236": {
+      "completion_sha256": "02b684013f95b3e052b154086dedc20a44f6f6f3aef35faaafd7d51de470d0f4",
+      "status": "success",
+      "worker_call_id": "fc-01KXHKX0BJ5ZKY636EHHTN4PEH"
+    },
+    "jlens_seed237": {
+      "completion_sha256": "dfbf8ab92b87417ebea6d067ad336add148a17122f4b1a4dd51a8157cd46c1ff",
+      "status": "success",
+      "worker_call_id": "fc-01KXHKX0DQ46CHBZ6XNP0V9YKS"
+    },
+    "jlens_seed238": {
+      "completion_sha256": "e65e2270bc96482bf17f5ded27a19b9a11150a0dfae478c78c698a29591ead40",
+      "status": "success",
+      "worker_call_id": "fc-01KXHKX0FQ110CD1W5QF1MNDH3"
+    },
+    "jlens_seed239": {
+      "completion_sha256": "ffc86783db7cbd3eacde6a22a167005a2bd6dc6b84742741133c0358f505715a",
+      "status": "success",
+      "worker_call_id": "fc-01KXHKX0J017D972Z071H425V6"
+    },
+    "signflip_seed236": {
+      "completion_sha256": "031ec1778767ec106e22f76a4d3a33ecb7cef8e6e4116498ede1c9d75fc0b80c",
+      "status": "success",
+      "worker_call_id": "fc-01KXHKX0KWJNW7BPXRHQR33HFS"
+    },
+    "signflip_seed237": {
+      "completion_sha256": "2b7870a1089f5d70fd717a0e6d878be2e54b06994f95f2e13ef01b84bbbbd51c",
+      "status": "success",
+      "worker_call_id": "fc-01KXHKX0PRFAEHAAM42SK8EB6J"
+    },
+    "signflip_seed238": {
+      "completion_sha256": "2675914d834fc608ecf64d7ce70d3e76e9a3a9712429368b14a76adf1cbc6a1c",
+      "status": "success",
+      "worker_call_id": "fc-01KXHKX0S6HZGDTQCQAZM6MG5S"
+    },
+    "signflip_seed239": {
+      "completion_sha256": "1587ccc353422cd4fbdd6e684bb0b0d35785400f45a7dd9b95d8c1af54d1366e",
+      "status": "success",
+      "worker_call_id": "fc-01KXHKX0XG8XEZ2NSV8K0EH1NC"
+    }
+  },
+  "protocol": "j-lens-rl-development-v14-v11style-celebration-u1-h6",
+  "recorded_at_utc": "2026-07-15T01:26:28.849064+00:00",
+  "schema_version": 1
+}

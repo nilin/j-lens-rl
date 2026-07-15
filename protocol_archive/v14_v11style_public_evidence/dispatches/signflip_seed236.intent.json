@@ -1,0 +1,15 @@
+{
+  "claim_id": "e0657eca40da49b78830f5e7a1e47a14",
+  "condition": "signflip",
+  "config": "configs/v14_v11style_celebration_signflip_seed236.json",
+  "config_sha256": "27b9ef647487ac16be07e243c0dea8dddad198e8a21033f8d606af256a1c6994",
+  "created_at_utc": "2026-07-15T00:47:48.005878+00:00",
+  "label": "signflip_seed236",
+  "protocol": "j-lens-rl-development-v14-v11style-celebration-u1-h6",
+  "root_call_id": "fc-01KXHKWSKM20R22NS64K2EZ1T6",
+  "schema_version": 1,
+  "seed": 236,
+  "slot": 4,
+  "status": "written_before_any_gpu_spawn",
+  "wandb_run_id": "dev-v14-v11style-celebration-signflip-seed236"
+}

@@ -1,0 +1,15 @@
+{
+  "claim_id": "e0657eca40da49b78830f5e7a1e47a14",
+  "condition": "jlens",
+  "config": "configs/v14_v11style_celebration_jlens_seed237.json",
+  "config_sha256": "9704e6e61cdf0788c16becafda6d39ed95d43f724d81ec3313c6d46c8019f507",
+  "created_at_utc": "2026-07-15T00:47:48.000732+00:00",
+  "label": "jlens_seed237",
+  "protocol": "j-lens-rl-development-v14-v11style-celebration-u1-h6",
+  "root_call_id": "fc-01KXHKWSKM20R22NS64K2EZ1T6",
+  "schema_version": 1,
+  "seed": 237,
+  "slot": 1,
+  "status": "written_before_any_gpu_spawn",
+  "wandb_run_id": "dev-v14-v11style-celebration-jlens-seed237"
+}

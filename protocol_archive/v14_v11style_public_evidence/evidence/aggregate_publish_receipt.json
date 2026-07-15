@@ -1,0 +1,22 @@
+{
+  "canonical_x_axis": "global_step",
+  "claim_id": "e0657eca40da49b78830f5e7a1e47a14",
+  "file_sha256": {
+    "v14_v11style_aggregate.json": "7bb3a49f49c54ed438b7ffd0f6f3f277df994fc525abc838988b6c7352e012d1",
+    "v14_v11style_curve.csv": "55c1758e53cb8c662d90c7fb4d1d2ec1a56ebbd826a86818b8b423f9791668d9",
+    "v14_v11style_curve.png": "7900f186ce6790c1cee1237fe18914c281f525650ea676bb13f587f964eb63d6"
+  },
+  "protocol": "j-lens-rl-development-v14-v11style-celebration-u1-h6",
+  "published_at_utc": "2026-07-15T01:26:40.887675+00:00",
+  "schema_version": 1,
+  "wandb": {
+    "artifact_digest": "897f69e304f133302d2c0edbeac4cbb2",
+    "artifact_id": "QXJ0aWZhY3Q6MzE0MTMzOTMwNA==",
+    "artifact_name": "dev-v14-v11style-celebration-aggregate-evidence:v0",
+    "artifact_version": "v0",
+    "group": "dev-v14-v11style-celebration-u1-h6",
+    "run_id": "dev-v14-v11style-celebration-aggregate",
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v14-v11style-celebration-aggregate"
+  },
+  "wandb_internal_step_is_optimizer_step": false
+}

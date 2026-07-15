@@ -1,0 +1,68 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Filter:   0%|          | 0/7473 [00:00<?, ? examples/s]
+Filter: 100%|██████████| 7473/7473 [00:00<00:00, 359619.02 examples/s]
+
+Map:   0%|          | 0/1000 [00:00<?, ? examples/s]
+Map: 100%|██████████| 1000/1000 [00:00<00:00, 26385.58 examples/s]
+
+Map:   0%|          | 0/400 [00:00<?, ? examples/s]
+Map: 100%|██████████| 400/400 [00:00<00:00, 19418.07 examples/s]
+warmup_ratio is deprecated and will be removed in v5.2. Use `warmup_steps` instead.
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights:  45%|████▍     | 130/290 [00:00<00:00, 1292.83it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 1525.18it/s]
+Detected kernel version 4.19.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: nilinabra (nilinabra-spare-time) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.28.0
+wandb: Run data is saved locally in /workspace/j-lens-rl/wandb/run-20260715_010903-dev-v14-v11style-celebration-signflip-seed239
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run dev-v14-v11style-celebration-signflip-seed239
+wandb: ⭐️ View project at https://wandb.ai/nilinabra-spare-time/j-lens-rl
+wandb: 🚀 View run at https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v14-v11style-celebration-signflip-seed239
+The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'bos_token_id': None, 'pad_token_id': 151643}.
+
+  0%|          | 0/6 [00:00<?, ?it/s]wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+/usr/local/lib/python3.11/site-packages/torch/autograd/graph.py:841: UserWarning: Flash Attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/attention_backward.cu:114.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+ 17%|█▋        | 1/6 [00:11<00:55, 11.02s/it]
+                                             
+
+ 17%|█▋        | 1/6 [01:31<00:55, 11.02s/it]/usr/local/lib/python3.11/site-packages/torch/autograd/graph.py:841: UserWarning: Memory Efficient attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/attention_backward.cu:897.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+ 33%|███▎      | 2/6 [01:42<03:53, 58.47s/it]
+                                             
+
+ 33%|███▎      | 2/6 [03:02<03:53, 58.47s/it]
+ 50%|█████     | 3/6 [03:13<03:39, 73.26s/it]
+                                             
+
+ 50%|█████     | 3/6 [04:36<03:39, 73.26s/it]
+ 67%|██████▋   | 4/6 [04:47<02:42, 81.47s/it]
+                                             
+
+ 67%|██████▋   | 4/6 [06:07<02:42, 81.47s/it]
+ 83%|████████▎ | 5/6 [06:17<01:24, 84.61s/it]
+                                             
+
+ 83%|████████▎ | 5/6 [07:37<01:24, 84.61s/it]
+100%|██████████| 6/6 [07:47<00:00, 86.46s/it]
+                                             
+
+100%|██████████| 6/6 [09:07<00:00, 86.46s/it]
+                                             
+
+100%|██████████| 6/6 [09:08<00:00, 86.46s/it]
+100%|██████████| 6/6 [09:08<00:00, 91.35s/it]
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.

@@ -67,6 +67,15 @@ W&B run is
 and its evidence artifact digest is `897f69e304f133302d2c0edbeac4cbb2`.
 Protected-final payloads were never mounted or accessed.
 
+The compact public reconstruction archive is
+`protocol_archive/v14_v11style_public_evidence/`: 116 files, comprising 113
+byte-preserved Modal artifacts plus README, inventory, and checksums. Its 115
+listed entries pass `sha256sum -c`; `CHECKSUMS.sha256` has SHA-256
+`48bb00768b78bb6b1d491664631a59c9a0fc32098cf35f7943535c1b9fca4e46`.
+It includes every raw six-update curve, config, log, terminal and W&B receipt,
+dispatch/claim record, aggregate JSON/CSV/PNG, and exact call identity, while
+excluding checkpoints, weights, protected-final data, and credentials.
+
 V15 was selected to retest V14's step-5 effect. Modal preempted its CPU
 coordinator while four treatment workers were active; its automatic restart
 found the immutable intents and failed closed rather than respawning. It has
