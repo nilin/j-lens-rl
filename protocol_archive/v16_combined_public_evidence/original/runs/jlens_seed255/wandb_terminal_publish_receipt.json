@@ -1,0 +1,57 @@
+{
+  "artifact": {
+    "digest": "87e179f7132a2da8027c59e6f7e0431a",
+    "id": "QXJ0aWZhY3Q6MzE0MTcyOTIwOQ==",
+    "name": "dev-v16-v14-celebration-jlens-seed255-terminal-evidence:v0",
+    "qualified_name": "nilinabra-spare-time/j-lens-rl/dev-v16-v14-celebration-jlens-seed255-terminal-evidence:v0",
+    "version": "v0"
+  },
+  "observed_wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "dev-v16-v14-celebration-n16-u2-h10",
+    "project": "j-lens-rl",
+    "run_id": "dev-v16-v14-celebration-jlens-seed255",
+    "run_name": "dev-v16-v14-celebration-jlens-seed255",
+    "tags": [
+      "development-only",
+      "adaptive-v14-extension",
+      "celebration-family",
+      "tail-taper",
+      "complete-u2-h10",
+      "n16-paired",
+      "jlens-treatment",
+      "seed255"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v16-v14-celebration-jlens-seed255"
+  },
+  "schema_version": 2,
+  "terminal_run_result_sha256": "542e95412a9d7e7487988b4e08d9a8efb96a914c3d5265f7eed050bbcb7661a4",
+  "uploaded_file_sha256": {
+    "data_indices.json": "1b42333b503c0bf44f20eb9737d3468eb7a0cd3799f9bd7bdde0c496ed9a76e3",
+    "environment_snapshot.json": "c670f8c52c333072a6223a1b98d63e61380ba5a87fa58339f0af904f16cf95ce",
+    "log_history.json": "5f467a4c78531f904435f5ec056d74dc8f410aeab3378cd133e20887b7621edd",
+    "resolved_config.json": "bb31dd18552a99ab06b6cb18536386c939c1b13e893ea326ea132e9db5310440",
+    "run_manifest.json": "b583b68c60663413a32cafd541acd0171dd63eaf23b4216212223fc3bf251346",
+    "run_result_manifest.json": "542e95412a9d7e7487988b4e08d9a8efb96a914c3d5265f7eed050bbcb7661a4",
+    "validation_history.jsonl": "3dd9ff12a2c8009cd56b50ed1768e5a3e150e0eb13fedf981b5d9f5749e0fdae"
+  },
+  "wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "dev-v16-v14-celebration-n16-u2-h10",
+    "project": "j-lens-rl",
+    "resume": "never",
+    "run_id": "dev-v16-v14-celebration-jlens-seed255",
+    "run_name": "dev-v16-v14-celebration-jlens-seed255",
+    "tags": [
+      "development-only",
+      "adaptive-v14-extension",
+      "celebration-family",
+      "tail-taper",
+      "complete-u2-h10",
+      "n16-paired",
+      "jlens-treatment",
+      "seed255"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v16-v14-celebration-jlens-seed255"
+  }
+}

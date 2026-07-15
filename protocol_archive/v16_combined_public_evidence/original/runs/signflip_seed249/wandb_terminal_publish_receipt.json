@@ -1,0 +1,57 @@
+{
+  "artifact": {
+    "digest": "cbcd6b6cdeeb50282f82dd9dcbbd7993",
+    "id": "QXJ0aWZhY3Q6MzE0MTU5Njk1OA==",
+    "name": "dev-v16-v14-celebration-signflip-seed249-terminal-evidence:v0",
+    "qualified_name": "nilinabra-spare-time/j-lens-rl/dev-v16-v14-celebration-signflip-seed249-terminal-evidence:v0",
+    "version": "v0"
+  },
+  "observed_wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "dev-v16-v14-celebration-n16-u2-h10",
+    "project": "j-lens-rl",
+    "run_id": "dev-v16-v14-celebration-signflip-seed249",
+    "run_name": "dev-v16-v14-celebration-signflip-seed249",
+    "tags": [
+      "development-only",
+      "adaptive-v14-extension",
+      "celebration-family",
+      "tail-taper",
+      "complete-u2-h10",
+      "n16-paired",
+      "matched-signflip",
+      "seed249"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v16-v14-celebration-signflip-seed249"
+  },
+  "schema_version": 2,
+  "terminal_run_result_sha256": "253b3dd540f3f28809e43587ee25f9d682a2b3f840ea58bdb9b81df2e313b9b4",
+  "uploaded_file_sha256": {
+    "data_indices.json": "dbe3be32385b69b837bf4a5edffd8781f5bbfd9ac5d106557401bb0dfe9d0632",
+    "environment_snapshot.json": "255c6e1008df66dfdd4a59aa1b0dd899a0ba0dcc8d1a2fd8a09c5c6849af3bc6",
+    "log_history.json": "ac6188e360e66d95678f01132c41f5c901e34c1400f4d8c44a8599e7775db266",
+    "resolved_config.json": "c23d0826fd0e0b274f0e2a416c7048b852485765c3f4b15784713628bcda7d55",
+    "run_manifest.json": "b23cc97dce9de5ee956bd8d56d166afbe1163f120dfb53ea617c35dcca71f90f",
+    "run_result_manifest.json": "253b3dd540f3f28809e43587ee25f9d682a2b3f840ea58bdb9b81df2e313b9b4",
+    "validation_history.jsonl": "5c152a3562a1d80b82598227e2122b9f2278d4145df4ac7ba170a6c3df13066c"
+  },
+  "wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "dev-v16-v14-celebration-n16-u2-h10",
+    "project": "j-lens-rl",
+    "resume": "never",
+    "run_id": "dev-v16-v14-celebration-signflip-seed249",
+    "run_name": "dev-v16-v14-celebration-signflip-seed249",
+    "tags": [
+      "development-only",
+      "adaptive-v14-extension",
+      "celebration-family",
+      "tail-taper",
+      "complete-u2-h10",
+      "n16-paired",
+      "matched-signflip",
+      "seed249"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v16-v14-celebration-signflip-seed249"
+  }
+}
