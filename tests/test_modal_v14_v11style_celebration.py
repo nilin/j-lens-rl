@@ -28,7 +28,7 @@ def test_registration_schema_and_every_runtime_input_are_byte_pinned() -> None:
 
     registration = json.loads((ROOT / v14.REGISTRATION_PATH).read_text())
     assert registration["protocol"] == v14.PROTOCOL
-    assert registration["status"].startswith("prospective_before_any_v14_gpu")
+    assert "before_any_v14_gpu_dispatch_wandb_run_or_outcome" in registration["status"]
     assert registration["scientific_status"] == {
         "classification": "development_only_posthoc_v11_style_replication",
         "untouched_independent_confirmation": False,
@@ -44,7 +44,7 @@ def test_registration_schema_and_every_runtime_input_are_byte_pinned() -> None:
     }
     assert registration["metric_schema"]["sha256"] == v14.METRIC_SCHEMA_SHA256
     assert registration["firewall"]["protected_final_payloads_mounted_or_accessed"] is False
-    assert registration["execution"]["function_max_containers"] == 8
+    assert registration["execution"]["function_max_containers"] == 4
 
 
 def test_fresh_run_identity_and_dense_v11_gate_are_exact() -> None:
@@ -53,6 +53,7 @@ def test_fresh_run_identity_and_dense_v11_gate_are_exact() -> None:
     assert v14.CONDITIONS == ("jlens", "signflip")
     assert v14.STEPS == (0, 1, 2, 3, 4, 5, 6)
     assert v14.V11_GATE_STEPS == (0, 4, 5, 6)
+    assert v14.MAX_PARALLEL_GPUS == v14.WORKSPACE_GPU_LIMIT == 4
     assert len(v14.LABELS) == len(set(v14.LABELS)) == 8
     assert len(v14.WANDB_IDS) == len(set(v14.WANDB_IDS.values())) == 8
     assert all(run_id.startswith("dev-v14-") for run_id in v14.WANDB_IDS.values())

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-v14-v11style-preclaim-attempt-a-closeout",
+  "protocol": "j-lens-rl-development-v14-v11style-celebration-u1-h6",
+  "closed_at_utc": "2026-07-15T00:34:20Z",
+  "modal_app_id": "ap-wxYp3OVAH6RlnT5rn8WIrA",
+  "app_created_at_utc": "2026-07-15T00:20:44Z",
+  "app_stopped_at_utc": "2026-07-15T00:33:30Z",
+  "source_commit": "d8400a6f0e5f4f41d769a49e2012793f073d9450",
+  "failure_stage": "local_preflight_before_claim",
+  "failure": "The local preflight derived /usr/bin/modal from /usr/bin/python, but the installed Modal executable is /usr/local/bin/modal.",
+  "state_volume": "j-lens-rl-development-v14-v11style-celebration-20260714a",
+  "state_volume_root_inventory_after_stop": [],
+  "claim_created": false,
+  "launch_receipt_created": false,
+  "gpu_dispatch_intent_created": false,
+  "gpu_worker_started": false,
+  "wandb_run_started": false,
+  "training_or_evaluation_outcome_exists": false,
+  "protected_final_accessed": false,
+  "retry_or_resume_of_training_run": false,
+  "disposition": "Close the app-only attempt. The still-empty Volume may be used by a newly pushed preclaim-corrected launch because no claim, run identity, GPU allocation, W&B initialization, or outcome exists."
+}
