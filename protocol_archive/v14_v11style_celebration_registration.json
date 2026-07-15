@@ -2,8 +2,8 @@
   "schema_version": 1,
   "document_type": "j-lens-rl-development-v14-v11style-celebration-registration",
   "protocol": "j-lens-rl-development-v14-v11style-celebration-u1-h6",
-  "registered_at_utc": "2026-07-15T00:34:20Z",
-  "status": "prospectively_refrozen_after_outcome_free_preclaim_failure_and_before_any_v14_gpu_dispatch_wandb_run_or_outcome",
+  "registered_at_utc": "2026-07-15T00:42:30Z",
+  "status": "prospectively_refrozen_after_outcome_free_dispatch_failure_and_before_any_v14_gpu_training_wandb_run_or_outcome",
   "purpose": "Run a fresh, dense, six-update replication of the V11 celebration recipe with four treatment seeds and four exactly seed-matched sign-flip controls.",
   "scientific_status": {
     "classification": "development_only_posthoc_v11_style_replication",
@@ -45,10 +45,14 @@
     "v14_preclaim_attempt_a_closeout": {
       "path": "protocol_archive/v14_v11style_preclaim_attempt_a_closeout.json",
       "sha256": "6019fefebb60b711821369d9fd4ad94a4e62be55331b0c3cb6d552b699896228"
+    },
+    "v14_dispatch_attempt_b_closeout": {
+      "path": "protocol_archive/v14_v11style_dispatch_attempt_b_closeout.json",
+      "sha256": "acc087b2df7901658d42b052246db6ea83618a076f0ebfd432e6b545adc3b84d"
     }
   },
   "v13_public_outcome_known_before_v14_registration": {
-    "selection_timing": "V13 app ap-AffsuHrmJkl2drAttKYaZ0 stopped at 2026-07-14T23:48:15Z; this final V14 registration was refrozen at 2026-07-15T00:34:20Z after the complete public curves and the outcome-free V14 preclaim failure were available, but before any V14 GPU dispatch, W&B run, or outcome.",
+    "selection_timing": "V13 app ap-AffsuHrmJkl2drAttKYaZ0 stopped at 2026-07-14T23:48:15Z. V14 was first frozen after the complete public curves and an outcome-free preclaim failure. A second outcome-free infrastructure attempt committed eight fixed intents but failed on its first train_run.spawn after the ephemeral app stopped; it created no GPU worker, training output, W&B run, or scientific outcome. This replacement was refrozen at 2026-07-15T00:42:30Z before any V14 training or outcome.",
     "source_volume": "j-lens-rl-confirmatory-v13-celebration-long-20260714a",
     "curve_steps": [0, 4, 10, 20],
     "treatment_by_seed": {
@@ -218,8 +222,8 @@
   },
   "execution": {
     "backend": "Modal",
-    "app_name": "j-lens-rl-development-v14-v11style-celebration",
-    "fresh_volume": "j-lens-rl-development-v14-v11style-celebration-20260714a",
+    "app_name": "j-lens-rl-development-v14-v11style-celebration-20260715b",
+    "fresh_volume": "j-lens-rl-development-v14-v11style-celebration-20260715b",
     "volume_version": 2,
     "gpu_type": "L40S",
     "one_gpu_per_worker": true,
@@ -229,6 +233,8 @@
     "all_eight_calls_spawned_before_serial_get": true,
     "capacity_policy": "All eight fixed calls are spawned without outcome conditioning; at most four GPU workers run concurrently, so the remaining calls queue for a second wave.",
     "post_preclaim_user_capacity_change": "After attempt A failed before claim or GPU dispatch, the user lowered every new-launch ceiling from eight to four. The actual GPU launch therefore uses max_containers=4 without changing any science, seed, analysis, or W&B identity.",
+    "dispatch_attempt_b_replacement": "Attempt B used the four-GPU cap and committed all eight fixed intents, but the local entrypoint returned after asynchronously spawning the orchestrator. The app stopped before its first train_run.spawn, producing no GPU worker, W&B run, or scientific outcome. The replacement changes only app/volume/claim identities and drains orchestrator call.get locally so the app remains alive; all science and W&B identities remain fixed.",
+    "local_entrypoint_waits_for_terminal_orchestrator_result": true,
     "closed_v13_state_modified": false
   },
   "metric_schema": {

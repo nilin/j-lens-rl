@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-v14-v11style-dispatch-attempt-b-closeout",
+  "protocol": "j-lens-rl-development-v14-v11style-celebration-u1-h6",
+  "closed_at_utc": "2026-07-15T00:41:35Z",
+  "scientific_status": "outcome_free_infrastructure_failure",
+  "source_main_commit": "4416b983a050a036cb4152173399c3321229d9c9",
+  "modal": {
+    "app_name": "j-lens-rl-development-v14-v11style-celebration",
+    "app_id": "ap-AnEZzgt607i8ElG7umfbJO",
+    "volume": "j-lens-rl-development-v14-v11style-celebration-20260714a",
+    "volume_object_id": "vo-uGRXnXC8E9XVU9zk3lpKId",
+    "claim_id": "b6a52a50b5134427959e19aaf9672732",
+    "root_call_id": "fc-01KXHKD4QC07XP5FGWC98J3CYY",
+    "created_at_utc": "2026-07-15T00:36:26Z",
+    "stopped_at_utc": "2026-07-15T00:39:15Z",
+    "terminal_app_state": "stopped",
+    "terminal_task_count": 0,
+    "max_parallel_gpus": 4
+  },
+  "durable_state_inventory": {
+    "attempt_claim.json": true,
+    "launch_receipt.json": true,
+    "attempt_status.json": true,
+    "dispatch_intents": [
+      "jlens_seed236",
+      "jlens_seed237",
+      "jlens_seed238",
+      "jlens_seed239",
+      "signflip_seed236",
+      "signflip_seed237",
+      "signflip_seed238",
+      "signflip_seed239"
+    ],
+    "worker_call_ids": [],
+    "worker_completions": [],
+    "training_logs": [],
+    "checkpoints": [],
+    "evidence_files": [],
+    "wandb_receipts": []
+  },
+  "failure": {
+    "stage": "after_all_eight_intents_committed_before_first_gpu_spawn",
+    "error_type": "modal.exception.ConflictError",
+    "error": "The app is stopped or disabled",
+    "root_cause": "The local Modal entrypoint returned immediately after recording the asynchronous orchestrator receipt. Modal then stopped the ephemeral app while the orchestrator was attempting its first train_run.spawn call.",
+    "app_log_evidence": [
+      "2026-07-15 00:39:12+00:00 Stopping app - local entrypoint completed.",
+      "2026-07-15 00:39:14+00:00 modal.exception.ConflictError: The app is stopped or disabled"
+    ],
+    "first_failed_operation": "train_run.spawn for jlens_seed236",
+    "gpu_worker_spawned": false,
+    "training_started": false,
+    "wandb_run_initialized": false,
+    "scientific_outcome_observed": false,
+    "protected_final_payloads_accessed": false
+  },
+  "disposition": {
+    "claim_is_terminal": true,
+    "volume_is_terminal_read_only_evidence": true,
+    "retry_resume_or_warm_start_permitted": false,
+    "fixed_seeds_configs_analysis_and_wandb_ids_consumed_by_training": false,
+    "fresh_replacement_required": true,
+    "authorized_replacement_changes": [
+      "fresh Modal app name",
+      "fresh empty Modal volume",
+      "fresh claim and call identities",
+      "keep local entrypoint alive by draining orchestrator call.get"
+    ],
+    "scientific_changes_authorized": false,
+    "capacity_change_authorized": false,
+    "replacement_max_parallel_gpus": 4
+  }
+}

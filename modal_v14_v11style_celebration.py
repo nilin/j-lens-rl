@@ -33,11 +33,11 @@ from modal_emotional_tournament_v1 import repo_image as cached_tournament_image
 LOCAL_REPO = Path(__file__).resolve().parent
 REMOTE_REPO = Path("/workspace/j-lens-rl")
 REMOTE_STATE = Path("/state")
-APP_NAME = "j-lens-rl-development-v14-v11style-celebration"
-VOLUME_NAME = "j-lens-rl-development-v14-v11style-celebration-20260714a"
+APP_NAME = "j-lens-rl-development-v14-v11style-celebration-20260715b"
+VOLUME_NAME = "j-lens-rl-development-v14-v11style-celebration-20260715b"
 PROTOCOL = "j-lens-rl-development-v14-v11style-celebration-u1-h6"
 REGISTRATION_PATH = "protocol_archive/v14_v11style_celebration_registration.json"
-REGISTRATION_SHA256 = "e62285fdae24c1ea6717c34e4ef0f4bf61df7615a49a922be3d1ff725e41e5c8"
+REGISTRATION_SHA256 = "d08e06cf6994247ba30c102391f731a3456c0fd0079533ee6e0302718992715f"
 METRIC_SCHEMA_PATH = "protocol_archive/v14_v11style_celebration_metric_schema.json"
 METRIC_SCHEMA_SHA256 = "4d5784a27b83804a83281fe95cba21f1093c39e934e8e1ffa7a9323a716a97f0"
 SOURCE_CONFIG_PATH = "protocol_archive/seed195_public_evidence/terminal/resolved_config.json"
@@ -109,7 +109,7 @@ EXPECTED_FILE_SHA256 = {
     LENS_PATH: LENS_SHA256,
     "configs/common.json": "c397905b4d4ac0cc64d7924d304b6aede4dc831d7d6e2a8b5622b63099266960",
     "configs/emotional_parallel_v3_common.json": "d4e8b8495b5df4b91a3110ef0baab08c1dcda1a5ca88b00fc4b45b099ba133ef",
-    COMMON_CONFIG_PATH: "2be74e00aa9ddd0f966454a072e7be0b16105ec3d67949111316938355cbfcb0",
+    COMMON_CONFIG_PATH: "59b06fa35015c71bc51fe3586fa728758aa5735f46529985de8b6405953727e5",
     "configs/v14_v11style_celebration_jlens_seed236.json": "4c785c35aed9357442830af11ac4a7def18ab7368c37352a7930ebdddc068e26",
     "configs/v14_v11style_celebration_jlens_seed237.json": "9704e6e61cdf0788c16becafda6d39ed95d43f724d81ec3313c6d46c8019f507",
     "configs/v14_v11style_celebration_jlens_seed238.json": "305d9b57a99d41534269092c3bb16159fe8fc22632889e4f75db0ee20794e941",
@@ -120,6 +120,7 @@ EXPECTED_FILE_SHA256 = {
     "configs/v14_v11style_celebration_signflip_seed239.json": "fa991c073e307c4ec1dcde5de9e006620b33b08a12eaf7f04cdf03105f940aa4",
     REGISTRATION_PATH: REGISTRATION_SHA256,
     "protocol_archive/v14_v11style_preclaim_attempt_a_closeout.json": "6019fefebb60b711821369d9fd4ad94a4e62be55331b0c3cb6d552b699896228",
+    "protocol_archive/v14_v11style_dispatch_attempt_b_closeout.json": "acc087b2df7901658d42b052246db6ea83618a076f0ebfd432e6b545adc3b84d",
     METRIC_SCHEMA_PATH: METRIC_SCHEMA_SHA256,
     SOURCE_CONFIG_PATH: SOURCE_CONFIG_SHA256,
     CALIBRATION_PATH: CALIBRATION_SHA256,
@@ -1446,5 +1447,26 @@ def main() -> None:
             },
             indent=2,
             sort_keys=True,
-        )
+        ),
+        flush=True,
+    )
+    summary = call.get()
+    print(
+        json.dumps(
+            {
+                "status": "orchestrator_terminal",
+                "claim_id": claim_id,
+                "root_call_id": call.object_id,
+                "stage": summary.get("stage"),
+                "target_evidence_met": summary.get("aggregate", {}).get(
+                    "target_evidence_met"
+                ),
+                "aggregate_publish_receipt": summary.get(
+                    "aggregate_publish_receipt"
+                ),
+            },
+            indent=2,
+            sort_keys=True,
+        ),
+        flush=True,
     )

@@ -28,7 +28,7 @@ def test_registration_schema_and_every_runtime_input_are_byte_pinned() -> None:
 
     registration = json.loads((ROOT / v14.REGISTRATION_PATH).read_text())
     assert registration["protocol"] == v14.PROTOCOL
-    assert "before_any_v14_gpu_dispatch_wandb_run_or_outcome" in registration["status"]
+    assert "before_any_v14_gpu_training_wandb_run_or_outcome" in registration["status"]
     assert registration["scientific_status"] == {
         "classification": "development_only_posthoc_v11_style_replication",
         "untouched_independent_confirmation": False,
@@ -45,6 +45,9 @@ def test_registration_schema_and_every_runtime_input_are_byte_pinned() -> None:
     assert registration["metric_schema"]["sha256"] == v14.METRIC_SCHEMA_SHA256
     assert registration["firewall"]["protected_final_payloads_mounted_or_accessed"] is False
     assert registration["execution"]["function_max_containers"] == 4
+    assert registration["execution"]["local_entrypoint_waits_for_terminal_orchestrator_result"] is True
+    assert registration["execution"]["app_name"] == v14.APP_NAME
+    assert registration["execution"]["fresh_volume"] == v14.VOLUME_NAME
 
 
 def test_fresh_run_identity_and_dense_v11_gate_are_exact() -> None:
@@ -268,6 +271,10 @@ def test_modal_runner_is_fresh_noncreating_parallel_and_drains_every_call() -> N
     assert "completion = calls[(condition, seed)].get()" in orchestrator
     assert "every_spawned_call_drained\": True" in orchestrator
     assert "after all eight calls were drained" in orchestrator
+    local_entrypoint = source[source.index("@app.local_entrypoint()") :]
+    assert local_entrypoint.index("orchestrate.spawn") < local_entrypoint.index(
+        "record_launch_receipt.remote"
+    ) < local_entrypoint.index("call.get()")
     assert "run.define_metric(\"global_step\")" in source
     assert 'step_metric="global_step"' in source
     assert v14.VOLUME_NAME not in {
