@@ -1,0 +1,23 @@
+{
+  "all_nodes_retained": true,
+  "artifact_digest": "1e6b4c0966c21dc465986459d83b76f9",
+  "artifact_id": "QXJ0aWZhY3Q6MzE0MjAzODY4Mg==",
+  "artifact_name": "v16-v16r-combined-public-evidence:v0",
+  "artifact_version": "v0",
+  "global_steps": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "protected_final_payloads_accessed": false,
+  "schema_version": 1,
+  "source_commit": "0d80c3dfb30ca74f834f82e42ecb09696a5e77c9",
+  "wandb_entity": "nilinabra-spare-time",
+  "wandb_group": "dev-v16-v14-celebration-n16-u2-h10-combined",
+  "wandb_project": "j-lens-rl",
+  "wandb_run_id": "dev-v16-v14-celebration-combined-n16-aggregate",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v16-v14-celebration-combined-n16-aggregate"
+}

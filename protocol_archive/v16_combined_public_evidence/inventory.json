@@ -1,5 +1,5 @@
 {
-  "file_count_excluding_inventory_and_checksums": 349,
+  "file_count_excluding_inventory_and_checksums": 350,
   "files": [
     {
       "bytes": 1444,
@@ -30,6 +30,11 @@
       "bytes": 1836,
       "path": "evidence/per_seed_effects.csv",
       "sha256": "61b90805af08aef709b2bcfb1e3cebf3dce2462663d9b3815b11dee52828a4bd"
+    },
+    {
+      "bytes": 749,
+      "path": "evidence/wandb_aggregate_publish_receipt.json",
+      "sha256": "acaa54a0458bc1b1db99673eb3d27c6d912e65d0597ce1ef807558c4c527d843"
     },
     {
       "bytes": 6984,

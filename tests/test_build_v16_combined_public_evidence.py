@@ -76,3 +76,11 @@ def test_wandb_publisher_uses_canonical_global_step_and_complete_files():
     assert 'step_metric="train/global_step"' in source
     assert '"evidence/all_nodes_retained": True' in source
     assert '"evidence/early_shape_pass"' in source
+
+    receipt = json.loads(
+        (ARCHIVE / "evidence/wandb_aggregate_publish_receipt.json").read_text()
+    )
+    assert receipt["source_commit"] == "0d80c3dfb30ca74f834f82e42ecb09696a5e77c9"
+    assert receipt["global_steps"] == [0, 2, 4, 6, 8, 10]
+    assert receipt["all_nodes_retained"] is True
+    assert receipt["artifact_digest"] == "1e6b4c0966c21dc465986459d83b76f9"

@@ -2,7 +2,7 @@
 
 Initial audit snapshot: `2026-07-14T00:32:52Z`
 Prelaunch v2 update: `2026-07-14 UTC`
-Current evidence update: `2026-07-15T04:38:00Z`
+Current evidence update: `2026-07-15T04:50:00Z`
 
 - Repository: `/j-lens-rl`
 - V16 launch source commit / `origin/main` at launch:
@@ -157,6 +157,32 @@ per-seed and aggregate CSV/JSON; sample SD/SEM at every node; and the complete
 SVG curve. It excludes checkpoints, adapters, optimizer state, weights,
 credentials, and protected-final data. `scripts/build_v16_combined_public_evidence.py`
 re-verifies and rebuilds the statistics and plot from the archived raw bytes.
+
+The complete six-node aggregate is published at
+`https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v16-v14-celebration-combined-n16-aggregate`.
+Its evidence artifact is `v16-v16r-combined-public-evidence:v0`, digest
+`1e6b4c0966c21dc465986459d83b76f9`, published from source commit
+`0d80c3dfb30ca74f834f82e42ecb09696a5e77c9`. The archived publication receipt
+retains all global steps `0/2/4/6/8/10`.
+
+### Final practical interpretation and shutdown
+
+The result is not promising for the intended causal story. Positive
+celebration reward and its exact sign-flip both improve similarly from the
+initial eval; the sign-flip improves slightly more on the registered integrated
+measure. Therefore these data support a shared RL/training-over-time effect,
+not the claim that rewarding positive emotional J-space caused better GSM8K
+performance. Possible shared causes include generic policy optimization,
+regularization, or exposed-eval variability; this experiment does not identify
+which. The requested rising aggregate curve is also absent. No conclusion
+should be based on selecting individual favorable curves.
+
+At `2026-07-15T04:49Z`, every Modal app was stopped with zero tasks and
+`modal container list --json` returned an empty list. The training, recovery,
+and aggregate-publication apps are terminal, and no collaborating agent has an
+external-compute launcher running. The current local box was intentionally left
+untouched. Evidence Volumes were retained because they are storage rather than
+active compute.
 
 The detailed sections below preserve the chronological audit trail. Earlier
 "current" statements describe their dated snapshots; this current summary and
