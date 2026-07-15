@@ -1,0 +1,15 @@
+{
+  "claim_id": "5d6c4eac2281450d97ac4870be98a2db",
+  "condition": "signflip",
+  "config_sha256": "372796337cb7f5dda812045920af5086bf5fcf85f967001154f2abca1c84ed0d",
+  "contract_sha256": "235789a0b92900552b67e704682817ffdf0ad291ea0574319177a6e2d8bfe40f",
+  "gpu_type": "L40S",
+  "label": "signflip_seed228",
+  "phase": "joint_treatment_and_signflip_training",
+  "protocol": "j-lens-rl-confirmatory-v13-modal-execution-contract-v1",
+  "root_call_id": "fc-01KXHFHKS166MWQ7SPS89HZZQJ",
+  "schema_version": 1,
+  "seed": 228,
+  "slot": 4,
+  "status": "written_before_gpu_schedule"
+}

@@ -1,0 +1,78 @@
+{
+  "audited_commit": "fb928bb99c0add626a7b513810fab7a67ad2a74b",
+  "auditor": "Codex V13 prelaunch automation audit",
+  "decision": "approved_before_final_unlock",
+  "design": {
+    "acceptance": {
+      "crossed_95pct_intervals": "reported descriptively, not used as acceptance gates",
+      "curve_gate_passed": true,
+      "difference_in_differences_exact_two_sided_sign_p": 0.125,
+      "difference_in_differences_mean": "> 0",
+      "difference_in_differences_seed_effects": "4 positive, 0 negative, 0 ties",
+      "literal_provenance_environment_collection_and_audit_checks": "all pass",
+      "treatment_vs_base_exact_two_sided_sign_p": 0.125,
+      "treatment_vs_base_mean": "> 0",
+      "treatment_vs_base_seed_effects": "4 positive, 0 negative, 0 ties"
+    },
+    "analysis": {
+      "acceptance_alpha": 0.15,
+      "bootstrap_method": "crossed seed-and-item percentile bootstrap",
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 0,
+      "confidence": 0.95,
+      "crossed_95pct_intervals": "reported descriptively, not used as acceptance gates",
+      "primary_estimand": "paired difference-in-differences: (selected-emotional-treatment minus base) minus (matched-signflip minus base), matched by seed and final item",
+      "secondary_estimand": "paired selected-emotional-treatment minus base across seeds and final items",
+      "seed_sign_test": "exact two-sided sign test across four registered seeds"
+    },
+    "curve_steps": [
+      0,
+      4,
+      10,
+      20
+    ],
+    "final_examples": 900,
+    "final_labels": [
+      "base",
+      "jlens_seed228",
+      "jlens_seed229",
+      "jlens_seed230",
+      "jlens_seed231",
+      "signflip_seed228",
+      "signflip_seed229",
+      "signflip_seed230",
+      "signflip_seed231"
+    ],
+    "seeds": [
+      228,
+      229,
+      230,
+      231
+    ],
+    "terminal_step": 20
+  },
+  "protected_payloads_accessed": false,
+  "schema_version": 1,
+  "source_sha256": {
+    "common": "6e85491315e79c308b769e02514538caef9c3a5b06cb7a3e440c63e655f6d16e",
+    "eval": "0403e7c35f92af20f13bb471605e044cbb66079600530e4d420b42dc8a4fd578",
+    "paired_eval": "53d3d0c89ebc292642900393af75ce9f228caf84cf52dbfcee3d06dfb5616ad0",
+    "protocol": "60f20e70960731effb17654c391dffc1f78eab29c5ec7420a413008696124d44",
+    "runner": "beb79255ab58612e9e67800331d4c2aa75a264c8595d77e0bd247a55802b2b69",
+    "shared_train": "048ff415ce51b50e6e0dea5ae60986d5ea7e783c3c7027057196597a594d4167",
+    "training_entrypoint": "a08bc43f3894d9941ca611b30d82b94e638d7364b4ddfe98dff823d2629d7737"
+  },
+  "test_command": [
+    "/usr/local/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_v10_final_automation.py",
+    "tests/test_paired_eval.py"
+  ],
+  "test_source_sha256": {
+    "tests/test_paired_eval.py": "cff4b8d3b3c68924d7fac44bb010001203379029d343c1c52068da67b193d6f5",
+    "tests/test_v10_final_automation.py": "8a034271a12e8ba3a640123baf29fbf24fce54c0d9b09318c921c2506a99e7f7"
+  },
+  "tests_passed": 38
+}

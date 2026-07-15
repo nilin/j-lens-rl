@@ -1,0 +1,53 @@
+{
+  "artifact": {
+    "digest": "c8d7521e3eab2687ca810958e1ab5976",
+    "id": "QXJ0aWZhY3Q6MzE0MDkxNDQwMA==",
+    "name": "confirm-v13-celebration-long-jlens-seed228-terminal-evidence:v0",
+    "qualified_name": "nilinabra-spare-time/j-lens-rl/confirm-v13-celebration-long-jlens-seed228-terminal-evidence:v0",
+    "version": "v0"
+  },
+  "observed_wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v13-celebration-long-u4-u10-u20",
+    "project": "j-lens-rl",
+    "run_id": "confirm-v13-celebration-long-jlens-seed228",
+    "run_name": "confirm-v13-celebration-long-jlens-seed228",
+    "tags": [
+      "confirmatory-v13",
+      "emotional",
+      "celebration-family",
+      "tail-taper",
+      "exact-seed195-horizon",
+      "prospective"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v13-celebration-long-jlens-seed228"
+  },
+  "schema_version": 2,
+  "terminal_run_result_sha256": "1c8b6da055ea406e968b6a4b195e1b48bb9641102e79dfa99a270217cf210145",
+  "uploaded_file_sha256": {
+    "data_indices.json": "7baafbbd24519af061766dd17cb3a293c05157585526131f68a3e1990cceb654",
+    "environment_snapshot.json": "d075869fc9864d927ca683cf1158c98dda203113bf9eeb19dbcdc9b783ac1ffe",
+    "log_history.json": "3c43d20624eca8585b2f43403a848dc1775836ad97f5fff37764c22c7a04d7f6",
+    "resolved_config.json": "146f2bd5ef800a1f511a6216ee1512808720ae3bc9908bc3af22761de1c41e4e",
+    "run_manifest.json": "494bba15c12cf5cc9249bc268f889385061b438f5307aa5cd8bec53f6c6ab87a",
+    "run_result_manifest.json": "1c8b6da055ea406e968b6a4b195e1b48bb9641102e79dfa99a270217cf210145",
+    "validation_history.jsonl": "8cafec92edc2f20ddcbc423402e8ae2ecafb27d15a9e7accc1dd5c12d6ec49d2"
+  },
+  "wandb_identity": {
+    "entity": "nilinabra-spare-time",
+    "group": "confirm-v13-celebration-long-u4-u10-u20",
+    "project": "j-lens-rl",
+    "resume": "never",
+    "run_id": "confirm-v13-celebration-long-jlens-seed228",
+    "run_name": "confirm-v13-celebration-long-jlens-seed228",
+    "tags": [
+      "confirmatory-v13",
+      "emotional",
+      "celebration-family",
+      "tail-taper",
+      "exact-seed195-horizon",
+      "prospective"
+    ],
+    "url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/confirm-v13-celebration-long-jlens-seed228"
+  }
+}

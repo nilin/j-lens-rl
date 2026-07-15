@@ -1,0 +1,270 @@
+{
+  "protected_payloads_accessed": false,
+  "protocol": "j-lens-rl-confirmatory-v13-celebration-long-u4-u10-u20",
+  "registered_spec_projection": {
+    "acceptance": {
+      "crossed_95pct_intervals": "reported descriptively, not used as acceptance gates",
+      "curve_gate_passed": true,
+      "difference_in_differences_exact_two_sided_sign_p": 0.125,
+      "difference_in_differences_mean": "> 0",
+      "difference_in_differences_seed_effects": "4 positive, 0 negative, 0 ties",
+      "literal_provenance_environment_collection_and_audit_checks": "all pass",
+      "treatment_vs_base_exact_two_sided_sign_p": 0.125,
+      "treatment_vs_base_mean": "> 0",
+      "treatment_vs_base_seed_effects": "4 positive, 0 negative, 0 ties"
+    },
+    "analysis": {
+      "acceptance_alpha": 0.15,
+      "bootstrap_method": "crossed seed-and-item percentile bootstrap",
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 0,
+      "confidence": 0.95,
+      "crossed_95pct_intervals": "reported descriptively, not used as acceptance gates",
+      "primary_estimand": "paired difference-in-differences: (selected-emotional-treatment minus base) minus (matched-signflip minus base), matched by seed and final item",
+      "secondary_estimand": "paired selected-emotional-treatment minus base across seeds and final items",
+      "seed_sign_test": "exact two-sided sign test across four registered seeds"
+    },
+    "artifacts": {
+      "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+      "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+      "lens_path": "artifacts/qwen25_05b_solved_lens.pt",
+      "lens_sha256": "178a9671cbf41882135807bde59b828e36c6f8f98b32c809ea3346860aad10dc"
+    },
+    "candidate_freeze": {
+      "path": "protocol_archive/v13_celebration_long_candidate_freeze.json",
+      "sha256": "5aec5b806dc947886e8778256224fc7e994e94050132d0fa055254e89b931b0c"
+    },
+    "candidate_freeze_correction": {
+      "path": "protocol_archive/v13_celebration_long_selection_integrity.json",
+      "sha256": "8bcd35d6fa15cc5fdca9093fa02b1980ad089217b5eacb44da57fab81e764db0"
+    },
+    "conditions": [
+      "jlens",
+      "signflip"
+    ],
+    "curve_gate": {
+      "criterion": "M4 > M0, M10 >= M4, and M20 >= M10 on the four-treatment-seed mean",
+      "steps": [
+        0,
+        4,
+        10,
+        20
+      ]
+    },
+    "dataset": {
+      "name": "openai/gsm8k",
+      "revision": "740312add88f781978c0658806c59bc2815b9866",
+      "size": 7473,
+      "split": "train",
+      "subset": "main"
+    },
+    "final_collection": {
+      "count": 900,
+      "labels": [
+        "base",
+        "jlens_seed228",
+        "jlens_seed229",
+        "jlens_seed230",
+        "jlens_seed231",
+        "signflip_seed228",
+        "signflip_seed229",
+        "signflip_seed230",
+        "signflip_seed231"
+      ],
+      "manifest_metadata": {
+        "dataset": "openai/gsm8k",
+        "split": "train",
+        "subset": "main"
+      },
+      "manifest_path": "/state/manifests/sealed_final_indices.json",
+      "manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+      "single_immutable_collection": true
+    },
+    "firewall": {
+      "curve_manifest": {
+        "count": 400,
+        "path": ".confirmatory/manifests/curve_indices.json",
+        "sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1"
+      },
+      "disjointness_receipt": {
+        "path": "/state/reproducibility/v10_disjointness_receipt.json",
+        "sha256": "d8422f2f016cdda0859a9cbb9f2649b89c7ec6da85baa0152121f43f6fbc440b"
+      },
+      "train_exclusions": {
+        "count": 3764,
+        "path": ".confirmatory/manifests/train_exclusions.json",
+        "sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+      }
+    },
+    "gpu_lock_path": "/state/v13_gpu.lock",
+    "hardware": {
+      "backend": "modal",
+      "cuda_version": "12.8",
+      "device_name": "NVIDIA L40S",
+      "driver_version": "580.95.05",
+      "gpu_per_worker": 1,
+      "max_gpu_processes": 1,
+      "max_modal_gpus_at_or_after_2026_07_14_23_00_utc": 10,
+      "max_modal_gpus_before_2026_07_14_23_00_utc": 5,
+      "memory_total_mib": 46068,
+      "torch_version": "2.9.1+cu128"
+    },
+    "matched_control_rule": "negate every selected treatment score-component weight; preserve the seed, training rows, optimizer, horizon, decoding, and all other science",
+    "matched_control_score_components": [
+      {
+        "aggregation": "mean",
+        "end_fraction": 0.75,
+        "layer": 8,
+        "start_fraction": 0.5,
+        "weight": -1.0
+      },
+      {
+        "aggregation": "mean",
+        "end_fraction": 1.0,
+        "layer": 8,
+        "start_fraction": 0.75,
+        "weight": -0.25
+      }
+    ],
+    "metric_schema": {
+      "path": "protocol_archive/v13_celebration_long_metric_schema.json",
+      "sha256": "f3f9e77a685a3959e384f730348caaff8446dc231a00e42f3bfcedefbf4f5ede"
+    },
+    "modal_execution": {
+      "contract_path": "protocol_archive/v10_modal_execution_contract.json",
+      "contract_sha256": "235789a0b92900552b67e704682817ffdf0ad291ea0574319177a6e2d8bfe40f"
+    },
+    "model": {
+      "dtype": "torch.bfloat16",
+      "name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "paths": {
+      "calibration_config_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+      "curve_config_path": ".confirmatory/manifests/curve_indices.json",
+      "lens_config_path": "artifacts/qwen25_05b_solved_lens.pt",
+      "metric_schema_config_path": "protocol_archive/v13_celebration_long_metric_schema.json",
+      "state_config_prefix": "/state",
+      "train_exclusions_config_path": ".confirmatory/manifests/train_exclusions.json",
+      "training_entrypoint": "scripts/confirmatory_v10_train.py"
+    },
+    "protocol": "j-lens-rl-confirmatory-v13-celebration-long-u4-u10-u20",
+    "protocol_family": "j-lens-rl-confirmatory-v13-celebration-long",
+    "python_executable": "/usr/local/bin/python",
+    "recipe_sha256": "47e7ce1d7337482642bb321aafd8d1e83d8238d7b0888955204ae87a2cc0c719",
+    "registered_code_sha256": "6de02334f439ecec234f4571497baebfa0be1823d39dc91cd36a652ee195ccef",
+    "repository": "/workspace/j-lens-rl",
+    "schema_version": 1,
+    "science_registration": {
+      "path": "protocol_archive/v13_celebration_long_registration.json",
+      "sha256": "d7d5d51a8bcdec8d364793181975e5ae47d5dd7e7b848b9d8a5dfeceb04d725e"
+    },
+    "seeds": [
+      228,
+      229,
+      230,
+      231
+    ],
+    "software": {
+      "datasets": "4.7.0",
+      "j-lens-rl": "0.1.0",
+      "peft": "0.18.0",
+      "torch": "2.9.1",
+      "transformers": "5.5.0"
+    },
+    "target_words": [
+      "yay",
+      "great",
+      "success",
+      "nice"
+    ],
+    "terminal_step": 20,
+    "training": {
+      "early_stopping_min_delta": 0.0,
+      "early_stopping_patience": null,
+      "eval_every": 4,
+      "gradient_accumulation_steps": 1,
+      "kl_beta": 0.02,
+      "learning_rate": 3e-06,
+      "lora_alpha": 16,
+      "lora_rank": 8,
+      "loss_type": "dapo",
+      "lr_scheduler_type": "constant",
+      "mask_target_tokens": true,
+      "max_new_tokens": 256,
+      "max_prompt_tokens": 384,
+      "min_new_tokens": 64,
+      "num_generations": 8,
+      "num_generations_eval": 1,
+      "save_every": 10,
+      "save_total_limit": 3,
+      "scale_rewards": "group",
+      "score_aggregation": "mean",
+      "score_include_final": false,
+      "score_layers": [
+        8,
+        14,
+        20
+      ],
+      "score_start_fraction": 0.0,
+      "score_stride": 10,
+      "temperature": 1.0,
+      "train_examples": 1000,
+      "updates": 20,
+      "validation_batch_size": 64,
+      "validation_examples": 400,
+      "validation_observational_only": true,
+      "validation_steps": [
+        4,
+        10,
+        20
+      ],
+      "vocab_chunk_size": 16384,
+      "warmup_ratio": 0.0,
+      "warmup_steps": 0
+    },
+    "treatment_score_components": [
+      {
+        "aggregation": "mean",
+        "end_fraction": 0.75,
+        "layer": 8,
+        "start_fraction": 0.5,
+        "weight": 1.0
+      },
+      {
+        "aggregation": "mean",
+        "end_fraction": 1.0,
+        "layer": 8,
+        "start_fraction": 0.75,
+        "weight": 0.25
+      }
+    ],
+    "wandb": {
+      "entity": "nilinabra-spare-time",
+      "group": "confirm-v13-celebration-long-u4-u10-u20",
+      "mode": "online",
+      "project": "j-lens-rl",
+      "run_ids": {
+        "jlens_seed228": "confirm-v13-celebration-long-jlens-seed228",
+        "jlens_seed229": "confirm-v13-celebration-long-jlens-seed229",
+        "jlens_seed230": "confirm-v13-celebration-long-jlens-seed230",
+        "jlens_seed231": "confirm-v13-celebration-long-jlens-seed231",
+        "signflip_seed228": "confirm-v13-celebration-long-signflip-seed228",
+        "signflip_seed229": "confirm-v13-celebration-long-signflip-seed229",
+        "signflip_seed230": "confirm-v13-celebration-long-signflip-seed230",
+        "signflip_seed231": "confirm-v13-celebration-long-signflip-seed231"
+      },
+      "tags": [
+        "confirmatory-v13",
+        "emotional",
+        "celebration-family",
+        "tail-taper",
+        "exact-seed195-horizon",
+        "prospective"
+      ]
+    }
+  },
+  "registered_spec_projection_sha256": "5f23caf9a28a98cddfaa9a505b7a7559ae0916abb2da4cc3a3a03788d819b4b2",
+  "schema_version": 1,
+  "status": "registered_before_v13_training_and_final_unlock"
+}

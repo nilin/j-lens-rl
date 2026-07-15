@@ -3,6 +3,8 @@
 modal.sh
 artifacts/
 runs/
+!protocol_archive/v13_celebration_long_public_evidence/runs/
+!protocol_archive/v13_celebration_long_public_evidence/runs/**
 wandb/
 /.confirmatory
 /build/

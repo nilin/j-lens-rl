@@ -1,0 +1,12 @@
+{
+  "claim_id": "5d6c4eac2281450d97ac4870be98a2db",
+  "completed_at_utc": "2026-07-14T23:41:23.111138+00:00",
+  "intent_sha256": "bea9002643dfefc13fae056f61e186fa815dddd0129d5e7891f72b4f7f193def",
+  "label": "jlens_seed230",
+  "protocol": "j-lens-rl-confirmatory-v13-modal-execution-contract-v1",
+  "receipt_sha256": "341f6a79a700031dd1ff99959ac278d2587af2f9dba4aa614f3466df738e6bc9",
+  "run_result_sha256": "b3ec483719e7962612e8ebdd95430cb243d9527c8b83e09b87682375bdf43fa5",
+  "schema_version": 1,
+  "status": "terminal_run_verified_before_completion",
+  "validation_history_sha256": "f2f99572244d341b9dc1be9346b05cd56cc0f747ea314db4ed2c3263b7c1533f"
+}

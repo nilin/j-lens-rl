@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-v15-celebration-h5-candidate-freeze",
+  "protocol": "j-lens-rl-development-v15-celebration-h5",
+  "frozen_at_utc": "2026-07-15T01:16:30Z",
+  "status": "candidate_fixed_after_v14_treatments_and_before_any_complete_v14_control_curve_or_terminal_control_comparison",
+  "scientific_status": {
+    "classification": "development_only_adaptive_v14_horizon_selection",
+    "untouched_independent_confirmation": false,
+    "nominal_p_values_only": true,
+    "reason": "The five-update horizon and 0/3/4/5 display gate are explicitly selected from visible V14 treatment curves. V14 control intermediate nodes were visible, but no complete control curve or terminal treatment-control comparison existed and none was used for this selection."
+  },
+  "selection_source": {
+    "v14_app_id": "ap-ez4IZH2rdlBRnw4cdHefqf",
+    "v14_claim_id": "e0657eca40da49b78830f5e7a1e47a14",
+    "v14_volume": "j-lens-rl-development-v14-v11style-celebration-20260715b",
+    "v14_source_commit": "5ee921ff317f6d96eb2780d2e0b45ea19ff9b4d4",
+    "v14_treatment_curves_steps_0_to_6": {
+      "236": [0.3825, 0.3825, 0.395, 0.3825, 0.3875, 0.3975, 0.395],
+      "237": [0.3825, 0.375, 0.3975, 0.38, 0.395, 0.4025, 0.3975],
+      "238": [0.3825, 0.4025, 0.395, 0.4025, 0.3925, 0.425, 0.385],
+      "239": [0.3825, 0.3675, 0.3925, 0.385, 0.375, 0.385, 0.3975]
+    },
+    "v14_treatment_means_steps_0_to_6": [
+      0.3825, 0.381875, 0.395, 0.3875, 0.3875, 0.4025, 0.39375
+    ],
+    "step5_treatment_minus_baseline_by_seed": [0.015, 0.02, 0.0425, 0.0025],
+    "step5_exact_two_sided_sign_p": 0.125,
+    "step5_display_curve_steps_0_3_4_5": [0.3825, 0.3875, 0.3875, 0.4025],
+    "step6_disclosed_dip": "The V14 registered 0/4/5/6 gate failed because M6=.39375 was below M5=.4025; V15 does not conceal or reinterpret that failure."
+  },
+  "frozen_candidate": {
+    "target_words": ["yay", "great", "success", "nice"],
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "score_stride": 10,
+    "treatment_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+    ],
+    "matched_signflip_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": -1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.25}
+    ],
+    "updates": 5,
+    "evaluation_steps": [0, 1, 2, 3, 4, 5],
+    "display_gate_steps": [0, 3, 4, 5],
+    "display_gate": "M3 > M0, M4 >= M3, and M5 >= M4",
+    "optimizer_science": "Exact V14/V11 recipe except fixed horizon/save step 5: LR 3e-6 constant, DAPO, scale_rewards group, eight generations, LoRA r8/alpha16, J reward plus KL beta .02, no correctness reward, no accuracy stopping."
+  },
+  "fresh_runs": {
+    "seeds": [240, 241, 242, 243],
+    "conditions": ["jlens", "signflip"],
+    "all_eight_fixed_before_launch": true,
+    "resume_retry_or_warm_start": false,
+    "wandb_group": "dev-v15-celebration-u1-h5",
+    "wandb_id_template": "dev-v15-celebration-{condition}-seed{seed}"
+  },
+  "predeclared_analysis": {
+    "terminal_step": 5,
+    "primary": "Exact two-sided sign test of treatment minus seed-matched signflip; success requires four positive effects, no ties, positive mean, p=.125.",
+    "secondary": "Exact two-sided sign test of treatment minus its deterministic baseline; success requires four positive effects, no ties, positive mean, p=.125.",
+    "display": "Report every dense node and separately report pass/failure of the fixed 0/3/4/5 gate.",
+    "nominal_alpha": 0.15,
+    "multiplicity_caveat": "Adaptive development evidence only; the candidate was selected from V14 treatment outcomes and is not familywise-error-corrected."
+  },
+  "execution_intent": {
+    "backend": "Modal",
+    "app_name": "j-lens-rl-development-v15-celebration-h5-20260715a",
+    "fresh_volume": "j-lens-rl-development-v15-celebration-h5-20260715a",
+    "gpu_type": "L40S",
+    "max_parallel_gpus": 4,
+    "capacity_policy": "Spawn all eight fixed calls without outcome conditioning; four run and four queue.",
+    "launch_blocked_until_exact_registration_runner_configs_tests_and_source_hashes_are_committed_and_pushed": true
+  },
+  "firewall": {
+    "protected_final_payloads_authorized": false,
+    "closed_attempts_mounted_resumed_retried_or_pooled": false,
+    "v14_controls_cancelled_or_delayed_for_selection": false
+  }
+}

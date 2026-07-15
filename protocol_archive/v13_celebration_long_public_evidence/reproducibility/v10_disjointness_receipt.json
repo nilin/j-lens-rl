@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "development_curve_in_training_exclusions": true,
+    "final_indices_disjoint_from_development_curve": true,
+    "final_indices_in_training_exclusions": true
+  },
+  "curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+  "protected_final_manifest_sha256": "1c3a544053504848318594ce21eea058d902884ba10c4f39ea3fa7796109b9c8",
+  "protected_final_outcomes_read": false,
+  "protocol": "j-lens-rl-confirmatory-v13-celebration-long-u4-u10-u20",
+  "schema_version": 1,
+  "status": "prospectively_verified_before_v13_final_unlock",
+  "train_exclusions_manifest_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61"
+}
