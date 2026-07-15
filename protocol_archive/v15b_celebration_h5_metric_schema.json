@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-development-v15b-celebration-h5",
+  "scientific_status": "development_only_adaptive_v14_horizon_replication",
+  "reward": "The sole task reward is the registered celebration-family J-lens score; GSM8K correctness is observational and never used for training. KL beta is 0.02.",
+  "treatment_reward": "Standardized J-lens mass for yay/great/success/nice at layer 8, response fractions 0.50-0.75 with weight +1 and 0.75-1.00 with weight +0.25, stride 10.",
+  "matched_signflip_reward": "The exact matched control changes only the two J-lens component weights from +1/+0.25 to -1/-0.25.",
+  "validation_exact_match": "Greedy numeric GSM8K exact match on the fixed exposed 400-row training-split development curve at baseline step 0 and optimizer steps 1,2,3,4,5.",
+  "optimizer_step_axis": "The canonical curve x-axis is validation_history.jsonl field step, equal to Hugging Face global_step and W&B train/global_step. W&B _step is an internal history-row counter and is not an optimizer step.",
+  "display_shape_gate": "On the four-treatment-seed mean, M3 > M0, M4 >= M3, and M5 >= M4. Every dense node remains visible.",
+  "terminal_treatment_control_test": "At optimizer step 5, exact two-sided sign test across four seed-matched treatment-minus-signflip exact-match effects; four positive effects and no ties gives nominal p=0.125.",
+  "terminal_treatment_baseline_test": "At optimizer step 5, exact two-sided sign test across four treatment-minus-own-baseline exact-match effects; four positive effects and no ties gives nominal p=0.125.",
+  "aggregate_curve": "At every registered optimizer step, report each seed, the unweighted condition means, sample standard errors, and paired treatment-minus-signflip effects.",
+  "inference_limit": "The horizon and display nodes were adaptively selected from V14 treatment outcomes and committed in the candidate freeze before any complete V14 control curve. All p-values are nominal development evidence, not familywise-corrected or an untouched independent confirmation."
+}

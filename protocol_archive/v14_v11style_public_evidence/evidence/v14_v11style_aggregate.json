@@ -1,0 +1,262 @@
+{
+  "canonical_x_axis": "global_step",
+  "multiplicity_caveat": "Nominal development evidence only; prior visible candidate, seed, horizon, V11, V12, and seed195 outcomes are not familywise-corrected.",
+  "protected_final_payloads_accessed": false,
+  "protocol": "j-lens-rl-development-v14-v11style-celebration-u1-h6",
+  "rows": [
+    {
+      "global_step": 0,
+      "n_seed_pairs": 4,
+      "paired_effect_by_seed": {
+        "236": 0.0,
+        "237": 0.0,
+        "238": 0.0,
+        "239": 0.0
+      },
+      "paired_mean": 0.0,
+      "paired_sem": 0.0,
+      "signflip_by_seed": {
+        "236": 0.3825,
+        "237": 0.3825,
+        "238": 0.3825,
+        "239": 0.3825
+      },
+      "signflip_mean": 0.3825,
+      "signflip_sem": 0.0,
+      "treatment_by_seed": {
+        "236": 0.3825,
+        "237": 0.3825,
+        "238": 0.3825,
+        "239": 0.3825
+      },
+      "treatment_mean": 0.3825,
+      "treatment_sem": 0.0
+    },
+    {
+      "global_step": 1,
+      "n_seed_pairs": 4,
+      "paired_effect_by_seed": {
+        "236": 0.0050000000000000044,
+        "237": -0.010000000000000009,
+        "238": 0.0025000000000000022,
+        "239": -0.025000000000000022
+      },
+      "paired_mean": -0.006875000000000006,
+      "paired_sem": 0.006875000000000006,
+      "signflip_by_seed": {
+        "236": 0.3775,
+        "237": 0.385,
+        "238": 0.4,
+        "239": 0.3925
+      },
+      "signflip_mean": 0.38875000000000004,
+      "signflip_sem": 0.0048412291827592754,
+      "treatment_by_seed": {
+        "236": 0.3825,
+        "237": 0.375,
+        "238": 0.4025,
+        "239": 0.3675
+      },
+      "treatment_mean": 0.381875,
+      "treatment_sem": 0.007525996611745191
+    },
+    {
+      "global_step": 2,
+      "n_seed_pairs": 4,
+      "paired_effect_by_seed": {
+        "236": -0.0050000000000000044,
+        "237": 0.0050000000000000044,
+        "238": 0.015000000000000013,
+        "239": 0.010000000000000009
+      },
+      "paired_mean": 0.0062500000000000056,
+      "paired_sem": 0.004269562819149837,
+      "signflip_by_seed": {
+        "236": 0.4,
+        "237": 0.3925,
+        "238": 0.38,
+        "239": 0.3825
+      },
+      "signflip_mean": 0.38875000000000004,
+      "signflip_sem": 0.004621056877670594,
+      "treatment_by_seed": {
+        "236": 0.395,
+        "237": 0.3975,
+        "238": 0.395,
+        "239": 0.3925
+      },
+      "treatment_mean": 0.395,
+      "treatment_sem": 0.0010206207261596585
+    },
+    {
+      "global_step": 3,
+      "n_seed_pairs": 4,
+      "paired_effect_by_seed": {
+        "236": 0.007500000000000007,
+        "237": -0.0050000000000000044,
+        "238": 0.02250000000000002,
+        "239": -0.012500000000000011
+      },
+      "paired_mean": 0.0031250000000000028,
+      "paired_sem": 0.007663155899062307,
+      "signflip_by_seed": {
+        "236": 0.375,
+        "237": 0.385,
+        "238": 0.38,
+        "239": 0.3975
+      },
+      "signflip_mean": 0.384375,
+      "signflip_sem": 0.0048277625942735325,
+      "treatment_by_seed": {
+        "236": 0.3825,
+        "237": 0.38,
+        "238": 0.4025,
+        "239": 0.385
+      },
+      "treatment_mean": 0.3875,
+      "treatment_sem": 0.005103103630798292
+    },
+    {
+      "global_step": 4,
+      "n_seed_pairs": 4,
+      "paired_effect_by_seed": {
+        "236": -0.012500000000000011,
+        "237": 0.0025000000000000022,
+        "238": -0.0050000000000000044,
+        "239": 0.0
+      },
+      "paired_mean": -0.0037500000000000033,
+      "paired_sem": 0.003307189138830741,
+      "signflip_by_seed": {
+        "236": 0.4,
+        "237": 0.3925,
+        "238": 0.3975,
+        "239": 0.375
+      },
+      "signflip_mean": 0.39125,
+      "signflip_sem": 0.005636562191028623,
+      "treatment_by_seed": {
+        "236": 0.3875,
+        "237": 0.395,
+        "238": 0.3925,
+        "239": 0.375
+      },
+      "treatment_mean": 0.3875,
+      "treatment_sem": 0.00444878260501305
+    },
+    {
+      "global_step": 5,
+      "n_seed_pairs": 4,
+      "paired_effect_by_seed": {
+        "236": 0.0,
+        "237": 0.017500000000000016,
+        "238": 0.05499999999999999,
+        "239": -0.007500000000000007
+      },
+      "paired_mean": 0.01625,
+      "paired_sem": 0.01393810723639811,
+      "signflip_by_seed": {
+        "236": 0.3975,
+        "237": 0.385,
+        "238": 0.37,
+        "239": 0.3925
+      },
+      "signflip_mean": 0.38625,
+      "signflip_sem": 0.005994789404140905,
+      "treatment_by_seed": {
+        "236": 0.3975,
+        "237": 0.4025,
+        "238": 0.425,
+        "239": 0.385
+      },
+      "treatment_mean": 0.4025,
+      "treatment_sem": 0.00835414068990142
+    },
+    {
+      "global_step": 6,
+      "n_seed_pairs": 4,
+      "paired_effect_by_seed": {
+        "236": -0.010000000000000009,
+        "237": 0.0050000000000000044,
+        "238": 0.0050000000000000044,
+        "239": 0.020000000000000018
+      },
+      "paired_mean": 0.0050000000000000044,
+      "paired_sem": 0.006123724356957951,
+      "signflip_by_seed": {
+        "236": 0.405,
+        "237": 0.3925,
+        "238": 0.38,
+        "239": 0.3775
+      },
+      "signflip_mean": 0.38875000000000004,
+      "signflip_sem": 0.006332785063987782,
+      "treatment_by_seed": {
+        "236": 0.395,
+        "237": 0.3975,
+        "238": 0.385,
+        "239": 0.3975
+      },
+      "treatment_mean": 0.39375000000000004,
+      "treatment_sem": 0.0029755951785595237
+    }
+  ],
+  "schema_version": 1,
+  "scientific_status": "development_only_posthoc_v11_style_replication",
+  "seeds": [
+    236,
+    237,
+    238,
+    239
+  ],
+  "target_evidence_met": false,
+  "terminal_treatment_minus_baseline": {
+    "effects": [
+      0.012500000000000011,
+      0.015000000000000013,
+      0.0025000000000000022,
+      0.015000000000000013
+    ],
+    "exact_two_sided_p": 0.125,
+    "mean_effect": 0.01125000000000001,
+    "negatives": 0,
+    "nominal_alpha": 0.15,
+    "nonzero": 4,
+    "positives": 4,
+    "success": true,
+    "ties": 0
+  },
+  "terminal_treatment_minus_signflip": {
+    "effects": [
+      -0.010000000000000009,
+      0.0050000000000000044,
+      0.0050000000000000044,
+      0.020000000000000018
+    ],
+    "exact_two_sided_p": 0.625,
+    "mean_effect": 0.0050000000000000044,
+    "negatives": 1,
+    "nominal_alpha": 0.15,
+    "nonzero": 4,
+    "positives": 3,
+    "success": false,
+    "ties": 0
+  },
+  "v11_shape_gate": {
+    "first_above_initial": true,
+    "means": [
+      0.3825,
+      0.3875,
+      0.4025,
+      0.39375000000000004
+    ],
+    "no_downward_steps_4_to_5_to_6": false,
+    "passed": false,
+    "steps": [
+      0,
+      4,
+      5,
+      6
+    ]
+  }
+}

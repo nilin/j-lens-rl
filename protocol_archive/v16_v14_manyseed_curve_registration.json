@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-v16-v14-manyseed-curve-registration",
+  "protocol": "j-lens-rl-development-v16-v14-celebration-n16-u2-h10",
+  "registered_at_utc": "2026-07-15T01:49:09Z",
+  "status": "registered_before_any_v16_gpu_wandb_run_or_outcome",
+  "purpose": "Measure the complete longer V14-recipe curve with enough fresh paired seeds to reduce the standard error, retaining every eval node requested by the user.",
+  "scientific_status": {
+    "classification": "development_only_adaptive_v14_many_seed_extension",
+    "untouched_independent_confirmation": false,
+    "nominal_p_values_permitted_with_caveat": true,
+    "reason": "The V14 reward was selected from prior development experiments, and the 16-seed count, ten-step horizon, two-step cadence, complete curve, and analyses were selected after V14/V15 were visible. This registration fixes the new batch before any V16 outcome.",
+    "protected_final_access_authorized": false
+  },
+  "bound_history": {
+    "v14_source_commit": "5ee921ff317f6d96eb2780d2e0b45ea19ff9b4d4",
+    "v14_aggregate": {
+      "path": "protocol_archive/v14_v11style_public_evidence/evidence/v14_v11style_aggregate.json",
+      "sha256": "7bb3a49f49c54ed438b7ffd0f6f3f277df994fc525abc838988b6c7352e012d1"
+    },
+    "v15_preemption_closeout": {
+      "path": "protocol_archive/v15_celebration_h5_preemption_closeout.json",
+      "sha256": "33bc8b4db1b19cab5417cc2623fbb6bf6be108e4e31e3cc0166f2db7c49e502e"
+    },
+    "disclosure": "V14's favorable and unfavorable nodes, matched-control result, V15 partial values, and the adaptive program remain disclosed; V16 does not retroactively make them confirmatory."
+  },
+  "candidate": {
+    "target_words": ["yay", "great", "success", "nice"],
+    "calibration_path": "protocol_archive/emotional_screen_forensic_bundle/family/artifacts/celebration_calibration.json",
+    "calibration_sha256": "93d05caf4848e745c07d908034b36f0b1ae465d8d89e1681134869c6b87a8ee6",
+    "score_stride": 10,
+    "treatment_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": 1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": 0.25}
+    ],
+    "matched_signflip_components": [
+      {"layer": 8, "start_fraction": 0.5, "end_fraction": 0.75, "aggregation": "mean", "weight": -1.0},
+      {"layer": 8, "start_fraction": 0.75, "end_fraction": 1.0, "aggregation": "mean", "weight": -0.25}
+    ],
+    "control_difference_from_treatment": "Only the two component-weight signs change.",
+    "correctness_reward": false,
+    "kl_beta": 0.02
+  },
+  "training": {
+    "updates": 10,
+    "learning_rate": 0.000003,
+    "lr_scheduler_type": "constant",
+    "warmup_steps": 0,
+    "warmup_ratio": 0.0,
+    "loss_type": "dapo",
+    "scale_rewards": "group",
+    "gradient_accumulation_steps": 1,
+    "num_generations": 8,
+    "num_generations_eval": 1,
+    "max_prompt_tokens": 384,
+    "max_new_tokens": 256,
+    "min_new_tokens": 64,
+    "temperature": 1.0,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "mask_target_tokens": true,
+    "score_include_final": false,
+    "vocab_chunk_size": 16384,
+    "train_examples": 1000,
+    "save_every": 10,
+    "save_total_limit": 1
+  },
+  "observational_evaluation": {
+    "validation_source": "train",
+    "validation_examples": 400,
+    "validation_batch_size": 64,
+    "curve_manifest_path": ".confirmatory/manifests/curve_indices.json",
+    "curve_manifest_sha256": "ad348fe17d2e6bd6aac691d9bcdbb9da481f675305fa0e05c68e86dad97451c1",
+    "train_exclusions_path": ".confirmatory/manifests/train_exclusions.json",
+    "train_exclusions_sha256": "7c1ca4f404ba9149093cc3c57dc3607582f671397e2fe99e93449848c1d65d61",
+    "eval_every": 2,
+    "steps": [0, 2, 4, 6, 8, 10],
+    "complete_curve_required": true,
+    "omit_or_select_intermediate_nodes_permitted": false,
+    "decoding": "greedy_do_sample_false",
+    "observational_only": true,
+    "early_stopping_patience": null,
+    "training_rng_consumed": false
+  },
+  "fresh_runs": {
+    "seeds": [248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263],
+    "conditions": ["jlens", "signflip"],
+    "seed_pairs": 16,
+    "total_runs": 32,
+    "reuse_resume_retry_or_warm_start": false,
+    "configs": {
+      "common": "configs/v16_v14_manyseed_curve_common.json",
+      "run_template": "configs/v16_v14_manyseed_curve_{condition}_seed{seed}.json"
+    }
+  },
+  "predeclared_analysis": {
+    "early_complete_node_shape": {
+      "steps": [0, 2, 4, 6],
+      "criterion": "M2 > M0, M4 >= M2, and M6 >= M4 on the 16-treatment-seed mean",
+      "remaining_nodes": "M8 and M10 are always retained, reported, and plotted regardless of this gate."
+    },
+    "primary_integrated_baseline": {
+      "per_seed_effect": "mean over s in {2,4,6,8,10} of treatment(seed,s)-treatment(seed,0)",
+      "test": "exact_two_sided_sign_test",
+      "success": "positive mean effect and nominal two-sided p <= 0.15",
+      "alpha": 0.15
+    },
+    "paired_integrated_control": {
+      "per_seed_effect": "mean over s in {2,4,6,8,10} of treatment(seed,s)-signflip(seed,s)",
+      "test": "exact_two_sided_sign_test",
+      "success": "positive mean effect and nominal two-sided p <= 0.15",
+      "alpha": 0.15
+    },
+    "secondary_terminal": [
+      "step-10 treatment minus own baseline exact two-sided sign test",
+      "step-10 treatment minus seed-matched signflip exact two-sided sign test"
+    ],
+    "target_evidence": "complete early-node shape plus successful primary integrated-baseline test; matched-control test is reported separately and is required for a causal reward-sign claim",
+    "report_regardless_of_result": [
+      "all six nodes of every individual curve",
+      "condition means, sample standard deviations, and sample standard errors at all six nodes",
+      "all paired effects and ties",
+      "all registered exact p-values",
+      "machine-readable JSON/CSV and a plot containing every node"
+    ],
+    "multiplicity_caveat": "Nominal adaptive development evidence only; not familywise-error-corrected."
+  },
+  "terminal_verifier": {
+    "authoritative_curve": "validation_history.jsonl must contain exactly steps 0,2,4,6,8,10 in order.",
+    "trainer_validation_rows": "log_history.json must contain exactly callback-emitted steps 2,4,6,8,10; baseline is absent.",
+    "learning_rate_rule": "Missing LR is allowed only on validation-merged rows; present LR must equal 3e-6 within 1e-15.",
+    "reward_rule": "Exactly one named J-lens reward and no correctness/GSM8K reward at every optimizer step 1 through 10.",
+    "duplicate_reward_std_rule": "Generic and named float32 reward std values must be within four binary32 ULPs.",
+    "collector_rule": "Drain and record every spawned call before aggregate failure."
+  },
+  "tracking": {
+    "entity": "nilinabra-spare-time",
+    "project": "j-lens-rl",
+    "group": "dev-v16-v14-celebration-n16-u2-h10",
+    "run_id_template": "dev-v16-v14-celebration-{condition}-seed{seed}",
+    "aggregate_run_id": "dev-v16-v14-celebration-aggregate",
+    "resume": "never",
+    "online_required": true,
+    "canonical_x_axis": "train/global_step for training; global_step for aggregate",
+    "wandb_internal_step_is_optimizer_step": false
+  },
+  "execution": {
+    "backend": "Modal",
+    "app_name": "j-lens-rl-development-v16-v14-celebration-n16-20260715a",
+    "fresh_volume": "j-lens-rl-development-v16-v14-celebration-n16-20260715a",
+    "volume_version": 2,
+    "gpu_type": "L40S",
+    "one_gpu_per_worker": true,
+    "function_max_containers": 4,
+    "user_requested_concurrent_gpu_cap": 4,
+    "all_32_intents_committed_before_any_spawn": true,
+    "all_32_calls_spawned_without_outcome_conditioning": true,
+    "spawn_order": "Seed-major pair-interleaved: jlens then signflip for seed 248, then jlens/signflip for 249, through 263.",
+    "local_entrypoint_waits_for_terminal_orchestrator_result": true,
+    "coordinator_preemption_recovery": "A restarted coordinator may reattach only to an exact durable 32-call manifest for the same root call after verifying all immutable intents; it never respawns. Partial or inconsistent dispatch fails closed."
+  },
+  "metric_schema": {
+    "path": "protocol_archive/v16_v14_manyseed_curve_metric_schema.json",
+    "sha256": "8f3c814334fedcf1e02f32c6622091638f8a92d8598a6b3b32c942271ca52b4d"
+  },
+  "firewall": {
+    "protected_final_payloads_mounted_or_accessed": false,
+    "prohibited_payload_names": ["sealed_final_indices.json", "future_reserve_indices.json", "retired_v3_curve_indices.json"],
+    "closed_attempt_volumes_mounted": false,
+    "closed_runs_resumed_retried_or_pooled": false
+  }
+}

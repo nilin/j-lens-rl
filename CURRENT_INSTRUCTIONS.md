@@ -1,6 +1,6 @@
 # Current Research Instructions
 
-Last reconciled: 2026-07-15 00:52 UTC. This is the current operating brief;
+Last reconciled: 2026-07-15 02:10 UTC. This is the current operating brief;
 older chat instructions and historical closeouts do not override it.
 
 ## Objective and evidence standard
@@ -10,24 +10,30 @@ emotionally charged words, apart from the fixed KL regularizer, improves GSM8K.
 Do not launch new `solved` experiments. Spend at least half of experiment/GPU
 time on RL, and never block ready RL on word search for more than one hour.
 
-The current experiment is V14, a development-only, adaptively selected dense
-replication of the most defensible V11/seed-195 celebration recipe:
+The current experiment is V16, a development-only, adaptively selected
+many-seed extension of V14's celebration result:
 `yay/great/success/nice`, calibration SHA `93d05caf...8ee6`, layer 8, stride
 10, weights `+1` on response fraction `.50-.75` and `+.25` on `.75-1.0`.
-Training is six fixed updates, LR `3e-6`, DAPO, LoRA r8/alpha16, eight
+Training is ten fixed updates, LR `3e-6`, DAPO, LoRA r8/alpha16, eight
 generations, J reward plus KL beta `.02`, and no correctness reward or
-accuracy-based stopping. Four treatment seeds 236--239 and four exact matched
-sign-flip controls are fixed. Eval is greedy on the exposed 400-row curve at
-every step `0..6`; the inherited display gate uses `0/4/5/6` and requires
-`M4>M0`, `M5>=M4`, `M6>=M5`. Four strictly positive matched terminal effects
-give exact two-sided sign-test `p=.125`, accepted as nominal evidence at
-`alpha=.15`. Always disclose the adaptive-program/multiplicity caveat.
+accuracy-based stopping. Sixteen treatments and sixteen exact seed-matched
+sign-flip controls are fixed on fresh seeds 248--263. Eval is greedy on the
+exposed 400-row curve at exactly global steps `0,2,4,6,8,10`. Every measured
+node must remain in every run history, aggregate JSON/CSV, W&B aggregate, and
+plot; never selectively omit a node. The early shape gate uses consecutive
+measured nodes `0/2/4/6` and requires `M2>M0`, `M4>=M2`, `M6>=M4`; nodes 8 and
+10 remain mandatory regardless. Primary evidence averages each treatment
+seed's improvement from baseline over all five post-baseline nodes, then uses
+an exact two-sided seed sign test at nominal `alpha=.15`. The matched-control
+integrated sign test is separate and required for a causal reward-sign claim.
+Always disclose the adaptive-program/multiplicity caveat.
 
-V14 app `ap-ez4IZH2rdlBRnw4cdHefqf`, claim
-`e0657eca40da49b78830f5e7a1e47a14`, and volume
-`j-lens-rl-development-v14-v11style-celebration-20260715b` are active from
-pushed commit `5ee921f`. The prior two V14 infrastructure attempts are closed,
-outcome-free, and must not be resumed.
+V15 was closed outcome-incomplete after a Modal CPU-coordinator preemption;
+four baselines and one partial step-1 value are disclosed but excluded. V15B
+was registered as a five-step replacement but was never launched after the
+user requested the longer complete curve. V16 inherits only its verified
+preemption-safe orchestration. Add V16 app/claim/source identities here
+immediately after launch.
 
 ## Execution and continuity
 
@@ -52,9 +58,11 @@ outcome-free, and must not be resumed.
 
 ## Context that must remain explicit
 
-Seed195 produced `.3825/.3925/.4000/.4125` at `0/4/10/20`, but it is one
-development seed. V11 rose through step5 but was infrastructure-interrupted;
-V12 dipped at step5; V13 positive treatment dipped at step10, while its
-sign-flip mean was monotone but beat treatment terminally in only one of four
-matched seeds. These visible results motivated V14 and prevent describing V14
-as an untouched independent confirmation or familywise-corrected evidence.
+V14 completed all eight runs cleanly. Treatment terminal-minus-baseline was
+positive for all four seeds (mean `+.01125`, exact sign `p=.125`) and its dense
+means contain the requested `0/3/4/5` segment
+`.3825/.3875/.3875/.4025`. Its registered `0/4/5/6` gate nevertheless failed
+on the step-6 dip, and treatment-minus-signflip was not significant
+(`p=.625`). V16's seed count, ten-update horizon, two-step cadence, shape, and
+integrated tests were selected after visible V11--V15 outcomes. This prevents
+calling V16 untouched, independent, or familywise-corrected evidence.

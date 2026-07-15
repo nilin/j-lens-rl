@@ -1,0 +1,9 @@
+{
+  "base": "v16_v14_manyseed_curve_signflip_template.json",
+  "seed": 251,
+  "run_name": "dev-v16-v14-celebration-signflip-seed251",
+  "wandb_run_id": "dev-v16-v14-celebration-signflip-seed251",
+  "wandb_url": "https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v16-v14-celebration-signflip-seed251",
+  "wandb_tags": ["development-only", "adaptive-v14-extension", "celebration-family", "tail-taper", "complete-u2-h10", "n16-paired", "matched-signflip", "seed251"],
+  "output_dir": "/state/runs/signflip_seed251"
+}

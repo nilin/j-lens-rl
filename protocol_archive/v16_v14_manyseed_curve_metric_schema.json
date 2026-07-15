@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "protocol": "j-lens-rl-development-v16-v14-celebration-n16-u2-h10",
+  "scientific_status": "development_only_adaptive_v14_many_seed_extension",
+  "reward": "The sole task reward is the celebration-family J-lens score; GSM8K correctness is observational and never used for training. KL beta is 0.02.",
+  "treatment_reward": "Standardized J-lens mass for yay/great/success/nice at layer 8, response fractions 0.50-0.75 with weight +1 and 0.75-1.00 with weight +0.25, stride 10.",
+  "matched_signflip_reward": "The exact seed-matched control changes only the two J-lens component weights from +1/+0.25 to -1/-0.25.",
+  "validation_exact_match": "Greedy numeric GSM8K exact match on the fixed exposed 400-row training-split development curve at every registered node: baseline 0 and optimizer global steps 2,4,6,8,10.",
+  "optimizer_step_axis": "The canonical x-axis is validation_history.jsonl field step, equal to Hugging Face global_step and W&B train/global_step. W&B _step is only an internal row counter.",
+  "complete_curve_rule": "Every registered node 0,2,4,6,8,10 must appear in every run, aggregate JSON, CSV, W&B aggregate, and plot. No measured intermediate node may be omitted or selectively displayed.",
+  "early_shape_gate": "On the 16-treatment-seed mean at consecutive measured nodes, M2 > M0, M4 >= M2, and M6 >= M4. Nodes 8 and 10 remain mandatory and visible regardless of the gate.",
+  "primary_integrated_baseline_test": "For each of 16 treatment seeds, average exact-match change from its own baseline across all post-baseline nodes 2,4,6,8,10; apply an exact two-sided sign test across seeds at nominal alpha 0.15 and require positive mean.",
+  "paired_integrated_control_test": "For each of 16 seeds, average treatment-minus-signflip exact-match across every post-baseline node 2,4,6,8,10; apply an exact two-sided sign test across seeds at nominal alpha 0.15 and require positive mean.",
+  "terminal_tests": "At global step 10, also report exact two-sided seed sign tests for treatment-minus-baseline and treatment-minus-signflip; these are secondary and are reported regardless of result.",
+  "aggregate_curve": "At every registered global step report all individual seed values and paired effects, unweighted condition means, sample standard deviations, and sample standard errors.",
+  "inference_limit": "The reward, horizon, eval cadence, seed count, shape, and tests were chosen after visible V11-V15 development outcomes. All p-values are nominal adaptive development evidence, not familywise-corrected or an untouched independent confirmation."
+}

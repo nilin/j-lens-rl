@@ -2,36 +2,97 @@
 
 Initial audit snapshot: `2026-07-14T00:32:52Z`
 Prelaunch v2 update: `2026-07-14 UTC`
+Current evidence update: `2026-07-15T02:10:00Z`
 
 - Repository: `/j-lens-rl`
-- Git HEAD / `origin/main`: `79f69d717901a2f073dadd3afc6135a041584e70`
-- Scope: committed code, dirty working tree, local artifacts/runs, root scripts,
-  research documentation, and the other Codex session's live experiment.
+- Git HEAD / `origin/main` before the pending V16 launch commit:
+  `d6aad4f309b249d4b6ae568e4c664425216540f6`.
+- Current scope: pushed source/configs/contracts, archived public run evidence,
+  W&B receipts, V14 terminal evidence, V15's infrastructure-failure closeout,
+  and the registered but not-yet-launched V16 experiment.
 - Initial verification: `.venv/bin/pytest -q` passed `9/9` tests.
-- Current prelaunch verification: `35/35` tests plus Python/Bash syntax and
-  `git diff --check` pass.
+- Current V14/V15/V15B/V16 verification: `31/31` focused tests, Python compilation,
+  byte-pinned runtime inputs, and `git diff --check` pass. The V13 archive has
+  `100/100` verified checksums and an independent curve/statistics review.
 
 ## Bottom line
 
-**PASS for the narrow implementation claim:** in the current dirty working
-tree, a J-only run removes gold answers from its training rows and registers
-exactly one J-lens task reward with weight `1`. The active run is therefore not
-using GSM8K correctness as its scalar policy-gradient reward.
+**PASS for the narrow implementation claim:** V14 and the registered V16 remove gold answers
+from training prompts, register exactly one celebration J-lens task reward,
+use no GSM8K correctness reward, and disable accuracy-based stopping.
+The configured KL term (`beta=.02`) remains part of the RL objective, so
+"intrinsic reward alone" means J-only task reward apart from that fixed
+regularizer.
 
-**FAIL / INCONCLUSIVE for the headline research claim:** the repository does
-not currently demonstrate that J-lens word reward alone reliably improves the
-evaluation. The claimed `+3/1,319` and `+2/1,319` result was selected using part
-of the same test set, is the product of adaptive test reuse, and is too small to
-be statistically informative. The newer clean protocol has not produced a
-full-test gain. It also still uses labeled accuracy for early stopping and
-manual model/config selection, so the end-to-end procedure is not driven only
-by intrinsic reward.
+**PARTIAL PASS at the explicitly adaptive development-evidence level:** V14's
+four positive-celebration seeds all finished above their common initial eval.
+The mean terminal gain was `+.01125` and the prospectively specified secondary
+exact two-sided seed sign test was `p=.125`, meeting the user's nominal
+`alpha=.15`. Its dense means also contain the requested nondecreasing segment
+`M0/M3/M4/M5 = .3825/.3875/.3875/.4025`, with the first selected post-baseline
+node above the initial eval.
+
+**INCONCLUSIVE for a reliable causal or independent-confirmation claim:** the
+V14 matched treatment-minus-signflip contrast was only `+.005` with effects
+`[-.010,+.005,+.005,+.020]` and `p=.625`. The prospectively fixed V11-style
+shape gate failed because `M6=.39375 < M5=.4025`; the favorable `0/3/4/5`
+segment is a disclosed dense-node description, not that registered gate.
+Candidate and horizon selection were adaptive across many visible runs, the
+400-row curve is exposed development data, and no familywise correction makes
+`p=.125` an independent confirmatory result.
 
 The accurate current conclusion is:
 
-> The live optimizer uses a J-only **task reward**, plus the configured KL
-> regularizer. The work is a useful exploratory search, but there is no clean,
-> reproducible positive result yet.
+> There is now reproducible nominal evidence that positive emotional J-lens
+> reward can improve the exposed GSM8K development eval across four fresh
+> training seeds. It is promising adaptive evidence, not yet clean proof that
+> the reward beats a matched intrinsic control or generalizes independently.
+
+## Current V14 finding and V15/V16 follow-up
+
+V14 ran from pushed commit `5ee921f` on Modal app
+`ap-ez4IZH2rdlBRnw4cdHefqf`, claim
+`e0657eca40da49b78830f5e7a1e47a14`. All eight fixed calls completed on at most
+four L40S workers; every terminal verifier and W&B publication succeeded. The
+sole task reward was the layer-8, stride-10 J-lens score for
+`yay/great/success/nice`, with weights `+1` on response fraction `.50-.75`
+and `+.25` on `.75-1`; controls changed only those signs. Correctness was
+greedy, observational evaluation at every optimizer step `0..6`.
+
+Treatment means were
+`.382500/.381875/.395000/.387500/.387500/.402500/.393750`; sign-flip means
+were `.382500/.388750/.388750/.384375/.391250/.386250/.388750`. The aggregate
+W&B run is
+`https://wandb.ai/nilinabra-spare-time/j-lens-rl/runs/dev-v14-v11style-celebration-aggregate`
+and its evidence artifact digest is `897f69e304f133302d2c0edbeac4cbb2`.
+Protected-final payloads were never mounted or accessed.
+
+V15 was selected to retest V14's step-5 effect. Modal preempted its CPU
+coordinator while four treatment workers were active; its automatic restart
+found the immutable intents and failed closed rather than respawning. It has
+no complete run, control, aggregate, or valid test. The only partial values
+are four baselines of `.3825` and seed 243 step 1 of `.365`; all are disclosed
+and excluded. Exact app/claim/call IDs and partial histories are frozen in
+`protocol_archive/v15_celebration_h5_preemption_closeout.json`. V15B was then
+registered with preemption-safe coordinator reattachment but never launched,
+because the user replaced the five-step design with a longer complete curve.
+
+V16 is that replacement: 16 fresh seeds 248--263, each in celebration and
+exact matched sign-flip conditions (32 runs), with ten fixed updates and the
+complete eval grid `0,2,4,6,8,10`. All six nodes are mandatory in each raw
+history, aggregate JSON/CSV, W&B aggregate, and plot; both sample SD and SEM
+are reported at every node. Calls are seed-major pair-interleaved and queued
+under a four-GPU function cap. The early consecutive-node gate is `0/2/4/6`.
+The primary sign test uses each seed's average treatment improvement from its
+own baseline across every post-baseline node; the integrated matched-control
+test is separately required for a causal reward-sign claim. The registration
+explicitly labels these nominal, adaptive development analyses because the
+reward, horizon, cadence, seed count, and tests follow visible V11--V15 data.
+V16 was not yet launched at this audit timestamp.
+
+The detailed sections below preserve the chronological audit trail. Earlier
+"current" statements describe their dated snapshots; this current summary and
+the immutable terminal archives control where they differ.
 
 ## What is implemented correctly now
 

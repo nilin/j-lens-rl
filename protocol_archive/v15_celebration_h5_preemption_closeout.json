@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "document_type": "j-lens-rl-development-v15-celebration-h5-preemption-closeout",
+  "protocol": "j-lens-rl-development-v15-celebration-h5",
+  "closed_at_utc": "2026-07-15T01:36:30Z",
+  "scientific_status": "incomplete_infrastructure_failure_no_terminal_inference",
+  "source_main_commit": "d6aad4f309b249d4b6ae568e4c664425216540f6",
+  "modal": {
+    "app_name": "j-lens-rl-development-v15-celebration-h5-20260715a",
+    "app_id": "ap-rRvGkZVa8kr4DpiDapXCRr",
+    "volume": "j-lens-rl-development-v15-celebration-h5-20260715a",
+    "volume_object_id": "vo-uDPlCbqxZTUsjuLraeh2s1",
+    "claim_id": "ee3a748f284a48a08c36af36869b3408",
+    "root_call_id": "fc-01KXHPAX60RXRQVADNR8PN2JQE",
+    "created_at_utc": "2026-07-15T01:27:27Z",
+    "stopped_at_utc": "2026-07-15T01:34:35Z",
+    "terminal_app_state": "stopped",
+    "terminal_task_count": 0,
+    "max_parallel_gpus": 4
+  },
+  "failure": {
+    "preempted_function": "orchestrate",
+    "preempted_function_id": "fu-MpgHWrOHMBomvh5s2sweM6",
+    "preempted_container_id": "ta-01KXHPAXRSAX9PD9DB7CXWM8WR",
+    "preempted_at_utc": "2026-07-15T01:33:23Z",
+    "automatic_restart_container_id": "ta-01KXHPJAC7ZYPMQ5FHQ2SA6KBR",
+    "restart_failure_at_utc": "2026-07-15T01:34:27Z",
+    "restart_error_type": "FileExistsError",
+    "restart_error": "[Errno 17] File exists: '/state/dispatches/jlens_seed240.intent.json'",
+    "root_cause": "Modal automatically restarted the preempted coordinator with the same root call. The coordinator correctly refused to overwrite the already-durable intent, but lacked a recovery path that reattached to the already-recorded child call IDs.",
+    "training_worker_was_preempted": false,
+    "protected_final_payloads_accessed": false
+  },
+  "durable_dispatch": {
+    "all_eight_intents_existed_before_any_spawn": true,
+    "worker_call_ids_recorded_before_preemption": {
+      "jlens_seed240": "fc-01KXHPB3S1QRZW1R6WKMNSRVTK",
+      "jlens_seed241": "fc-01KXHPB3WTR56GGYFGDQRDWECG",
+      "jlens_seed242": "fc-01KXHPB40HZ8X77B2G76PGTD83",
+      "jlens_seed243": "fc-01KXHPB447M2EMB5AFKFEES9HN",
+      "signflip_seed240": "fc-01KXHPB48B052ASW7SZV4WVMFP",
+      "signflip_seed241": "fc-01KXHPB4BR9PJ09KYM5SP7CBK1",
+      "signflip_seed242": "fc-01KXHPB4FBE5J15PNNAETJ05DX",
+      "signflip_seed243": "fc-01KXHPB4JVKX1VHZCAGAXBVBWF"
+    },
+    "completion_records": [],
+    "failure_records": [],
+    "aggregate_records": []
+  },
+  "partial_observations": {
+    "not_eligible_for_pooling_or_inference": true,
+    "treatment_curves": {
+      "240": {"0": 0.3825},
+      "241": {"0": 0.3825},
+      "242": {"0": 0.3825},
+      "243": {"0": 0.3825, "1": 0.365}
+    },
+    "complete_treatment_curves": 0,
+    "complete_control_curves": 0,
+    "terminal_adapters": 0,
+    "terminal_wandb_receipts": 0
+  },
+  "disposition": {
+    "claim_is_terminal": true,
+    "volume_is_terminal_read_only_evidence": true,
+    "retry_resume_warm_start_or_pooling_permitted": false,
+    "replacement_uses_next_four_unused_seeds": [244, 245, 246, 247],
+    "replacement_science_change_authorized": false,
+    "replacement_capacity": 4,
+    "required_infrastructure_fix": "On a same-root coordinator restart, verify and reuse existing intents and recover every existing child call via modal.FunctionCall.from_id from a durable dispatch manifest; never respawn a recorded child."
+  }
+}
