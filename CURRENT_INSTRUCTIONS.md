@@ -32,8 +32,15 @@ V15 was closed outcome-incomplete after a Modal CPU-coordinator preemption;
 four baselines and one partial step-1 value are disclosed but excluded. V15B
 was registered as a five-step replacement but was never launched after the
 user requested the longer complete curve. V16 inherits only its verified
-preemption-safe orchestration. Add V16 app/claim/source identities here
-immediately after launch.
+preemption-safe orchestration. V16 launched from pushed commit
+`e11f4fbe02fcd2b1cf279a5c651f5b6adf3f5b0f` as Modal app
+`ap-jZvqIF8u5dMi8dteypxVBs`, claim
+`906eefc5089c4e928a7e6f165ff07108`, root call
+`fc-01KXHS11WNJ0VPYCXR86X8C5H9`, and fresh Volume
+`j-lens-rl-development-v16-v14-celebration-n16-20260715a`. Its durable
+manifest contains exactly 32 fixed worker call IDs; four pair-interleaved
+workers run at a time and the remaining calls queue without outcome
+conditioning.
 
 ## Execution and continuity
 

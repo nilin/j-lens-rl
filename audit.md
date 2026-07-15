@@ -2,14 +2,14 @@
 
 Initial audit snapshot: `2026-07-14T00:32:52Z`
 Prelaunch v2 update: `2026-07-14 UTC`
-Current evidence update: `2026-07-15T02:10:00Z`
+Current evidence update: `2026-07-15T02:18:00Z`
 
 - Repository: `/j-lens-rl`
-- Git HEAD / `origin/main` before the pending V16 launch commit:
-  `d6aad4f309b249d4b6ae568e4c664425216540f6`.
+- V16 launch source commit / `origin/main` at launch:
+  `e11f4fbe02fcd2b1cf279a5c651f5b6adf3f5b0f`.
 - Current scope: pushed source/configs/contracts, archived public run evidence,
   W&B receipts, V14 terminal evidence, V15's infrastructure-failure closeout,
-  and the registered but not-yet-launched V16 experiment.
+  and the active V16 experiment.
 - Initial verification: `.venv/bin/pytest -q` passed `9/9` tests.
 - Current V14/V15/V15B/V16 verification: `31/31` focused tests, Python compilation,
   byte-pinned runtime inputs, and `git diff --check` pass. The V13 archive has
@@ -88,7 +88,15 @@ own baseline across every post-baseline node; the integrated matched-control
 test is separately required for a causal reward-sign claim. The registration
 explicitly labels these nominal, adaptive development analyses because the
 reward, horizon, cadence, seed count, and tests follow visible V11--V15 data.
-V16 was not yet launched at this audit timestamp.
+V16 launched at `2026-07-15T02:17Z` on app
+`ap-jZvqIF8u5dMi8dteypxVBs`, claim
+`906eefc5089c4e928a7e6f165ff07108`, root call
+`fc-01KXHS11WNJ0VPYCXR86X8C5H9`, and fresh Volume
+`j-lens-rl-development-v16-v14-celebration-n16-20260715a`. The durable status
+records all 32 unique worker call IDs before any result, `max_parallel_gpus=4`,
+and a seed-major pair-interleaved first wave. At this audit timestamp exactly
+four run directories (seeds 248 and 249, both conditions) existed and the
+remaining fixed calls were queued; no result had been used to alter dispatch.
 
 The detailed sections below preserve the chronological audit trail. Earlier
 "current" statements describe their dated snapshots; this current summary and
